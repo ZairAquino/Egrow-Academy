@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
 # . "$(dirname -- "$0")/_/husky.sh"
-
+ 
 # Pre-push hook - temporalmente deshabilitado hasta configurar tests
 # npm test 

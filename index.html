@@ -27,6 +27,11 @@
       </div>
 
       <div class="sidebar-menu">
+        <a href="index.html" class="menu-link">
+          <span class="menu-icon">🏠</span>
+          <span class="menu-text">Inicio</span>
+        </a>
+
         <div class="menu-item dropdown-sidebar">
           <a href="courses.html" class="menu-link">
             <span class="menu-icon">📚</span>
@@ -34,8 +39,8 @@
             <span class="dropdown-arrow">▼</span>
           </a>
           <div class="submenu">
-            <a href="#" class="submenu-link">Cursos Cortos</a>
-            <a href="#" class="submenu-link">Especializaciones</a>
+            <a href="cursos-cortos.html" class="submenu-link">Cursos Cortos</a>
+            <a href="especializaciones.html" class="submenu-link">Especializaciones</a>
             <a href="courses.html" class="submenu-link">Todos los Cursos</a>
           </div>
         </div>
@@ -61,6 +66,16 @@
         </a>
       </div>
     </nav>
+
+    <!-- Menu Toggle Button -->
+    <button id="menuToggle" class="menu-toggle">
+      <div class="menu-icon">
+        <div class="menu-arrow"></div>
+      </div>
+    </button>
+
+    <!-- Sidebar Overlay -->
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
 
     <main class="main-content">
       <!-- Hero Section -->

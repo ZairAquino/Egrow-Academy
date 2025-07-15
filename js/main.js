@@ -15,28 +15,87 @@ document.addEventListener('DOMContentLoaded', function() {
     const sidebar = document.getElementById('sidebar');
     const sidebarClose = document.getElementById('sidebarClose');
     const sidebarOverlay = document.getElementById('sidebarOverlay');
-    const mainContent = document.querySelector('.main-content');
-    const header = document.querySelector('.header');
     
-    let lastScrollTop = 0;
-    let isScrolling = false;
+    // Debug logging
+    console.log('Menu Toggle Element:', menuToggle);
+    console.log('Sidebar Element:', sidebar);
+    console.log('Sidebar Overlay Element:', sidebarOverlay);
     
-    // Open sidebar
+    // Open/close sidebar with animation
     if (menuToggle && sidebar) {
+        const mainContent = document.querySelector('.main-content');
+        const header = document.querySelector('.header');
+        
         menuToggle.addEventListener('click', function() {
             this.classList.toggle('active');
             sidebar.classList.toggle('open');
-            sidebarOverlay.classList.toggle('show');
-            document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
+            
+            // Toggle classes for main content and header
+            if (mainContent) {
+                mainContent.classList.toggle('sidebar-open');
+            }
+            if (header) {
+                header.classList.toggle('sidebar-open');
+            }
+            
+            // Toggle button position
+            this.classList.toggle('sidebar-open');
+            
+            // Only show overlay and block scroll on mobile
+            if (window.innerWidth < 768) {
+                if (sidebarOverlay) {
+                    sidebarOverlay.classList.toggle('show');
+                }
+                document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
+            }
+            
+            // Add animation class to sidebar with optimized performance
+            sidebar.classList.add('sidebar-animating');
+            requestAnimationFrame(() => {
+                setTimeout(() => {
+                    sidebar.classList.remove('sidebar-animating');
+                }, 300);
+            });
         });
     }
     
-    // Close sidebar
+    // Close sidebar with animation
     function closeSidebar() {
-        menuToggle.classList.remove('active');
+        const mainContent = document.querySelector('.main-content');
+        const header = document.querySelector('.header');
+        
+        if (menuToggle) {
+            menuToggle.classList.remove('active');
+            menuToggle.classList.remove('sidebar-open');
+        }
+        
         sidebar.classList.remove('open');
-        sidebarOverlay.classList.remove('show');
-        document.body.style.overflow = '';
+        
+        // Remove classes from main content and header
+        if (mainContent) {
+            mainContent.classList.remove('sidebar-open');
+        }
+        if (header) {
+            header.classList.remove('sidebar-open');
+        }
+        
+        if (sidebarOverlay) {
+            sidebarOverlay.classList.remove('show');
+        }
+        
+        // Force restore scroll immediately
+        document.body.style.overflow = 'auto';
+        setTimeout(() => {
+            document.body.style.overflow = '';
+        }, 50);
+        
+        // Add animation class to sidebar with optimized performance
+        sidebar.classList.add('sidebar-animating');
+        requestAnimationFrame(() => {
+            setTimeout(() => {
+                sidebar.classList.remove('sidebar-animating');
+            }, 300);
+        });
     }
     
     if (sidebarClose) {
@@ -73,11 +132,78 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Handle responsive behavior
     function handleResize() {
-        if (window.innerWidth >= 1200) {
-            document.body.style.overflow = '';
-            sidebarOverlay.classList.remove('show');
+        if (window.innerWidth >= 768) {
+            // Force restore scroll on desktop
+            document.body.style.overflow = 'auto';
+            setTimeout(() => {
+                document.body.style.overflow = '';
+            }, 50);
+            if (sidebarOverlay) {
+                sidebarOverlay.classList.remove('show');
+            }
+            // Don't auto-close sidebar on desktop resize
         }
     }
+    
+    // Add touch event support for better mobile experience
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchEndX = 0;
+    let touchEndY = 0;
+    
+    // Handle swipe to open/close sidebar
+    document.addEventListener('touchstart', function(e) {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+    });
+    
+    document.addEventListener('touchmove', function(e) {
+        // Prevent scrolling when sidebar is open
+        if (sidebar.classList.contains('open')) {
+            e.preventDefault();
+        }
+    }, { passive: false });
+    
+    document.addEventListener('touchend', function(e) {
+        touchEndX = e.changedTouches[0].clientX;
+        touchEndY = e.changedTouches[0].clientY;
+        
+        const deltaX = touchEndX - touchStartX;
+        const deltaY = touchEndY - touchStartY;
+        
+        // Only handle horizontal swipes
+        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
+            // Swipe right from left edge to open sidebar
+            if (deltaX > 0 && touchStartX < 50 && window.innerWidth < 768) {
+                if (!sidebar.classList.contains('open')) {
+                    const mainContent = document.querySelector('.main-content');
+                    const header = document.querySelector('.header');
+                    
+                    if (menuToggle) {
+                        menuToggle.classList.add('active');
+                        menuToggle.classList.add('sidebar-open');
+                    }
+                    sidebar.classList.add('open');
+                    
+                    if (mainContent) {
+                        mainContent.classList.add('sidebar-open');
+                    }
+                    if (header) {
+                        header.classList.add('sidebar-open');
+                    }
+                    
+                    if (sidebarOverlay) {
+                        sidebarOverlay.classList.add('show');
+                    }
+                    document.body.style.overflow = 'hidden';
+                }
+            }
+            // Swipe left to close sidebar
+            else if (deltaX < 0 && sidebar.classList.contains('open')) {
+                closeSidebar();
+            }
+        }
+    });
     
     window.addEventListener('resize', handleResize);
     
@@ -88,53 +214,27 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Hide/show sidebar on scroll
-    window.addEventListener('scroll', function() {
-        let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        
-        if (scrollTop <= 0) {
-            // At the top of the page - always show sidebar
-            sidebar.style.transform = 'translateX(0)';
-            mainContent.style.marginLeft = '300px';
-            header.style.marginLeft = '300px';
-            isScrolling = false;
-        } else if (scrollTop > lastScrollTop && scrollTop > 100) {
-            // Scrolling down
-            if (!isScrolling) {
-                sidebar.style.transform = 'translateX(-100%)';
-                mainContent.style.marginLeft = '0';
-                header.style.marginLeft = '0';
-                isScrolling = true;
-            }
-        } else if (scrollTop < lastScrollTop) {
-            // Scrolling up
-            if (isScrolling) {
-                sidebar.style.transform = 'translateX(0)';
-                mainContent.style.marginLeft = '300px';
-                header.style.marginLeft = '300px';
-                isScrolling = false;
-            }
-        }
-        
-        lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
-    });
+    // Sidebar remains visible at all times - scroll effect removed
     
-    // Add hover effects to menu items
+    // Add hover effects to menu items (desktop only)
     const menuLinks = document.querySelectorAll('.menu-link');
     menuLinks.forEach(link => {
-        link.addEventListener('mouseenter', function() {
-            const icon = this.querySelector('.menu-icon');
-            if (icon) {
-                icon.style.transform = 'scale(1.1) rotate(5deg)';
-            }
-        });
-        
-        link.addEventListener('mouseleave', function() {
-            const icon = this.querySelector('.menu-icon');
-            if (icon) {
-                icon.style.transform = 'scale(1) rotate(0deg)';
-            }
-        });
+        // Only add hover effects on non-touch devices
+        if (!('ontouchstart' in window)) {
+            link.addEventListener('mouseenter', function() {
+                const icon = this.querySelector('.menu-icon');
+                if (icon) {
+                    icon.style.transform = 'scale(1.1) rotate(5deg)';
+                }
+            });
+            
+            link.addEventListener('mouseleave', function() {
+                const icon = this.querySelector('.menu-icon');
+                if (icon) {
+                    icon.style.transform = 'scale(1) rotate(0deg)';
+                }
+            });
+        }
     });
     
     // Newsletter form submission
