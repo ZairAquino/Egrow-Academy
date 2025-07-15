@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
+# . "$(dirname -- "$0")/_/husky.sh"
 
 # Validar formato de mensaje de commit
 # Formato: tipo(alcance): descripción
@@ -15,6 +15,4 @@ if ! grep -qE "$commit_regex" "$1"; then
     echo "📋 Tipos válidos: feat, fix, docs, style, refactor, test, chore"
     echo "💡 Ejemplo: feat(nav): agregar navegación responsive"
     exit 1
-fi
-
-echo "✅ Mensaje de commit válido" 
+fi 
