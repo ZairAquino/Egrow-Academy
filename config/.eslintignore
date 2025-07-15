@@ -1,0 +1,24 @@
+# Dependencias
+node_modules/
+
+# Documentación generada
+docs/
+
+# Archivos minificados
+*.min.js
+*.min.css
+
+# Archivos de configuración
+jsdoc.json
+openapi.json
+
+# Archivos de build
+dist/
+build/
+
+# Archivos temporales
+*.tmp
+*.temp
+
+# Logs
+*.log 

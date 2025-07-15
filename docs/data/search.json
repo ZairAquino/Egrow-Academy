@@ -1,0 +1,14 @@
+{
+  "list": [
+    {
+      "title": "initializeApp",
+      "link": "<a href=\"global.html#initializeApp\">initializeApp</a>",
+      "description": "<p>Inicializa todas las funcionalidades de la aplicación cuando el DOM está listo</p>"
+    },
+    {
+      "title": "main.js",
+      "link": "<a href=\"main.js.html\">main.js</a>",
+      "description": "<p>Maneja la navegación, sidebar, animaciones y formularios del sitio web</p>"
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "name": "egrow-academy",
+  "version": "1.0.0",
+  "description": "Plataforma educativa de inteligencia artificial y aprendizaje automático.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "docs:generate": "node scripts/mcp-docs.js",
+    "docs:serve": "npx http-server docs/ -p 3001",
+    "docs:openapi": "node -e \"require('./scripts/mcp-docs.js').prototype.generateOpenAPI.call(new (require('./scripts/mcp-docs.js'))())\"",
+    "docs:jsdoc": "npx jsdoc -c jsdoc.json",
+    "lint": "eslint . --ext .js",
+    "lint:fix": "eslint . --ext .js --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "clean": "node scripts/mcp-cleaner.js",
+    "clean:analyze": "node -e \"new (require('./scripts/mcp-cleaner.js'))().analyzeSpace()\"",
+    "clean:temp": "node -e \"new (require('./scripts/mcp-cleaner.js'))().cleanTempFiles()\"",
+    "clean:build": "node -e \"new (require('./scripts/mcp-cleaner.js'))().cleanBuildArtifacts()\"",
+    "clean:modules": "node -e \"new (require('./scripts/mcp-cleaner.js'))().optimizeNodeModules()\"",
+    "prepare": "husky"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZairAquino/Egrow-Academy.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ZairAquino/Egrow-Academy/issues"
+  },
+  "homepage": "https://github.com/ZairAquino/Egrow-Academy#readme",
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{html,css,json,md}": [
+      "prettier --write"
+    ],
+    "!node_modules/**": [],
+    "!docs/**": [],
+    "!config/**": []
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.31.0",
+    "@modelcontextprotocol/sdk": "^1.15.1",
+    "clean-jsdoc-theme": "^4.3.0",
+    "eslint": "^9.31.0",
+    "globals": "^16.3.0",
+    "husky": "^9.1.7",
+    "jsdoc": "^4.0.4",
+    "lint-staged": "^16.1.2",
+    "prettier": "^3.6.2",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
+  }
+}

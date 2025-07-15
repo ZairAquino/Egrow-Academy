@@ -2,26 +2,89 @@
 
 Plataforma educativa de inteligencia artificial y aprendizaje automático.
 
-## Descripción
+## 📁 Organización de Archivos
 
-eGrow Academy es una plataforma web que ofrece cursos de IA, recursos educativos y una comunidad para aprender inteligencia artificial de los mejores expertos del mundo.
+- **/mcp/**
+  - Archivos y scripts relacionados con MCP personalizados y configuración
+- **/config/**
+  - Archivos de configuración JSON generales del proyecto
+- **/docs/**
+  - Documentación generada y recursos estáticos
+- **/scripts/**
+  - Scripts utilitarios y de automatización
 
-## Tecnologías
+## 📦 Estructura sugerida
+
+```
+eGrow-academy/
+├── mcp/
+│   ├── mcp-cleaner.js
+│   ├── mcp-docs.js
+│   └── openapi.json
+├── config/
+│   ├── jsdoc.json
+│   ├── eslint.config.js
+│   ├── .prettierrc
+│   ├── .prettierignore
+│   ├── .eslintrc.json
+│   └── .eslintignore
+├── docs/
+│   └── ...
+├── scripts/
+│   └── ...
+├── package.json
+├── package-lock.json
+├── README.md
+└── ...
+```
+
+## 🚀 Inicio Rápido
+
+```bash
+# Instalar dependencias
+npm install
+
+# Iniciar servidor de desarrollo
+python3 -m http.server 8000
+
+# Abrir en navegador
+xdg-open http://localhost:8000
+```
+
+## 📚 Documentación
+
+- **API Documentation**: [OpenAPI Spec](./mcp/openapi.json)
+- **JavaScript Docs**: [JSDoc](./docs/)
+- **Swagger UI**: https://editor.swagger.io/
+
+## 🛠️ Scripts Disponibles
+
+```bash
+# Generar documentación completa
+npm run docs:generate
+
+# Servir documentación
+npm run docs:serve
+
+# Generar OpenAPI
+npm run docs:openapi
+
+# Limpieza y optimización
+npm run clean
+```
+
+## 🔧 Tecnologías
 
 - HTML5
 - CSS3
-- JavaScript
-- Diseño responsive
+- JavaScript (ES6+)
+- OpenAPI 3.0
+- JSDoc
 
-## Páginas
+## 📝 Licencia
 
-- **Inicio**: Página principal con cursos destacados
-- **Cursos**: Catálogo completo de cursos de IA
-- **The Batch**: Newsletter de noticias de IA
-- **Comunidad**: Foro y eventos
-- **Recursos**: Materiales educativos
-- **Empresa**: Información sobre la empresa
+ISC
 
-## Despliegue
+---
 
-Este proyecto está configurado para ser desplegado en Vercel como un sitio web estático.
+Generado automáticamente por MCP Documentation

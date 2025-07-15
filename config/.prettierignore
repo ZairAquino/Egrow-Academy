@@ -1,0 +1,30 @@
+# Dependencias
+node_modules/
+package-lock.json
+yarn.lock
+
+# Documentación generada
+docs/
+*.min.js
+*.min.css
+
+# Archivos de configuración
+.eslintrc.json
+jsdoc.json
+openapi.json
+config/
+
+# Archivos de build
+dist/
+build/
+
+# Archivos temporales
+*.tmp
+*.temp
+
+# Logs
+*.log
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db 

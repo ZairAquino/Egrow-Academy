@@ -1,0 +1,343 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "eGrow Academy API",
+    "description": "API para la plataforma educativa de inteligencia artificial y aprendizaje automático",
+    "version": "1.0.0",
+    "contact": {
+      "name": "eGrow Academy Team",
+      "url": "https://github.com/ZairAquino/Egrow-Academy"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000",
+      "description": "Servidor de desarrollo"
+    }
+  ],
+  "paths": {
+    "/community.html": {
+      "get": {
+        "summary": "Página de Community",
+        "description": "Retorna la página Community de eGrow Academy",
+        "responses": {
+          "200": {
+            "description": "Página HTML de Community",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/company.html": {
+      "get": {
+        "summary": "Página de Company",
+        "description": "Retorna la página Company de eGrow Academy",
+        "responses": {
+          "200": {
+            "description": "Página HTML de Company",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/courses.html": {
+      "get": {
+        "summary": "Página de Courses",
+        "description": "Retorna la página Courses de eGrow Academy",
+        "responses": {
+          "200": {
+            "description": "Página HTML de Courses",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cursos-cortos.html": {
+      "get": {
+        "summary": "Página de Cursos Cortos",
+        "description": "Retorna la página Cursos Cortos de eGrow Academy",
+        "responses": {
+          "200": {
+            "description": "Página HTML de Cursos Cortos",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/docs/index.html": {
+      "get": {
+        "summary": "Página de Docs/Index",
+        "description": "Retorna la página Docs/Index de eGrow Academy",
+        "responses": {
+          "200": {
+            "description": "Página HTML de Docs/Index",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/especializaciones.html": {
+      "get": {
+        "summary": "Página de Especializaciones",
+        "description": "Retorna la página Especializaciones de eGrow Academy",
+        "responses": {
+          "200": {
+            "description": "Página HTML de Especializaciones",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "summary": "Página de Index",
+        "description": "Retorna la página Index de eGrow Academy",
+        "responses": {
+          "200": {
+            "description": "Página HTML de Index",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/node_modules/clean-jsdoc-theme/helpers/Environment.html": {
+      "get": {
+        "summary": "Página de Node_modules/Clean Jsdoc Theme/Helpers/Environment",
+        "description": "Retorna la página Node_modules/Clean Jsdoc Theme/Helpers/Environment de eGrow Academy",
+        "responses": {
+          "200": {
+            "description": "Página HTML de Node_modules/Clean Jsdoc Theme/Helpers/Environment",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/node_modules/swagger-ui-dist/index.html": {
+      "get": {
+        "summary": "Página de Node_modules/Swagger Ui Dist/Index",
+        "description": "Retorna la página Node_modules/Swagger Ui Dist/Index de eGrow Academy",
+        "responses": {
+          "200": {
+            "description": "Página HTML de Node_modules/Swagger Ui Dist/Index",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/node_modules/swagger-ui-dist/oauth2-redirect.html": {
+      "get": {
+        "summary": "Página de Node_modules/Swagger Ui Dist/Oauth2 Redirect",
+        "description": "Retorna la página Node_modules/Swagger Ui Dist/Oauth2 Redirect de eGrow Academy",
+        "responses": {
+          "200": {
+            "description": "Página HTML de Node_modules/Swagger Ui Dist/Oauth2 Redirect",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/node_modules/terser/tools/props.html": {
+      "get": {
+        "summary": "Página de Node_modules/Terser/Tools/Props",
+        "description": "Retorna la página Node_modules/Terser/Tools/Props de eGrow Academy",
+        "responses": {
+          "200": {
+            "description": "Página HTML de Node_modules/Terser/Tools/Props",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/node_modules/tslib/tslib.es6.html": {
+      "get": {
+        "summary": "Página de Node_modules/Tslib/Tslib.Es6",
+        "description": "Retorna la página Node_modules/Tslib/Tslib.Es6 de eGrow Academy",
+        "responses": {
+          "200": {
+            "description": "Página HTML de Node_modules/Tslib/Tslib.Es6",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/node_modules/tslib/tslib.html": {
+      "get": {
+        "summary": "Página de Node_modules/Tslib/Tslib",
+        "description": "Retorna la página Node_modules/Tslib/Tslib de eGrow Academy",
+        "responses": {
+          "200": {
+            "description": "Página HTML de Node_modules/Tslib/Tslib",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/resources.html": {
+      "get": {
+        "summary": "Página de Resources",
+        "description": "Retorna la página Resources de eGrow Academy",
+        "responses": {
+          "200": {
+            "description": "Página HTML de Resources",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/the-batch.html": {
+      "get": {
+        "summary": "Página de The Batch",
+        "description": "Retorna la página The Batch de eGrow Academy",
+        "responses": {
+          "200": {
+            "description": "Página HTML de The Batch",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Course": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID único del curso"
+          },
+          "title": {
+            "type": "string",
+            "description": "Título del curso"
+          },
+          "description": {
+            "type": "string",
+            "description": "Descripción del curso"
+          },
+          "duration": {
+            "type": "string",
+            "description": "Duración del curso"
+          },
+          "level": {
+            "type": "string",
+            "enum": ["Principiante", "Intermedio", "Avanzado"],
+            "description": "Nivel del curso"
+          },
+          "category": {
+            "type": "string",
+            "enum": ["Curso Corto", "Especialización"],
+            "description": "Categoría del curso"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID único del usuario"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Email del usuario"
+          },
+          "name": {
+            "type": "string",
+            "description": "Nombre del usuario"
+          }
+        }
+      }
+    }
+  }
+}

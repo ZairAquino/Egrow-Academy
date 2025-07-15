@@ -1,4 +1,15 @@
-// Sidebar Menu Toggle
+/**
+ * @fileoverview Funcionalidades principales de eGrow Academy
+ * @author eGrow Academy Team
+ * @version 1.0.0
+ * @description Maneja la navegación, sidebar, animaciones y formularios del sitio web
+ */
+
+/**
+ * @function initializeApp
+ * @description Inicializa todas las funcionalidades de la aplicación cuando el DOM está listo
+ * @listens DOMContentLoaded
+ */
 document.addEventListener('DOMContentLoaded', function() {
     const menuToggle = document.getElementById('menuToggle');
     const sidebar = document.getElementById('sidebar');
