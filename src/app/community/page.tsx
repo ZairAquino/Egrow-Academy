@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, Suspense } from 'react';
+import { useState, Suspense, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import Sidebar from '@/components/Sidebar';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import Footer from '@/components/Footer';
 
 // Lazy load components
 const CompaniesMarquee = dynamic(() => import('@/components/CompaniesMarquee'), {
@@ -17,6 +18,29 @@ export default function CommunityPage() {
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
+
+  useEffect(() => {
+    const handleFAQToggle = (e: Event) => {
+      const question = (e.target as Element).closest('.faq-question');
+      if (question) {
+        const faqItem = question.closest('.faq-item');
+        if (faqItem) {
+          faqItem.classList.toggle('active');
+        }
+      }
+    };
+
+    const faqQuestions = document.querySelectorAll('.faq-question');
+    faqQuestions.forEach(question => {
+      question.addEventListener('click', handleFAQToggle);
+    });
+
+    return () => {
+      faqQuestions.forEach(question => {
+        question.removeEventListener('click', handleFAQToggle);
+      });
+    };
+  }, []);
 
   const communityStats = [
     { number: '25K+', label: 'Miembros Activos' },
@@ -136,8 +160,10 @@ export default function CommunityPage() {
                 Aprende, comparte y crece junto a una comunidad global apasionada por la IA.
               </p>
               <div className="hero-buttons">
-                <a href="#join" className="btn btn-white">Unirse a la Comunidad</a>
+                <a href="#features" className="btn btn-white">¿Qué Ofrecemos?</a>
+                <a href="#forum" className="btn btn-outline">Ver Foro</a>
                 <a href="#events" className="btn btn-outline">Ver Eventos</a>
+                <a href="#faq" className="btn btn-outline">FAQ</a>
               </div>
             </div>
           </div>
@@ -148,22 +174,8 @@ export default function CommunityPage() {
           <CompaniesMarquee />
         </Suspense>
 
-        {/* Community Stats */}
-        <section className="section stats-section">
-          <div className="container">
-            <div className="stats-grid">
-              {communityStats.map((stat, index) => (
-                <div key={index} className="stat-card">
-                  <div className="stat-number">{stat.number}</div>
-                  <div className="stat-label">{stat.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Community Features */}
-        <section className="section">
+        {/* Community Features & Stats */}
+        <section id="features" className="section">
           <div className="container">
             <div className="section-header">
               <h2 className="section-title">¿Qué Ofrece Nuestra Comunidad?</h2>
@@ -172,20 +184,253 @@ export default function CommunityPage() {
               </p>
             </div>
 
-            <div className="features-grid">
-              {communityFeatures.map((feature, index) => (
-                <div key={index} className="feature-card">
-                  <div className="feature-icon">{feature.icon}</div>
-                  <h3>{feature.title}</h3>
-                  <p>{feature.description}</p>
+            <div className="features-stats-layout">
+              {/* Left side - Features */}
+              <div className="features-container">
+                <div className="features-grid-compact">
+                  {communityFeatures.map((feature, index) => (
+                    <div key={index} className="feature-card">
+                      <div className="feature-icon">{feature.icon}</div>
+                      <h3>{feature.title}</h3>
+                      <p>{feature.description}</p>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
+
+              {/* Right side - Stats */}
+              <div className="stats-container">
+                <h3 className="stats-title">Nuestra Comunidad en Números</h3>
+                <div className="stats-grid-vertical">
+                  {communityStats.map((stat, index) => (
+                    <div key={index} className="stat-card">
+                      <div className="stat-number">{stat.number}</div>
+                      <div className="stat-label">{stat.label}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
+        {/* Community Forum */}
+        <section id="forum" className="section forum-section">
+          <div className="container">
+            <div className="section-header">
+              <h2 className="section-title">Foro de la Comunidad eGrow</h2>
+              <p className="section-description">
+                Únete a las discusiones, comparte experiencias y conecta con otros estudiantes
+              </p>
+            </div>
+
+            <div className="forum-layout">
+              {/* Forum Header with Stats */}
+              <div className="forum-header">
+                <div className="forum-stats">
+                  <div className="stat-item">
+                    <span className="stat-number">245</span>
+                    <span className="stat-text">Discusiones</span>
+                  </div>
+                  <div className="stat-item">
+                    <span className="stat-number">89</span>
+                    <span className="stat-text">Miembros Activos</span>
+                  </div>
+                  <div className="stat-item">
+                    <span className="stat-number">1.2K</span>
+                    <span className="stat-text">Respuestas</span>
+                  </div>
+                </div>
+                <button className="btn btn-primary forum-cta">💬 Crear Nueva Discusión</button>
+              </div>
+
+              {/* Recent Discussions */}
+              <div className="forum-content">
+                <div className="forum-section-title">
+                  <h3>💬 Discusiones Recientes sobre Cursos</h3>
+                  <span className="view-all">Ver todas →</span>
+                </div>
+                
+                <div className="forum-posts">
+                  <div className="forum-post-card">
+                    <div className="post-header">
+                      <div className="user-info">
+                        <img src="https://via.placeholder.com/50x50/667eea/ffffff?text=MJ" alt="María José" className="user-avatar" />
+                        <div className="user-details">
+                          <h4 className="post-title">¿Alguien más tuvo problemas con el módulo de Transformers?</h4>
+                          <p className="post-meta">María José · hace 2 horas · <span className="course-tag">Deep Learning con PyTorch</span></p>
+                        </div>
+                      </div>
+                      <div className="post-engagement">
+                        <div className="engagement-item">
+                          <span className="icon">👍</span>
+                          <span>12</span>
+                        </div>
+                        <div className="engagement-item">
+                          <span className="icon">💬</span>
+                          <span>8</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="forum-post-card">
+                    <div className="post-header">
+                      <div className="user-info">
+                        <img src="https://via.placeholder.com/50x50/764ba2/ffffff?text=AR" alt="Alex Rodriguez" className="user-avatar" />
+                        <div className="user-details">
+                          <h4 className="post-title">Recursos adicionales para ChatGPT Prompt Engineering</h4>
+                          <p className="post-meta">Alex Rodriguez · hace 5 horas · <span className="course-tag">ChatGPT para Desarrolladores</span></p>
+                        </div>
+                      </div>
+                      <div className="post-engagement">
+                        <div className="engagement-item">
+                          <span className="icon">👍</span>
+                          <span>28</span>
+                        </div>
+                        <div className="engagement-item">
+                          <span className="icon">💬</span>
+                          <span>15</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="forum-post-card">
+                    <div className="post-header">
+                      <div className="user-info">
+                        <img src="https://via.placeholder.com/50x50/f093fb/ffffff?text=CS" alt="Carlos Silva" className="user-avatar" />
+                        <div className="user-details">
+                          <h4 className="post-title">Proyecto final: ¿Qué dataset recomiendan?</h4>
+                          <p className="post-meta">Carlos Silva · hace 1 día · <span className="course-tag">Machine Learning Fundamentals</span></p>
+                        </div>
+                      </div>
+                      <div className="post-engagement">
+                        <div className="engagement-item">
+                          <span className="icon">👍</span>
+                          <span>19</span>
+                        </div>
+                        <div className="engagement-item">
+                          <span className="icon">💬</span>
+                          <span>22</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="forum-post-card">
+                    <div className="post-header">
+                      <div className="user-info">
+                        <img src="https://via.placeholder.com/50x50/84fab0/ffffff?text=LP" alt="Laura Pérez" className="user-avatar" />
+                        <div className="user-details">
+                          <h4 className="post-title">Compartiendo mi experiencia con LangChain</h4>
+                          <p className="post-meta">Laura Pérez · hace 1 día · <span className="course-tag">LangChain Development</span></p>
+                        </div>
+                      </div>
+                      <div className="post-engagement">
+                        <div className="engagement-item">
+                          <span className="icon">👍</span>
+                          <span>35</span>
+                        </div>
+                        <div className="engagement-item">
+                          <span className="icon">💬</span>
+                          <span>18</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ Section */}
+        <section id="faq" className="section faq-section">
+          <div className="container">
+            <div className="section-header">
+              <h2 className="section-title">Preguntas Frecuentes</h2>
+              <p className="section-description">
+                Encuentra respuestas a las preguntas más comunes de nuestra comunidad
+              </p>
+            </div>
+
+            <div className="faq-container">
+              <div className="faq-item">
+                <div className="faq-question">
+                  <h3>¿Cómo puedo acceder a los foros de discusión?</h3>
+                  <span className="faq-toggle">+</span>
+                </div>
+                <div className="faq-answer">
+                  <p>Una vez que te registres en eGrow Academy, tendrás acceso automático a todos los foros de la comunidad. Simplemente inicia sesión y navega a la sección de Comunidad.</p>
+                </div>
+              </div>
+
+              <div className="faq-item">
+                <div className="faq-question">
+                  <h3>¿Los eventos son gratuitos para todos los miembros?</h3>
+                  <span className="faq-toggle">+</span>
+                </div>
+                <div className="faq-answer">
+                  <p>Sí, todos los eventos listados son completamente gratuitos para miembros de eGrow Academy. Solo necesitas registrarte con anticipación debido a la capacidad limitada.</p>
+                </div>
+              </div>
+
+              <div className="faq-item">
+                <div className="faq-question">
+                  <h3>¿Puedo participar en mentorías aunque sea principiante?</h3>
+                  <span className="faq-toggle">+</span>
+                </div>
+                <div className="faq-answer">
+                  <p>¡Por supuesto! Nuestro programa de mentorías está diseñado para todos los niveles. Tenemos mentores especializados en guiar a principiantes en sus primeros pasos en IA.</p>
+                </div>
+              </div>
+
+              <div className="faq-item">
+                <div className="faq-question">
+                  <h3>¿Cómo puedo convertirme en mentor de la comunidad?</h3>
+                  <span className="faq-toggle">+</span>
+                </div>
+                <div className="faq-answer">
+                  <p>Si tienes experiencia profesional en IA y quieres contribuir, puedes aplicar para ser mentor completando nuestro formulario de aplicación. Evaluamos cada candidatura individualmente.</p>
+                </div>
+              </div>
+
+              <div className="faq-item">
+                <div className="faq-question">
+                  <h3>¿Hay oportunidades laborales exclusivas para miembros?</h3>
+                  <span className="faq-toggle">+</span>
+                </div>
+                <div className="faq-answer">
+                  <p>Sí, tenemos partnerships con empresas líderes en IA que publican ofertas de trabajo exclusivamente para nuestra comunidad. Estas aparecen en la sección de Oportunidades Laborales.</p>
+                </div>
+              </div>
+
+              <div className="faq-item">
+                <div className="faq-question">
+                  <h3>¿Puedo organizar mi propio evento para la comunidad?</h3>
+                  <span className="faq-toggle">+</span>
+                </div>
+                <div className="faq-answer">
+                  <p>¡Sí! Fomentamos que los miembros organicen sus propios eventos. Contáctanos con tu propuesta y te ayudaremos con la logística y promoción.</p>
+                </div>
+              </div>
+
+              {/* Ask Question CTA */}
+              <div className="ask-question-cta">
+                <div className="cta-content">
+                  <h3>¿No encuentras la respuesta que buscas?</h3>
+                  <p>Haz tu pregunta a la comunidad y obtén respuestas de expertos</p>
+                  <button className="btn btn-primary">❓ Hacer una Pregunta</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
         {/* Upcoming Events */}
-        <section className="section events-section">
+        <section id="events" className="section events-section">
           <div className="container">
             <div className="section-header">
               <h2 className="section-title">Próximos Eventos</h2>
@@ -251,19 +496,41 @@ export default function CommunityPage() {
         </section>
 
         {/* Join Community CTA */}
-        <section className="section cta-section">
+        <section className="section join-cta-section">
           <div className="container">
-            <div className="cta-content">
-              <h2>¿Listo para Unirte?</h2>
-              <p>Forma parte de una de las comunidades más activas y valiosas en inteligencia artificial</p>
-              <div className="cta-buttons">
-                <a href="#join" className="btn btn-primary">Unirse Gratis</a>
-                <a href="#learn-more" className="btn btn-outline">Saber Más</a>
+            <div className="join-cta-card">
+              <div className="cta-decoration">
+                <div className="decoration-circle circle-1"></div>
+                <div className="decoration-circle circle-2"></div>
+                <div className="decoration-circle circle-3"></div>
+              </div>
+              <div className="join-cta-content">
+                <h2>¿Listo para Unirte?</h2>
+                <p>Forma parte de una de las comunidades más activas y valiosas en inteligencia artificial</p>
+                <div className="cta-stats-inline">
+                  <div className="inline-stat">
+                    <span className="stat-num">25K+</span>
+                    <span className="stat-text">Miembros</span>
+                  </div>
+                  <div className="inline-stat">
+                    <span className="stat-num">150+</span>
+                    <span className="stat-text">Países</span>
+                  </div>
+                  <div className="inline-stat">
+                    <span className="stat-num">95%</span>
+                    <span className="stat-text">Satisfacción</span>
+                  </div>
+                </div>
+                <div className="cta-buttons-centered">
+                  <a href="#join" className="btn btn-primary btn-large">Unirse Gratis</a>
+                </div>
               </div>
             </div>
           </div>
         </section>
       </main>
+
+      <Footer />
     </>
   );
 } 

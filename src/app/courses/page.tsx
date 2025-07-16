@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import Sidebar from '@/components/Sidebar';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import CourseCard from '@/components/CourseCard';
+import Footer from '@/components/Footer';
 
 // Lazy load components
 const CompaniesMarquee = dynamic(() => import('@/components/CompaniesMarquee'), {
@@ -21,29 +22,102 @@ export default function CoursesPage() {
   };
 
   const categories = [
-    { id: 'todos', name: 'Todos los Cursos', icon: '🚀' },
-    { id: 'cortos', name: 'Cursos Cortos', icon: '⚡' },
-    { id: 'especializaciones', name: 'Especializaciones', icon: '🎓' },
-    { id: 'machine-learning', name: 'Machine Learning', icon: '🤖' },
-    { id: 'deep-learning', name: 'Deep Learning', icon: '🧠' },
-    { id: 'nlp', name: 'NLP', icon: '💬' },
-    { id: 'computer-vision', name: 'Computer Vision', icon: '👁️' },
-    { id: 'data-science', name: 'Data Science', icon: '📊' },
-    { id: 'ai-ethics', name: 'AI Ethics', icon: '⚖️' },
-    { id: 'mlops', name: 'MLOps', icon: '🔧' }
+    { id: 'todos', name: 'Todos los Cursos' },
+    { id: 'cortos', name: 'Cursos Cortos' },
+    { id: 'videos', name: 'Video Tutoriales' },
+    { id: 'especializaciones', name: 'Especializaciones' },
+    { id: 'machine-learning', name: 'Machine Learning' },
+    { id: 'deep-learning', name: 'Deep Learning' },
+    { id: 'nlp', name: 'NLP' },
+    { id: 'computer-vision', name: 'Computer Vision' },
+    { id: 'data-science', name: 'Data Science' },
+    { id: 'llms', name: 'LLMs & ChatGPT' }
   ];
 
   const courses = [
     {
       id: 1,
-      title: 'ChatGPT Prompt Engineering for Developers',
-      description: 'Aprende las mejores prácticas de prompt engineering para aplicaciones con LLMs.',
-      category: 'cortos',
-      duration: '4 horas',
+      title: 'Machine Learning por Andrew Ng - Stanford',
+      description: 'El curso más completo de ML. Fundamentos matemáticos y prácticos de machine learning.',
+      category: 'videos',
+      duration: '60 horas',
+      level: 'Principiante',
+      price: 'Gratis',
+      image: 'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=400&h=250&fit=crop&crop=center',
+      tag: 'Video Curso',
+      link: 'https://www.youtube.com/playlist?list=PLoROMvodv4rMiGQp3WXShtMGgzqpfVfbU'
+    },
+    {
+      id: 15,
+      title: 'Deep Learning con PyTorch - Tutorial Completo',
+      description: 'Aprende PyTorch desde cero. Tutorial de 10 horas por freeCodeCamp.',
+      category: 'videos',
+      duration: '10 horas',
+      level: 'Intermedio',
+      price: 'Gratis',
+      image: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=400&h=250&fit=crop&crop=center',
+      tag: 'Video Tutorial',
+      link: 'https://www.youtube.com/watch?v=V_xro1bcAuA'
+    },
+    {
+      id: 16,
+      title: 'LangChain para Principiantes',
+      description: 'Construye aplicaciones con LLMs usando LangChain. Tutorial paso a paso.',
+      category: 'llms',
+      duration: '5 horas',
       level: 'Intermedio',
       price: 'Gratis',
       image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=250&fit=crop&crop=center',
-      tag: 'Curso Corto'
+      tag: 'Video Tutorial',
+      link: 'https://www.youtube.com/watch?v=LbT1yp6quS8'
+    },
+    {
+      id: 17,
+      title: 'ChatGPT Prompt Engineering',
+      description: 'Curso oficial de DeepLearning.AI y OpenAI sobre prompt engineering.',
+      category: 'llms',
+      duration: '1.5 horas',
+      level: 'Principiante',
+      price: 'Gratis',
+      image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=250&fit=crop&crop=center',
+      tag: 'Curso Corto',
+      link: 'https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/'
+    },
+    {
+      id: 18,
+      title: 'Transformer y Atención - Explicado',
+      description: 'Entiende la arquitectura Transformer que potencia ChatGPT y otros LLMs.',
+      category: 'videos',
+      duration: '3 horas',
+      level: 'Avanzado',
+      price: 'Gratis',
+      image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=250&fit=crop&crop=center',
+      tag: 'Video Tutorial',
+      link: 'https://www.youtube.com/watch?v=4Bdc55j80l8'
+    },
+    {
+      id: 19,
+      title: 'Fast.ai - Deep Learning Práctico',
+      description: 'Aprende deep learning con el enfoque práctico de fast.ai. Sin matemáticas complejas.',
+      category: 'videos',
+      duration: '24 horas',
+      level: 'Principiante',
+      price: 'Gratis',
+      image: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=400&h=250&fit=crop&crop=center',
+      tag: 'Video Curso',
+      link: 'https://www.youtube.com/playlist?list=PLfYUBJiXbdtRL3FMB3GoWHRI8ieU6FhfM'
+    },
+    {
+      id: 20,
+      title: 'Python para Machine Learning',
+      description: 'Curso completo de Python enfocado en ciencia de datos y ML.',
+      category: 'videos',
+      duration: '12 horas',
+      level: 'Principiante',
+      price: 'Gratis',
+      image: 'https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=400&h=250&fit=crop&crop=center',
+      tag: 'Video Curso',
+      link: 'https://www.youtube.com/watch?v=7eh4d6sabA0'
     },
     {
       id: 2,
@@ -216,7 +290,6 @@ export default function CoursesPage() {
                   onClick={() => setSelectedCategory(category.id)}
                   className={`category-filter ${selectedCategory === category.id ? 'active' : ''}`}
                 >
-                  <span className="category-icon">{category.icon}</span>
                   <span className="category-name">{category.name}</span>
                 </button>
               ))}
@@ -233,6 +306,7 @@ export default function CoursesPage() {
                   tag={course.tag}
                   duration={course.duration}
                   level={course.level}
+                  link={course.link}
                 />
               ))}
             </div>
@@ -245,6 +319,8 @@ export default function CoursesPage() {
           </div>
         </section>
       </main>
+
+      <Footer />
     </>
   );
 } 

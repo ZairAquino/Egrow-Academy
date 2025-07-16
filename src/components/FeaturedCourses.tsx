@@ -4,30 +4,30 @@ import Link from 'next/link';
 const featuredCourses = [
   {
     image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=250&fit=crop",
-    title: "ChatGPT Prompt Engineering for Developers",
-    description: "Aprende las mejores prácticas de prompt engineering para aplicaciones con LLMs.",
-    tag: "Curso Corto",
-    duration: "1.5 horas",
+    title: "Introducción Práctica a Machine Learning",
+    description: "Curso completo de ML por Andrew Ng en Stanford. Aprende los fundamentos desde cero.",
+    tag: "Video Curso",
+    duration: "60 horas",
     level: "Principiante",
-    link: "https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/"
+    link: "https://www.youtube.com/playlist?list=PLoROMvodv4rMiGQp3WXShtMGgzqpfVfbU"
   },
   {
     image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=400&h=250&fit=crop",
-    title: "Building Systems with the ChatGPT API",
-    description: "Construye aplicaciones complejas usando el API de ChatGPT y mejores prácticas.",
-    tag: "Curso Corto",
-    duration: "1 hora",
+    title: "Deep Learning con PyTorch",
+    description: "Tutorial completo de PyTorch y redes neuronales por freeCodeCamp.",
+    tag: "Video Tutorial",
+    duration: "10 horas",
     level: "Intermedio",
-    link: "https://www.deeplearning.ai/short-courses/building-systems-with-chatgpt/"
+    link: "https://www.youtube.com/watch?v=V_xro1bcAuA"
   },
   {
     image: "https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=400&h=250&fit=crop",
-    title: "LangChain for LLM Application Development",
-    description: "Usa el framework LangChain para construir aplicaciones potentes con LLMs.",
-    tag: "Curso Corto",
-    duration: "1 hora",
-    level: "Intermedio",
-    link: "https://www.deeplearning.ai/short-courses/langchain-for-llm-application-development/"
+    title: "ChatGPT y LLMs: Guía Completa",
+    description: "Aprende a construir aplicaciones con ChatGPT, Claude y otros LLMs modernos.",
+    tag: "Curso Gratuito",
+    duration: "3 horas",
+    level: "Principiante",
+    link: "https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/"
   }
 ];
 

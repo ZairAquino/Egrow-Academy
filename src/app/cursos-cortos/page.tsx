@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import Sidebar from '@/components/Sidebar';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import CourseCard from '@/components/CourseCard';
+import Footer from '@/components/Footer';
 
 // Lazy load components
 const CompaniesMarquee = dynamic(() => import('@/components/CompaniesMarquee'), {
@@ -24,71 +25,76 @@ export default function CursosCortosPage() {
       id: 1,
       title: 'ChatGPT Prompt Engineering for Developers',
       description: 'Aprende las mejores prácticas de prompt engineering para aplicaciones con LLMs.',
-      duration: '4 horas',
-      level: 'Intermedio',
+      duration: '1.5 horas',
+      level: 'Principiante',
       price: 'Gratis',
       image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=250&fit=crop&crop=center',
       tag: 'Curso Corto',
-      instructor: 'Dr. Sarah Chen',
-      rating: 4.8,
-      students: 1247,
-      source: 'YouTube - freeCodeCamp'
+      instructor: 'DeepLearning.AI & OpenAI',
+      rating: 4.9,
+      students: 150000,
+      source: 'DeepLearning.AI',
+      link: 'https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/'
     },
     {
       id: 2,
-      title: 'AI Ethics and Responsible AI',
-      description: 'Aprende sobre ética en IA y desarrollo responsable de sistemas de IA.',
-      duration: '3 horas',
-      level: 'Todos los niveles',
+      title: 'Building Systems with ChatGPT API',
+      description: 'Construye aplicaciones complejas usando el API de ChatGPT con mejores prácticas.',
+      duration: '1 hora',
+      level: 'Intermedio',
       price: 'Gratis',
-      image: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=250&fit=crop&crop=center',
+      image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=400&h=250&fit=crop&crop=center',
       tag: 'Curso Corto',
-      instructor: 'Prof. Michael Rodriguez',
-      rating: 4.9,
-      students: 892,
-      source: 'YouTube - MIT OpenCourseWare'
+      instructor: 'DeepLearning.AI & OpenAI',
+      rating: 4.8,
+      students: 89000,
+      source: 'DeepLearning.AI',
+      link: 'https://www.deeplearning.ai/short-courses/building-systems-with-chatgpt/'
     },
     {
       id: 3,
-      title: 'Introduction to Machine Learning',
-      description: 'Conceptos básicos de machine learning para principiantes.',
-      duration: '6 horas',
-      level: 'Principiante',
+      title: 'LangChain for LLM Application Development',
+      description: 'Usa el framework LangChain para construir aplicaciones potentes con LLMs.',
+      duration: '1 hora',
+      level: 'Intermedio',
       price: 'Gratis',
-      image: 'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=400&h=250&fit=crop&crop=center',
+      image: 'https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=400&h=250&fit=crop&crop=center',
       tag: 'Curso Corto',
-      instructor: 'Dr. Emily Watson',
-      rating: 4.7,
-      students: 2156,
-      source: 'YouTube - StatQuest'
+      instructor: 'DeepLearning.AI & LangChain',
+      rating: 4.8,
+      students: 75000,
+      source: 'DeepLearning.AI',
+      link: 'https://www.deeplearning.ai/short-courses/langchain-for-llm-application-development/'
     },
     {
       id: 4,
-      title: 'Python for Data Science',
-      description: 'Fundamentos de Python para análisis de datos y ciencia de datos.',
-      duration: '5 horas',
-      level: 'Principiante',
+      title: 'LLMOps: Large Language Model Operations',
+      description: 'Aprende a desplegar y gestionar LLMs en producción con mejores prácticas.',
+      duration: '1 hora',
+      level: 'Intermedio',
       price: 'Gratis',
       image: 'https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=400&h=250&fit=crop&crop=center',
       tag: 'Curso Corto',
-      instructor: 'Alex Johnson',
-      rating: 4.6,
-      students: 3421,
-      source: 'YouTube - Corey Schafer'
+      instructor: 'DeepLearning.AI & Google Cloud',
+      rating: 4.7,
+      students: 42000,
+      source: 'DeepLearning.AI',
+      link: 'https://www.deeplearning.ai/short-courses/llmops/'
     },
     {
       id: 5,
-      title: 'Neural Networks Basics',
-      description: 'Introducción a redes neuronales y deep learning.',
-      duration: '4 horas',
-      level: 'Intermedio',
+      title: 'Building Generative AI Applications with Gradio',
+      description: 'Crea interfaces web interactivas para tus modelos de IA con Gradio.',
+      duration: '1 hora',
+      level: 'Principiante',
       price: 'Gratis',
       image: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=400&h=250&fit=crop&crop=center',
       tag: 'Curso Corto',
-      instructor: 'Dr. Carlos Mendez',
-      rating: 4.8,
-      students: 1567,
-      source: 'YouTube - 3Blue1Brown'
+      instructor: 'DeepLearning.AI & Hugging Face',
+      rating: 4.6,
+      students: 38000,
+      source: 'DeepLearning.AI',
+      link: 'https://www.deeplearning.ai/short-courses/building-generative-ai-applications-with-gradio/'
     },
     {
       id: 6,
@@ -242,26 +248,16 @@ export default function CursosCortosPage() {
           <div className="container">
             <div className="hero-content">
               <h1 className="hero-title">
-                Cursos Cortos de
-                <span className="block">Inteligencia Artificial</span>
+                Cursos Gratuitos
+                <span className="block">de Inteligencia Artificial</span>
               </h1>
               <p className="hero-description">
-                Aprende conceptos clave de IA en sesiones intensivas y prácticas. 
-                Perfectos para profesionales ocupados que quieren actualizarse rápidamente.
+                Aprende conceptos clave de IA sin costo alguno. Sesiones intensivas y prácticas 
+                perfectas para profesionales que quieren iniciarse en inteligencia artificial.
               </p>
-              <div className="hero-stats">
-                <div className="stat">
-                  <span className="stat-number">15</span>
-                  <span className="stat-label">Cursos Disponibles</span>
-                </div>
-                <div className="stat">
-                  <span className="stat-number">2-6</span>
-                  <span className="stat-label">Horas por Curso</span>
-                </div>
-                <div className="stat">
-                  <span className="stat-number">35K+</span>
-                  <span className="stat-label">Estudiantes</span>
-                </div>
+              <div className="free-badge">
+                <span className="badge-icon">🆓</span>
+                <span className="badge-text">100% Gratuito</span>
               </div>
             </div>
           </div>
@@ -275,35 +271,75 @@ export default function CursosCortosPage() {
         {/* Courses Section */}
         <section className="section">
           <div className="container">
-            <div className="section-header">
-              <h2 className="section-title">Cursos Cortos Disponibles</h2>
+            {/* Features Section */}
+            <div className="features-section-header">
+              <h2 className="section-title">¿Por qué elegir nuestros Cursos Gratuitos?</h2>
               <p className="section-description">
-                Aprende habilidades específicas de IA en sesiones intensivas y prácticas
+                Descubre las ventajas de aprender IA con nosotros sin ningún costo
               </p>
             </div>
 
-            {/* Course Features */}
-            <div className="features-grid">
-              <div className="feature-card">
-                <div className="feature-icon">⚡</div>
-                <h3>Aprendizaje Rápido</h3>
-                <p>Cursos intensivos de 3-6 horas para aprender conceptos clave rápidamente</p>
+            <div className="features-stats-layout">
+              {/* Left side - Features */}
+              <div className="features-container">
+                <div className="features-grid-vertical">
+                  <div className="feature-card">
+                    <div className="feature-icon">🆓</div>
+                    <h3>Completamente Gratis</h3>
+                    <p>Sin costos ocultos, sin suscripciones. Acceso inmediato a contenido de calidad</p>
+                  </div>
+                  <div className="feature-card">
+                    <div className="feature-icon">⚡</div>
+                    <h3>Aprendizaje Rápido</h3>
+                    <p>Cursos de 1-4 horas para aprender conceptos clave rápidamente</p>
+                  </div>
+                  <div className="feature-card">
+                    <div className="feature-icon">🎯</div>
+                    <h3>Enfoque Práctico</h3>
+                    <p>Proyectos reales y ejercicios prácticos para aplicar lo aprendido</p>
+                  </div>
+                  <div className="feature-card">
+                    <div className="feature-icon">📚</div>
+                    <h3>Sin Barreras</h3>
+                    <p>Comienza tu viaje en IA sin inversión inicial. Perfectos para principiantes</p>
+                  </div>
+                </div>
               </div>
-              <div className="feature-card">
-                <div className="feature-icon">🎯</div>
-                <h3>Enfoque Práctico</h3>
-                <p>Proyectos reales y ejercicios prácticos para aplicar lo aprendido</p>
+
+              {/* Right side - Stats */}
+              <div className="stats-container">
+                <h3 className="stats-title">Nuestros Números</h3>
+                <div className="stats-grid-vertical">
+                  <div className="stat-card">
+                    <div className="stat-number">15</div>
+                    <div className="stat-label">Cursos Disponibles</div>
+                  </div>
+                  <div className="stat-card">
+                    <div className="stat-number">1-4</div>
+                    <div className="stat-label">Horas por Curso</div>
+                  </div>
+                  <div className="stat-card">
+                    <div className="stat-number">35K+</div>
+                    <div className="stat-label">Estudiantes</div>
+                  </div>
+                  <div className="stat-card">
+                    <div className="stat-number">100%</div>
+                    <div className="stat-label">Gratuito</div>
+                  </div>
+                </div>
               </div>
-              <div className="feature-card">
-                <div className="feature-icon">👨‍🏫</div>
-                <h3>Expertos del Sector</h3>
-                <p>Instructores con experiencia en empresas líderes de IA</p>
-              </div>
-              <div className="feature-card">
-                <div className="feature-icon">📱</div>
-                <h3>Acceso Ilimitado</h3>
-                <p>Accede al contenido cuando quieras, desde cualquier dispositivo</p>
-              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Courses Section */}
+        <section className="section courses-section">
+          <div className="container">
+            <div className="section-header">
+              <h2 className="section-title">Cursos Gratuitos Disponibles</h2>
+              <p className="section-description">
+                Aprende habilidades específicas de IA completamente gratis. Acceso inmediato sin necesidad de suscripción.
+              </p>
             </div>
 
             {/* Courses Grid */}
@@ -317,6 +353,7 @@ export default function CursosCortosPage() {
                   tag={course.tag}
                   duration={course.duration}
                   level={course.level}
+                  link={course.link}
                 />
               ))}
             </div>
@@ -327,13 +364,17 @@ export default function CursosCortosPage() {
         <section className="section cta-section">
           <div className="container">
             <div className="cta-content">
-              <h2>¿Listo para empezar?</h2>
-              <p>Únete a miles de profesionales que ya están aprendiendo IA con nuestros cursos cortos</p>
-              <a href="/courses" className="btn btn-primary">Ver Todos los Cursos</a>
+              <h2>¿Listo para llevar tu aprendizaje al siguiente nivel?</h2>
+              <p>¿Te gustaron nuestros cursos gratuitos? Descubre nuestros cursos premium con certificaciones y proyectos avanzados</p>
+              <div className="cta-button-center">
+                <a href="/courses" className="btn btn-primary">Ver Todos los Cursos</a>
+              </div>
             </div>
           </div>
         </section>
       </main>
+
+      <Footer />
     </>
   );
 } 

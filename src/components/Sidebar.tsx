@@ -87,10 +87,10 @@ export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
             </div>
           </div>
 
-          <Link href="/the-batch" className="menu-link">
-            <span className="menu-icon">📰</span>
-            <span className="menu-text">Newsletter IA</span>
-          </Link>
+          <a href="https://egrow-theta.vercel.app/ai-news" target="_blank" rel="noopener noreferrer" className="menu-link ai-news-btn">
+            <span className="menu-icon">🤖</span>
+            <span className="menu-text">AI-News</span>
+          </a>
 
           <Link href="/community" className="menu-link">
             <span className="menu-icon">👥</span>
@@ -102,10 +102,15 @@ export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
             <span className="menu-text">Recursos</span>
           </Link>
 
-          <Link href="/company" className="menu-link">
-            <span className="menu-icon">🏢</span>
-            <span className="menu-text">Empresa</span>
+          <Link href="/contacto" className="menu-link">
+            <span className="menu-icon">✉️</span>
+            <span className="menu-text">Contacto</span>
           </Link>
+
+          <a href="https://egrow.lat/ai-experts" target="_blank" rel="noopener noreferrer" className="menu-link">
+            <span className="menu-icon">🏢</span>
+            <span className="menu-text">AI Experts©</span>
+          </a>
         </div>
       </nav>
     </>
