@@ -1,0 +1,53 @@
+# Next.js specific optimizations
+.next/
+out/
+build/
+.cache/
+.turbo/
+
+# Node modules
+node_modules/
+
+# Environment files
+.env*
+
+# Build artifacts
+*.tsbuildinfo
+*.js.map
+*.css.map
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Test coverage
+coverage/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Package lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Large dependencies to ignore from indexing
+node_modules/@next/
+node_modules/next/
+node_modules/@img/
+node_modules/typescript/
+node_modules/lightningcss*/
+node_modules/@napi-rs/
+node_modules/react-dom/
+node_modules/es-abstract/
+node_modules/@typescript-eslint/

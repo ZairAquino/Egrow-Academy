@@ -1,9 +1,8 @@
+// Service Worker básico para eGrow Academy
 const CACHE_NAME = 'egrow-academy-v1';
 const urlsToCache = [
   '/',
-  '/images/Logo2.png',
-  '/css/styles.css',
-  '/js/main.js'
+  '/offline.html'
 ];
 
 self.addEventListener('install', (event) => {
@@ -20,19 +19,5 @@ self.addEventListener('fetch', (event) => {
         // Return cached version or fetch from network
         return response || fetch(event.request);
       })
-  );
-});
-
-self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    })
   );
 }); 

@@ -23,8 +23,17 @@ export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
         onClick={onToggle}
         className={`menu-toggle ${isOpen ? 'active' : ''}`}
       >
-        <div className="menu-icon">
-          <div className="menu-arrow"></div>
+        <div className="menu-icon" style={{
+          fontSize: '40px',
+          color: 'white',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: '100%',
+          height: '100%',
+          lineHeight: '1'
+        }}>
+          {isOpen ? '‹' : '›'}
         </div>
       </button>
 
@@ -73,9 +82,8 @@ export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
               <span className="dropdown-arrow">▼</span>
             </button>
             <div className="submenu">
-              <Link href="/cursos-cortos" className="submenu-link">Cursos Cortos</Link>
-              <Link href="/especializaciones" className="submenu-link">Especializaciones</Link>
-              <Link href="/courses" className="submenu-link">Todos los Cursos</Link>
+              <Link href="/cursos-cortos" className="submenu-link">Cursos Gratuitos</Link>
+              <Link href="/courses" className="submenu-link">Todos los Cursos 🔒</Link>
             </div>
           </div>
 

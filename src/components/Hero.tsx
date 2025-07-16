@@ -6,20 +6,20 @@ export default function Hero() {
       <div className="container">
         <div className="hero-content">
           <h1 className="hero-title">
-            Aprende IA de los
-            <span className="block">mejores expertos del mundo</span>
+            La IA es la nueva electricidad.
+            <span className="block">Tú eres la chispa.</span>
           </h1>
           <p className="hero-description">
             Domina el aprendizaje automático e inteligencia artificial con
-            cursos diseñados por expertos de clase mundial. Comienza tu viaje
+            cursos gratuitos y recursos de alta calidad. Comienza tu viaje
             en IA hoy mismo.
           </p>
           <div className="hero-buttons">
             <Link href="/courses" className="btn btn-white">
-              Explorar Cursos
+              Comenzar a Aprender
             </Link>
             <Link href="/the-batch" className="btn btn-outline">
-              Leer Noticias IA
+              Explorar Recursos
             </Link>
           </div>
         </div>
