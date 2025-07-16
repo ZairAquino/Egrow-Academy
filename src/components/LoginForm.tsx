@@ -84,12 +84,12 @@ export default function LoginForm() {
             outline: 'none',
             backgroundColor: '#f9fafb'
           }}
-          onFocus={(e) => {
+          onFocus={(e: React.FocusEvent<HTMLInputElement>) => {
             e.target.style.borderColor = '#667eea';
             e.target.style.backgroundColor = '#ffffff';
             e.target.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)';
           }}
-          onBlur={(e) => {
+          onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
             e.target.style.borderColor = '#e5e7eb';
             e.target.style.backgroundColor = '#f9fafb';
             e.target.style.boxShadow = 'none';
@@ -125,12 +125,12 @@ export default function LoginForm() {
             outline: 'none',
             backgroundColor: '#f9fafb'
           }}
-          onFocus={(e) => {
+          onFocus={(e: React.FocusEvent<HTMLInputElement>) => {
             e.target.style.borderColor = '#667eea';
             e.target.style.backgroundColor = '#ffffff';
             e.target.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)';
           }}
-          onBlur={(e) => {
+          onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
             e.target.style.borderColor = '#e5e7eb';
             e.target.style.backgroundColor = '#f9fafb';
             e.target.style.boxShadow = 'none';
@@ -172,14 +172,16 @@ export default function LoginForm() {
         }}
         onMouseEnter={(e) => {
           if (!loading) {
-            e.target.style.transform = 'translateY(-2px)';
-            e.target.style.boxShadow = '0 8px 25px rgba(102, 126, 234, 0.6)';
+            const target = e.target as HTMLButtonElement;
+            target.style.transform = 'translateY(-2px)';
+            target.style.boxShadow = '0 8px 25px rgba(102, 126, 234, 0.6)';
           }
         }}
         onMouseLeave={(e) => {
           if (!loading) {
-            e.target.style.transform = 'translateY(0)';
-            e.target.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.4)';
+            const target = e.target as HTMLButtonElement;
+            target.style.transform = 'translateY(0)';
+            target.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.4)';
           }
         }}
       >
