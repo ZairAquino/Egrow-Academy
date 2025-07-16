@@ -14,14 +14,6 @@ export default function Hero() {
             cursos gratuitos y recursos de alta calidad. Comienza tu viaje
             en IA hoy mismo.
           </p>
-          <div className="hero-buttons">
-            <Link href="/courses" className="btn btn-white">
-              Comenzar a Aprender
-            </Link>
-            <Link href="/the-batch" className="btn btn-outline">
-              Explorar Recursos
-            </Link>
-          </div>
         </div>
       </div>
     </section>

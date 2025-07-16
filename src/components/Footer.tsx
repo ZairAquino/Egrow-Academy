@@ -30,8 +30,7 @@ export default function Footer() {
             <h4>AI Experts</h4>
             <ul>
               <li><a href="https://egrow.lat/ai-experts" target="_blank" rel="noopener noreferrer">Acerca de</a></li>
-              <li><a href="https://egrow.lat/ai-experts" target="_blank" rel="noopener noreferrer">Carreras</a></li>
-              <li><a href="https://egrow.lat/ai-experts" target="_blank" rel="noopener noreferrer">Contacto</a></li>
+              <li><Link href="/contacto">Contacto</Link></li>
             </ul>
           </div>
         </div>

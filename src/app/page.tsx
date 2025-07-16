@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Sidebar from '@/components/Sidebar';
+import FixedUserProfile from '@/components/FixedUserProfile';
 import Hero from '@/components/Hero';
 import CompaniesMarquee from '@/components/CompaniesMarquee';
 import FeaturedCourses from '@/components/FeaturedCourses';
@@ -18,6 +19,9 @@ export default function Home() {
 
   return (
     <>
+      {/* UserProfile fijo en esquina superior derecha */}
+      <FixedUserProfile />
+      
       <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
       
       <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''}`}>

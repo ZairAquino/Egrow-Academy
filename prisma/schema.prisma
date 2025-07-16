@@ -1,0 +1,240 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Modelo de Usuarios
+model User {
+  id              String    @id @default(cuid())
+  email           String    @unique
+  passwordHash    String
+  firstName       String
+  lastName        String
+  username        String?   @unique
+  profileImage    String?
+  bio             String?
+  membershipLevel MembershipLevel @default(FREE)
+  isActive        Boolean   @default(true)
+  emailVerified   Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  lastLogin       DateTime?
+
+  // Relaciones
+  comments        Comment[]
+  questions       Question[]
+  enrollments     Enrollment[]
+  posts           CommunityPost[]
+  likes           Like[]
+  sessions        Session[]
+  courses         Course[]  @relation("CourseInstructor")
+
+  @@map("users")
+}
+
+// Modelo de Cursos
+model Course {
+  id              String    @id @default(cuid())
+  title           String
+  slug            String    @unique
+  description     String?
+  shortDescription String?
+  imageUrl        String?
+  price           Decimal   @default(0)
+  isFree          Boolean   @default(true)
+  requiresAuth    Boolean   @default(true)
+  difficulty      Difficulty?
+  durationHours   Int?
+  lessonsCount    Int       @default(0)
+  studentsCount   Int       @default(0)
+  rating          Decimal   @default(0)
+  status          CourseStatus @default(DRAFT)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relaciones
+  instructorId    String?
+  instructor      User?     @relation("CourseInstructor", fields: [instructorId], references: [id])
+  enrollments     Enrollment[]
+  comments        Comment[]
+  lessons         Lesson[]
+
+  @@map("courses")
+}
+
+// Modelo de Comentarios
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  type      CommentType
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relaciones
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId  String?
+  course    Course?  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  parentId  String?
+  parent    Comment? @relation("CommentReplies", fields: [parentId], references: [id])
+  replies   Comment[] @relation("CommentReplies")
+  likes     Like[]
+
+  // Relaciones agregadas para bidireccionalidad
+  questionId String?
+  question   Question? @relation("QuestionComments", fields: [questionId], references: [id], onDelete: Cascade)
+
+  postId     String?
+  post       CommunityPost? @relation("PostComments", fields: [postId], references: [id], onDelete: Cascade)
+
+  @@map("comments")
+}
+
+// Modelo de Preguntas
+model Question {
+  id       String   @id @default(cuid())
+  title    String
+  content  String
+  category String?
+  status   QuestionStatus @default(OPEN)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relaciones
+  userId   String
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  answers  Comment[] @relation("QuestionComments")
+  likes    Like[]
+
+  @@map("questions")
+}
+
+// Modelo de Posts de Comunidad
+model CommunityPost {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  category  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relaciones
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  likes     Like[]
+  comments  Comment[] @relation("PostComments")
+
+  @@map("community_posts")
+}
+
+// Modelo de Inscripciones
+model Enrollment {
+  id                 String   @id @default(cuid())
+  enrolledAt         DateTime @default(now())
+  completedAt        DateTime?
+  progressPercentage Decimal  @default(0)
+  status             EnrollmentStatus @default(ACTIVE)
+
+  // Relaciones
+  userId   String
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId String
+  course   Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+  @@map("enrollments")
+}
+
+// Modelo de Likes
+model Like {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  // Relaciones
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  commentId String?
+  comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  questionId String?
+  question  Question? @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  postId    String?
+  post      CommunityPost? @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, commentId, questionId, postId])
+  @@map("likes")
+}
+
+// Modelo de Sesiones
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  // Relaciones
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+// Modelo de Lecciones
+model Lesson {
+  id          String   @id @default(cuid())
+  title       String
+  content     String?
+  videoUrl    String?
+  duration    Int?     // en minutos
+  order       Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relaciones
+  courseId    String
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@map("lessons")
+}
+
+// Enums
+enum MembershipLevel {
+  FREE
+  PREMIUM
+}
+
+enum CourseStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum Difficulty {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum CommentType {
+  FORUM
+  QUESTION
+  COURSE_COMMENT
+}
+
+enum QuestionStatus {
+  OPEN
+  ANSWERED
+  CLOSED
+}
+
+enum EnrollmentStatus {
+  ACTIVE
+  COMPLETED
+  DROPPED
+}
