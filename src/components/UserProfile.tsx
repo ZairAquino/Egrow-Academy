@@ -3,31 +3,23 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  username: string;
-  membershipLevel: 'FREE' | 'PREMIUM' | 'BASIC';
-  emailVerified: boolean;
-  createdAt: string;
-  enrollments?: any[];
-}
+import { useSession, signOut } from 'next-auth/react';
 
 interface UserProfileProps {
   className?: string;
 }
 
 export default function UserProfile({ className = '' }: UserProfileProps) {
-  const [user, setUser] = useState<User | null>(null);
+  const { data: session, status } = useSession();
   const [isOpen, setIsOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  // Logs de depuración
   useEffect(() => {
-    checkAuthStatus();
-  }, []);
+    console.log('UserProfile - Status:', status);
+    console.log('UserProfile - Session:', session);
+    console.log('UserProfile - User:', session?.user);
+  }, [session, status]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -40,35 +32,9 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const checkAuthStatus = async () => {
-    try {
-      const response = await fetch('/api/auth/me', {
-        credentials: 'include'
-      });
-      
-      if (response.ok) {
-        const userData = await response.json();
-        setUser(userData.user);
-      }
-    } catch (error) {
-      console.error('Error checking auth status:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleLogout = async () => {
     try {
-      const response = await fetch('/api/auth/logout', {
-        method: 'POST',
-        credentials: 'include'
-      });
-      
-      if (response.ok) {
-        setUser(null);
-        setIsOpen(false);
-        window.location.reload();
-      }
+      await signOut({ callbackUrl: '/' });
     } catch (error) {
       console.error('Error logging out:', error);
     }
@@ -90,17 +56,49 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
     }
   };
 
-  if (loading) {
+  // Mostrar estado de carga
+  if (status === 'loading') {
     return (
       <div className={`user-profile-container ${className}`}>
         <div className="loading-spinner">⏳</div>
+        <div style={{ fontSize: '10px', color: '#666' }}>Cargando sesión...</div>
+        {/* Indicador de depuración temporal */}
+        <div style={{ 
+          position: 'absolute', 
+          top: '-20px', 
+          right: '0', 
+          fontSize: '8px', 
+          color: '#ff6b6b',
+          background: '#fff',
+          padding: '2px 4px',
+          borderRadius: '4px',
+          border: '1px solid #ff6b6b'
+        }}>
+          DEBUG: {status}
+        </div>
       </div>
     );
   }
 
-  if (!user) {
+  // Mostrar estado no autenticado
+  if (!session?.user) {
     return (
       <div className={`user-profile-container ${className}`} ref={dropdownRef}>
+        {/* Indicador de depuración temporal */}
+        <div style={{ 
+          position: 'absolute', 
+          top: '-20px', 
+          right: '0', 
+          fontSize: '8px', 
+          color: '#ff6b6b',
+          background: '#fff',
+          padding: '2px 4px',
+          borderRadius: '4px',
+          border: '1px solid #ff6b6b'
+        }}>
+          DEBUG: {status} - No session
+        </div>
+        
         <button 
           onClick={() => setIsOpen(!isOpen)}
           className="profile-trigger"
@@ -139,8 +137,25 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
     );
   }
 
+  const user = session.user;
+
   return (
     <div className={`user-profile-container ${className}`} ref={dropdownRef}>
+      {/* Indicador de depuración temporal */}
+      <div style={{ 
+        position: 'absolute', 
+        top: '-20px', 
+        right: '0', 
+        fontSize: '8px', 
+        color: '#10b981',
+        background: '#fff',
+        padding: '2px 4px',
+        borderRadius: '4px',
+        border: '1px solid #10b981'
+      }}>
+        DEBUG: {status} - Logged in
+      </div>
+      
       <button 
         onClick={() => setIsOpen(!isOpen)}
         className="profile-trigger"
@@ -148,17 +163,28 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
         aria-haspopup="true"
       >
         <div className="profile-avatar">
-          <span className="avatar-text">
-            {user.name?.charAt(0)?.toUpperCase() || 'U'}
-          </span>
+          {user.image ? (
+            <Image 
+              src={user.image} 
+              alt={user.name || 'Usuario'} 
+              width={32} 
+              height={32}
+              className="avatar-image"
+              style={{ borderRadius: '50%', objectFit: 'cover' }}
+            />
+          ) : (
+            <span className="avatar-text">
+              {user.name?.charAt(0)?.toUpperCase() || 'U'}
+            </span>
+          )}
         </div>
         <div className="profile-info">
           <span className="profile-name">{user.name || 'Usuario'}</span>
           <span 
             className="profile-membership"
-            style={{ color: getMembershipColor(user.membershipLevel) }}
+            style={{ color: getMembershipColor('FREE') }}
           >
-            {getMembershipLabel(user.membershipLevel)}
+            {getMembershipLabel('FREE')}
           </span>
         </div>
         <span className="dropdown-arrow">▼</span>
@@ -168,19 +194,29 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
         <div className="profile-dropdown">
           <div className="profile-header">
             <div className="profile-avatar large">
-              <span className="avatar-text">
-                {user.name?.charAt(0)?.toUpperCase() || 'U'}
-              </span>
+              {user.image ? (
+                <Image 
+                  src={user.image} 
+                  alt={user.name || 'Usuario'} 
+                  width={48} 
+                  height={48}
+                  className="avatar-image"
+                  style={{ borderRadius: '50%', objectFit: 'cover' }}
+                />
+              ) : (
+                <span className="avatar-text">
+                  {user.name?.charAt(0)?.toUpperCase() || 'U'}
+                </span>
+              )}
             </div>
             <div className="profile-details">
               <h3>{user.name || 'Usuario'}</h3>
-              <p className="profile-username">@{user.username || 'usuario'}</p>
               <p className="profile-email">{user.email || 'No disponible'}</p>
               <span 
                 className="membership-badge"
-                style={{ backgroundColor: getMembershipColor(user.membershipLevel) }}
+                style={{ backgroundColor: getMembershipColor('FREE') }}
               >
-                {getMembershipLabel(user.membershipLevel)}
+                {getMembershipLabel('FREE')}
               </span>
             </div>
           </div>
@@ -188,21 +224,18 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
           <div className="profile-stats">
             <div className="stat-item">
               <span className="stat-label">Cursos Inscritos</span>
-              <span className="stat-value">{user.enrollments?.length || 0}</span>
+              <span className="stat-value">0</span>
             </div>
             <div className="stat-item">
               <span className="stat-label">Estado de Email</span>
-              <span className={`stat-value ${user.emailVerified ? 'verified' : 'pending'}`}>
-                {user.emailVerified ? '✅ Verificado' : '⏳ Pendiente'}
+              <span className="stat-value verified">
+                ✅ Verificado (Google)
               </span>
             </div>
             <div className="stat-item">
-              <span className="stat-label">Miembro desde</span>
+              <span className="stat-label">Proveedor</span>
               <span className="stat-value">
-                {new Date(user.createdAt).toLocaleDateString('es-ES', {
-                  year: 'numeric',
-                  month: 'long'
-                })}
+                Google
               </span>
             </div>
           </div>
@@ -217,11 +250,9 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
             <Link href="/settings" className="action-btn">
               ⚙️ Configuración
             </Link>
-            {user.membershipLevel === 'FREE' && (
-              <Link href="/upgrade" className="action-btn upgrade-btn">
-                ⭐ Actualizar Plan
-              </Link>
-            )}
+            <Link href="/upgrade" className="action-btn upgrade-btn">
+              ⭐ Actualizar Plan
+            </Link>
             <button onClick={handleLogout} className="action-btn logout-btn">
               🚪 Cerrar Sesión
             </button>
