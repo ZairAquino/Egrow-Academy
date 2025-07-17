@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Verificar si la cuenta está activa
-    if (user.status === 'INACTIVE') {
+    if (!user.isActive) {
       return NextResponse.json(
         { error: 'Tu cuenta está desactivada. Contacta al administrador' },
         { status: 403 }
