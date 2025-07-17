@@ -5,11 +5,19 @@ import { LoginData } from '@/types/auth'
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('🔍 [LOGIN] Iniciando proceso de login')
+    
     const body: LoginData = await request.json()
     const { email, password } = body
+    
+    console.log('📝 [LOGIN] Datos recibidos:', { 
+      email, 
+      passwordLength: password?.length || 0 
+    })
 
     // Validar campos requeridos
     if (!email || !password) {
+      console.log('❌ [LOGIN] Campos requeridos faltantes')
       return NextResponse.json(
         { error: 'Por favor, completa todos los campos requeridos' },
         { status: 400 }
@@ -19,11 +27,14 @@ export async function POST(request: NextRequest) {
     // Validar formato de email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(email)) {
+      console.log('❌ [LOGIN] Email inválido:', email)
       return NextResponse.json(
         { error: 'Por favor, ingresa un correo electrónico válido' },
         { status: 400 }
       )
     }
+
+    console.log('✅ [LOGIN] Validaciones pasadas, buscando usuario')
 
     // Buscar usuario
     const user = await prisma.user.findUnique({
@@ -31,32 +42,44 @@ export async function POST(request: NextRequest) {
     })
 
     if (!user) {
+      console.log('❌ [LOGIN] Usuario no encontrado:', email)
       return NextResponse.json(
         { error: 'No existe una cuenta con este correo electrónico. ¿Te registraste?' },
         { status: 401 }
       )
     }
 
+    console.log('✅ [LOGIN] Usuario encontrado, verificando contraseña')
+
     // Verificar contraseña
     const isValidPassword = await verifyPassword(password, user.passwordHash)
 
     if (!isValidPassword) {
+      console.log('❌ [LOGIN] Contraseña incorrecta para:', email)
       return NextResponse.json(
         { error: 'La contraseña es incorrecta. Inténtalo de nuevo' },
         { status: 401 }
       )
     }
 
+    console.log('✅ [LOGIN] Contraseña correcta, verificando cuenta activa')
+
     // Verificar si la cuenta está activa
     if (!user.isActive) {
+      console.log('❌ [LOGIN] Cuenta desactivada:', email)
       return NextResponse.json(
         { error: 'Tu cuenta está desactivada. Contacta al administrador' },
         { status: 403 }
       )
     }
 
+    console.log('✅ [LOGIN] Cuenta activa, generando token')
+
     // Generar token
     const token = generateToken(user.id)
+    console.log('✅ [LOGIN] Token generado')
+
+    console.log('✅ [LOGIN] Creando sesión')
 
     // Crear sesión
     await prisma.session.create({
@@ -67,11 +90,15 @@ export async function POST(request: NextRequest) {
       }
     })
 
+    console.log('✅ [LOGIN] Sesión creada')
+
     // Actualizar último login
     await prisma.user.update({
       where: { id: user.id },
       data: { lastLogin: new Date() }
     })
+
+    console.log('✅ [LOGIN] Último login actualizado')
 
     // Devolver usuario sin passwordHash
     const safeUser = createSafeUser(user)
@@ -92,13 +119,17 @@ export async function POST(request: NextRequest) {
       path: '/'
     })
 
+    console.log('✅ [LOGIN] Login completado exitosamente')
     return response
   } catch (error) {
-    console.error('Error en login:', error)
+    console.error('💥 [LOGIN] Error completo:', error)
     
     // Manejar errores específicos de base de datos
     if (error instanceof Error) {
+      console.error('💥 [LOGIN] Mensaje de error:', error.message)
+      
       if (error.message.includes('connect')) {
+        console.error('💥 [LOGIN] Error de conexión a BD')
         return NextResponse.json(
           { error: 'Error de conexión con la base de datos. Inténtalo más tarde' },
           { status: 503 }
@@ -106,6 +137,7 @@ export async function POST(request: NextRequest) {
       }
     }
     
+    console.error('💥 [LOGIN] Error genérico, devolviendo 500')
     return NextResponse.json(
       { error: 'Error interno del servidor. Inténtalo más tarde' },
       { status: 500 }
