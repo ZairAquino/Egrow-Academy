@@ -7,6 +7,7 @@ export default function RegisterForm() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -21,15 +22,18 @@ export default function RegisterForm() {
       ...formData,
       [e.target.name]: e.target.value
     })
+    // Limpiar errores cuando el usuario empiece a escribir
+    if (error) setError('')
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+    setSuccess('')
 
     // Validar que las contraseñas coincidan
     if (formData.password !== formData.confirmPassword) {
-      setError('Las contraseñas no coinciden')
+      setError('Las contraseñas no coinciden. Verifica que ambas sean iguales')
       return
     }
 
@@ -54,18 +58,23 @@ export default function RegisterForm() {
       const data = await response.json()
 
       if (!response.ok) {
-        setError(data.error || 'Error al registrar')
+        setError(data.error || 'Error al registrar la cuenta')
         return
       }
 
+      // Mostrar mensaje de éxito
+      setSuccess(data.message || '¡Cuenta creada exitosamente!')
+      
       // El token se guarda automáticamente en cookies HTTP-only
       // Ya no necesitamos localStorage para el token
       
-      // Redirigir al home
-      router.push('/')
-      router.refresh()
+      // Redirigir al home después de un breve delay
+      setTimeout(() => {
+        router.push('/')
+        router.refresh()
+      }, 2000)
     } catch (err) {
-      setError('Error de conexión')
+      setError('Error de conexión. Verifica tu conexión a internet')
     } finally {
       setLoading(false)
     }
@@ -74,7 +83,7 @@ export default function RegisterForm() {
   const inputStyle = {
     width: '100%',
     padding: '0.75rem 1rem',
-    border: '2px solid #e5e7eb',
+    border: error ? '2px solid #ef4444' : '2px solid #e5e7eb',
     borderRadius: '12px',
     fontSize: '1rem',
     transition: 'all 0.3s ease',
@@ -89,7 +98,7 @@ export default function RegisterForm() {
   };
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.target.style.borderColor = '#e5e7eb';
+    e.target.style.borderColor = error ? '#ef4444' : '#e5e7eb';
     e.target.style.backgroundColor = '#f9fafb';
     e.target.style.boxShadow = 'none';
   };
@@ -256,6 +265,22 @@ export default function RegisterForm() {
           gap: '0.5rem'
         }}>
           ❌ {error}
+        </div>
+      )}
+
+      {success && (
+        <div style={{
+          backgroundColor: '#f0fdf4',
+          border: '1px solid #86efac',
+          color: '#16a34a',
+          padding: '0.75rem 1rem',
+          borderRadius: '12px',
+          fontSize: '0.9rem',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem'
+        }}>
+          ✅ {success}
         </div>
       )}
 

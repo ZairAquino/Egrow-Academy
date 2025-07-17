@@ -7,6 +7,7 @@ export default function LoginForm() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -17,11 +18,14 @@ export default function LoginForm() {
       ...formData,
       [e.target.name]: e.target.value
     })
+    // Limpiar errores cuando el usuario empiece a escribir
+    if (error) setError('')
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+    setSuccess('')
     setLoading(true)
 
     try {
@@ -41,14 +45,19 @@ export default function LoginForm() {
         return
       }
 
+      // Mostrar mensaje de éxito
+      setSuccess(data.message || '¡Inicio de sesión exitoso!')
+      
       // El token se guarda automáticamente en cookies HTTP-only
       // Ya no necesitamos localStorage para el token
       
-      // Redirigir al home
-      router.push('/')
-      router.refresh()
+      // Redirigir al home después de un breve delay
+      setTimeout(() => {
+        router.push('/')
+        router.refresh()
+      }, 1500)
     } catch (err) {
-      setError('Error de conexión')
+      setError('Error de conexión. Verifica tu conexión a internet')
     } finally {
       setLoading(false)
     }
@@ -77,7 +86,7 @@ export default function LoginForm() {
           style={{
             width: '100%',
             padding: '0.75rem 1rem',
-            border: '2px solid #e5e7eb',
+            border: error ? '2px solid #ef4444' : '2px solid #e5e7eb',
             borderRadius: '12px',
             fontSize: '1rem',
             transition: 'all 0.3s ease',
@@ -90,7 +99,7 @@ export default function LoginForm() {
             e.target.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)';
           }}
           onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
-            e.target.style.borderColor = '#e5e7eb';
+            e.target.style.borderColor = error ? '#ef4444' : '#e5e7eb';
             e.target.style.backgroundColor = '#f9fafb';
             e.target.style.boxShadow = 'none';
           }}
@@ -118,7 +127,7 @@ export default function LoginForm() {
           style={{
             width: '100%',
             padding: '0.75rem 1rem',
-            border: '2px solid #e5e7eb',
+            border: error ? '2px solid #ef4444' : '2px solid #e5e7eb',
             borderRadius: '12px',
             fontSize: '1rem',
             transition: 'all 0.3s ease',
@@ -131,7 +140,7 @@ export default function LoginForm() {
             e.target.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)';
           }}
           onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
-            e.target.style.borderColor = '#e5e7eb';
+            e.target.style.borderColor = error ? '#ef4444' : '#e5e7eb';
             e.target.style.backgroundColor = '#f9fafb';
             e.target.style.boxShadow = 'none';
           }}
@@ -151,6 +160,22 @@ export default function LoginForm() {
           gap: '0.5rem'
         }}>
           ❌ {error}
+        </div>
+      )}
+
+      {success && (
+        <div style={{
+          backgroundColor: '#f0fdf4',
+          border: '1px solid #86efac',
+          color: '#16a34a',
+          padding: '0.75rem 1rem',
+          borderRadius: '12px',
+          fontSize: '0.9rem',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem'
+        }}>
+          ✅ {success}
         </div>
       )}
 

@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
     // Validar campos requeridos
     if (!email || !password || !firstName || !lastName) {
       return NextResponse.json(
-        { error: 'Todos los campos son requeridos' },
+        { error: 'Por favor, completa todos los campos obligatorios' },
         { status: 400 }
       )
     }
@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(email)) {
       return NextResponse.json(
-        { error: 'Email inválido' },
+        { error: 'Por favor, ingresa un correo electrónico válido' },
         { status: 400 }
       )
     }
@@ -33,12 +33,53 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Validar que la contraseña no sea muy débil
+    const weakPasswordRegex = /^(123456|password|qwerty|abc123)$/i
+    if (weakPasswordRegex.test(password)) {
+      return NextResponse.json(
+        { error: 'Por favor, elige una contraseña más segura' },
+        { status: 400 }
+      )
+    }
+
+    // Validar nombres
+    if (firstName.trim().length < 2) {
+      return NextResponse.json(
+        { error: 'El nombre debe tener al menos 2 caracteres' },
+        { status: 400 }
+      )
+    }
+
+    if (lastName.trim().length < 2) {
+      return NextResponse.json(
+        { error: 'El apellido debe tener al menos 2 caracteres' },
+        { status: 400 }
+      )
+    }
+
+    // Validar username si se proporciona
+    if (username) {
+      if (username.length < 3) {
+        return NextResponse.json(
+          { error: 'El nombre de usuario debe tener al menos 3 caracteres' },
+          { status: 400 }
+        )
+      }
+      
+      if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+        return NextResponse.json(
+          { error: 'El nombre de usuario solo puede contener letras, números y guiones bajos' },
+          { status: 400 }
+        )
+      }
+    }
+
     // Verificar si el usuario ya existe
     const existingUser = await prisma.user.findFirst({
       where: {
         OR: [
           { email },
-          { username: username || undefined }
+          ...(username ? [{ username }] : [])
         ]
       }
     })
@@ -46,14 +87,14 @@ export async function POST(request: NextRequest) {
     if (existingUser) {
       if (existingUser.email === email) {
         return NextResponse.json(
-          { error: 'El email ya está registrado' },
-          { status: 400 }
+          { error: 'Ya existe una cuenta con este correo electrónico. ¿Ya tienes una cuenta?' },
+          { status: 409 }
         )
       }
       if (username && existingUser.username === username) {
         return NextResponse.json(
-          { error: 'El nombre de usuario ya está en uso' },
-          { status: 400 }
+          { error: 'Este nombre de usuario ya está en uso. Elige otro' },
+          { status: 409 }
         )
       }
     }
@@ -66,9 +107,9 @@ export async function POST(request: NextRequest) {
       data: {
         email,
         passwordHash,
-        firstName,
-        lastName,
-        username
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        username: username?.trim() || null
       }
     })
 
@@ -90,7 +131,8 @@ export async function POST(request: NextRequest) {
     // Crear respuesta con cookie
     const response = NextResponse.json({
       user: safeUser,
-      token
+      token,
+      message: '¡Cuenta creada exitosamente! Bienvenido a eGrow Academy'
     })
 
     // Establecer cookie HTTP-only para mantener sesión
@@ -105,8 +147,26 @@ export async function POST(request: NextRequest) {
     return response
   } catch (error) {
     console.error('Error en registro:', error)
+    
+    // Manejar errores específicos de base de datos
+    if (error instanceof Error) {
+      if (error.message.includes('connect')) {
+        return NextResponse.json(
+          { error: 'Error de conexión con la base de datos. Inténtalo más tarde' },
+          { status: 503 }
+        )
+      }
+      
+      if (error.message.includes('Unique constraint')) {
+        return NextResponse.json(
+          { error: 'Ya existe una cuenta con estos datos. ¿Ya tienes una cuenta?' },
+          { status: 409 }
+        )
+      }
+    }
+    
     return NextResponse.json(
-      { error: 'Error al registrar usuario' },
+      { error: 'Error interno del servidor. Inténtalo más tarde' },
       { status: 500 }
     )
   }

@@ -11,7 +11,16 @@ export async function POST(request: NextRequest) {
     // Validar campos requeridos
     if (!email || !password) {
       return NextResponse.json(
-        { error: 'Email y contraseña son requeridos' },
+        { error: 'Por favor, completa todos los campos requeridos' },
+        { status: 400 }
+      )
+    }
+
+    // Validar formato de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      return NextResponse.json(
+        { error: 'Por favor, ingresa un correo electrónico válido' },
         { status: 400 }
       )
     }
@@ -23,7 +32,7 @@ export async function POST(request: NextRequest) {
 
     if (!user) {
       return NextResponse.json(
-        { error: 'Credenciales inválidas' },
+        { error: 'No existe una cuenta con este correo electrónico. ¿Te registraste?' },
         { status: 401 }
       )
     }
@@ -33,8 +42,16 @@ export async function POST(request: NextRequest) {
 
     if (!isValidPassword) {
       return NextResponse.json(
-        { error: 'Credenciales inválidas' },
+        { error: 'La contraseña es incorrecta. Inténtalo de nuevo' },
         { status: 401 }
+      )
+    }
+
+    // Verificar si la cuenta está activa
+    if (user.status === 'INACTIVE') {
+      return NextResponse.json(
+        { error: 'Tu cuenta está desactivada. Contacta al administrador' },
+        { status: 403 }
       )
     }
 
@@ -62,7 +79,8 @@ export async function POST(request: NextRequest) {
     // Crear respuesta con cookie
     const response = NextResponse.json({
       user: safeUser,
-      token
+      token,
+      message: '¡Bienvenido de vuelta!'
     })
 
     // Establecer cookie HTTP-only para mantener sesión
@@ -77,8 +95,19 @@ export async function POST(request: NextRequest) {
     return response
   } catch (error) {
     console.error('Error en login:', error)
+    
+    // Manejar errores específicos de base de datos
+    if (error instanceof Error) {
+      if (error.message.includes('connect')) {
+        return NextResponse.json(
+          { error: 'Error de conexión con la base de datos. Inténtalo más tarde' },
+          { status: 503 }
+        )
+      }
+    }
+    
     return NextResponse.json(
-      { error: 'Error al iniciar sesión' },
+      { error: 'Error interno del servidor. Inténtalo más tarde' },
       { status: 500 }
     )
   }
