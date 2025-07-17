@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,200 +7,169 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Modelo de Usuarios
 model User {
-  id              String    @id @default(cuid())
-  email           String    @unique
+  id              String          @id @default(cuid())
+  email           String          @unique
   passwordHash    String
   firstName       String
   lastName        String
-  username        String?   @unique
+  username        String?         @unique
   profileImage    String?
   bio             String?
   membershipLevel MembershipLevel @default(FREE)
-  isActive        Boolean   @default(true)
-  emailVerified   Boolean   @default(false)
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  isActive        Boolean         @default(true)
+  emailVerified   Boolean         @default(false)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
   lastLogin       DateTime?
-
-  // Relaciones
   comments        Comment[]
-  questions       Question[]
-  enrollments     Enrollment[]
   posts           CommunityPost[]
+  courses         Course[]        @relation("CourseInstructor")
+  enrollments     Enrollment[]
   likes           Like[]
+  questions       Question[]
   sessions        Session[]
-  courses         Course[]  @relation("CourseInstructor")
 
   @@map("users")
 }
 
-// Modelo de Cursos
 model Course {
-  id              String    @id @default(cuid())
-  title           String
-  slug            String    @unique
-  description     String?
+  id               String       @id @default(cuid())
+  title            String
+  slug             String       @unique
+  description      String?
   shortDescription String?
-  imageUrl        String?
-  price           Decimal   @default(0)
-  isFree          Boolean   @default(true)
-  requiresAuth    Boolean   @default(true)
-  difficulty      Difficulty?
-  durationHours   Int?
-  lessonsCount    Int       @default(0)
-  studentsCount   Int       @default(0)
-  rating          Decimal   @default(0)
-  status          CourseStatus @default(DRAFT)
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-
-  // Relaciones
-  instructorId    String?
-  instructor      User?     @relation("CourseInstructor", fields: [instructorId], references: [id])
-  enrollments     Enrollment[]
-  comments        Comment[]
-  lessons         Lesson[]
+  imageUrl         String?
+  price            Decimal      @default(0)
+  isFree           Boolean      @default(true)
+  requiresAuth     Boolean      @default(true)
+  difficulty       Difficulty?
+  durationHours    Int?
+  lessonsCount     Int          @default(0)
+  studentsCount    Int          @default(0)
+  rating           Decimal      @default(0)
+  status           CourseStatus @default(DRAFT)
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  instructorId     String?
+  comments         Comment[]
+  instructor       User?        @relation("CourseInstructor", fields: [instructorId], references: [id])
+  enrollments      Enrollment[]
+  lessons          Lesson[]
 
   @@map("courses")
 }
 
-// Modelo de Comentarios
 model Comment {
-  id        String   @id @default(cuid())
-  content   String
-  type      CommentType
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relaciones
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  courseId  String?
-  course    Course?  @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  parentId  String?
-  parent    Comment? @relation("CommentReplies", fields: [parentId], references: [id])
-  replies   Comment[] @relation("CommentReplies")
-  likes     Like[]
-
-  // Relaciones agregadas para bidireccionalidad
+  id         String         @id @default(cuid())
+  content    String
+  type       CommentType
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+  userId     String
+  courseId   String?
+  parentId   String?
   questionId String?
-  question   Question? @relation("QuestionComments", fields: [questionId], references: [id], onDelete: Cascade)
-
   postId     String?
+  course     Course?        @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  parent     Comment?       @relation("CommentReplies", fields: [parentId], references: [id])
+  replies    Comment[]      @relation("CommentReplies")
   post       CommunityPost? @relation("PostComments", fields: [postId], references: [id], onDelete: Cascade)
+  question   Question?      @relation("QuestionComments", fields: [questionId], references: [id], onDelete: Cascade)
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  likes      Like[]
 
   @@map("comments")
 }
 
-// Modelo de Preguntas
 model Question {
-  id       String   @id @default(cuid())
-  title    String
-  content  String
-  category String?
-  status   QuestionStatus @default(OPEN)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relaciones
-  userId   String
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  answers  Comment[] @relation("QuestionComments")
-  likes    Like[]
+  id        String         @id @default(cuid())
+  title     String
+  content   String
+  category  String?
+  status    QuestionStatus @default(OPEN)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  userId    String
+  answers   Comment[]      @relation("QuestionComments")
+  likes     Like[]
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("questions")
 }
 
-// Modelo de Posts de Comunidad
 model CommunityPost {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   title     String
   content   String
   category  String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relaciones
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  likes     Like[]
   comments  Comment[] @relation("PostComments")
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  likes     Like[]
 
   @@map("community_posts")
 }
 
-// Modelo de Inscripciones
 model Enrollment {
-  id                 String   @id @default(cuid())
-  enrolledAt         DateTime @default(now())
+  id                 String           @id @default(cuid())
+  enrolledAt         DateTime         @default(now())
   completedAt        DateTime?
-  progressPercentage Decimal  @default(0)
+  progressPercentage Decimal          @default(0)
   status             EnrollmentStatus @default(ACTIVE)
-
-  // Relaciones
-  userId   String
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  courseId String
-  course   Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  userId             String
+  courseId           String
+  course             Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  user               User             @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, courseId])
   @@map("enrollments")
 }
 
-// Modelo de Likes
 model Like {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-
-  // Relaciones
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  commentId String?
-  comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  id         String         @id @default(cuid())
+  createdAt  DateTime       @default(now())
+  userId     String
+  commentId  String?
   questionId String?
-  question  Question? @relation(fields: [questionId], references: [id], onDelete: Cascade)
-  postId    String?
-  post      CommunityPost? @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId     String?
+  comment    Comment?       @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  post       CommunityPost? @relation(fields: [postId], references: [id], onDelete: Cascade)
+  question   Question?      @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, commentId, questionId, postId])
   @@map("likes")
 }
 
-// Modelo de Sesiones
 model Session {
   id        String   @id @default(cuid())
   token     String   @unique
   expiresAt DateTime
   createdAt DateTime @default(now())
-
-  // Relaciones
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("sessions")
 }
 
-// Modelo de Lecciones
 model Lesson {
-  id          String   @id @default(cuid())
-  title       String
-  content     String?
-  videoUrl    String?
-  duration    Int?     // en minutos
-  order       Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  // Relaciones
-  courseId    String
-  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  id        String   @id @default(cuid())
+  title     String
+  content   String?
+  videoUrl  String?
+  duration  Int?
+  order     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  courseId  String
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   @@map("lessons")
 }
 
-// Enums
 enum MembershipLevel {
   FREE
   PREMIUM
