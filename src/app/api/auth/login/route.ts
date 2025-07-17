@@ -51,6 +51,15 @@ export async function POST(request: NextRequest) {
 
     console.log('✅ [LOGIN] Usuario encontrado, verificando contraseña')
 
+    // Verificar si el usuario tiene contraseña (no es usuario OAuth)
+    if (!user.passwordHash) {
+      console.log('❌ [LOGIN] Usuario sin contraseña (probablemente OAuth):', email)
+      return NextResponse.json(
+        { error: 'Esta cuenta fue creada con Google. Por favor, inicia sesión con Google' },
+        { status: 401 }
+      )
+    }
+
     // Verificar contraseña
     const isValidPassword = await verifyPassword(password, user.passwordHash)
 
