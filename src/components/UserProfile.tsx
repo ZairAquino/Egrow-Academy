@@ -3,23 +3,22 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useSession, signOut } from 'next-auth/react';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface UserProfileProps {
   className?: string;
 }
 
 export default function UserProfile({ className = '' }: UserProfileProps) {
-  const { data: session, status } = useSession();
+  const { user, status, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Logs de depuración
   useEffect(() => {
     console.log('UserProfile - Status:', status);
-    console.log('UserProfile - Session:', session);
-    console.log('UserProfile - User:', session?.user);
-  }, [session, status]);
+    console.log('UserProfile - User:', user);
+  }, [user, status]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -34,7 +33,9 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
 
   const handleLogout = async () => {
     try {
-      await signOut({ callbackUrl: '/' });
+      await logout();
+      // Redirigir a la página principal después del logout
+      window.location.href = '/';
     } catch (error) {
       console.error('Error logging out:', error);
     }
@@ -81,7 +82,7 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
   }
 
   // Mostrar estado no autenticado
-  if (!session?.user) {
+  if (!user) {
     return (
       <div className={`user-profile-container ${className}`} ref={dropdownRef}>
         {/* Indicador de depuración temporal */}
@@ -137,7 +138,7 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
     );
   }
 
-  const user = session.user;
+  // El usuario ya está disponible del contexto
 
   return (
     <div className={`user-profile-container ${className}`} ref={dropdownRef}>
@@ -182,9 +183,9 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
           <span className="profile-name">{user.name || 'Usuario'}</span>
           <span 
             className="profile-membership"
-            style={{ color: getMembershipColor('FREE') }}
+            style={{ color: getMembershipColor(user.membershipLevel || 'FREE') }}
           >
-            {getMembershipLabel('FREE')}
+            {getMembershipLabel(user.membershipLevel || 'FREE')}
           </span>
         </div>
         <span className="dropdown-arrow">▼</span>
@@ -214,9 +215,9 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
               <p className="profile-email">{user.email || 'No disponible'}</p>
               <span 
                 className="membership-badge"
-                style={{ backgroundColor: getMembershipColor('FREE') }}
+                style={{ backgroundColor: getMembershipColor(user.membershipLevel || 'FREE') }}
               >
-                {getMembershipLabel('FREE')}
+                {getMembershipLabel(user.membershipLevel || 'FREE')}
               </span>
             </div>
           </div>
@@ -229,13 +230,13 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
             <div className="stat-item">
               <span className="stat-label">Estado de Email</span>
               <span className="stat-value verified">
-                ✅ Verificado (Google)
+                {user.emailVerified ? '✅ Verificado' : '❌ No verificado'}
               </span>
             </div>
             <div className="stat-item">
-              <span className="stat-label">Proveedor</span>
+              <span className="stat-label">Estado de Cuenta</span>
               <span className="stat-value">
-                Google
+                {user.isActive ? '✅ Activa' : '❌ Inactiva'}
               </span>
             </div>
           </div>

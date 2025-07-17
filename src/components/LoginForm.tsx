@@ -3,9 +3,11 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
+import { useAuth } from '@/contexts/AuthContext'
 
 export default function LoginForm() {
   const router = useRouter()
+  const { refreshUser } = useAuth()
   const [loading, setLoading] = useState(false)
   const [googleLoading, setGoogleLoading] = useState(false)
   const [error, setError] = useState('')
@@ -53,6 +55,9 @@ export default function LoginForm() {
       // El token se guarda automáticamente en cookies HTTP-only
       // Ya no necesitamos localStorage para el token
       
+      // Refrescar el contexto de autenticación
+      await refreshUser()
+      
       // Redirigir al home después de un breve delay
       setTimeout(() => {
         router.push('/')
@@ -71,12 +76,20 @@ export default function LoginForm() {
     setSuccess('')
 
     try {
-      await signIn('google', {
+      const result = await signIn('google', {
         callbackUrl: '/',
-        redirect: true
+        redirect: false
       })
-      // Con redirect: true, NextAuth maneja la redirección automáticamente
-      // No necesitamos manejar el resultado aquí
+      
+      if (result?.ok) {
+        // Refrescar el contexto de autenticación
+        await refreshUser()
+        // Redirigir manualmente
+        router.push('/')
+      } else {
+        setError('Error al conectar con Google')
+        setGoogleLoading(false)
+      }
     } catch (err) {
       setError('Error al conectar con Google')
       setGoogleLoading(false)

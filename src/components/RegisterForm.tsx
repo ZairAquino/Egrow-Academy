@@ -2,9 +2,11 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useAuth } from '@/contexts/AuthContext'
 
 export default function RegisterForm() {
   const router = useRouter()
+  const { refreshUser } = useAuth()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
@@ -67,6 +69,9 @@ export default function RegisterForm() {
       
       // El token se guarda automáticamente en cookies HTTP-only
       // Ya no necesitamos localStorage para el token
+      
+      // Refrescar el contexto de autenticación
+      await refreshUser()
       
       // Redirigir al home después de un breve delay
       setTimeout(() => {
