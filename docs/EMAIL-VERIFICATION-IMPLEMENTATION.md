@@ -16,12 +16,14 @@ Implementación completa del sistema de verificación de emails usando **Resend*
 - [x] **Actualizar schema de Prisma** (campos de verificación agregados)
 - [x] **Crear migración de base de datos** (`add_email_verification_fields`)
 - [x] **Implementar endpoint para verificar emails** (`/api/auth/verify-email`)
+- [x] **Implementar endpoint para reenviar emails** (`/api/auth/resend-verification`)
+- [x] **Modificar registro para enviar email de verificación**
+- [x] **Crear página de verificación** (`/verify-email`)
 
 ### 🔄 **Pendiente**
-- [ ] **Implementar endpoint para reenviar emails** (`/api/auth/resend-verification`)
-- [ ] **Modificar registro para enviar email de verificación**
-- [ ] **Agregar UI para mostrar estado de verificación**
-- [ ] **Implementar reenvío de email de verificación en frontend**
+- [ ] **Agregar UI de estado de verificación en perfil de usuario**
+- [ ] **Testing completo del flujo de verificación**
+- [ ] **Optimización de templates de email**
 
 ---
 
@@ -71,6 +73,7 @@ model User {
 
 ### **4. API Endpoints**
 - **POST/GET** `/api/auth/verify-email` - Verifica email con token
+- **POST/GET** `/api/auth/resend-verification` - Reenvía email de verificación
 
 ---
 
@@ -196,5 +199,5 @@ Usuario solicita reenvío → Generar nuevo token → Actualizar BD → Enviar n
 ---
 
 **Última actualización:** 17 de Julio, 2025  
-**Estado:** 70% completado (7/10 tareas)  
-**Próxima revisión:** Después de implementar reenvío y UI 
+**Estado:** 90% completado (10/11 tareas)  
+**Próxima revisión:** Después de implementar UI de perfil y testing 

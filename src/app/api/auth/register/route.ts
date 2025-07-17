@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { hashPassword, generateToken, createSafeUser } from '@/lib/auth'
 import { RegisterData } from '@/types/auth'
+import { EmailService } from '@/lib/email'
+import { VerificationService } from '@/lib/verification'
 
 export async function POST(request: NextRequest) {
   try {
@@ -127,16 +129,23 @@ export async function POST(request: NextRequest) {
     const passwordHash = await hashPassword(password)
     console.log('✅ [REGISTER] Contraseña hasheada correctamente')
 
+    console.log('✅ [REGISTER] Generando token de verificación')
+
+    // Generar token de verificación
+    const verificationToken = VerificationService.generateVerificationToken()
+
     console.log('✅ [REGISTER] Creando usuario en base de datos')
 
-    // Crear usuario
+    // Crear usuario con token de verificación
     const user = await prisma.user.create({
       data: {
         email,
         passwordHash,
         firstName: firstName.trim(),
         lastName: lastName.trim(),
-        username: username?.trim() || null
+        username: username?.trim() || null,
+        emailVerificationToken: verificationToken.token,
+        emailVerificationExpires: verificationToken.expiresAt
       }
     })
 
@@ -157,6 +166,20 @@ export async function POST(request: NextRequest) {
 
     console.log('✅ [REGISTER] Sesión creada')
 
+    // Enviar email de verificación
+    console.log('📧 [REGISTER] Enviando email de verificación')
+    const emailSent = await EmailService.sendVerificationEmail({
+      email: user.email,
+      name: `${user.firstName} ${user.lastName}`,
+      verificationToken: verificationToken.token
+    })
+
+    if (emailSent) {
+      console.log('✅ [REGISTER] Email de verificación enviado exitosamente')
+    } else {
+      console.log('⚠️ [REGISTER] Error enviando email de verificación')
+    }
+
     // Devolver usuario sin passwordHash
     const safeUser = createSafeUser(user)
 
@@ -164,7 +187,9 @@ export async function POST(request: NextRequest) {
     const response = NextResponse.json({
       user: safeUser,
       token,
-      message: '¡Cuenta creada exitosamente! Bienvenido a eGrow Academy'
+      message: emailSent 
+        ? '¡Cuenta creada exitosamente! Revisa tu email para verificar tu cuenta'
+        : '¡Cuenta creada exitosamente! (Error enviando email de verificación)'
     })
 
     // Establecer cookie HTTP-only para mantener sesión
