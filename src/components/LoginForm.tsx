@@ -71,23 +71,14 @@ export default function LoginForm() {
     setSuccess('')
 
     try {
-      const result = await signIn('google', {
+      await signIn('google', {
         callbackUrl: '/',
         redirect: true
       })
-
-      if (result?.error) {
-        setError('Error al iniciar sesión con Google')
-      } else if (result?.ok) {
-        setSuccess('¡Inicio de sesión con Google exitoso!')
-        setTimeout(() => {
-          router.push('/')
-          router.refresh()
-        }, 1500)
-      }
+      // Con redirect: true, NextAuth maneja la redirección automáticamente
+      // No necesitamos manejar el resultado aquí
     } catch (err) {
       setError('Error al conectar con Google')
-    } finally {
       setGoogleLoading(false)
     }
   }
