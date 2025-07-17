@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Script from "next/script";
+import Providers from "@/components/Providers";
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -102,7 +103,9 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
       </head>
       <body className={inter.className}>
-        {children}
+        <Providers>
+          {children}
+        </Providers>
         <Script
           id="service-worker"
           strategy="afterInteractive"
