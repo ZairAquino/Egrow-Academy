@@ -65,17 +65,49 @@ export function AuthProvider({ children }: AuthProviderProps) {
     
     // Primero intentar obtener de NextAuth (Google OAuth)
     if (session?.user) {
-      setUser({
-        id: session.user.id || '',
-        name: session.user.name || null,
-        email: session.user.email || null,
-        image: session.user.image || null,
-        emailVerified: new Date(),
-        isActive: true,
-        membershipLevel: 'FREE'
-      })
-      setStatus('authenticated')
-      return
+      try {
+        // Obtener información completa del usuario desde la base de datos
+        const response = await fetch('/api/auth/me', {
+          method: 'GET',
+          credentials: 'include'
+        })
+        
+        if (response.ok) {
+          const data = await response.json()
+          if (data.user) {
+            setUser(data.user)
+            setStatus('authenticated')
+            return
+          }
+        }
+        
+        // Fallback si no se puede obtener de la API
+        setUser({
+          id: session.user.id || '',
+          name: session.user.name || null,
+          email: session.user.email || null,
+          image: session.user.image || null,
+          emailVerified: new Date(),
+          isActive: true,
+          membershipLevel: 'FREE'
+        })
+        setStatus('authenticated')
+        return
+      } catch (error) {
+        console.error('Error fetching user details:', error)
+        // Fallback en caso de error
+        setUser({
+          id: session.user.id || '',
+          name: session.user.name || null,
+          email: session.user.email || null,
+          image: session.user.image || null,
+          emailVerified: new Date(),
+          isActive: true,
+          membershipLevel: 'FREE'
+        })
+        setStatus('authenticated')
+        return
+      }
     }
 
     // Si no hay sesión de NextAuth, intentar obtener del sistema manual
