@@ -73,7 +73,7 @@ export default function LoginForm() {
     try {
       const result = await signIn('google', {
         callbackUrl: '/',
-        redirect: false
+        redirect: true
       })
 
       if (result?.error) {
