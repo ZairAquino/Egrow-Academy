@@ -199,6 +199,20 @@ GitHub: https://github.com/ZairAquino/Egrow-Academy
 - ✅ `openapi-docs.md` → Documentación técnica completa
 - ✅ `README-DOCS.md` → Guía de documentación
 
+### **FASE 9: Corrección de Errores de Build**
+
+#### **9.1 Error de TypeScript en Vercel (16/Jul/2025):**
+- ✅ **Problema identificado:** CourseCard faltaban propiedades requeridas
+- ✅ **Archivo afectado:** `src/app/cursos-gratuitos/page.tsx` línea 477
+- ✅ **Propiedades agregadas:**
+  - `id={course.id.toString()}` → Conversión de number a string
+  - `category={course.tag}` → Usando tag como categoría
+  - `isFree={true}` → Cursos gratuitos por defecto
+  - `requiresAuth={false}` → Sin autenticación requerida
+- ✅ **Commit realizado:** `3283dd0` - "fix: Agregar propiedades faltantes a CourseCard"
+- ✅ **Push exitoso** a rama main
+- ✅ **Build de Vercel** debería compilar correctamente ahora
+
 ### **FASE 9: Integración de Stripe y Sistema de Pagos**
 
 #### **9.1 Configuración de Stripe:**

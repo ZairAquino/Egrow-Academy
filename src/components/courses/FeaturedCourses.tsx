@@ -47,12 +47,16 @@ export default function FeaturedCourses() {
           {featuredCourses.map((course, index) => (
             <CourseCard
               key={index}
+              id={`featured-${index}`}
               image={course.image}
               title={course.title}
               description={course.description}
               tag={course.tag}
               duration={course.duration}
               level={course.level}
+              category={course.tag}
+              isFree={course.tag === "Curso Gratuito"}
+              requiresAuth={false}
               link={course.link}
             />
           ))}
