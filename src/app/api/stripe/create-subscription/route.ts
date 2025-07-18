@@ -112,7 +112,7 @@ export async function POST(request: NextRequest) {
     const subscription = await prisma.subscription.create({
       data: {
         stripeSubscriptionId: stripeSubscription.id,
-        status: mapStripeStatusToPrisma(stripeSubscription.status),
+        status: mapStripeStatusToPrisma(stripeSubscription.status) as any,
         currentPeriodStart: new Date(stripeSubscription.current_period_start * 1000),
         currentPeriodEnd: new Date(stripeSubscription.current_period_end * 1000),
         cancelAtPeriodEnd: stripeSubscription.cancel_at_period_end,
