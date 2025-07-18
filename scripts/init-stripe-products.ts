@@ -123,7 +123,9 @@ async function initializeStripeProducts() {
       const product = await createStripeProduct({
         name: productData.name,
         description: productData.description,
-        metadata: productData.metadata,
+        metadata: Object.fromEntries(
+          Object.entries(productData.metadata).filter(([_, value]) => value !== undefined)
+        ) as Record<string, string>,
       });
 
       console.log(`✅ Producto creado: ${product.id}`);
