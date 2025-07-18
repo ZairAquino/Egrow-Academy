@@ -2990,3 +2990,9 @@ button, a, input, select, textarea {
     justify-content: center;
   }
 }
+
+/* Animación de spin para loading */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
