@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { hashPassword, generateToken, createSafeUser } from '@/lib/auth'
+import { validateEmail, getEmailSuggestions } from '@/lib/email-validation'
+import { validateEmailServer } from '@/lib/server-email-validation'
+import { generateVerificationCode, sendVerificationEmail } from '@/lib/email'
 import { RegisterData } from '@/types/auth'
 
 export async function POST(request: NextRequest) {
@@ -27,12 +30,28 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Validar formato de email más estricto
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
-    if (!emailRegex.test(email)) {
-      console.log('❌ [REGISTER] Email inválido:', email)
+    // Validar email con validación completa (cliente)
+    const emailValidation = validateEmail(email)
+    if (!emailValidation.isValid) {
+      console.log('❌ [REGISTER] Email inválido (cliente):', email, emailValidation.error)
+      
+      // Obtener sugerencias si el dominio no es confiable
+      const suggestions = getEmailSuggestions(email)
+      const responseData: any = { error: emailValidation.error }
+      
+      if (suggestions.length > 0) {
+        responseData.suggestions = suggestions
+      }
+      
+      return NextResponse.json(responseData, { status: 400 })
+    }
+
+    // Validar email con verificación DNS (servidor)
+    const serverEmailValidation = await validateEmailServer(email)
+    if (!serverEmailValidation.isValid) {
+      console.log('❌ [REGISTER] Email inválido (servidor):', email, serverEmailValidation.error)
       return NextResponse.json(
-        { error: 'Por favor, ingresa un correo electrónico válido' },
+        { error: serverEmailValidation.error },
         { status: 400 }
       )
     }
@@ -104,26 +123,13 @@ export async function POST(request: NextRequest) {
       }
     })
 
-    // Si el usuario ya existe, siempre devolver éxito (sin revelar que existe)
+    // Si el usuario ya existe, devolver error sin revelar información específica
     if (existingUser) {
-      console.log('✅ [REGISTER] Usuario ya existe, devolviendo éxito sin revelar')
-      
-      // Devolver respuesta de éxito sin crear nada nuevo
-      const response = NextResponse.json({
-        user: createSafeUser(existingUser),
-        message: '¡Cuenta creada exitosamente! Ya puedes iniciar sesión.'
-      })
-
-      // Establecer cookie HTTP-only para mantener sesión
-      response.cookies.set('auth-token', generateToken(existingUser.id), {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        maxAge: 7 * 24 * 60 * 60, // 7 días en segundos
-        path: '/'
-      })
-
-      return response
+      console.log('❌ [REGISTER] Usuario ya existe, devolviendo error genérico')
+      return NextResponse.json(
+        { error: 'No se pudo completar el registro. Verifica tus datos e inténtalo nuevamente.' },
+        { status: 400 }
+      )
     }
 
     console.log('✅ [REGISTER] Usuario no existe, hasheando contraseña')
@@ -134,7 +140,7 @@ export async function POST(request: NextRequest) {
 
     console.log('✅ [REGISTER] Creando usuario en base de datos')
 
-    // Crear usuario con email verificado inmediatamente
+    // Crear usuario verificado directamente (temporalmente sin verificación por email)
     const user = await prisma.user.create({
       data: {
         email,
@@ -142,22 +148,24 @@ export async function POST(request: NextRequest) {
         firstName: firstName.trim(),
         lastName: lastName.trim(),
         username: username?.trim() || null,
-        emailVerified: true, // Email verificado inmediatamente
+        emailVerified: true, // Verificado directamente (temporal)
       }
     })
 
     console.log('✅ [REGISTER] Usuario creado con ID:', user.id)
 
-    // Generar token
+    // Generar token y crear sesión
     const token = generateToken(user.id)
+    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 días
+
     console.log('✅ [REGISTER] Token generado')
 
     // Crear sesión
     await prisma.session.create({
       data: {
-        userId: user.id,
         token,
-        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 días
+        expiresAt,
+        userId: user.id
       }
     })
 
@@ -169,17 +177,16 @@ export async function POST(request: NextRequest) {
     // Crear respuesta con cookie
     const response = NextResponse.json({
       user: safeUser,
-      token,
-      message: '¡Cuenta creada exitosamente! Ya puedes iniciar sesión.'
+      message: '¡Cuenta creada exitosamente! Ya puedes acceder a todos nuestros cursos.',
+      requiresVerification: false
     })
 
-    // Establecer cookie HTTP-only para mantener sesión
+    // Establecer cookie HTTP-only
     response.cookies.set('auth-token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60, // 7 días en segundos
-      path: '/'
+      maxAge: 7 * 24 * 60 * 60 // 7 días
     })
 
     console.log('✅ [REGISTER] Registro completado exitosamente')

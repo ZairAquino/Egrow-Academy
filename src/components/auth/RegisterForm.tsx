@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
+import { validateEmail } from '@/lib/email-validation'
 
 export default function RegisterForm() {
   const router = useRouter()
@@ -10,6 +11,8 @@ export default function RegisterForm() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+  const [emailSuggestions, setEmailSuggestions] = useState<string[]>([])
+  const [emailValid, setEmailValid] = useState<boolean | null>(null)
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -24,13 +27,25 @@ export default function RegisterForm() {
       ...formData,
       [e.target.name]: e.target.value
     })
+    
     // Limpiar errores cuando el usuario empiece a escribir
     if (error) setError('')
+    
+    // Validar email en tiempo real
+    if (e.target.name === 'email') {
+      const email = e.target.value
+      if (email) {
+        const validation = validateEmail(email)
+        setEmailValid(validation.isValid)
+      } else {
+        setEmailValid(null)
+      }
+    }
   }
 
   // Función para guardar email Gmail en localStorage
   const saveGmailToStorage = (email: string) => {
-    if (!email.includes('@gmail.com')) return
+    if (!email.includes('@gmail.com') || !validateEmail(email).isValid) return
 
     try {
       const saved = localStorage.getItem('gmail-accounts')
@@ -46,6 +61,7 @@ export default function RegisterForm() {
     e.preventDefault()
     setError('')
     setSuccess('')
+    setEmailSuggestions([])
 
     // Validar que las contraseñas coincidan
     if (formData.password !== formData.confirmPassword) {
@@ -75,21 +91,23 @@ export default function RegisterForm() {
 
       if (!response.ok) {
         setError(data.error || 'Error al registrar la cuenta')
+        if (data.suggestions) {
+          setEmailSuggestions(data.suggestions)
+        }
         return
       }
 
-      // Guardar email Gmail en localStorage si corresponde
-      saveGmailToStorage(formData.email)
+      // Guardar email Gmail en localStorage si corresponde y es válido
+      if (emailValid) {
+        saveGmailToStorage(formData.email)
+      }
 
       // Mostrar mensaje de éxito
-      setSuccess('¡Cuenta creada exitosamente! Ya puedes iniciar sesión.')
+      setSuccess('¡Cuenta creada exitosamente! Revisa tu correo electrónico para verificar tu cuenta.')
       
-      // Refrescar el contexto de autenticación
-      await refreshUser()
-      
-      // Redirigir al login después de un breve delay
+      // Redirigir a la página de verificación después de un breve delay
       setTimeout(() => {
-        router.push('/login')
+        router.push(`/verify-email?email=${encodeURIComponent(formData.email)}`)
         router.refresh()
       }, 2000)
     } catch (err) {
@@ -210,22 +228,37 @@ export default function RegisterForm() {
             onFocus={handleFocus}
             onBlur={handleBlur}
           />
-          {formData.email.includes('@gmail.com') && (
+          {formData.email && (
             <div style={{
               marginTop: '0.5rem',
               fontSize: '0.8rem',
-              color: '#059669',
+              color: emailValid === true ? '#059669' : emailValid === false ? '#dc2626' : '#6b7280',
               display: 'flex',
               alignItems: 'center',
               gap: '0.25rem'
             }}>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="#059669">
-                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-              </svg>
-              Gmail detectado - Acceso rápido en futuros logins
+              {emailValid === true ? (
+                <>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="#059669">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                  Email válido
+                </>
+              ) : emailValid === false ? (
+                <>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="#dc2626">
+                    <path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                  Correo no válido - Usa un proveedor confiable
+                </>
+              ) : (
+                <>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="#6b7280">
+                    <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+                  </svg>
+                  Ingresa un correo válido
+                </>
+              )}
             </div>
           )}
         </div>
@@ -314,6 +347,54 @@ export default function RegisterForm() {
             fontSize: '0.9rem'
           }}>
             ❌ {error}
+            
+            {/* Mostrar sugerencias de correo si existen */}
+            {emailSuggestions.length > 0 && (
+              <div style={{ marginTop: '0.75rem' }}>
+                <div style={{ 
+                  fontSize: '0.85rem', 
+                  fontWeight: '600', 
+                  marginBottom: '0.5rem',
+                  color: '#374151'
+                }}>
+                  💡 Sugerencias de correo:
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                  {emailSuggestions.map((suggestion, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      onClick={() => {
+                        setFormData(prev => ({ ...prev, email: suggestion }))
+                        setError('')
+                        setEmailSuggestions([])
+                      }}
+                      style={{
+                        background: '#f3f4f6',
+                        border: '1px solid #d1d5db',
+                        borderRadius: '6px',
+                        padding: '0.5rem',
+                        fontSize: '0.8rem',
+                        color: '#374151',
+                        cursor: 'pointer',
+                        textAlign: 'left',
+                        transition: 'all 0.2s ease'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = '#e5e7eb'
+                        e.currentTarget.style.borderColor = '#9ca3af'
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = '#f3f4f6'
+                        e.currentTarget.style.borderColor = '#d1d5db'
+                      }}
+                    >
+                      📧 {suggestion}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
 

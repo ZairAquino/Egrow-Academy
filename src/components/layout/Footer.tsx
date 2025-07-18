@@ -35,7 +35,22 @@ export default function Footer() {
           </div>
         </div>
         <div className="footer-bottom">
-          <p>&copy; 2024 eGrow-academy. Todos los derechos reservados.</p>
+          <div className="footer-legal">
+            <p>&copy; 2024 eGrow-academy. Todos los derechos reservados.</p>
+            <div className="footer-links">
+              <Link href="/terminos-condiciones" className="footer-link">
+                Términos y Condiciones
+              </Link>
+              <span className="footer-separator">|</span>
+              <Link href="/politica-privacidad" className="footer-link">
+                Política de Privacidad
+              </Link>
+              <span className="footer-separator">|</span>
+              <Link href="/facturacion" className="footer-link">
+                Facturación
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </footer>

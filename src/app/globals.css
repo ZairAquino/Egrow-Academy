@@ -2946,3 +2946,47 @@ button, a, input, select, textarea {
   font-size: 1.125rem;
   margin-bottom: 1rem;
 }
+
+/* Footer Legal Links */
+.footer-legal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-links {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.footer-link {
+  color: var(--gray-500);
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+  color: var(--gray-700);
+  text-decoration: underline;
+}
+
+.footer-separator {
+  color: var(--gray-400);
+  font-size: 0.875rem;
+}
+
+@media (max-width: 640px) {
+  .footer-legal {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+  
+  .footer-links {
+    justify-content: center;
+  }
+}

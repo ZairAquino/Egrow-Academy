@@ -82,6 +82,18 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Verificar que el email esté verificado
+    if (!user.emailVerified) {
+      console.log('❌ [LOGIN] Email no verificado para:', email)
+      return NextResponse.json(
+        { 
+          error: 'Tu cuenta no está verificada. Revisa tu correo electrónico para el código de verificación.',
+          requiresVerification: true
+        },
+        { status: 401 }
+      )
+    }
+
     console.log('✅ [LOGIN] Cuenta activa, generando token')
 
     // Generar token

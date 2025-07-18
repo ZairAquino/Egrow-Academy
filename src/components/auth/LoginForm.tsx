@@ -67,6 +67,14 @@ export default function LoginForm() {
 
       if (!response.ok) {
         setError(data.error || 'Error al iniciar sesión')
+        
+        // Si requiere verificación, redirigir a la página de verificación
+        if (data.requiresVerification) {
+          setTimeout(() => {
+            router.push(`/verify-email?email=${encodeURIComponent(formData.email)}`)
+            router.refresh()
+          }, 2000)
+        }
         return
       }
 

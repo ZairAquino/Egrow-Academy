@@ -17,6 +17,7 @@
     "@trpc/react-query": "^11.4.3",
     "@trpc/server": "^11.4.3",
     "bcryptjs": "^3.0.2",
+    "email-validator": "^2.0.4",
     "jsonwebtoken": "^9.0.2",
     "next": "15.4.1",
     "react": "19.1.0",
