@@ -86,10 +86,10 @@ async function handlePaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent)
     console.log('💰 [WEBHOOK] Pago exitoso:', paymentIntent.id);
     
     // Actualizar el estado del pago en la base de datos
-    await prisma.payment.updateMany({
+    await (prisma as any).payment.updateMany({
       where: { stripePaymentId: paymentIntent.id },
       data: {
-        status: 'COMPLETED',
+        status: 'SUCCEEDED',
         updatedAt: new Date(),
       },
     });
@@ -104,7 +104,7 @@ async function handlePaymentIntentFailed(paymentIntent: Stripe.PaymentIntent) {
   try {
     console.log('❌ [WEBHOOK] Pago fallido:', paymentIntent.id);
     
-    await prisma.payment.updateMany({
+    await (prisma as any).payment.updateMany({
       where: { stripePaymentId: paymentIntent.id },
       data: {
         status: 'FAILED',
@@ -124,7 +124,7 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
     console.log('📅 [WEBHOOK] Suscripción creada:', subscription.id);
     
     // Buscar el usuario por el customer ID de Stripe
-    const user = await prisma.user.findFirst({
+    const user = await (prisma as any).user.findFirst({
       where: { stripeCustomerId: subscriptionAny.customer as string },
     });
 
@@ -134,7 +134,7 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
     }
 
     // Crear o actualizar la suscripción en la base de datos
-    await prisma.subscription.upsert({
+    await (prisma as any).subscription.upsert({
       where: { stripeSubscriptionId: subscription.id },
       update: {
         status: subscription.status,
