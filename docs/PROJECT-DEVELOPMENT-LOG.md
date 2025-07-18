@@ -202,18 +202,18 @@ GitHub: https://github.com/ZairAquino/Egrow-Academy
 ### **FASE 9: Corrección de Errores de Build**
 
 #### **9.1 Error de TypeScript en Vercel (16/Jul/2025):**
-- ✅ **Problema identificado:** CourseCard faltaban propiedades requeridas en múltiples archivos
+- ✅ **Problema identificado:** Múltiples errores de TypeScript en diferentes archivos
 - ✅ **Archivos afectados:** 
-  - `src/app/cursos-gratuitos/page.tsx` línea 477
-  - `src/components/courses/FeaturedCourses.tsx` línea 48
-- ✅ **Propiedades agregadas:**
-  - `id={course.id.toString()}` → Conversión de number a string
-  - `category={course.tag}` → Usando tag como categoría
-  - `isFree={true}` → Cursos gratuitos por defecto
-  - `requiresAuth={false}` → Sin autenticación requerida
+  - `src/app/cursos-gratuitos/page.tsx` línea 477 → CourseCard faltaban propiedades
+  - `src/components/courses/FeaturedCourses.tsx` línea 48 → CourseCard faltaban propiedades
+  - `src/hooks/useCourseAccess.ts` línea 13 → Propiedad `isAuthenticated` no existe en AuthContext
+- ✅ **Correcciones realizadas:**
+  - **CourseCard:** Agregué `id`, `category`, `isFree`, `requiresAuth`
+  - **useCourseAccess:** Cambié `isAuthenticated` por `status === 'authenticated'`
 - ✅ **Commits realizados:** 
   - `3283dd0` - "fix: Agregar propiedades faltantes a CourseCard en cursos gratuitos"
   - `8eec711` - "fix: Agregar propiedades faltantes a CourseCard en FeaturedCourses"
+  - `b57934c` - "fix: Corregir useCourseAccess para usar status en lugar de isAuthenticated"
 - ✅ **Push exitoso** a rama main
 - ✅ **Build de Vercel** debería compilar correctamente ahora
 
