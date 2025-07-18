@@ -188,17 +188,18 @@ async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
 
 async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
   try {
+    const subscriptionAny = subscription as any;
     // La suscripción ya debería estar creada en la base de datos
     // Solo actualizar si es necesario
     await prisma.subscription.updateMany({
       where: { stripeSubscriptionId: subscription.id },
       data: {
         status: subscription.status.toUpperCase() as any,
-        currentPeriodStart: new Date(subscription.current_period_start * 1000),
-        currentPeriodEnd: new Date(subscription.current_period_end * 1000),
-        cancelAtPeriodEnd: subscription.cancel_at_period_end,
-        trialStart: subscription.trial_start ? new Date(subscription.trial_start * 1000) : null,
-        trialEnd: subscription.trial_end ? new Date(subscription.trial_end * 1000) : null,
+        currentPeriodStart: new Date(subscriptionAny.current_period_start * 1000),
+        currentPeriodEnd: new Date(subscriptionAny.current_period_end * 1000),
+        cancelAtPeriodEnd: subscriptionAny.cancel_at_period_end,
+        trialStart: subscriptionAny.trial_start ? new Date(subscriptionAny.trial_start * 1000) : null,
+        trialEnd: subscriptionAny.trial_end ? new Date(subscriptionAny.trial_end * 1000) : null,
         updatedAt: new Date(),
       },
     });
@@ -211,6 +212,7 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
 
 async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
   try {
+    const subscriptionAny = subscription as any;
     const dbSubscription = await prisma.subscription.findUnique({
       where: { stripeSubscriptionId: subscription.id },
       include: { user: true }
@@ -221,13 +223,13 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
         where: { id: dbSubscription.id },
         data: {
           status: subscription.status.toUpperCase() as any,
-          currentPeriodStart: new Date(subscription.current_period_start * 1000),
-          currentPeriodEnd: new Date(subscription.current_period_end * 1000),
-          cancelAtPeriodEnd: subscription.cancel_at_period_end,
-          canceledAt: subscription.canceled_at ? new Date(subscription.canceled_at * 1000) : null,
-          endedAt: subscription.ended_at ? new Date(subscription.ended_at * 1000) : null,
-          trialStart: subscription.trial_start ? new Date(subscription.trial_start * 1000) : null,
-          trialEnd: subscription.trial_end ? new Date(subscription.trial_end * 1000) : null,
+          currentPeriodStart: new Date(subscriptionAny.current_period_start * 1000),
+          currentPeriodEnd: new Date(subscriptionAny.current_period_end * 1000),
+          cancelAtPeriodEnd: subscriptionAny.cancel_at_period_end,
+          canceledAt: subscriptionAny.canceled_at ? new Date(subscriptionAny.canceled_at * 1000) : null,
+          endedAt: subscriptionAny.ended_at ? new Date(subscriptionAny.ended_at * 1000) : null,
+          trialStart: subscriptionAny.trial_start ? new Date(subscriptionAny.trial_start * 1000) : null,
+          trialEnd: subscriptionAny.trial_end ? new Date(subscriptionAny.trial_end * 1000) : null,
           updatedAt: new Date(),
         },
       });
