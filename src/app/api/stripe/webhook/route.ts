@@ -136,9 +136,10 @@ async function handlePaymentIntentFailed(paymentIntent: Stripe.PaymentIntent) {
 
 async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
   try {
-    if (invoice.subscription) {
+    const invoiceAny = invoice as any;
+    if (invoiceAny.subscription) {
       const subscription = await prisma.subscription.findUnique({
-        where: { stripeSubscriptionId: invoice.subscription as string },
+        where: { stripeSubscriptionId: invoiceAny.subscription as string },
         include: { user: true }
       });
 
@@ -168,9 +169,10 @@ async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
 
 async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
   try {
-    if (invoice.subscription) {
+    const invoiceAny = invoice as any;
+    if (invoiceAny.subscription) {
       await prisma.subscription.updateMany({
-        where: { stripeSubscriptionId: invoice.subscription as string },
+        where: { stripeSubscriptionId: invoiceAny.subscription as string },
         data: {
           status: 'PAST_DUE',
           updatedAt: new Date(),
