@@ -476,12 +476,16 @@ export default function CursosGratuitosPage() {
               {freeCourses.map((course) => (
                 <CourseCard 
                   key={course.id} 
+                  id={course.id.toString()}
                   image={course.image}
                   title={course.title}
                   description={course.description}
                   tag={course.tag}
                   duration={course.duration}
                   level={course.level}
+                  category={course.tag}
+                  isFree={true}
+                  requiresAuth={false}
                   link={course.link}
                 />
               ))}
