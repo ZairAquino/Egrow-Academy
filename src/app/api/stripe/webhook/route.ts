@@ -206,18 +206,18 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
 
     // La suscripción ya debería estar creada en la base de datos
     // Solo actualizar si es necesario
-    await prisma.subscription.updateMany({
-      where: { stripeSubscriptionId: subscription.id },
-      data: {
-        status: mapStripeStatusToPrisma(subscription.status),
-        currentPeriodStart: new Date(subscriptionAny.current_period_start * 1000),
-        currentPeriodEnd: new Date(subscriptionAny.current_period_end * 1000),
-        cancelAtPeriodEnd: subscriptionAny.cancel_at_period_end,
-        trialStart: subscriptionAny.trial_start ? new Date(subscriptionAny.trial_start * 1000) : null,
-        trialEnd: subscriptionAny.trial_end ? new Date(subscriptionAny.trial_end * 1000) : null,
-        updatedAt: new Date(),
-      },
-    });
+          await prisma.subscription.updateMany({
+        where: { stripeSubscriptionId: subscription.id },
+        data: {
+          status: mapStripeStatusToPrisma(subscription.status) as any,
+          currentPeriodStart: new Date(subscriptionAny.current_period_start * 1000),
+          currentPeriodEnd: new Date(subscriptionAny.current_period_end * 1000),
+          cancelAtPeriodEnd: subscriptionAny.cancel_at_period_end,
+          trialStart: subscriptionAny.trial_start ? new Date(subscriptionAny.trial_start * 1000) : null,
+          trialEnd: subscriptionAny.trial_end ? new Date(subscriptionAny.trial_end * 1000) : null,
+          updatedAt: new Date(),
+        },
+      });
 
     console.log(`Suscripción creada: ${subscription.id}`);
   } catch (error) {
@@ -252,7 +252,7 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
       await prisma.subscription.update({
         where: { id: dbSubscription.id },
         data: {
-          status: mapStripeStatusToPrisma(subscription.status),
+          status: mapStripeStatusToPrisma(subscription.status) as any,
           currentPeriodStart: new Date(subscriptionAny.current_period_start * 1000),
           currentPeriodEnd: new Date(subscriptionAny.current_period_end * 1000),
           cancelAtPeriodEnd: subscriptionAny.cancel_at_period_end,

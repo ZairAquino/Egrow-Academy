@@ -151,7 +151,7 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
     await (prisma as any).subscription.upsert({
       where: { stripeSubscriptionId: subscription.id },
       update: {
-        status: mapStripeStatusToPrisma(subscription.status),
+        status: mapStripeStatusToPrisma(subscription.status) as any,
         currentPeriodStart: new Date(subscriptionAny.current_period_start * 1000),
         currentPeriodEnd: new Date(subscriptionAny.current_period_end * 1000),
         updatedAt: new Date(),
@@ -160,7 +160,7 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
         stripeSubscriptionId: subscription.id,
         userId: user.id,
         stripePriceId: subscriptionAny.items.data[0].price.id,
-        status: mapStripeStatusToPrisma(subscription.status),
+        status: mapStripeStatusToPrisma(subscription.status) as any,
         currentPeriodStart: new Date(subscriptionAny.current_period_start * 1000),
         currentPeriodEnd: new Date(subscriptionAny.current_period_end * 1000),
       },
@@ -200,7 +200,7 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
     await (prisma as any).subscription.updateMany({
       where: { stripeSubscriptionId: subscription.id },
       data: {
-        status: mapStripeStatusToPrisma(subscription.status),
+        status: mapStripeStatusToPrisma(subscription.status) as any,
         currentPeriodStart: new Date(subscriptionAny.current_period_start * 1000),
         currentPeriodEnd: new Date(subscriptionAny.current_period_end * 1000),
         updatedAt: new Date(),
