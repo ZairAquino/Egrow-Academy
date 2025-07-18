@@ -201,19 +201,24 @@ GitHub: https://github.com/ZairAquino/Egrow-Academy
 
 ### **FASE 9: Corrección de Errores de Build**
 
-#### **9.1 Error de TypeScript en Vercel (16/Jul/2025):**
-- ✅ **Problema identificado:** Múltiples errores de TypeScript en diferentes archivos
+#### **9.1 Errores de Build en Vercel (16/Jul/2025):**
+- ✅ **Problemas identificados:** Múltiples errores de TypeScript y Next.js
 - ✅ **Archivos afectados:** 
   - `src/app/cursos-gratuitos/page.tsx` línea 477 → CourseCard faltaban propiedades
   - `src/components/courses/FeaturedCourses.tsx` línea 48 → CourseCard faltaban propiedades
   - `src/hooks/useCourseAccess.ts` línea 13 → Propiedad `isAuthenticated` no existe en AuthContext
+  - `src/app/payment/success/page.tsx` → useSearchParams necesita Suspense
+  - `src/app/layout.tsx` → viewport y themeColor deben estar en export separado
 - ✅ **Correcciones realizadas:**
-  - **CourseCard:** Agregué `id`, `category`, `isFree`, `requiresAuth`
+  - **CourseCard:** Agregué `id`, `category`, `isFree`, `requiresAuth` en todos los usos
   - **useCourseAccess:** Cambié `isAuthenticated` por `status === 'authenticated'`
+  - **useSearchParams:** Envolví en Suspense con fallback apropiado
+  - **Metadata:** Moví viewport y themeColor a export separado según Next.js 15
 - ✅ **Commits realizados:** 
   - `3283dd0` - "fix: Agregar propiedades faltantes a CourseCard en cursos gratuitos"
   - `8eec711` - "fix: Agregar propiedades faltantes a CourseCard en FeaturedCourses"
   - `b57934c` - "fix: Corregir useCourseAccess para usar status en lugar de isAuthenticated"
+  - `05de0ea` - "fix: Corregir errores de build - Suspense para useSearchParams y metadata viewport/themeColor"
 - ✅ **Push exitoso** a rama main
 - ✅ **Build de Vercel** debería compilar correctamente ahora
 
