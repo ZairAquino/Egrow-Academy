@@ -10,9 +10,11 @@ interface Course {
 }
 
 export function useCourseAccess() {
-  const { user, isAuthenticated } = useAuth();
+  const { user, status } = useAuth();
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+
+  const isAuthenticated = status === 'authenticated';
 
   const canAccessCourse = (course: Course): boolean => {
     if (course.isFree) {

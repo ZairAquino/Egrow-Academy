@@ -202,14 +202,18 @@ GitHub: https://github.com/ZairAquino/Egrow-Academy
 ### **FASE 9: Corrección de Errores de Build**
 
 #### **9.1 Error de TypeScript en Vercel (16/Jul/2025):**
-- ✅ **Problema identificado:** CourseCard faltaban propiedades requeridas
-- ✅ **Archivo afectado:** `src/app/cursos-gratuitos/page.tsx` línea 477
+- ✅ **Problema identificado:** CourseCard faltaban propiedades requeridas en múltiples archivos
+- ✅ **Archivos afectados:** 
+  - `src/app/cursos-gratuitos/page.tsx` línea 477
+  - `src/components/courses/FeaturedCourses.tsx` línea 48
 - ✅ **Propiedades agregadas:**
   - `id={course.id.toString()}` → Conversión de number a string
   - `category={course.tag}` → Usando tag como categoría
   - `isFree={true}` → Cursos gratuitos por defecto
   - `requiresAuth={false}` → Sin autenticación requerida
-- ✅ **Commit realizado:** `3283dd0` - "fix: Agregar propiedades faltantes a CourseCard"
+- ✅ **Commits realizados:** 
+  - `3283dd0` - "fix: Agregar propiedades faltantes a CourseCard en cursos gratuitos"
+  - `8eec711` - "fix: Agregar propiedades faltantes a CourseCard en FeaturedCourses"
 - ✅ **Push exitoso** a rama main
 - ✅ **Build de Vercel** debería compilar correctamente ahora
 
