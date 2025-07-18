@@ -87,7 +87,7 @@ async function handlePaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent)
     
     // Actualizar el estado del pago en la base de datos
     await prisma.payment.updateMany({
-      where: { stripePaymentIntentId: paymentIntent.id },
+      where: { stripePaymentId: paymentIntent.id },
       data: {
         status: 'COMPLETED',
         updatedAt: new Date(),
@@ -105,7 +105,7 @@ async function handlePaymentIntentFailed(paymentIntent: Stripe.PaymentIntent) {
     console.log('❌ [WEBHOOK] Pago fallido:', paymentIntent.id);
     
     await prisma.payment.updateMany({
-      where: { stripePaymentIntentId: paymentIntent.id },
+      where: { stripePaymentId: paymentIntent.id },
       data: {
         status: 'FAILED',
         updatedAt: new Date(),
@@ -120,11 +120,12 @@ async function handlePaymentIntentFailed(paymentIntent: Stripe.PaymentIntent) {
 
 async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
   try {
+    const subscriptionAny = subscription as any;
     console.log('📅 [WEBHOOK] Suscripción creada:', subscription.id);
     
     // Buscar el usuario por el customer ID de Stripe
     const user = await prisma.user.findFirst({
-      where: { stripeCustomerId: subscription.customer as string },
+      where: { stripeCustomerId: subscriptionAny.customer as string },
     });
 
     if (!user) {
@@ -137,17 +138,17 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
       where: { stripeSubscriptionId: subscription.id },
       update: {
         status: subscription.status,
-        currentPeriodStart: new Date(subscription.current_period_start * 1000),
-        currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+        currentPeriodStart: new Date(subscriptionAny.current_period_start * 1000),
+        currentPeriodEnd: new Date(subscriptionAny.current_period_end * 1000),
         updatedAt: new Date(),
       },
       create: {
         stripeSubscriptionId: subscription.id,
         userId: user.id,
-        stripePriceId: subscription.items.data[0].price.id,
+        stripePriceId: subscriptionAny.items.data[0].price.id,
         status: subscription.status,
-        currentPeriodStart: new Date(subscription.current_period_start * 1000),
-        currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+        currentPeriodStart: new Date(subscriptionAny.current_period_start * 1000),
+        currentPeriodEnd: new Date(subscriptionAny.current_period_end * 1000),
       },
     });
 
