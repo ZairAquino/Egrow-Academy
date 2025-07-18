@@ -132,15 +132,21 @@ async function initializeStripeProducts() {
 
       // Crear precios para el producto
       for (const priceData of productData.prices) {
-        const price = await createStripePrice({
+        const priceParams: any = {
           productId: product.id,
           unitAmount: priceData.amount,
           currency: priceData.currency,
           type: priceData.type,
-          interval: priceData.interval,
-          intervalCount: priceData.intervalCount,
-          trialPeriodDays: priceData.trialPeriodDays,
-        });
+        };
+
+        // Solo agregar propiedades de suscripción si el tipo es recurring
+        if (priceData.type === 'recurring') {
+          priceParams.interval = priceData.interval;
+          priceParams.intervalCount = priceData.intervalCount;
+          priceParams.trialPeriodDays = priceData.trialPeriodDays;
+        }
+
+        const price = await createStripePrice(priceParams);
 
         console.log(`💰 Precio creado: ${price.id} - ${priceData.amount / 100} ${priceData.currency.toUpperCase()}`);
       }
