@@ -94,11 +94,25 @@ export async function POST(request: NextRequest) {
       trialPeriodDays,
     }) as any; // Cast explícito para evitar errores de TypeScript
 
+    // Mapear el status de Stripe al enum de Prisma
+    const mapStripeStatusToPrisma = (stripeStatus: string): string => {
+      const statusMap: { [key: string]: string } = {
+        'active': 'ACTIVE',
+        'trialing': 'TRIALING',
+        'canceled': 'CANCELED',
+        'incomplete': 'INCOMPLETE',
+        'incomplete_expired': 'INCOMPLETE_EXPIRED',
+        'past_due': 'PAST_DUE',
+        'unpaid': 'UNPAID'
+      };
+      return statusMap[stripeStatus] || 'ACTIVE';
+    };
+
     // Guardar la suscripción en la base de datos
     const subscription = await prisma.subscription.create({
       data: {
         stripeSubscriptionId: stripeSubscription.id,
-        status: stripeSubscription.status.toUpperCase() as any,
+        status: mapStripeStatusToPrisma(stripeSubscription.status),
         currentPeriodStart: new Date(stripeSubscription.current_period_start * 1000),
         currentPeriodEnd: new Date(stripeSubscription.current_period_end * 1000),
         cancelAtPeriodEnd: stripeSubscription.cancel_at_period_end,

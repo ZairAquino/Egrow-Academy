@@ -189,12 +189,27 @@ async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
 async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
   try {
     const subscriptionAny = subscription as any;
+    
+    // Mapear el status de Stripe al enum de Prisma
+    const mapStripeStatusToPrisma = (stripeStatus: string): string => {
+      const statusMap: { [key: string]: string } = {
+        'active': 'ACTIVE',
+        'trialing': 'TRIALING',
+        'canceled': 'CANCELED',
+        'incomplete': 'INCOMPLETE',
+        'incomplete_expired': 'INCOMPLETE_EXPIRED',
+        'past_due': 'PAST_DUE',
+        'unpaid': 'UNPAID'
+      };
+      return statusMap[stripeStatus] || 'ACTIVE';
+    };
+
     // La suscripción ya debería estar creada en la base de datos
     // Solo actualizar si es necesario
     await prisma.subscription.updateMany({
       where: { stripeSubscriptionId: subscription.id },
       data: {
-        status: subscription.status.toUpperCase() as any,
+        status: mapStripeStatusToPrisma(subscription.status),
         currentPeriodStart: new Date(subscriptionAny.current_period_start * 1000),
         currentPeriodEnd: new Date(subscriptionAny.current_period_end * 1000),
         cancelAtPeriodEnd: subscriptionAny.cancel_at_period_end,
@@ -213,6 +228,21 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
 async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
   try {
     const subscriptionAny = subscription as any;
+    
+    // Mapear el status de Stripe al enum de Prisma
+    const mapStripeStatusToPrisma = (stripeStatus: string): string => {
+      const statusMap: { [key: string]: string } = {
+        'active': 'ACTIVE',
+        'trialing': 'TRIALING',
+        'canceled': 'CANCELED',
+        'incomplete': 'INCOMPLETE',
+        'incomplete_expired': 'INCOMPLETE_EXPIRED',
+        'past_due': 'PAST_DUE',
+        'unpaid': 'UNPAID'
+      };
+      return statusMap[stripeStatus] || 'ACTIVE';
+    };
+
     const dbSubscription = await prisma.subscription.findUnique({
       where: { stripeSubscriptionId: subscription.id },
       include: { user: true }
@@ -222,7 +252,7 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
       await prisma.subscription.update({
         where: { id: dbSubscription.id },
         data: {
-          status: subscription.status.toUpperCase() as any,
+          status: mapStripeStatusToPrisma(subscription.status),
           currentPeriodStart: new Date(subscriptionAny.current_period_start * 1000),
           currentPeriodEnd: new Date(subscriptionAny.current_period_end * 1000),
           cancelAtPeriodEnd: subscriptionAny.cancel_at_period_end,
