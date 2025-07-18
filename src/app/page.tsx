@@ -1,14 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import Sidebar from '@/components/Sidebar';
-import FixedUserProfile from '@/components/FixedUserProfile';
-import Hero from '@/components/Hero';
-import CompaniesMarquee from '@/components/CompaniesMarquee';
-import FeaturedCourses from '@/components/FeaturedCourses';
-import Newsletter from '@/components/Newsletter';
-import WhyChoose from '@/components/WhyChoose';
-import Footer from '@/components/Footer';
+import Sidebar from '@/components/layout/Sidebar';
+import FixedUserProfile from '@/components/auth/FixedUserProfile';
+import Hero from '@/components/layout/Hero';
+import CompaniesMarquee from '@/components/ui/CompaniesMarquee';
+import FeaturedCourses from '@/components/courses/FeaturedCourses';
+import Newsletter from '@/components/ui/Newsletter';
+import WhyChoose from '@/components/ui/WhyChoose';
+import Footer from '@/components/layout/Footer';
 
 export default function Home() {
   const [sidebarOpen, setSidebarOpen] = useState(false);

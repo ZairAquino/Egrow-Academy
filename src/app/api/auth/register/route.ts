@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { hashPassword, generateToken, createSafeUser } from '@/lib/auth'
 import { RegisterData } from '@/types/auth'
-import { EmailService } from '@/lib/email'
-import { VerificationService } from '@/lib/verification'
 
 export async function POST(request: NextRequest) {
   try {
@@ -29,8 +27,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Validar formato de email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    // Validar formato de email más estricto
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
     if (!emailRegex.test(email)) {
       console.log('❌ [REGISTER] Email inválido:', email)
       return NextResponse.json(
@@ -106,21 +104,26 @@ export async function POST(request: NextRequest) {
       }
     })
 
+    // Si el usuario ya existe, siempre devolver éxito (sin revelar que existe)
     if (existingUser) {
-      if (existingUser.email === email) {
-        console.log('❌ [REGISTER] Email ya existe:', email)
-        return NextResponse.json(
-          { error: 'Ya existe una cuenta con este correo electrónico. ¿Ya tienes una cuenta?' },
-          { status: 409 }
-        )
-      }
-      if (username && existingUser.username === username) {
-        console.log('❌ [REGISTER] Username ya existe:', username)
-        return NextResponse.json(
-          { error: 'Este nombre de usuario ya está en uso. Elige otro' },
-          { status: 409 }
-        )
-      }
+      console.log('✅ [REGISTER] Usuario ya existe, devolviendo éxito sin revelar')
+      
+      // Devolver respuesta de éxito sin crear nada nuevo
+      const response = NextResponse.json({
+        user: createSafeUser(existingUser),
+        message: '¡Cuenta creada exitosamente! Ya puedes iniciar sesión.'
+      })
+
+      // Establecer cookie HTTP-only para mantener sesión
+      response.cookies.set('auth-token', generateToken(existingUser.id), {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 7 * 24 * 60 * 60, // 7 días en segundos
+        path: '/'
+      })
+
+      return response
     }
 
     console.log('✅ [REGISTER] Usuario no existe, hasheando contraseña')
@@ -129,14 +132,9 @@ export async function POST(request: NextRequest) {
     const passwordHash = await hashPassword(password)
     console.log('✅ [REGISTER] Contraseña hasheada correctamente')
 
-    console.log('✅ [REGISTER] Generando token de verificación')
-
-    // Generar token de verificación
-    const verificationToken = VerificationService.generateVerificationToken()
-
     console.log('✅ [REGISTER] Creando usuario en base de datos')
 
-    // Crear usuario con token de verificación
+    // Crear usuario con email verificado inmediatamente
     const user = await prisma.user.create({
       data: {
         email,
@@ -144,8 +142,7 @@ export async function POST(request: NextRequest) {
         firstName: firstName.trim(),
         lastName: lastName.trim(),
         username: username?.trim() || null,
-        emailVerificationToken: verificationToken.token,
-        emailVerificationExpires: verificationToken.expiresAt
+        emailVerified: true, // Email verificado inmediatamente
       }
     })
 
@@ -166,20 +163,6 @@ export async function POST(request: NextRequest) {
 
     console.log('✅ [REGISTER] Sesión creada')
 
-    // Enviar email de verificación
-    console.log('📧 [REGISTER] Enviando email de verificación')
-    const emailSent = await EmailService.sendVerificationEmail({
-      email: user.email,
-      name: `${user.firstName} ${user.lastName}`,
-      verificationToken: verificationToken.token
-    })
-
-    if (emailSent) {
-      console.log('✅ [REGISTER] Email de verificación enviado exitosamente')
-    } else {
-      console.log('⚠️ [REGISTER] Error enviando email de verificación')
-    }
-
     // Devolver usuario sin passwordHash
     const safeUser = createSafeUser(user)
 
@@ -187,9 +170,7 @@ export async function POST(request: NextRequest) {
     const response = NextResponse.json({
       user: safeUser,
       token,
-      message: emailSent 
-        ? '¡Cuenta creada exitosamente! Revisa tu email para verificar tu cuenta'
-        : '¡Cuenta creada exitosamente! (Error enviando email de verificación)'
+      message: '¡Cuenta creada exitosamente! Ya puedes iniciar sesión.'
     })
 
     // Establecer cookie HTTP-only para mantener sesión

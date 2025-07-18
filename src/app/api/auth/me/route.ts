@@ -1,33 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { verifyToken, extractTokenFromHeader, createSafeUser } from '@/lib/auth'
-import { auth } from '@/lib/auth.config'
 
 export async function GET(request: NextRequest) {
   try {
-    // Primero verificar si hay sesión de NextAuth (Google OAuth)
-    const session = await auth()
-    
-    if (session?.user?.email) {
-      // Obtener usuario desde la base de datos usando el email de la sesión
-      const user = await prisma.user.findUnique({
-        where: { email: session.user.email },
-        include: {
-          enrollments: {
-            include: {
-              course: true
-            }
-          }
-        }
-      })
-
-      if (user) {
-        const safeUser = createSafeUser(user)
-        return NextResponse.json({ user: safeUser })
-      }
-    }
-
-    // Si no hay sesión de NextAuth, verificar con el sistema manual
+    // Verificar token desde cookies o headers
     const cookieToken = request.cookies.get('auth-token')?.value
     const authHeader = request.headers.get('authorization')
     const headerToken = extractTokenFromHeader(authHeader)
@@ -44,12 +21,12 @@ export async function GET(request: NextRequest) {
     // Verificar token
     const { userId } = verifyToken(token)
 
-    // Verificar sesión manual
-    const manualSession = await prisma.session.findUnique({
+    // Verificar sesión en base de datos
+    const session = await prisma.session.findUnique({
       where: { token }
     })
 
-    if (!manualSession || manualSession.expiresAt < new Date()) {
+    if (!session || session.expiresAt < new Date()) {
       return NextResponse.json(
         { error: 'Sesión expirada' },
         { status: 401 }

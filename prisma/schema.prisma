@@ -10,7 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Modelo de Usuarios (Actualizado para Auth.js)
+// Modelo de Usuarios (Simplificado sin NextAuth)
 model User {
   id              String          @id @default(cuid())
   email           String          @unique
@@ -22,9 +22,7 @@ model User {
   bio             String?
   membershipLevel MembershipLevel @default(FREE)
   isActive        Boolean         @default(true)
-  emailVerified   Boolean         @default(false)
-  emailVerificationToken String?
-  emailVerificationExpires DateTime?
+  emailVerified   Boolean         @default(true) // Siempre verificado
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
   lastLogin       DateTime?
@@ -38,53 +36,7 @@ model User {
   sessions        Session[]
   courses         Course[]        @relation("CourseInstructor")
 
-  // Relaciones para Auth.js
-  accounts        Account[]
-  sessions_auth   Session_auth[]
-
   @@map("users")
-}
-
-// Tabla para cuentas OAuth (Auth.js)
-model Account {
-  id                String  @id @default(cuid())
-  userId            String
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String? @db.Text
-  session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
-  @@map("accounts")
-}
-
-// Tabla para sesiones de Auth.js
-model Session_auth {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("sessions_auth")
-}
-
-// Tabla para verificación de emails (Auth.js)
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
-  @@map("verification_tokens")
 }
 
 // Modelo de Sesiones (Existente - mantener para compatibilidad)
@@ -250,12 +202,12 @@ enum CommentType {
 
 enum QuestionStatus {
   OPEN
-  ANSWERED
   CLOSED
+  RESOLVED
 }
 
 enum EnrollmentStatus {
   ACTIVE
   COMPLETED
-  DROPPED
+  CANCELLED
 }

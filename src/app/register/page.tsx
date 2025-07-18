@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import RegisterForm from '@/components/RegisterForm';
-import Sidebar from '@/components/Sidebar';
+import RegisterForm from '@/components/auth/RegisterForm';
+import Sidebar from '@/components/layout/Sidebar';
 import Link from 'next/link';
 
 export default function RegisterPage() {

@@ -57,6 +57,25 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
     }
   };
 
+  // Función para obtener el nombre completo del usuario
+  const getUserFullName = () => {
+    if (user?.firstName && user?.lastName) {
+      return `${user.firstName} ${user.lastName}`;
+    }
+    return user?.firstName || user?.username || 'Usuario';
+  };
+
+  // Función para obtener la inicial del nombre
+  const getUserInitial = () => {
+    if (user?.firstName) {
+      return user.firstName.charAt(0).toUpperCase();
+    }
+    if (user?.username) {
+      return user.username.charAt(0).toUpperCase();
+    }
+    return 'U';
+  };
+
   // Mostrar estado de carga
   if (status === 'loading') {
     return (
@@ -164,10 +183,10 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
         aria-haspopup="true"
       >
         <div className="profile-avatar">
-          {user.image ? (
+          {user.profileImage ? (
             <Image 
-              src={user.image} 
-              alt={user.name || 'Usuario'} 
+              src={user.profileImage} 
+              alt={getUserFullName()} 
               width={32} 
               height={32}
               className="avatar-image"
@@ -175,12 +194,12 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
             />
           ) : (
             <span className="avatar-text">
-              {user.name?.charAt(0)?.toUpperCase() || 'U'}
+              {getUserInitial()}
             </span>
           )}
         </div>
         <div className="profile-info">
-          <span className="profile-name">{user.name || 'Usuario'}</span>
+          <span className="profile-name">{getUserFullName()}</span>
           <span 
             className="profile-membership"
             style={{ color: getMembershipColor(user.membershipLevel || 'FREE') }}
@@ -195,10 +214,10 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
         <div className="profile-dropdown">
           <div className="profile-header">
             <div className="profile-avatar large">
-              {user.image ? (
+              {user.profileImage ? (
                 <Image 
-                  src={user.image} 
-                  alt={user.name || 'Usuario'} 
+                  src={user.profileImage} 
+                  alt={getUserFullName()} 
                   width={48} 
                   height={48}
                   className="avatar-image"
@@ -206,12 +225,12 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
                 />
               ) : (
                 <span className="avatar-text">
-                  {user.name?.charAt(0)?.toUpperCase() || 'U'}
+                  {getUserInitial()}
                 </span>
               )}
             </div>
             <div className="profile-details">
-              <h3>{user.name || 'Usuario'}</h3>
+              <h3>{getUserFullName()}</h3>
               <p className="profile-email">{user.email || 'No disponible'}</p>
               <span 
                 className="membership-badge"
@@ -248,13 +267,7 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
             <Link href="/my-courses" className="action-btn">
               📚 Mis Cursos
             </Link>
-            <Link href="/settings" className="action-btn">
-              ⚙️ Configuración
-            </Link>
-            <Link href="/upgrade" className="action-btn upgrade-btn">
-              ⭐ Actualizar Plan
-            </Link>
-            <button onClick={handleLogout} className="action-btn logout-btn">
+            <button onClick={handleLogout} className="action-btn logout">
               🚪 Cerrar Sesión
             </button>
           </div>

@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import LoginForm from '@/components/LoginForm';
-import Sidebar from '@/components/Sidebar';
+import LoginForm from '@/components/auth/LoginForm';
+import Sidebar from '@/components/layout/Sidebar';
 import Link from 'next/link';
 
 export default function LoginPage() {

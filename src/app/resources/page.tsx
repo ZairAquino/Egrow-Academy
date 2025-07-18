@@ -2,12 +2,12 @@
 
 import { useState, Suspense } from 'react';
 import dynamic from 'next/dynamic';
-import Sidebar from '@/components/Sidebar';
-import LoadingSpinner from '@/components/LoadingSpinner';
-import Footer from '@/components/Footer';
+import Sidebar from '@/components/layout/Sidebar';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import Footer from '@/components/layout/Footer';
 
 // Lazy load components
-const CompaniesMarquee = dynamic(() => import('@/components/CompaniesMarquee'), {
+const CompaniesMarquee = dynamic(() => import('@/components/ui/CompaniesMarquee'), {
   loading: () => <LoadingSpinner />,
   ssr: false
 });

@@ -1,188 +1,111 @@
-# 🚀 eGrow Academy - Plataforma de Aprendizaje de IA
+# 🎓 eGrow Academy
 
-Plataforma educativa moderna para aprender Inteligencia Artificial y Machine Learning, construida con Next.js 15, TypeScript, PostgreSQL y Prisma.
+Plataforma educativa de Inteligencia Artificial desarrollada con Next.js 15, TypeScript y PostgreSQL.
 
-## 🎯 Características
+## 🚀 Características
 
-- **Cursos Gratuitos y Premium**: Sistema de membresía con acceso controlado
-- **Comunidad Interactiva**: Foro, preguntas y respuestas
-- **Autenticación Segura**: JWT + bcrypt para protección de usuarios
-- **Diseño Responsivo**: Optimizado para móviles y desktop
-- **Escalabilidad**: PostgreSQL + Prisma para grandes volúmenes de datos
-
-## 🛠️ Tecnologías
-
-- **Frontend**: Next.js 15, TypeScript, Tailwind CSS
-- **Backend**: Next.js API Routes, Prisma ORM
-- **Base de Datos**: PostgreSQL
-- **Autenticación**: JWT, bcrypt
-- **Deploy**: Vercel (recomendado)
-
-## 📋 Estado del Proyecto
-
-### ✅ Completado (40%)
-- [x] Configuración inicial de Prisma + PostgreSQL
-- [x] Modelo de datos completo (9 entidades)
-- [x] Utilidades de autenticación
-- [x] Tipos TypeScript
-- [x] Documentación completa
-
-### 🔄 En Progreso (60%)
-- [ ] Configuración de PostgreSQL
-- [ ] Migraciones de base de datos
-- [ ] APIs de autenticación
-- [ ] Componentes de frontend
-- [ ] Integración completa
-
-## 🚀 Inicio Rápido
-
-### Prerrequisitos
-- Node.js 18+ 
-- PostgreSQL (local o cloud)
-- npm o yarn
-
-### Instalación
-
-1. **Clonar el repositorio**
-```bash
-git clone [url-del-repositorio]
-cd egrow-academy-nextjs
-```
-
-2. **Instalar dependencias**
-```bash
-npm install
-```
-
-3. **Configurar variables de entorno**
-```bash
-# Crear archivo .env
-cp .env.example .env
-
-# Editar .env con tus credenciales
-DATABASE_URL="postgresql://usuario:password@host:port/egrow_academy"
-JWT_SECRET="tu_jwt_secret_super_seguro_minimo_32_caracteres"
-```
-
-4. **Configurar base de datos**
-```bash
-# Generar cliente Prisma
-npx prisma generate
-
-# Crear y ejecutar migraciones
-npx prisma migrate dev --name init
-```
-
-5. **Ejecutar en desarrollo**
-```bash
-npm run dev
-```
-
-Abrir [http://localhost:3000](http://localhost:3000) para ver la aplicación.
+- **Autenticación Simplificada**: Sistema de login/registro con JWT
+- **Selección Rápida de Gmail**: Acceso rápido para usuarios con correos Gmail
+- **Diseño Responsivo**: Mobile-first con Tailwind CSS
+- **Base de Datos**: PostgreSQL con Prisma ORM
+- **Performance**: Optimizado con Next.js 15 y Turbopack
 
 ## 📁 Estructura del Proyecto
 
 ```
-egrow-academy-nextjs/
-├── src/
-│   ├── app/                 # Next.js App Router
-│   ├── components/          # Componentes React
-│   ├── lib/                 # Utilidades y configuración
-│   ├── types/               # Tipos TypeScript
-│   └── contexts/            # Contextos React
-├── prisma/
-│   └── schema.prisma        # Modelo de datos
-├── docs/                    # Documentación
-│   ├── DATABASE-SETUP.md    # Configuración de BD
-│   ├── NEXT-STEPS.md        # Próximos pasos
-│   └── EXECUTIVE-SUMMARY.md # Resumen ejecutivo
-└── public/                  # Archivos estáticos
+src/
+├── app/                    # Páginas de Next.js App Router
+│   ├── api/auth/          # APIs de autenticación
+│   ├── community/         # Página de comunidad
+│   ├── contacto/          # Página de contacto
+│   ├── courses/           # Página de cursos
+│   ├── cursos-cortos/     # Página de cursos cortos
+│   ├── login/             # Página de login
+│   ├── register/          # Página de registro
+│   └── resources/         # Página de recursos
+├── components/
+│   ├── auth/              # Componentes de autenticación
+│   ├── courses/           # Componentes de cursos
+│   ├── layout/            # Componentes de layout
+│   └── ui/                # Componentes de UI
+├── contexts/              # Contextos de React
+├── lib/                   # Utilidades y configuraciones
+└── types/                 # Tipos de TypeScript
 ```
 
-## 🗄️ Modelo de Datos
+## 🛠️ Tecnologías
 
-### Entidades Principales
-- **User**: Usuarios con niveles de membresía (FREE/PREMIUM)
-- **Course**: Cursos con sistema de precios y dificultad
-- **Comment**: Sistema de comentarios con respuestas
-- **Question**: Preguntas de la comunidad
-- **Enrollment**: Inscripciones y progreso de usuarios
-- **Like**: Sistema de likes flexible
-- **Session**: Gestión de sesiones
-- **Lesson**: Lecciones dentro de cursos
-- **CommunityPost**: Posts del foro
+- **Frontend**: Next.js 15.4.1, TypeScript, Tailwind CSS
+- **Backend**: Next.js API Routes, Prisma ORM
+- **Base de Datos**: PostgreSQL
+- **Autenticación**: JWT con cookies HTTP-only
 
-## 🔐 Sistema de Autenticación
+## 🚀 Instalación
 
-### Flujo de Usuario
-1. **Visitante**: Ve contenido limitado
-2. **Intenta interactuar**: Modal de login aparece
-3. **Usuario registrado**: Acceso completo a funcionalidades gratuitas
-4. **Usuario premium**: Acceso a cursos de pago (futuro)
+1. **Clonar el repositorio**
+   ```bash
+   git clone <repository-url>
+   cd Egrow-Academy
+   ```
 
-### Características de Seguridad
-- Contraseñas hasheadas con bcrypt (12 rounds)
-- JWT con expiración de 7 días
-- Validación de inputs
-- Middleware de autenticación
-- Tipos seguros (excluye passwordHash)
+2. **Instalar dependencias**
+   ```bash
+   npm install
+   ```
+
+3. **Configurar variables de entorno**
+   ```bash
+   cp .env.example .env.local
+   ```
+   
+   Configurar las siguientes variables:
+   ```
+   DATABASE_URL="postgresql://..."
+   JWT_SECRET="tu-secreto-jwt"
+   ```
+
+4. **Configurar la base de datos**
+   ```bash
+   npx prisma generate
+   npx prisma db push
+   ```
+
+5. **Ejecutar en desarrollo**
+   ```bash
+   npm run dev
+   ```
 
 ## 📚 Documentación
 
-- **[DATABASE-SETUP.md](./docs/DATABASE-SETUP.md)**: Configuración completa de base de datos
-- **[NEXT-STEPS.md](./docs/NEXT-STEPS.md)**: Próximos pasos detallados
-- **[EXECUTIVE-SUMMARY.md](./docs/EXECUTIVE-SUMMARY.md)**: Resumen ejecutivo del proyecto
+- [Guía de Autenticación](./docs/features/AUTH_SIMPLIFICATION.md)
+- [Selección Rápida de Gmail](./docs/features/GMAIL_QUICK_SELECT.md)
+- [Resumen del Proyecto](./docs/features/QUICK-SUMMARY.md)
+- [Log de Desarrollo](./docs/PROJECT-DEVELOPMENT-LOG.md)
 
-## 🛠️ Comandos Útiles
+## 🎯 Funcionalidades Principales
 
-```bash
-# Desarrollo
-npm run dev          # Servidor de desarrollo
-npm run build        # Build de producción
-npm run start        # Servidor de producción
+### Autenticación
+- Registro con verificación automática de email
+- Login con JWT seguro
+- Logout automático
 
-# Base de datos
-npx prisma studio    # Interfaz visual de BD
-npx prisma generate  # Generar cliente Prisma
-npx prisma migrate dev --name [nombre]  # Crear migración
-npx prisma db push   # Sincronizar schema (solo desarrollo)
+### Selección Rápida de Gmail
+- Guardado automático de correos Gmail
+- Dropdown para selección rápida
+- Máximo 5 correos guardados
 
-# TypeScript
-npm run type-check   # Verificar tipos
-```
+### Cursos
+- Catálogo de cursos de IA
+- Cursos cortos especializados
+- Recursos educativos
 
-## 🌐 Deploy
+## 🔧 Scripts Disponibles
 
-### Vercel (Recomendado)
-1. Conectar repositorio a Vercel
-2. Configurar variables de entorno
-3. Deploy automático en cada push
+- `npm run dev` - Servidor de desarrollo
+- `npm run build` - Build de producción
+- `npm run start` - Servidor de producción
+- `npm run lint` - Linting del código
 
-### Variables de Entorno en Producción
-```env
-DATABASE_URL="postgresql://..."
-JWT_SECRET="secret_super_seguro_produccion"
-NODE_ENV="production"
-```
+## 📝 Licencia
 
-## 🤝 Contribuir
-
-1. Fork el proyecto
-2. Crear rama para feature (`git checkout -b feature/AmazingFeature`)
-3. Commit cambios (`git commit -m 'Add AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abrir Pull Request
-
-## 📄 Licencia
-
-Este proyecto está bajo la Licencia MIT. Ver `LICENSE` para más detalles.
-
-## 📞 Soporte
-
-- **Documentación**: Revisar archivos en `/docs/`
-- **Issues**: Crear issue en GitHub
-- **Discusiones**: Usar GitHub Discussions
-
----
-
-**Desarrollado con ❤️ por el equipo de eGrow Academy**
+Este proyecto está bajo la Licencia MIT.
