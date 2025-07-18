@@ -1,6 +1,12 @@
+'use client';
+
 import Link from 'next/link';
+import { useAuth } from '@/contexts/AuthContext';
+import SubscriptionButton from '@/components/payments/SubscriptionButton';
 
 export default function Hero() {
+  const { user } = useAuth();
+
   return (
     <section className="hero gradient-bg">
       <div className="container">
@@ -14,8 +20,105 @@ export default function Hero() {
             cursos gratuitos y recursos de alta calidad. Comienza tu viaje
             en IA hoy mismo.
           </p>
+          
+          <div className="hero-actions">
+            <Link href="/cursos-gratuitos" className="hero-button primary">
+              Cursos Gratuitos
+            </Link>
+            
+            {user && user.membershipLevel === 'PREMIUM' ? (
+              <Link href="/courses" className="hero-button secondary">
+                Ver Todos los Cursos
+              </Link>
+            ) : (
+              <SubscriptionButton
+                amount={2999}
+                currency="usd"
+                description="Suscripción Premium - eGrow Academy"
+                className="hero-button secondary"
+              >
+                👑 Suscribirse Premium
+              </SubscriptionButton>
+            )}
+          </div>
+
+          {user && user.membershipLevel === 'PREMIUM' && (
+            <div className="premium-badge">
+              <span className="premium-icon">👑</span>
+              <span>Miembro Premium</span>
+            </div>
+          )}
         </div>
       </div>
+
+      <style jsx>{`
+        .hero-actions {
+          display: flex;
+          gap: 16px;
+          margin-top: 32px;
+          flex-wrap: wrap;
+        }
+
+        .hero-button {
+          padding: 12px 24px;
+          border-radius: 8px;
+          font-weight: 600;
+          text-decoration: none;
+          transition: all 0.3s ease;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          min-width: 160px;
+        }
+
+        .hero-button.primary {
+          background: #3b82f6;
+          color: white;
+          border: 2px solid #3b82f6;
+        }
+
+        .hero-button.primary:hover {
+          background: #2563eb;
+          border-color: #2563eb;
+          transform: translateY(-2px);
+        }
+
+        .hero-button.secondary {
+          background: transparent;
+          color: #3b82f6;
+          border: 2px solid #3b82f6;
+        }
+
+        .hero-button.secondary:hover {
+          background: #3b82f6;
+          color: white;
+          transform: translateY(-2px);
+        }
+
+        .premium-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          background: linear-gradient(135deg, #ffd700, #ffed4e);
+          color: #000;
+          padding: 8px 16px;
+          border-radius: 20px;
+          font-weight: 600;
+          margin-top: 16px;
+        }
+
+        @media (max-width: 768px) {
+          .hero-actions {
+            flex-direction: column;
+            align-items: center;
+          }
+
+          .hero-button {
+            width: 100%;
+            max-width: 280px;
+          }
+        }
+      `}</style>
     </section>
   );
 } 

@@ -97,7 +97,7 @@ export default function Sidebar({ isOpen, onToggle, hideToggle = false }: Sideba
               <span className="dropdown-arrow" aria-hidden="true">▼</span>
             </button>
             <div className="submenu" id="courses-submenu" role="region" aria-label="Submenú de cursos">
-              <Link href="/cursos-cortos" className="submenu-link" onClick={handleLinkClick}>Cursos Gratuitos</Link>
+              <Link href="/cursos-gratuitos" className="submenu-link" onClick={handleLinkClick}>Cursos Gratuitos</Link>
               <Link href="/courses" className="submenu-link" onClick={handleLinkClick}>Todos los Cursos 🔒</Link>
             </div>
           </div>

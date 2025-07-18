@@ -14,7 +14,7 @@ export default function Footer() {
           <div className="footer-column">
             <h4>Aprende</h4>
             <ul>
-              <li><Link href="/cursos-cortos">Cursos Gratuitos</Link></li>
+              <li><Link href="/cursos-gratuitos">Cursos Gratuitos</Link></li>
               <li><Link href="/courses">Todos los Cursos</Link></li>
             </ul>
           </div>

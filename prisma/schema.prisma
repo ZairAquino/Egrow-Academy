@@ -25,6 +25,7 @@ model User {
   emailVerified   Boolean         @default(false) // Requiere verificación
   verificationCode String?        // Código de verificación de 6 dígitos
   verificationExpires DateTime?   // Fecha de expiración del código
+  stripeCustomerId String?        @unique // ID del cliente en Stripe
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
   lastLogin       DateTime?
@@ -37,6 +38,8 @@ model User {
   likes           Like[]
   sessions        Session[]
   courses         Course[]        @relation("CourseInstructor")
+  payments        Payment[]
+  subscriptions   Subscription[]
 
   @@map("users")
 }
@@ -63,6 +66,7 @@ model Course {
   price            Decimal      @default(0)
   isFree           Boolean      @default(true)
   requiresAuth     Boolean      @default(true)
+
   difficulty       Difficulty?
   durationHours    Int?
   lessonsCount     Int          @default(0)
@@ -76,6 +80,7 @@ model Course {
   instructor       User?        @relation("CourseInstructor", fields: [instructorId], references: [id])
   enrollments      Enrollment[]
   lessons          Lesson[]
+  payments         Payment[]
 
   @@map("courses")
 }
@@ -212,4 +217,112 @@ enum EnrollmentStatus {
   ACTIVE
   COMPLETED
   CANCELLED
+}
+
+// Modelos para Stripe
+model Payment {
+  id                String   @id @default(cuid())
+  stripePaymentId   String   @unique
+  amount            Int      // Cantidad en centavos
+  currency          String   @default("usd")
+  status            PaymentStatus
+  paymentMethod     String?
+  description       String?
+  metadata          Json?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  userId            String
+  courseId          String?
+  subscriptionId    String?
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course            Course?  @relation(fields: [courseId], references: [id])
+  subscription      Subscription? @relation(fields: [subscriptionId], references: [id])
+
+  @@map("payments")
+}
+
+model Subscription {
+  id                String   @id @default(cuid())
+  stripeSubscriptionId String @unique
+  status            SubscriptionStatus
+  currentPeriodStart DateTime
+  currentPeriodEnd   DateTime
+  cancelAtPeriodEnd Boolean  @default(false)
+  canceledAt        DateTime?
+  endedAt           DateTime?
+  trialStart        DateTime?
+  trialEnd          DateTime?
+  metadata          Json?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  userId            String
+  priceId           String
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  price             Price    @relation(fields: [priceId], references: [id])
+  payments          Payment[]
+
+  @@map("subscriptions")
+}
+
+model Product {
+  id                String   @id @default(cuid())
+  stripeProductId   String   @unique
+  name              String
+  description       String?
+  active            Boolean  @default(true)
+  metadata          Json?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  prices            Price[]
+
+  @@map("products")
+}
+
+model Price {
+  id                String   @id @default(cuid())
+  stripePriceId     String   @unique
+  active            Boolean  @default(true)
+  currency          String   @default("usd")
+  type              PriceType
+  unitAmount        Int?     // Cantidad en centavos
+  interval          BillingInterval?
+  intervalCount     Int?
+  trialPeriodDays   Int?
+  metadata          Json?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  productId         String
+  product           Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  subscriptions     Subscription[]
+
+  @@map("prices")
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  CANCELED
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELED
+  INCOMPLETE
+  INCOMPLETE_EXPIRED
+  PAST_DUE
+  TRIALING
+  UNPAID
+}
+
+enum PriceType {
+  ONE_TIME
+  RECURRING
+}
+
+enum BillingInterval {
+  DAY
+  WEEK
+  MONTH
+  YEAR
 }

@@ -20,6 +20,7 @@ interface User {
 interface AuthContextType {
   user: User | null
   status: 'loading' | 'authenticated' | 'unauthenticated'
+  token: string | null
   logout: () => Promise<void>
   refreshUser: () => Promise<void>
 }
@@ -41,6 +42,7 @@ interface AuthProviderProps {
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null)
   const [status, setStatus] = useState<'loading' | 'authenticated' | 'unauthenticated'>('loading')
+  const [token, setToken] = useState<string | null>(null)
 
   // Función para obtener usuario desde el endpoint /api/auth/me
   const fetchUserFromAPI = async (): Promise<User | null> => {
@@ -69,9 +71,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
     if (apiUser) {
       setUser(apiUser)
       setStatus('authenticated')
+      // Obtener token del localStorage o cookies
+      const storedToken = localStorage.getItem('authToken') || sessionStorage.getItem('authToken')
+      setToken(storedToken)
     } else {
       setUser(null)
       setStatus('unauthenticated')
+      setToken(null)
     }
   }
 
@@ -85,6 +91,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
       
       setUser(null)
       setStatus('unauthenticated')
+      setToken(null)
+      // Limpiar token del almacenamiento
+      localStorage.removeItem('authToken')
+      sessionStorage.removeItem('authToken')
     } catch (error) {
       console.error('Error during logout:', error)
     }
@@ -98,6 +108,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const value: AuthContextType = {
     user,
     status,
+    token,
     logout,
     refreshUser
   }

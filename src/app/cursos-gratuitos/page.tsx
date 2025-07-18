@@ -6,6 +6,7 @@ import Sidebar from '@/components/layout/Sidebar';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import CourseCard from '@/components/courses/CourseCard';
 import Footer from '@/components/layout/Footer';
+import UserProfile from '@/components/auth/UserProfile';
 
 // Lazy load components
 const CompaniesMarquee = dynamic(() => import('@/components/ui/CompaniesMarquee'), {
@@ -13,14 +14,29 @@ const CompaniesMarquee = dynamic(() => import('@/components/ui/CompaniesMarquee'
   ssr: false
 });
 
-export default function CursosCortosPage() {
+export default function CursosGratuitosPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
-  const shortCourses = [
+  const freeCourses = [
+    // Nuestro Curso Propio
+    {
+      id: 'introduccion-llms',
+      title: 'Introducción a Large Language Models (LLMs)',
+      description: 'Aprende los fundamentos de los modelos de lenguaje grandes, desde GPT hasta Claude, y cómo implementarlos en aplicaciones reales.',
+      duration: '2 horas',
+      level: 'Principiante',
+      price: 'Gratis',
+      image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=250&fit=crop&crop=center',
+      tag: 'eGrow Academy',
+      instructor: 'Dr. Maria Rodriguez',
+      source: 'eGrow Academy',
+      link: '/curso/introduccion-llms'
+    },
+    // Cursos Cortos
     {
       id: 1,
       title: 'ChatGPT Prompt Engineering for Developers',
@@ -35,6 +51,22 @@ export default function CursosCortosPage() {
       students: 150000,
       source: 'DeepLearning.AI',
       link: 'https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/'
+    },
+    // Machine Learning
+    {
+      id: 16,
+      title: 'Machine Learning por Andrew Ng - Stanford',
+      description: 'El curso más completo de ML. Fundamentos matemáticos y prácticos de machine learning.',
+      duration: '60 horas',
+      level: 'Principiante',
+      price: 'Gratis',
+      image: 'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=400&h=250&fit=crop&crop=center',
+      tag: 'Machine Learning',
+      instructor: 'Andrew Ng',
+      rating: 4.9,
+      students: 500000,
+      source: 'YouTube - Stanford',
+      link: 'https://www.youtube.com/playlist?list=PLoROMvodv4rMiGQp3WXShtMGgzqpfVfbU'
     },
     {
       id: 2,
@@ -95,6 +127,38 @@ export default function CursosCortosPage() {
       students: 38000,
       source: 'DeepLearning.AI',
       link: 'https://www.deeplearning.ai/short-courses/building-generative-ai-applications-with-gradio/'
+    },
+    // Deep Learning
+    {
+      id: 17,
+      title: 'Deep Learning con TensorFlow - Google',
+      description: 'Curso oficial de Google sobre deep learning con TensorFlow.',
+      duration: '30 horas',
+      level: 'Intermedio',
+      price: 'Gratis',
+      image: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=400&h=250&fit=crop&crop=center',
+      tag: 'Deep Learning',
+      instructor: 'Google',
+      rating: 4.8,
+      students: 250000,
+      source: 'Google',
+      link: 'https://developers.google.com/machine-learning/crash-course'
+    },
+    // NLP
+    {
+      id: 18,
+      title: 'NLP con Transformers - Hugging Face',
+      description: 'Curso oficial de Hugging Face sobre transformers y modelos de lenguaje.',
+      duration: '20 horas',
+      level: 'Intermedio',
+      price: 'Gratis',
+      image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=250&fit=crop&crop=center',
+      tag: 'NLP',
+      instructor: 'Hugging Face',
+      rating: 4.9,
+      students: 180000,
+      source: 'Hugging Face',
+      link: 'https://huggingface.co/course'
     },
     {
       id: 6,
@@ -235,12 +299,77 @@ export default function CursosCortosPage() {
       rating: 4.4,
       students: 987,
       source: 'YouTube - Tech With Tim'
+    },
+    // Computer Vision
+    {
+      id: 19,
+      title: 'Computer Vision con OpenCV',
+      description: 'Aprende procesamiento de imágenes y visión por computadora con OpenCV.',
+      duration: '25 horas',
+      level: 'Intermedio',
+      price: 'Gratis',
+      image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=250&fit=crop&crop=center',
+      tag: 'Computer Vision',
+      instructor: 'freeCodeCamp',
+      rating: 4.7,
+      students: 120000,
+      source: 'YouTube - freeCodeCamp',
+      link: 'https://www.youtube.com/watch?v=oXlwWbU8l2o'
+    },
+    // Data Science
+    {
+      id: 20,
+      title: 'Python para Data Science - freeCodeCamp',
+      description: 'Aprende Python desde cero para ciencia de datos. Incluye proyectos prácticos.',
+      duration: '30 horas',
+      level: 'Principiante',
+      price: 'Gratis',
+      image: 'https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=400&h=250&fit=crop&crop=center',
+      tag: 'Data Science',
+      instructor: 'freeCodeCamp',
+      rating: 4.8,
+      students: 300000,
+      source: 'freeCodeCamp',
+      link: 'https://www.freecodecamp.org/learn/scientific-computing-with-python/'
+    },
+    // LLMs
+    {
+      id: 21,
+      title: 'LangChain para Principiantes',
+      description: 'Construye aplicaciones con LLMs usando LangChain. Tutorial paso a paso.',
+      duration: '5 horas',
+      level: 'Intermedio',
+      price: 'Gratis',
+      image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=250&fit=crop&crop=center',
+      tag: 'LLMs',
+      instructor: 'Video Tutorial',
+      rating: 4.6,
+      students: 85000,
+      source: 'YouTube',
+      link: 'https://www.youtube.com/watch?v=LbT1yp6quS8'
+    },
+    // PyTorch
+    {
+      id: 22,
+      title: 'Deep Learning con PyTorch - Tutorial Completo',
+      description: 'Aprende PyTorch desde cero. Tutorial de 10 horas por freeCodeCamp.',
+      duration: '10 horas',
+      level: 'Intermedio',
+      price: 'Gratis',
+      image: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=400&h=250&fit=crop&crop=center',
+      tag: 'Deep Learning',
+      instructor: 'freeCodeCamp',
+      rating: 4.9,
+      students: 200000,
+      source: 'YouTube - freeCodeCamp',
+      link: 'https://www.youtube.com/watch?v=V_xro1bcAuA'
     }
   ];
 
   return (
     <>
       <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
+      <UserProfile className="user-profile-top-right" />
       
       <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''}`}>
         {/* Hero Section */}
@@ -311,7 +440,7 @@ export default function CursosCortosPage() {
                 <h3 className="stats-title">Nuestros Números</h3>
                 <div className="stats-grid-vertical">
                   <div className="stat-card">
-                    <div className="stat-number">15</div>
+                    <div className="stat-number">23</div>
                     <div className="stat-label">Cursos Disponibles</div>
                   </div>
                   <div className="stat-card">
@@ -344,7 +473,7 @@ export default function CursosCortosPage() {
 
             {/* Courses Grid */}
             <div className="courses-grid">
-              {shortCourses.map((course) => (
+              {freeCourses.map((course) => (
                 <CourseCard 
                   key={course.id} 
                   image={course.image}
