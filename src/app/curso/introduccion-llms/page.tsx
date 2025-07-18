@@ -2,11 +2,13 @@
 
 import { useState, Suspense } from 'react';
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/navigation';
 import Sidebar from '@/components/layout/Sidebar';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Footer from '@/components/layout/Footer';
 import UserProfile from '@/components/auth/UserProfile';
 import { useAuth } from '@/contexts/AuthContext';
+import { useCourseEnrollment } from '@/hooks/useCourseEnrollment';
 
 // Lazy load components
 const CompaniesMarquee = dynamic(() => import('@/components/ui/CompaniesMarquee'), {
@@ -18,9 +20,23 @@ export default function IntroduccionLLMsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [currentLesson, setCurrentLesson] = useState(0);
   const { user } = useAuth();
+  const router = useRouter();
+  const { enrollInCourse, isLoading: isEnrolling, error: enrollmentError } = useCourseEnrollment();
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
+  };
+
+  const handleEnrollClick = async () => {
+    if (!user) {
+      router.push('/login?redirect=/curso/introduccion-llms');
+      return;
+    }
+
+    const success = await enrollInCourse('introduccion-llms');
+    if (success) {
+      router.push('/curso/introduccion-llms/contenido');
+    }
   };
 
   const courseData = {
@@ -181,9 +197,18 @@ export default function IntroduccionLLMsPage() {
                   <p className="course-description">{courseData.description}</p>
                   
                   <div className="course-actions">
-                    <button className="btn btn-primary btn-large">
-                      Comenzar Curso Gratis
+                    <button 
+                      className="btn btn-primary btn-large"
+                      onClick={handleEnrollClick}
+                      disabled={isEnrolling}
+                    >
+                      {isEnrolling ? 'Inscribiéndote...' : 'Comenzar Curso Gratis'}
                     </button>
+                    {enrollmentError && (
+                      <div className="error-message">
+                        {enrollmentError}
+                      </div>
+                    )}
                   </div>
                   
                   <div className="course-meta">
@@ -346,6 +371,18 @@ export default function IntroduccionLLMsPage() {
       </main>
 
       <Footer />
+
+      <style jsx>{`
+        .error-message {
+          color: #dc2626;
+          background: #fef2f2;
+          border: 1px solid #fecaca;
+          padding: 0.75rem;
+          border-radius: 8px;
+          margin-top: 1rem;
+          font-size: 0.9rem;
+        }
+      `}</style>
     </>
   );
 }

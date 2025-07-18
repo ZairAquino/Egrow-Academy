@@ -82,20 +82,6 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
       <div className={`user-profile-container ${className}`}>
         <div className="loading-spinner">⏳</div>
         <div style={{ fontSize: '10px', color: '#666' }}>Cargando sesión...</div>
-        {/* Indicador de depuración temporal */}
-        <div style={{ 
-          position: 'absolute', 
-          top: '-20px', 
-          right: '0', 
-          fontSize: '8px', 
-          color: '#ff6b6b',
-          background: '#fff',
-          padding: '2px 4px',
-          borderRadius: '4px',
-          border: '1px solid #ff6b6b'
-        }}>
-          DEBUG: {status}
-        </div>
       </div>
     );
   }
@@ -104,21 +90,6 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
   if (!user) {
     return (
       <div className={`user-profile-container ${className}`} ref={dropdownRef}>
-        {/* Indicador de depuración temporal */}
-        <div style={{ 
-          position: 'absolute', 
-          top: '-20px', 
-          right: '0', 
-          fontSize: '8px', 
-          color: '#ff6b6b',
-          background: '#fff',
-          padding: '2px 4px',
-          borderRadius: '4px',
-          border: '1px solid #ff6b6b'
-        }}>
-          DEBUG: {status} - No session
-        </div>
-        
         <button 
           onClick={() => setIsOpen(!isOpen)}
           className="profile-trigger"
@@ -161,21 +132,6 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
 
   return (
     <div className={`user-profile-container ${className}`} ref={dropdownRef}>
-      {/* Indicador de depuración temporal */}
-      <div style={{ 
-        position: 'absolute', 
-        top: '-20px', 
-        right: '0', 
-        fontSize: '8px', 
-        color: '#10b981',
-        background: '#fff',
-        padding: '2px 4px',
-        borderRadius: '4px',
-        border: '1px solid #10b981'
-      }}>
-        DEBUG: {status} - Logged in
-      </div>
-      
       <button 
         onClick={() => setIsOpen(!isOpen)}
         className="profile-trigger"

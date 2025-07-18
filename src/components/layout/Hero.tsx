@@ -21,26 +21,7 @@ export default function Hero() {
             en IA hoy mismo.
           </p>
           
-          <div className="hero-actions">
-            <Link href="/cursos-gratuitos" className="hero-button primary">
-              Cursos Gratuitos
-            </Link>
-            
-            {user && user.membershipLevel === 'PREMIUM' ? (
-              <Link href="/courses" className="hero-button secondary">
-                Ver Todos los Cursos
-              </Link>
-            ) : (
-              <SubscriptionButton
-                amount={2999}
-                currency="usd"
-                description="Suscripción Premium - eGrow Academy"
-                className="hero-button secondary"
-              >
-                👑 Suscribirse Premium
-              </SubscriptionButton>
-            )}
-          </div>
+          {/* Botones removidos - solo se mantiene el contenido informativo */}
 
           {user && user.membershipLevel === 'PREMIUM' && (
             <div className="premium-badge">
