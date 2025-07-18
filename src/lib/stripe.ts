@@ -2,13 +2,13 @@ import Stripe from 'stripe';
 
 // Configuración de Stripe
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-12-18.acacia',
+  apiVersion: '2025-06-30.basil',
 });
 
 // Configuración del cliente de Stripe para el frontend
 export const getStripeClient = () => {
   return new Stripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!, {
-    apiVersion: '2024-12-18.acacia',
+    apiVersion: '2025-06-30.basil',
   });
 };
 
