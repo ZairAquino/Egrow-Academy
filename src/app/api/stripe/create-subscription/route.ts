@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
       priceId,
       metadata: subscriptionMetadata,
       trialPeriodDays,
-    });
+    }) as any; // Cast explícito para evitar errores de TypeScript
 
     // Guardar la suscripción en la base de datos
     const subscription = await prisma.subscription.create({
