@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
     // Calcular estadísticas
     const totalEnrolled = enrollments.length;
     const completedCourses = enrollments.filter(e => e.status === 'COMPLETED').length;
-    const inProgressCourses = enrollments.filter(e => e.status === 'IN_PROGRESS').length;
+    const inProgressCourses = enrollments.filter(e => e.status === 'ACTIVE').length;
     const freeCourses = enrollments.filter(e => e.course.isFree).length;
     const premiumCourses = enrollments.filter(e => !e.course.isFree).length;
     
