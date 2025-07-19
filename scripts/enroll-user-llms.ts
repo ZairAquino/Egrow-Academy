@@ -39,7 +39,7 @@ async function enrollUserInLLMs() {
         userId: user.id,
         courseId: 'introduccion-llms',
         enrolledAt: new Date(),
-        status: 'IN_PROGRESS',
+        status: 'ACTIVE',
         progressPercentage: 0
       }
     });
