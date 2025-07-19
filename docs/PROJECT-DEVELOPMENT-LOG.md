@@ -1,9 +1,9 @@
 # 📋 Registro de Desarrollo - eGrow Academy
 
 ## 📅 **Sesión de Desarrollo Completa**
-**Fecha:** 16-17 de Julio, 2025  
+**Fecha:** 16-19 de Julio, 2025  
 **Duración:** Sesión extendida  
-**Objetivo:** Crear plataforma completa de educación en IA y sistema de cursos gratuitos  
+**Objetivo:** Crear plataforma completa de educación en IA, sistema de cursos gratuitos y funcionalidad de progreso de cursos  
 
 ---
 
@@ -198,6 +198,138 @@ GitHub: https://github.com/ZairAquino/Egrow-Academy
 #### **8.2 Documentación Creada:**
 - ✅ `openapi-docs.md` → Documentación técnica completa
 - ✅ `README-DOCS.md` → Guía de documentación
+
+---
+
+## 🎓 **FASE 9: Sistema de Cursos y Progreso (19 Julio, 2025)**
+
+### **9.1 Curso de LLMs Implementado**
+**Objetivo:** Crear curso completo de "Introducción a Large Language Models (LLMs)"
+
+#### **Estructura del Curso:**
+- ✅ **10 lecciones** con contenido real y detallado
+- ✅ **Tipos de contenido:** Video, Lab, Teoría
+- ✅ **Duración:** 3 horas totales
+- ✅ **Dificultad:** Principiante
+- ✅ **Estado:** Gratuito y publicado
+
+#### **Lecciones Implementadas:**
+1. **Bienvenida e Introducción** (8 min) - Conceptos fundamentales
+2. **¿Qué son los LLMs?** (15 min) - Definición y características
+3. **Historia y Evolución** (12 min) - Línea de tiempo desde 1950s
+4. **Arquitectura Transformer** (20 min) - Componentes principales
+5. **Lab: Explorando GPT-3.5** (25 min) - Ejercicio práctico con API
+6. **Prompt Engineering** (18 min) - Técnicas de prompts efectivos
+7. **Lab: Prompt Engineering Avanzado** (20 min) - Casos prácticos
+8. **Casos de Uso Reales** (15 min) - Aplicaciones en la industria
+9. **Limitaciones y Sesgos** (12 min) - Consideraciones éticas
+10. **Proyecto Final** (25 min) - Integración completa
+
+### **9.2 Sistema de Progreso de Cursos**
+**Objetivo:** Implementar tracking completo del progreso del usuario
+
+#### **Base de Datos:**
+- ✅ **Modelo CourseProgress** optimizado para todos los cursos
+- ✅ **Modelo LessonProgress** para tracking detallado por lección
+- ✅ **Relaciones** con Enrollment y User
+- ✅ **Métricas avanzadas:** tiempo, sesiones, intentos
+
+#### **API de Progreso:**
+- ✅ **GET /api/courses/progress** - Obtener progreso actual
+- ✅ **POST /api/courses/progress** - Actualizar progreso
+- ✅ **Autenticación** con JWT tokens
+- ✅ **Validación** de inscripción automática
+
+#### **Hook useCourseProgress:**
+```typescript
+const {
+  progress,
+  isLoading,
+  progressPercentage,
+  saveProgress,
+  markLessonComplete,
+  setCurrentLesson
+} = useCourseProgress('introduccion-llms', isEnrolled);
+```
+
+### **9.3 Página de Contenido del Curso**
+**Objetivo:** Interfaz completa para navegar y completar lecciones
+
+#### **Características Implementadas:**
+- ✅ **Navegación entre lecciones** con validación de progreso
+- ✅ **Marcado automático** de lecciones completadas
+- ✅ **Barra de progreso** visual en tiempo real
+- ✅ **Guardado automático** del progreso
+- ✅ **Interfaz responsive** mobile-first
+- ✅ **Debug tools** para desarrollo
+
+#### **Funcionalidades de UX:**
+- ✅ **Breadcrumb navigation** con enlaces funcionales
+- ✅ **Sidebar** con lista de lecciones y estados
+- ✅ **Botones de navegación** (Anterior/Completar)
+- ✅ **Indicadores visuales** de estado (completada, activa, bloqueada)
+- ✅ **Botón "Salir"** simplificado (antes "Salir y Guardar Progreso")
+
+### **9.4 Sistema de Inscripción**
+**Objetivo:** Permitir a usuarios inscribirse en cursos
+
+#### **API de Inscripción:**
+- ✅ **POST /api/courses/enroll** - Crear inscripción
+- ✅ **Validación** de usuario autenticado
+- ✅ **Prevención** de inscripciones duplicadas
+- ✅ **Estado ACTIVE** para nuevas inscripciones
+
+#### **Corrección de Errores:**
+- ✅ **Enum EnrollmentStatus** corregido (ACTIVE vs IN_PROGRESS)
+- ✅ **Validación** de datos de entrada
+- ✅ **Manejo de errores** con mensajes claros
+
+### **9.5 Sistema de Autenticación**
+**Objetivo:** Verificar usuarios para acceso a cursos
+
+#### **Problemas Identificados y Solucionados:**
+- ✅ **Error 404** en progreso por falta de inscripción
+- ✅ **Creación automática** de inscripción si no existe
+- ✅ **Validación** de tokens JWT
+- ✅ **Manejo de sesiones** con cookies
+
+### **9.6 Sistema de Email (Pendiente)**
+**Objetivo:** Envío de emails de verificación
+
+#### **Problema Identificado:**
+- ❌ **Dominio no verificado:** `egrow-academy.com` en Resend
+- ✅ **Solución temporal:** Cambio a `onboarding@resend.dev`
+- ⏳ **Pendiente:** Verificación de DNS en Resend
+
+#### **Configuración Actual:**
+```typescript
+// src/lib/email.ts
+from: 'onboarding@resend.dev' // Dominio verificado de Resend
+```
+
+### **9.7 Estado Actual del Sistema**
+
+#### **✅ Funcionalidades Completadas:**
+- **📚 Curso de LLMs** completamente funcional
+- **📊 Sistema de progreso** tracking completo
+- **🔐 Autenticación** y autorización
+- **📝 Inscripción** a cursos
+- **🎯 Navegación** entre lecciones
+- **💾 Guardado automático** de progreso
+
+#### **⏳ Pendientes para Lunes:**
+- **📧 Verificación de DNS** en Resend
+- **🔧 Configuración** de dominio personalizado
+- **📱 Testing** completo del flujo de email
+
+#### **📊 Métricas del Curso:**
+- **👥 Usuarios inscritos:** 1 (testing)
+- **📈 Progreso promedio:** 100% (curso completado)
+- **⏱️ Tiempo total:** 62 minutos
+- **🔄 Sesiones:** 14
+- **✅ Lecciones completadas:** 10/10
+
+
 
 ---
 
@@ -1210,3 +1342,49 @@ src/
 
 *Registro completo del desarrollo de eGrow Academy Platform*  
 *Actualizado el 17 de Julio, 2025 - Sistema de cursos gratuitos implementado*
+
+### **10.6 Limpieza y Optimización del Proyecto**
+
+#### **Limpieza Realizada:**
+- ✅ **Carpetas vacías eliminadas:** `src/utils/`, `src/styles/`, `src/constants/`
+- ✅ **Dependencias no utilizadas removidas:** tRPC, React Query
+- ✅ **Scripts obsoletos eliminados:** `create-llms-tables.sql`, `create-course.ts`
+- ✅ **Documentación redundante eliminada:** `REORGANIZATION.md`
+- ✅ **Páginas de prueba eliminadas:** `/test-payment`
+- ✅ **Carpetas de API vacías eliminadas:** `test-env/`, `test-stripe-webhook/`, `test-webhook/`
+
+#### **Dependencias Optimizadas:**
+```json
+// Eliminadas (no utilizadas):
+"@trpc/client": "^11.4.3",
+"@trpc/next": "^11.4.3", 
+"@trpc/react-query": "^11.4.3",
+"@trpc/server": "^11.4.3",
+"@tanstack/react-query": "^5.83.0"
+```
+
+#### **Estructura Final Limpia:**
+```
+src/
+├── app/                    # App Router (Next.js 13+)
+│   ├── api/               # APIs de autenticación y pagos
+│   ├── auth/              # Páginas de autenticación
+│   ├── community/         # Página de comunidad
+│   ├── contacto/          # Formulario de contacto
+│   ├── courses/           # Catálogo de cursos
+│   ├── cursos-gratuitos/  # Cursos gratuitos
+│   ├── resources/         # Biblioteca de recursos
+│   └── [páginas legales]  # Términos, privacidad, facturación
+├── components/            # Componentes reutilizables
+├── contexts/              # Contextos de React
+├── hooks/                 # Hooks personalizados
+├── lib/                   # Utilidades y configuración
+└── types/                 # Tipos TypeScript
+```
+
+#### **Beneficios de la Limpieza:**
+- 🚀 **Bundle size reducido** al eliminar dependencias no utilizadas
+- 📁 **Estructura más clara** sin carpetas vacías
+- 🧹 **Código más mantenible** sin archivos obsoletos
+- ⚡ **Mejor performance** en build y desarrollo
+- 📚 **Documentación actualizada** y sin redundancias

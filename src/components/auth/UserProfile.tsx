@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
+import { useUserStats } from '@/hooks/useUserStats';
 
 interface UserProfileProps {
   className?: string;
@@ -11,6 +12,7 @@ interface UserProfileProps {
 
 export default function UserProfile({ className = '' }: UserProfileProps) {
   const { user, status, logout } = useAuth();
+  const { stats } = useUserStats();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -200,18 +202,20 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
           <div className="profile-stats">
             <div className="stat-item">
               <span className="stat-label">Cursos Inscritos</span>
-              <span className="stat-value">0</span>
+              <span className="stat-value">{stats?.totalEnrolled || 0}</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-label">Cursos Completados</span>
+              <span className="stat-value">{stats?.completedCourses || 0}</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-label">Certificaciones</span>
+              <span className="stat-value">{stats?.certificates || 0}</span>
             </div>
             <div className="stat-item">
               <span className="stat-label">Estado de Email</span>
               <span className="stat-value verified">
                 {user.emailVerified ? '✅ Verificado' : '❌ No verificado'}
-              </span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-label">Estado de Cuenta</span>
-              <span className="stat-value">
-                {user.isActive ? '✅ Activa' : '❌ Inactiva'}
               </span>
             </div>
           </div>

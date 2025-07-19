@@ -24,7 +24,7 @@ export async function sendVerificationEmail(
     console.log('🔍 [EMAIL] API Key configurada:', !!process.env.RESEND_API_KEY)
     
     const { data, error } = await resend.emails.send({
-      from: 'noreply@egrow-academy.com', // Usar dominio personalizado verificado
+      from: 'onboarding@resend.dev', // Usar dominio verificado de Resend
       to: [email],
       subject: '🔐 Verifica tu cuenta - eGrow Academy',
       html: `
@@ -91,7 +91,7 @@ export async function sendWelcomeEmail(
 ): Promise<{ success: boolean; error?: string }> {
   try {
     const { data, error } = await resend.emails.send({
-      from: 'noreply@egrow-academy.com', // Usar dominio personalizado verificado
+      from: 'onboarding@resend.dev', // Usar dominio verificado de Resend
       to: [email],
       subject: '🎉 ¡Bienvenido a eGrow Academy!',
       html: `

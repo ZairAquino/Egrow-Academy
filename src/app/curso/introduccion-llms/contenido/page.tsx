@@ -679,20 +679,42 @@ if prompt := st.chat_input(&quot;Escribe tu mensaje...&quot;):
           <div className="container">
             <div className="course-header-content">
               <div className="course-breadcrumb">
-                <a href="/">Inicio</a> / <a href="/cursos-gratuitos">Cursos Gratuitos</a> / <a href="/curso/introduccion-llms">Introducción a LLMs</a> / <span>Contenido</span>
+                <div className="breadcrumb-container">
+                  <a href="/" className="breadcrumb-item">
+                    <span className="breadcrumb-icon">🏠</span>
+                    <span className="breadcrumb-text">Inicio</span>
+                  </a>
+                  <span className="breadcrumb-separator">/</span>
+                  <a href="/cursos-gratuitos" className="breadcrumb-item">
+                    <span className="breadcrumb-icon">📚</span>
+                    <span className="breadcrumb-text">Cursos Gratuitos</span>
+                  </a>
+                  <span className="breadcrumb-separator">/</span>
+                  <a href="/curso/introduccion-llms" className="breadcrumb-item">
+                    <span className="breadcrumb-icon">🎯</span>
+                    <span className="breadcrumb-text">Introducción a LLMs</span>
+                  </a>
+                  <span className="breadcrumb-separator">/</span>
+                  <span className="breadcrumb-item active">
+                    <span className="breadcrumb-icon">📖</span>
+                    <span className="breadcrumb-text">Contenido</span>
+                  </span>
+                </div>
               </div>
               
               <div className="header-main">
-                <h1 className="course-title">{courseData.title}</h1>
-                
-                <div className="header-actions">
-                  <button 
-                    className="btn btn-exit-course"
-                    onClick={handleReturnToCourse}
-                    disabled={isSaving}
-                  >
-                    {isSaving ? '💾 Guardando...' : '🏠 Salir del Curso'}
-                  </button>
+                <div className="header-content">
+                  <h1 className="course-title">{courseData.title}</h1>
+                  
+                  <div className="header-actions">
+                    <button 
+                      className="btn btn-exit-course btn-save-exit"
+                      onClick={handleReturnToCourse}
+                      disabled={isSaving}
+                    >
+                      {isSaving ? '💾 Guardando...' : '🏠 Salir'}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -837,37 +859,87 @@ if prompt := st.chat_input(&quot;Escribe tu mensaje...&quot;):
         }
 
         .course-breadcrumb {
-          margin-bottom: 1rem;
+          margin-bottom: 2rem;
           font-size: 0.9rem;
         }
 
-        .course-breadcrumb a {
-          color: rgba(255, 255, 255, 0.8);
-          text-decoration: none;
+        .breadcrumb-container {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          flex-wrap: wrap;
         }
 
-        .course-breadcrumb a:hover {
+        .breadcrumb-item {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          color: rgba(255, 255, 255, 0.8);
+          text-decoration: none;
+          padding: 0.5rem 0.75rem;
+          border-radius: 8px;
+          transition: all 0.3s ease;
+          background: rgba(255, 255, 255, 0.1);
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .breadcrumb-item:hover {
           color: white;
+          background: rgba(255, 255, 255, 0.2);
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .breadcrumb-item.active {
+          color: white;
+          background: rgba(255, 255, 255, 0.25);
+          border-color: rgba(255, 255, 255, 0.4);
+          font-weight: 600;
+        }
+
+        .breadcrumb-icon {
+          font-size: 1rem;
+        }
+
+        .breadcrumb-text {
+          font-weight: 500;
+        }
+
+        .breadcrumb-separator {
+          color: rgba(255, 255, 255, 0.6);
+          font-weight: 600;
+          margin: 0 0.25rem;
         }
 
         .header-main {
           display: flex;
-          justify-content: space-between;
-          align-items: center;
+          justify-content: flex-start;
+          align-items: flex-start;
           gap: 2rem;
+        }
+
+        .header-content {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 1.5rem;
+          text-align: left;
+          width: 100%;
         }
 
         .course-title {
           font-size: 2.5rem;
           font-weight: 700;
           margin: 0;
-          flex: 1;
+          text-align: left;
         }
 
         .header-actions {
           display: flex;
           gap: 1rem;
           align-items: center;
+          justify-content: center;
         }
 
         .btn-outline-white {
@@ -955,7 +1027,24 @@ if prompt := st.chat_input(&quot;Escribe tu mensaje...&quot;):
           .header-main {
             flex-direction: column;
             gap: 1rem;
-            text-align: center;
+            text-align: left;
+          }
+
+          .header-content {
+            align-items: flex-start;
+          }
+          
+          .breadcrumb-container {
+            gap: 0.25rem;
+          }
+          
+          .breadcrumb-item {
+            padding: 0.4rem 0.6rem;
+            font-size: 0.8rem;
+          }
+          
+          .breadcrumb-icon {
+            font-size: 0.9rem;
           }
 
           .header-actions {
@@ -1158,6 +1247,10 @@ if prompt := st.chat_input(&quot;Escribe tu mensaje...&quot;):
             text-align: center;
           }
 
+          .header-content {
+            align-items: center;
+          }
+
           .header-actions {
             flex-direction: column;
             width: 100%;
@@ -1168,6 +1261,8 @@ if prompt := st.chat_input(&quot;Escribe tu mensaje...&quot;):
             width: 100%;
             justify-content: center;
           }
+
+
         }
 
         .lessons-navigation {
@@ -1340,6 +1435,39 @@ if prompt := st.chat_input(&quot;Escribe tu mensaje...&quot;):
           
           .course-title {
             font-size: 2rem;
+          }
+        }
+        
+        @media (max-width: 480px) {
+          .header-main {
+            flex-direction: column;
+            gap: 1rem;
+            text-align: left;
+          }
+
+          .header-content {
+            align-items: flex-start;
+          }
+          
+          .breadcrumb-container {
+            gap: 0.2rem;
+          }
+          
+          .breadcrumb-item {
+            padding: 0.3rem 0.5rem;
+            font-size: 0.75rem;
+          }
+          
+          .breadcrumb-icon {
+            font-size: 0.8rem;
+          }
+          
+          .breadcrumb-separator {
+            margin: 0 0.15rem;
+          }
+          
+          .course-title {
+            font-size: 1.75rem;
           }
         }
       `}</style>

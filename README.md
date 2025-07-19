@@ -225,3 +225,43 @@ Este proyecto está bajo la Licencia MIT.
 ---
 
 **Desarrollado con ❤️ para la comunidad de Inteligencia Artificial**
+
+## 🔧 **Cambios necesarios en Namecheap:**
+
+### **1. Eliminar el registro A de GitHub Pages:**
+- **Elimina** el registro A que dice:
+  - Tipo: "A Record"
+  - Host: "@"
+  - Valor: "216.198.79.1" ← **Este es el problema**
+
+### **2. Agregar los registros A de Vercel:**
+- **Click en "ADD NEW RECORD"** y agrega:
+
+```
+Tipo: A Record  
+Host: @
+Valor: 76.76.19.76
+TTL: Automatic
+```
+
+### **3. Verificar el CNAME existente:**
+- **Mantén** el CNAME que ya tienes:
+  - Tipo: "CNAME Record"
+  - Host: "www"
+  - Valor: "b1f74eb4b69f83a3.vercel-dns-017.com." ← **Este está bien**
+
+### **4. Verificar el TXT existente:**
+- **Mantén** el TXT que ya tienes:
+  - Tipo: "TXT Record"
+  - Host: "vercel"
+  - Valor: "ns1.vercel-dns.com" ← **Este está bien**
+
+## 📋 **Resumen de lo que debes hacer:**
+
+1. **❌ Eliminar:** A Record con valor `216.198.79.1`
+2. **✅ Agregar:** 2 A Records con valor `76.76.19.76`
+3. **✅ Mantener:** Los registros CNAME y TXT existentes
+
+**Después de hacer estos cambios, espera 24-48 horas para que se propaguen los DNS.**
+
+**¿Quieres que te ayude con algún paso específico?**

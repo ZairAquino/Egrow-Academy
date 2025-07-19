@@ -8,7 +8,6 @@ import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Footer from '@/components/layout/Footer';
 import UserProfile from '@/components/auth/UserProfile';
 import { useAuth } from '@/contexts/AuthContext';
-import { useCourseEnrollment } from '@/hooks/useCourseEnrollment';
 
 // Lazy load components
 const CompaniesMarquee = dynamic(() => import('@/components/ui/CompaniesMarquee'), {
@@ -24,7 +23,6 @@ export default function IntroduccionLLMsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuth();
   const router = useRouter();
-  const { enrollInCourse, isLoading: isEnrolling, error: enrollmentError } = useCourseEnrollment();
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -36,9 +34,25 @@ export default function IntroduccionLLMsPage() {
       return;
     }
 
-    const success = await enrollInCourse('introduccion-llms');
-    if (success) {
-      router.push('/curso/introduccion-llms/contenido');
+    try {
+      const response = await fetch('/api/courses/enroll', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ courseId: 'introduccion-llms' }),
+        credentials: 'include', // Incluir cookies
+      });
+
+      if (response.ok) {
+        router.push('/curso/introduccion-llms/contenido');
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Error al inscribirse en el curso');
+      }
+    } catch (error) {
+      console.error('❌ Error al inscribirse en el curso:', error);
+      alert(`Error al inscribirse en el curso: ${error.message}`);
     }
   };
 
@@ -220,18 +234,33 @@ export default function IntroduccionLLMsPage() {
   }, [user]);
 
   const loadUserProgress = async () => {
-    if (!user) return;
+    if (!user) {
+      console.log('🔄 [DEBUG] No hay usuario, saltando carga de progreso');
+      setIsLoading(false);
+      return;
+    }
     
     try {
       console.log('🔄 [DEBUG] Cargando progreso del usuario...');
-      const response = await fetch(`/api/courses/progress?courseId=${courseData.id}`);
+      console.log('🔄 [DEBUG] Course ID:', courseData.id);
+      console.log('🔄 [DEBUG] User ID:', user.id);
+      
+      const response = await fetch(`/api/courses/progress?courseId=${courseData.id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include', // Incluir cookies
+      });
+      
+      console.log('🔄 [DEBUG] Response status:', response.status);
+      console.log('🔄 [DEBUG] Response ok:', response.ok);
       
       if (response.ok) {
         const data = await response.json();
         console.log('🔄 [DEBUG] Progreso cargado:', data);
         
         setCurrentLesson(data.currentLesson || 0);
-        
         setCompletedLessons(data.completedLessons || []);
         setProgressPercentage(Math.round((data.completedLessons?.length || 0) / courseData.lessons.length * 100));
         
@@ -241,10 +270,22 @@ export default function IntroduccionLLMsPage() {
           progressPercentage: Math.round((data.completedLessons?.length || 0) / courseData.lessons.length * 100)
         });
       } else {
-        console.error('Error en la respuesta de la API:', response.status);
+        console.error('❌ [DEBUG] Error en la respuesta de la API:', response.status);
+        console.error('❌ [DEBUG] Response text:', await response.text());
+        
+        // Si es 404, intentar crear inscripción automática
+        if (response.status === 404) {
+          console.log('🔄 [DEBUG] Intentando crear inscripción automática...');
+          // La API ya maneja la creación automática, pero podemos intentar de nuevo
+          setTimeout(() => {
+            loadUserProgress();
+          }, 1000);
+          return;
+        }
       }
     } catch (error) {
-      console.error('Error cargando progreso:', error);
+      console.error('❌ [DEBUG] Error cargando progreso:', error);
+      console.error('❌ [DEBUG] Error details:', error instanceof Error ? error.message : 'Unknown error');
     } finally {
       setIsLoading(false);
     }
@@ -288,7 +329,7 @@ export default function IntroduccionLLMsPage() {
                     <span className="badge badge-duration">Duración: {courseData.duration}</span>
                   </div>
                   
-                  <h1 className="course-title">{courseData.title}</h1>
+                  <h1 className="course-title-large">{courseData.title}</h1>
                   <p className="course-description">{courseData.description}</p>
                   
                   <div className="course-actions">
@@ -303,44 +344,32 @@ export default function IntroduccionLLMsPage() {
                           </p>
                         </div>
                         <button 
-                          className="btn btn-primary btn-large"
+                          className="btn btn-primary btn-large btn-continue-course"
                           onClick={async () => {
                             // Recargar progreso antes de navegar
                             await loadUserProgress();
                             router.push('/curso/introduccion-llms/contenido');
                           }}
                         >
-                          Continuar con el curso
+                          🚀 Continuar con el curso
                         </button>
                       </div>
                     ) : (
                       <button 
-                        className="btn btn-primary btn-large"
+                        className="btn btn-primary btn-large btn-start-course"
                         onClick={handleEnrollClick}
-                        disabled={isEnrolling}
+                        disabled={isLoading}
                       >
-                        {isEnrolling ? 'Inscribiéndote...' : 'Comenzar Curso Gratis'}
+                        {isLoading ? '⏳ Inscribiéndote...' : '🎯 Comenzar Curso Gratis'}
                       </button>
-                    )}
-                    {enrollmentError && (
-                      <div className="error-message">
-                        {enrollmentError}
-                      </div>
                     )}
                   </div>
                   
                   <div className="course-meta">
-                    <div className="meta-item">
-                      <span className="meta-label">Idioma:</span>
-                      <span>{courseData.language}</span>
-                    </div>
-                    <div className="meta-item">
-                      <span className="meta-label">Incluye:</span>
-                      <span>Proyecto práctico incluido</span>
-                    </div>
-                    <div className="meta-item">
-                      <span className="meta-label">Acceso:</span>
-                      <span>De por vida</span>
+                    <div className="course-badges-secondary">
+                      <span className="badge badge-language">🌍 {courseData.language}</span>
+                      <span className="badge badge-includes">📦 Proyecto práctico incluido</span>
+                      <span className="badge badge-access">🔓 Acceso de por vida</span>
                     </div>
                   </div>
                 </div>
@@ -369,14 +398,14 @@ export default function IntroduccionLLMsPage() {
                       </div>
                       {completedLessons.length > 0 && (
                         <button 
-                          className="btn btn-outline btn-small"
+                          className="btn btn-outline btn-small btn-continue-progress"
                           onClick={async () => {
                             // Recargar progreso antes de navegar
                             await loadUserProgress();
                             router.push('/curso/introduccion-llms/contenido');
                           }}
                         >
-                          Continuar donde lo dejaste
+                          🔄 Continuar donde lo dejaste
                         </button>
                       )}
                       

@@ -202,7 +202,7 @@ export async function POST(request: NextRequest) {
     const userId = decoded.userId;
 
     // Buscar la inscripción del usuario
-    const enrollment = await prisma.enrollment.findFirst({
+    let enrollment = await prisma.enrollment.findFirst({
       where: {
         userId: userId,
         courseId: courseId
@@ -210,7 +210,24 @@ export async function POST(request: NextRequest) {
     });
 
     if (!enrollment) {
-      return NextResponse.json({ error: 'User not enrolled in this course' }, { status: 404 });
+      console.log('🔍 [API] Usuario no inscrito, creando inscripción automática');
+      
+      try {
+        // Crear inscripción automática
+        enrollment = await prisma.enrollment.create({
+          data: {
+            userId: userId,
+            courseId: courseId,
+            enrolledAt: new Date(),
+            status: 'IN_PROGRESS',
+            progressPercentage: 0
+          }
+        });
+        console.log('🔍 [API] Inscripción automática creada exitosamente');
+      } catch (enrollmentError) {
+        console.error('🔍 [API] Error creando inscripción automática:', enrollmentError);
+        return NextResponse.json({ error: 'Error creating enrollment' }, { status: 500 });
+      }
     }
 
     // Obtener o crear el progreso del curso
