@@ -138,9 +138,15 @@ export async function POST(request: NextRequest) {
     const passwordHash = await hashPassword(password)
     console.log('✅ [REGISTER] Contraseña hasheada correctamente')
 
+    console.log('✅ [REGISTER] Generando código de verificación')
+
+    // Generar código de verificación
+    const verificationCode = generateVerificationCode()
+    const verificationExpires = new Date(Date.now() + 10 * 60 * 1000) // 10 minutos
+
     console.log('✅ [REGISTER] Creando usuario en base de datos')
 
-    // Crear usuario verificado directamente (temporalmente sin verificación por email)
+    // Crear usuario NO verificado (requiere verificación por email)
     const user = await prisma.user.create({
       data: {
         email,
@@ -148,45 +154,41 @@ export async function POST(request: NextRequest) {
         firstName: firstName.trim(),
         lastName: lastName.trim(),
         username: username?.trim() || null,
-        emailVerified: true, // Verificado directamente (temporal)
+        emailVerified: false, // Requiere verificación por email
+        verificationCode,
+        verificationExpires
       }
     })
 
     console.log('✅ [REGISTER] Usuario creado con ID:', user.id)
 
-    // Generar token y crear sesión
-    const token = generateToken(user.id)
-    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 días
+    console.log('✅ [REGISTER] Enviando email de verificación')
 
-    console.log('✅ [REGISTER] Token generado')
+    // Enviar email de verificación
+    const emailResult = await sendVerificationEmail(
+      email,
+      verificationCode,
+      user.firstName
+    )
 
-    // Crear sesión
-    await prisma.session.create({
-      data: {
-        token,
-        expiresAt,
-        userId: user.id
-      }
-    })
+    if (!emailResult.success) {
+      console.error('❌ [REGISTER] Error enviando email:', emailResult.error)
+      return NextResponse.json(
+        { error: 'Error al enviar el email de verificación. Inténtalo más tarde.' },
+        { status: 500 }
+      )
+    }
 
-    console.log('✅ [REGISTER] Sesión creada')
+    console.log('✅ [REGISTER] Email de verificación enviado')
 
     // Devolver usuario sin passwordHash
     const safeUser = createSafeUser(user)
 
-    // Crear respuesta con cookie
+    // Crear respuesta SIN cookie (usuario no autenticado hasta verificar email)
     const response = NextResponse.json({
       user: safeUser,
-      message: '¡Cuenta creada exitosamente! Ya puedes acceder a todos nuestros cursos.',
-      requiresVerification: false
-    })
-
-    // Establecer cookie HTTP-only
-    response.cookies.set('auth-token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 // 7 días
+      message: '¡Cuenta creada exitosamente! Revisa tu correo electrónico para verificar tu cuenta.',
+      requiresVerification: true
     })
 
     console.log('✅ [REGISTER] Registro completado exitosamente')
