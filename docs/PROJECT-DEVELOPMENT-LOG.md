@@ -199,6 +199,64 @@ GitHub: https://github.com/ZairAquino/Egrow-Academy
 - ✅ `openapi-docs.md` → Documentación técnica completa
 - ✅ `README-DOCS.md` → Guía de documentación
 
+---
+
+## 🎯 **FASE 9: Sistema de Cursos y Progreso**
+
+### **9.1 Implementación de Curso LLMs**
+**Desarrollo completo del curso "Introducción a Large Language Models (LLMs)"**
+
+- ✅ **10 lecciones estructuradas** con contenido real
+- ✅ **Sistema de progreso** con tracking de lecciones completadas
+- ✅ **API de progreso** (`/api/courses/progress`) con Prisma + PostgreSQL
+- ✅ **Hook personalizado** (`useCourseProgress`) para gestión de estado
+- ✅ **Navegación entre lecciones** con botones anterior/siguiente
+- ✅ **Marcado de lecciones completadas** con persistencia en base de datos
+
+### **9.2 Base de Datos y Modelos**
+```sql
+-- Modelos implementados en Prisma
+Enrollment: userId, courseId, status, progressPercentage
+CourseProgress: enrollmentId, currentLesson, completedLessons, status
+LessonProgress: courseProgressId, lessonNumber, isCompleted, timeSpent
+```
+
+### **9.3 Problemas Resueltos**
+**Issue crítico: Reset de progreso al salir y volver al curso**
+
+#### **Problema Identificado:**
+- El progreso se guardaba correctamente en la base de datos
+- Pero al salir y volver al curso, se reseteaba a estado vacío
+- Múltiples `useEffect` ejecutándose causaban conflictos de estado
+
+#### **Solución Implementada:**
+```typescript
+// Antes: Dependencias múltiples causaban ejecuciones innecesarias
+useEffect(() => {
+  handleRouteChange();
+}, [pathname, isEnrolled, isLoading]);
+
+// Después: Solo dependencia de pathname
+useEffect(() => {
+  if (isEnrolled && !isLoading && progress.completedLessons.length > 0) {
+    handleRouteChange();
+  }
+}, [pathname]);
+```
+
+#### **Cambios Realizados:**
+- ✅ **Condición de guardado:** Solo guardar cuando hay lecciones completadas
+- ✅ **Dependencias simplificadas:** Evitar ejecuciones múltiples de useEffect
+- ✅ **Debug logs agregados:** Para monitorear el estado del progreso
+- ✅ **API mejorada:** Cálculo correcto de `completedLessons` desde `lessonProgress`
+
+### **9.4 Estado Final del Sistema**
+- ✅ **Progreso persistente:** Se mantiene al salir y volver al curso
+- ✅ **8/10 lecciones completadas** en el curso LLMs
+- ✅ **80% de progreso** correctamente calculado
+- ✅ **Navegación fluida** entre lecciones
+- ✅ **Base de datos Neon** sincronizada y funcional
+
 ### **FASE 9: Corrección de Errores de Build**
 
 #### **9.1 Errores de Build en Vercel (16/Jul/2025):**
