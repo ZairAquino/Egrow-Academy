@@ -142,7 +142,7 @@ export async function GET(request: NextRequest) {
     } else if (actualCompletedLessons.length === 10) {
       actualStatus = 'COMPLETED';
     } else {
-      actualStatus = 'ACTIVE';
+      actualStatus = 'IN_PROGRESS';
     }
 
     const responseData = {
@@ -244,7 +244,7 @@ export async function POST(request: NextRequest) {
           currentLesson: 0,
           completedLessons: [],
           progressPercentage: 0,
-          status: 'ACTIVE',
+          status: 'IN_PROGRESS',
           lastAccessed: new Date()
         }
       });
@@ -255,7 +255,7 @@ export async function POST(request: NextRequest) {
     const newProgressPercentage = Math.round((completedLessons?.length || 0) / totalLessons * 100);
 
     // Determinar el estado del curso
-    let newStatus: 'NOT_STARTED' | 'ACTIVE' | 'COMPLETED' = 'ACTIVE';
+    let newStatus: 'NOT_STARTED' | 'IN_PROGRESS' | 'COMPLETED' = 'IN_PROGRESS';
     if (newProgressPercentage === 0) {
       newStatus = 'NOT_STARTED';
     } else if (newProgressPercentage === 100) {
