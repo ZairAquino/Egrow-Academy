@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
 
     // Calcular progreso promedio
     const averageProgress = enrollments.length > 0 
-      ? enrollments.reduce((total, enrollment) => total + (enrollment.progressPercentage || 0), 0) / enrollments.length
+      ? enrollments.reduce((total, enrollment) => total + Number(enrollment.progressPercentage || 0), 0) / enrollments.length
       : 0;
 
     // Por ahora, certificaciones = cursos completados
