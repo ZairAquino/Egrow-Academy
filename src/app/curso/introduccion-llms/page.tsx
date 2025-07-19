@@ -52,7 +52,8 @@ export default function IntroduccionLLMsPage() {
       }
     } catch (error) {
       console.error('❌ Error al inscribirse en el curso:', error);
-      alert(`Error al inscribirse en el curso: ${error.message}`);
+      const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+      alert(`Error al inscribirse en el curso: ${errorMessage}`);
     }
   };
 
