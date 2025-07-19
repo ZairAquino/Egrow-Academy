@@ -19,8 +19,12 @@ export async function sendVerificationEmail(
   firstName: string
 ): Promise<{ success: boolean; error?: string }> {
   try {
+    console.log('🔍 [EMAIL] Iniciando envío de verificación a:', email)
+    console.log('🔍 [EMAIL] Código generado:', code)
+    console.log('🔍 [EMAIL] API Key configurada:', !!process.env.RESEND_API_KEY)
+    
     const { data, error } = await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
+      from: 'onboarding@resend.dev', // Usar dominio de prueba de Resend
       to: [email],
       subject: '🔐 Verifica tu cuenta - eGrow Academy',
       html: `
@@ -87,7 +91,7 @@ export async function sendWelcomeEmail(
 ): Promise<{ success: boolean; error?: string }> {
   try {
     const { data, error } = await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
+      from: 'onboarding@resend.dev', // Usar dominio de prueba de Resend
       to: [email],
       subject: '🎉 ¡Bienvenido a eGrow Academy!',
       html: `
