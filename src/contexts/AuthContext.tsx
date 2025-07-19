@@ -8,6 +8,7 @@ interface User {
   lastName: string
   email: string
   username?: string
+  bio?: string
   profileImage?: string
   emailVerified: boolean
   isActive: boolean
