@@ -37,7 +37,7 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
     currentLesson: 0,
     completedLessons: [],
     progressPercentage: 0,
-    status: 'NOT_STARTED',
+    status: 'NOT_STARTED' as const,
     totalTimeSpent: 0,
     totalSessions: 0,
     averageSessionTime: 0,
@@ -76,7 +76,7 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
           setProgress(data);
         } else {
           // Si no hay progreso guardado, usar valores por defecto
-          setProgress({
+          const defaultProgress: CourseProgress = {
             currentLesson: 0,
             completedLessons: [],
             progressPercentage: 0,
@@ -89,7 +89,8 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
             lastAccessed: new Date().toISOString(),
             lessonProgress: [],
             totalLessons: 10
-          });
+          };
+          setProgress(defaultProgress);
         }
       }
     } catch (error) {
@@ -136,7 +137,7 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
       } else {
         // Fallback a localStorage si la API falla
         const localStorageKey = `course-progress-${courseId}`;
-        const progressData = {
+        const progressData: CourseProgress = {
           currentLesson,
           completedLessons,
           progressPercentage: Math.round((completedLessons.length / 10) * 100),
