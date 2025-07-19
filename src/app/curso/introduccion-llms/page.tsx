@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, Suspense } from 'react';
+import { useState, Suspense, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import Sidebar from '@/components/layout/Sidebar';
@@ -19,6 +19,9 @@ const CompaniesMarquee = dynamic(() => import('@/components/ui/CompaniesMarquee'
 export default function IntroduccionLLMsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [currentLesson, setCurrentLesson] = useState(0);
+  const [completedLessons, setCompletedLessons] = useState<number[]>([]);
+  const [progressPercentage, setProgressPercentage] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuth();
   const router = useRouter();
   const { enrollInCourse, isLoading: isEnrolling, error: enrollmentError } = useCourseEnrollment();
@@ -168,8 +171,100 @@ export default function IntroduccionLLMsPage() {
     return total + duration;
   }, 0);
 
-  const completedLessons = courseData.lessons.filter(lesson => lesson.completed).length;
-  const progress = (completedLessons / courseData.lessons.length) * 100;
+  // Cargar progreso del usuario si está logueado
+  useEffect(() => {
+    if (user) {
+      loadUserProgress();
+    } else {
+      setIsLoading(false);
+    }
+  }, [user]);
+
+  // Recargar progreso cuando el usuario regrese del contenido del curso
+  useEffect(() => {
+    const handleFocus = () => {
+      if (user) {
+        console.log('🔄 [DEBUG] Usuario regresó a la página, recargando progreso...');
+        loadUserProgress();
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      if (user && !document.hidden) {
+        console.log('🔄 [DEBUG] Pestaña visible, recargando progreso...');
+        loadUserProgress();
+      }
+    };
+
+    // Escuchar cuando la ventana recupera el foco
+    window.addEventListener('focus', handleFocus);
+    
+    // Escuchar cuando la pestaña se vuelve visible
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    // Escuchar cuando el usuario navega de vuelta
+    const handlePopState = () => {
+      if (user) {
+        console.log('🔄 [DEBUG] Navegación detectada, recargando progreso...');
+        setTimeout(() => loadUserProgress(), 100); // Pequeño delay para asegurar que la navegación se complete
+      }
+    };
+    
+    window.addEventListener('popstate', handlePopState);
+    
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [user]);
+
+  const loadUserProgress = async () => {
+    if (!user) return;
+    
+    try {
+      console.log('🔄 [DEBUG] Cargando progreso del usuario...');
+      const response = await fetch(`/api/courses/progress?courseId=${courseData.id}`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        console.log('🔄 [DEBUG] Progreso cargado:', data);
+        
+        setCurrentLesson(data.currentLesson || 0);
+        
+        setCompletedLessons(data.completedLessons || []);
+        setProgressPercentage(Math.round((data.completedLessons?.length || 0) / courseData.lessons.length * 100));
+        
+        console.log('🔄 [DEBUG] Estado actualizado:', {
+          currentLesson: data.currentLesson,
+          completedLessons: data.completedLessons?.length,
+          progressPercentage: Math.round((data.completedLessons?.length || 0) / courseData.lessons.length * 100)
+        });
+      } else {
+        console.error('Error en la respuesta de la API:', response.status);
+      }
+    } catch (error) {
+      console.error('Error cargando progreso:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const getRemainingTime = () => {
+    const remainingLessons = courseData.lessons.length - completedLessons.length;
+    const avgDuration = totalDuration / courseData.lessons.length;
+    const remainingMinutes = remainingLessons * avgDuration;
+    
+    if (remainingMinutes < 60) {
+      return `${Math.round(remainingMinutes)} min`;
+    } else {
+      const hours = Math.floor(remainingMinutes / 60);
+      const minutes = Math.round(remainingMinutes % 60);
+      return `${hours}h ${minutes}min`;
+    }
+  };
+
+
 
   return (
     <>
@@ -197,13 +292,36 @@ export default function IntroduccionLLMsPage() {
                   <p className="course-description">{courseData.description}</p>
                   
                   <div className="course-actions">
-                    <button 
-                      className="btn btn-primary btn-large"
-                      onClick={handleEnrollClick}
-                      disabled={isEnrolling}
-                    >
-                      {isEnrolling ? 'Inscribiéndote...' : 'Comenzar Curso Gratis'}
-                    </button>
+                    {completedLessons.length > 0 ? (
+                      <div className="course-actions-with-progress">
+                        <div className="progress-summary">
+                          <p className="progress-status">
+                            📚 <strong>Progreso actual:</strong> Lección {currentLesson + 1} de {courseData.lessons.length}
+                          </p>
+                          <p className="progress-detail">
+                            {completedLessons.length} lecciones completadas • {Math.round(progressPercentage)}% del curso
+                          </p>
+                        </div>
+                        <button 
+                          className="btn btn-primary btn-large"
+                          onClick={async () => {
+                            // Recargar progreso antes de navegar
+                            await loadUserProgress();
+                            router.push('/curso/introduccion-llms/contenido');
+                          }}
+                        >
+                          Continuar con el curso
+                        </button>
+                      </div>
+                    ) : (
+                      <button 
+                        className="btn btn-primary btn-large"
+                        onClick={handleEnrollClick}
+                        disabled={isEnrolling}
+                      >
+                        {isEnrolling ? 'Inscribiéndote...' : 'Comenzar Curso Gratis'}
+                      </button>
+                    )}
                     {enrollmentError && (
                       <div className="error-message">
                         {enrollmentError}
@@ -235,13 +353,34 @@ export default function IntroduccionLLMsPage() {
                     </div>
                   </div>
                   
-                  {user && (
+                  {user && !isLoading && (
                     <div className="progress-card">
                       <h3>Tu Progreso</h3>
                       <div className="progress-bar">
-                        <div className="progress-fill" style={{ width: `${progress}%` }}></div>
+                        <div className="progress-fill" style={{ width: `${progressPercentage}%` }}></div>
                       </div>
-                      <p>{completedLessons}/{courseData.lessons.length} lecciones completadas</p>
+                      <div className="progress-details">
+                        <p className="progress-text">
+                          {completedLessons.length}/{courseData.lessons.length} lecciones completadas
+                        </p>
+                        <p className="progress-remaining">
+                          {courseData.lessons.length - completedLessons.length} módulos restantes • {getRemainingTime()}
+                        </p>
+                      </div>
+                      {completedLessons.length > 0 && (
+                        <button 
+                          className="btn btn-outline btn-small"
+                          onClick={async () => {
+                            // Recargar progreso antes de navegar
+                            await loadUserProgress();
+                            router.push('/curso/introduccion-llms/contenido');
+                          }}
+                        >
+                          Continuar donde lo dejaste
+                        </button>
+                      )}
+                      
+
                     </div>
                   )}
                 </div>

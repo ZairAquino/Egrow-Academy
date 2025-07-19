@@ -12,34 +12,34 @@ datasource db {
 
 // Modelo de Usuarios (Simplificado sin NextAuth)
 model User {
-  id              String          @id @default(cuid())
-  email           String          @unique
-  passwordHash    String?         // Opcional para usuarios OAuth
-  firstName       String
-  lastName        String
-  username        String?         @unique
-  profileImage    String?
-  bio             String?
-  membershipLevel MembershipLevel @default(FREE)
-  isActive        Boolean         @default(true)
-  emailVerified   Boolean         @default(false) // Requiere verificación
-  verificationCode String?        // Código de verificación de 6 dígitos
-  verificationExpires DateTime?   // Fecha de expiración del código
-  stripeCustomerId String?        @unique // ID del cliente en Stripe
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-  lastLogin       DateTime?
+  id                  String          @id @default(cuid())
+  email               String          @unique
+  passwordHash        String? // Opcional para usuarios OAuth
+  firstName           String
+  lastName            String
+  username            String?         @unique
+  profileImage        String?
+  bio                 String?
+  membershipLevel     MembershipLevel @default(FREE)
+  isActive            Boolean         @default(true)
+  emailVerified       Boolean         @default(false) // Requiere verificación
+  verificationCode    String? // Código de verificación de 6 dígitos
+  verificationExpires DateTime? // Fecha de expiración del código
+  stripeCustomerId    String?         @unique // ID del cliente en Stripe
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  lastLogin           DateTime?
 
   // Relaciones existentes
-  comments        Comment[]
-  questions       Question[]
-  enrollments     Enrollment[]
-  posts           CommunityPost[]
-  likes           Like[]
-  sessions        Session[]
-  courses         Course[]        @relation("CourseInstructor")
-  payments        Payment[]
-  subscriptions   Subscription[]
+  comments      Comment[]
+  questions     Question[]
+  enrollments   Enrollment[]
+  posts         CommunityPost[]
+  likes         Like[]
+  sessions      Session[]
+  courses       Course[]        @relation("CourseInstructor")
+  payments      Payment[]
+  subscriptions Subscription[]
 
   @@map("users")
 }
@@ -57,30 +57,30 @@ model Session {
 }
 
 model Course {
-  id               String       @id @default(cuid())
+  id               String  @id @default(cuid())
   title            String
-  slug             String       @unique
+  slug             String  @unique
   description      String?
   shortDescription String?
   imageUrl         String?
-  price            Decimal      @default(0)
-  isFree           Boolean      @default(true)
-  requiresAuth     Boolean      @default(true)
+  price            Decimal @default(0)
+  isFree           Boolean @default(true)
+  requiresAuth     Boolean @default(true)
 
-  difficulty       Difficulty?
-  durationHours    Int?
-  lessonsCount     Int          @default(0)
-  studentsCount    Int          @default(0)
-  rating           Decimal      @default(0)
-  status           CourseStatus @default(DRAFT)
-  createdAt        DateTime     @default(now())
-  updatedAt        DateTime     @updatedAt
-  instructorId     String?
-  comments         Comment[]
-  instructor       User?        @relation("CourseInstructor", fields: [instructorId], references: [id])
-  enrollments      Enrollment[]
-  lessons          Lesson[]
-  payments         Payment[]
+  difficulty    Difficulty?
+  durationHours Int?
+  lessonsCount  Int          @default(0)
+  studentsCount Int          @default(0)
+  rating        Decimal      @default(0)
+  status        CourseStatus @default(DRAFT)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  instructorId  String?
+  comments      Comment[]
+  instructor    User?        @relation("CourseInstructor", fields: [instructorId], references: [id])
+  enrollments   Enrollment[]
+  lessons       Lesson[]
+  payments      Payment[]
 
   @@map("courses")
 }
@@ -148,9 +148,82 @@ model Enrollment {
   courseId           String
   course             Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
   user               User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  progress           CourseProgress?
 
   @@unique([userId, courseId])
   @@map("enrollments")
+}
+
+// Tabla optimizada de progreso para todos los cursos
+model CourseProgress {
+  id           String     @id @default(cuid())
+  enrollmentId String     @unique
+  enrollment   Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+
+  // Progreso general
+  currentLesson      Int      @default(0)
+  completedLessons   Int[]    @default([])
+  progressPercentage Decimal  @default(0)
+  lastAccessed       DateTime @default(now())
+
+  // Métricas de tiempo (para cursos que las requieran)
+  startedAt          DateTime  @default(now())
+  completedAt        DateTime?
+  totalTimeSpent     Int       @default(0) // en minutos
+  totalSessions      Int       @default(0)
+  averageSessionTime Int       @default(0) // en minutos
+  longestSession     Int       @default(0) // en minutos
+
+  // Estado del curso
+  status CourseProgressStatus @default(IN_PROGRESS)
+
+  // Datos específicos del curso (JSON para flexibilidad)
+  courseSpecificData Json? // Para datos específicos de cada curso
+
+  // Progreso detallado por lección (opcional)
+  lessonProgress LessonProgress[]
+
+  @@map("course_progress")
+}
+
+// Progreso detallado por lección (opcional para cursos que lo requieran)
+model LessonProgress {
+  id               String         @id @default(cuid())
+  courseProgressId String
+  courseProgress   CourseProgress @relation(fields: [courseProgressId], references: [id], onDelete: Cascade)
+
+  lessonNumber Int
+  lessonTitle  String
+
+  // Estado de la lección
+  isCompleted Boolean   @default(false)
+  completedAt DateTime?
+
+  // Métricas de tiempo
+  timeSpent     Int      @default(0) // en minutos
+  firstAccessed DateTime @default(now())
+  lastAccessed  DateTime @default(now())
+
+  // Intentos y engagement
+  accessCount        Int @default(0)
+  completionAttempts Int @default(0)
+
+  // Notas del usuario (opcional)
+  userNotes String?
+
+  // Datos específicos de la lección (JSON para flexibilidad)
+  lessonSpecificData Json?
+
+  @@unique([courseProgressId, lessonNumber])
+  @@map("lesson_progress")
+}
+
+enum CourseProgressStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+  PAUSED
+  ABANDONED
 }
 
 model Like {
@@ -221,79 +294,79 @@ enum EnrollmentStatus {
 
 // Modelos para Stripe
 model Payment {
-  id                String   @id @default(cuid())
-  stripePaymentId   String   @unique
-  amount            Int      // Cantidad en centavos
-  currency          String   @default("usd")
-  status            PaymentStatus
-  paymentMethod     String?
-  description       String?
-  metadata          Json?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  userId            String
-  courseId          String?
-  subscriptionId    String?
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  course            Course?  @relation(fields: [courseId], references: [id])
-  subscription      Subscription? @relation(fields: [subscriptionId], references: [id])
+  id              String        @id @default(cuid())
+  stripePaymentId String        @unique
+  amount          Int // Cantidad en centavos
+  currency        String        @default("usd")
+  status          PaymentStatus
+  paymentMethod   String?
+  description     String?
+  metadata        Json?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  userId          String
+  courseId        String?
+  subscriptionId  String?
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course          Course?       @relation(fields: [courseId], references: [id])
+  subscription    Subscription? @relation(fields: [subscriptionId], references: [id])
 
   @@map("payments")
 }
 
 model Subscription {
-  id                String   @id @default(cuid())
-  stripeSubscriptionId String @unique
-  status            SubscriptionStatus
-  currentPeriodStart DateTime
-  currentPeriodEnd   DateTime
-  cancelAtPeriodEnd Boolean  @default(false)
-  canceledAt        DateTime?
-  endedAt           DateTime?
-  trialStart        DateTime?
-  trialEnd          DateTime?
-  metadata          Json?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  userId            String
-  priceId           String
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  price             Price    @relation(fields: [priceId], references: [id])
-  payments          Payment[]
+  id                   String             @id @default(cuid())
+  stripeSubscriptionId String             @unique
+  status               SubscriptionStatus
+  currentPeriodStart   DateTime
+  currentPeriodEnd     DateTime
+  cancelAtPeriodEnd    Boolean            @default(false)
+  canceledAt           DateTime?
+  endedAt              DateTime?
+  trialStart           DateTime?
+  trialEnd             DateTime?
+  metadata             Json?
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+  userId               String
+  priceId              String
+  user                 User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  price                Price              @relation(fields: [priceId], references: [id])
+  payments             Payment[]
 
   @@map("subscriptions")
 }
 
 model Product {
-  id                String   @id @default(cuid())
-  stripeProductId   String   @unique
-  name              String
-  description       String?
-  active            Boolean  @default(true)
-  metadata          Json?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  prices            Price[]
+  id              String   @id @default(cuid())
+  stripeProductId String   @unique
+  name            String
+  description     String?
+  active          Boolean  @default(true)
+  metadata        Json?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  prices          Price[]
 
   @@map("products")
 }
 
 model Price {
-  id                String   @id @default(cuid())
-  stripePriceId     String   @unique
-  active            Boolean  @default(true)
-  currency          String   @default("usd")
-  type              PriceType
-  unitAmount        Int?     // Cantidad en centavos
-  interval          BillingInterval?
-  intervalCount     Int?
-  trialPeriodDays   Int?
-  metadata          Json?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  productId         String
-  product           Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  subscriptions     Subscription[]
+  id              String           @id @default(cuid())
+  stripePriceId   String           @unique
+  active          Boolean          @default(true)
+  currency        String           @default("usd")
+  type            PriceType
+  unitAmount      Int? // Cantidad en centavos
+  interval        BillingInterval?
+  intervalCount   Int?
+  trialPeriodDays Int?
+  metadata        Json?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  productId       String
+  product         Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
+  subscriptions   Subscription[]
 
   @@map("prices")
 }

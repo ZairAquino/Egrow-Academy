@@ -1,15 +1,33 @@
 import Stripe from 'stripe';
 
-// Configuración de Stripe
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-06-30.basil',
-});
+// Configuración de Stripe con manejo de errores
+let stripe: Stripe | null = null;
+
+try {
+  if (process.env.STRIPE_SECRET_KEY) {
+    stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: '2025-06-30.basil',
+    });
+  }
+} catch (error) {
+  console.warn('Stripe no está configurado correctamente:', error);
+}
 
 // Configuración del cliente de Stripe para el frontend
 export const getStripeClient = () => {
-  return new Stripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!, {
-    apiVersion: '2025-06-30.basil',
-  });
+  if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
+    console.warn('NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY no está configurada');
+    return null;
+  }
+  
+  try {
+    return new Stripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY, {
+      apiVersion: '2025-06-30.basil',
+    });
+  } catch (error) {
+    console.warn('Error inicializando Stripe client:', error);
+    return null;
+  }
 };
 
 // Tipos para los productos de Stripe
@@ -39,6 +57,10 @@ export const createStripeProduct = async (productData: {
   description?: string;
   metadata?: Record<string, string>;
 }) => {
+  if (!stripe) {
+    throw new Error('Stripe no está configurado. Verifica las variables de entorno.');
+  }
+  
   try {
     const product = await stripe.products.create({
       name: productData.name,
@@ -61,6 +83,10 @@ export const createStripePrice = async (priceData: {
   intervalCount?: number;
   trialPeriodDays?: number;
 }) => {
+  if (!stripe) {
+    throw new Error('Stripe no está configurado. Verifica las variables de entorno.');
+  }
+  
   try {
     const price = await stripe.prices.create({
       product: priceData.productId,
@@ -86,6 +112,10 @@ export const createPaymentIntent = async (data: {
   metadata?: Record<string, string>;
   customerId?: string;
 }) => {
+  if (!stripe) {
+    throw new Error('Stripe no está configurado. Verifica las variables de entorno.');
+  }
+  
   try {
     const paymentIntent = await stripe.paymentIntents.create({
       amount: data.amount,
@@ -110,6 +140,10 @@ export const createSubscription = async (data: {
   metadata?: Record<string, string>;
   trialPeriodDays?: number;
 }) => {
+  if (!stripe) {
+    throw new Error('Stripe no está configurado. Verifica las variables de entorno.');
+  }
+  
   try {
     const subscription = await stripe.subscriptions.create({
       customer: data.customerId,
@@ -129,6 +163,10 @@ export const createSubscription = async (data: {
 
 // Función para crear o recuperar un cliente
 export const createOrRetrieveCustomer = async (email: string, userId: string) => {
+  if (!stripe) {
+    throw new Error('Stripe no está configurado. Verifica las variables de entorno.');
+  }
+  
   try {
     // Buscar cliente existente por email
     const existingCustomers = await stripe.customers.list({
@@ -157,6 +195,10 @@ export const createOrRetrieveCustomer = async (email: string, userId: string) =>
 
 // Función para cancelar una suscripción
 export const cancelSubscription = async (subscriptionId: string, cancelAtPeriodEnd: boolean = true) => {
+  if (!stripe) {
+    throw new Error('Stripe no está configurado. Verifica las variables de entorno.');
+  }
+  
   try {
     if (cancelAtPeriodEnd) {
       const subscription = await stripe.subscriptions.update(subscriptionId, {
@@ -175,6 +217,10 @@ export const cancelSubscription = async (subscriptionId: string, cancelAtPeriodE
 
 // Función para recuperar una suscripción
 export const retrieveSubscription = async (subscriptionId: string) => {
+  if (!stripe) {
+    throw new Error('Stripe no está configurado. Verifica las variables de entorno.');
+  }
+  
   try {
     const subscription = await stripe.subscriptions.retrieve(subscriptionId, {
       expand: ['latest_invoice', 'customer'],
@@ -188,6 +234,10 @@ export const retrieveSubscription = async (subscriptionId: string) => {
 
 // Función para listar productos
 export const listProducts = async (active?: boolean) => {
+  if (!stripe) {
+    throw new Error('Stripe no está configurado. Verifica las variables de entorno.');
+  }
+  
   try {
     const products = await stripe.products.list({
       active: active,
@@ -202,6 +252,10 @@ export const listProducts = async (active?: boolean) => {
 
 // Función para listar precios de un producto
 export const listPrices = async (productId: string, active?: boolean) => {
+  if (!stripe) {
+    throw new Error('Stripe no está configurado. Verifica las variables de entorno.');
+  }
+  
   try {
     const prices = await stripe.prices.list({
       product: productId,

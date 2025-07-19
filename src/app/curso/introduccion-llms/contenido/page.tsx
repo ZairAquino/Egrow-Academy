@@ -1,18 +1,40 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import Sidebar from '@/components/layout/Sidebar';
 import UserProfile from '@/components/auth/UserProfile';
 import Footer from '@/components/layout/Footer';
 import { useAuth } from '@/contexts/AuthContext';
+import { useCourseProgress } from '@/hooks/useCourseProgress';
 
 export default function ContenidoCursoPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [currentLesson, setCurrentLesson] = useState(0);
   const [isEnrolled, setIsEnrolled] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const { user } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
+  
+  const {
+    progress,
+    isLoading,
+    progressPercentage,
+    saveProgress,
+    markLessonComplete,
+    setCurrentLesson
+  } = useCourseProgress('introduccion-llms', isEnrolled);
+
+  // Debug: Log cuando cambie el progreso
+  useEffect(() => {
+    console.log('🔍 [DEBUG] Progreso actualizado en componente:');
+    console.log('  - Lección actual:', progress.currentLesson);
+    console.log('  - Lecciones completadas:', progress.completedLessons);
+    console.log('  - Porcentaje:', progress.progressPercentage);
+    console.log('  - Estado:', progress.status);
+    console.log('  - isEnrolled:', isEnrolled);
+    console.log('  - isLoading:', isLoading);
+  }, [progress, isEnrolled, isLoading]);
 
   const courseData = {
     id: 'introduccion-llms',
@@ -160,6 +182,264 @@ print(response.choices[0].message.content)</code></pre>
           </ol>
         `,
         completed: false
+      },
+      {
+        id: 6,
+        title: 'Prompt Engineering',
+        duration: '18 min',
+        type: 'video',
+        description: 'Técnicas para crear prompts efectivos',
+        content: `
+          <h2>Prompt Engineering</h2>
+          <p>El prompt engineering es el arte de diseñar entradas que guíen a los LLMs para producir las respuestas deseadas.</p>
+          
+          <h3>Principios fundamentales:</h3>
+          <ul>
+            <li><strong>Claridad:</strong> Instrucciones específicas y sin ambigüedad</li>
+            <li><strong>Contexto:</strong> Proporcionar información relevante</li>
+            <li><strong>Ejemplos:</strong> Few-shot learning con casos de uso</li>
+            <li><strong>Formato:</strong> Estructura clara de la respuesta esperada</li>
+          </ul>
+          
+          <h3>Técnicas avanzadas:</h3>
+          <ul>
+            <li><strong>Chain of Thought:</strong> Guiar el razonamiento paso a paso</li>
+            <li><strong>Role Prompting:</strong> Asignar roles específicos al modelo</li>
+            <li><strong>Temperature Control:</strong> Ajustar la creatividad vs consistencia</li>
+            <li><strong>System Messages:</strong> Definir el comportamiento del modelo</li>
+          </ul>
+          
+          <h3>Ejemplos prácticos:</h3>
+          <pre><code># Ejemplo de Chain of Thought
+"Resuelve este problema paso a paso:
+1. Primero, identifica los datos conocidos
+2. Luego, determina qué fórmula usar
+3. Finalmente, calcula el resultado
+
+Problema: Si un tren viaja a 120 km/h, ¿cuánto tiempo tarda en recorrer 360 km?"</code></pre>
+        `,
+        completed: false
+      },
+      {
+        id: 7,
+        title: 'Lab: Prompt Engineering Avanzado',
+        duration: '30 min',
+        type: 'lab',
+        description: 'Ejercicios prácticos de optimización de prompts',
+        content: `
+          <h2>Laboratorio: Prompt Engineering Avanzado</h2>
+          <p>En este laboratorio, practicarás técnicas avanzadas de prompt engineering con casos reales.</p>
+          
+          <h3>Ejercicio 1: Análisis de Sentimientos</h3>
+          <pre><code># Prompt básico
+"Analiza el sentimiento de este texto: 'Me encanta este producto!'"
+
+# Prompt mejorado con contexto
+"Actúa como un analista de sentimientos experto. 
+Analiza el siguiente texto y proporciona:
+1. Sentimiento (positivo/negativo/neutral)
+2. Confianza (0-100%)
+3. Palabras clave que influyen en el sentimiento
+
+Texto: 'Me encanta este producto!'"</code></pre>
+          
+          <h3>Ejercicio 2: Generación de Código</h3>
+          <pre><code># Prompt para generar código Python
+"Eres un desarrollador Python experto. Crea una función que:
+- Tome una lista de números
+- Retorne la suma de los números pares
+- Incluya manejo de errores
+- Tenga documentación clara
+
+Formato de respuesta:
+\`\`\`python
+def nombre_funcion(parametros):
+    &quot;&quot;&quot;
+    Descripción de la función
+    &quot;&quot;&quot;
+    # código aquí
+\`\`\`</code></pre>
+          
+          <h3>Ejercicio 3: Resolución de Problemas</h3>
+          <p>Usa Chain of Thought para resolver problemas matemáticos complejos.</p>
+        `,
+        completed: false
+      },
+      {
+        id: 8,
+        title: 'Casos de Uso Reales',
+        duration: '15 min',
+        type: 'video',
+        description: 'Aplicaciones en chatbots, análisis de texto y más',
+        content: `
+          <h2>Casos de Uso Reales de LLMs</h2>
+          <p>Los LLMs están transformando múltiples industrias con aplicaciones prácticas innovadoras.</p>
+          
+          <h3>Chatbots y Asistentes Virtuales:</h3>
+          <ul>
+            <li><strong>Customer Service:</strong> Atención al cliente 24/7</li>
+            <li><strong>Asistentes Personales:</strong> Siri, Alexa, Google Assistant</li>
+            <li><strong>Chatbots Educativos:</strong> Tutores personalizados</li>
+            <li><strong>Asistentes de Programación:</strong> GitHub Copilot, Cursor</li>
+          </ul>
+          
+          <h3>Análisis y Generación de Contenido:</h3>
+          <ul>
+            <li><strong>Resúmenes Automáticos:</strong> Artículos, documentos, reuniones</li>
+            <li><strong>Generación de Contenido:</strong> Blogs, marketing, creativo</li>
+            <li><strong>Traducción:</strong> Múltiples idiomas con contexto</li>
+            <li><strong>Análisis de Sentimientos:</strong> Redes sociales, reviews</li>
+          </ul>
+          
+          <h3>Aplicaciones Empresariales:</h3>
+          <ul>
+            <li><strong>Automatización de Procesos:</strong> Documentos, emails, reportes</li>
+            <li><strong>Investigación:</strong> Análisis de datos, literatura científica</li>
+            <li><strong>Educación:</strong> Contenido personalizado, evaluación</li>
+            <li><strong>Salud:</strong> Diagnóstico, investigación médica</li>
+          </ul>
+        `,
+        completed: false
+      },
+      {
+        id: 9,
+        title: 'Limitaciones y Sesgos',
+        duration: '12 min',
+        type: 'video',
+        description: 'Desafíos actuales y consideraciones éticas',
+        content: `
+          <h2>Limitaciones y Sesgos en LLMs</h2>
+          <p>Es crucial entender las limitaciones y sesgos de los LLMs para usarlos de manera responsable.</p>
+          
+          <h3>Limitaciones Técnicas:</h3>
+          <ul>
+            <li><strong>Alucinaciones:</strong> Generación de información falsa pero plausible</li>
+            <li><strong>Contexto Limitado:</strong> Ventana de atención restringida</li>
+            <li><strong>Falta de Razonamiento:</strong> No entienden realmente el contenido</li>
+            <li><strong>Actualización de Conocimiento:</strong> Datos de entrenamiento desactualizados</li>
+          </ul>
+          
+          <h3>Sesgos y Consideraciones Éticas:</h3>
+          <ul>
+            <li><strong>Sesgos de Entrenamiento:</strong> Reflejan sesgos en los datos de entrenamiento</li>
+            <li><strong>Discriminación:</strong> Pueden perpetuar estereotipos</li>
+            <li><strong>Privacidad:</strong> Riesgos de exposición de datos sensibles</li>
+            <li><strong>Responsabilidad:</strong> ¿Quién es responsable de las decisiones del modelo?</li>
+          </ul>
+          
+          <h3>Mejores Prácticas:</h3>
+          <ul>
+            <li>Verificar siempre la información generada</li>
+            <li>Implementar filtros de contenido</li>
+            <li>Diversificar fuentes de datos</li>
+            <li>Transparencia en el uso de IA</li>
+            <li>Evaluación continua de sesgos</li>
+          </ul>
+        `,
+        completed: false
+      },
+      {
+        id: 10,
+        title: 'Proyecto Final',
+        duration: '35 min',
+        type: 'project',
+        description: 'Construye una aplicación completa con LLMs',
+        content: `
+          <h2>Proyecto Final: Chatbot Inteligente</h2>
+          <p>En este proyecto final, construirás un chatbot inteligente que integre todo lo aprendido en el curso.</p>
+          
+          <h3>Objetivos del Proyecto:</h3>
+          <ul>
+            <li>Crear un chatbot funcional con GPT-3.5</li>
+            <li>Implementar prompt engineering efectivo</li>
+            <li>Manejar conversaciones contextuales</li>
+            <li>Integrar con una interfaz web</li>
+          </ul>
+          
+          <h3>Arquitectura del Proyecto:</h3>
+          <pre><code># Estructura del proyecto
+chatbot-app/
+├── app.py              # Aplicación principal
+├── chatbot.py          # Lógica del chatbot
+├── prompts.py          # Templates de prompts
+├── templates/          # Interfaz web
+│   ├── index.html
+│   └── chat.html
+└── requirements.txt    # Dependencias</code></pre>
+          
+          <h3>Funcionalidades a Implementar:</h3>
+          <ol>
+            <li><strong>Configuración inicial:</strong> API key y configuración</li>
+            <li><strong>Chat básico:</strong> Conversación simple con el modelo</li>
+            <li><strong>Manejo de contexto:</strong> Mantener conversación</li>
+            <li><strong>Prompt templates:</strong> Diferentes tipos de respuestas</li>
+            <li><strong>Interfaz web:</strong> Chat visual con Streamlit</li>
+            <li><strong>Validación:</strong> Filtros de contenido</li>
+          </ol>
+          
+          <h3>Código Base:</h3>
+          <pre><code>import streamlit as st
+import openai
+from datetime import datetime
+
+# Configuración
+openai.api_key = st.secrets[&quot;openai_api_key&quot;]
+
+def chat_with_gpt(message, conversation_history):
+    messages = [
+        {&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: &quot;Eres un asistente útil y amigable.&quot;}
+    ]
+    
+    # Agregar historial de conversación
+    for msg in conversation_history:
+        messages.append(msg)
+    
+    # Agregar mensaje actual
+    messages.append({&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: message})
+    
+    response = openai.ChatCompletion.create(
+        model=&quot;gpt-3.5-turbo&quot;,
+        messages=messages,
+        max_tokens=150
+    )
+    
+    return response.choices[0].message.content
+
+# Interfaz de Streamlit
+st.title(&quot;🤖 Chatbot Inteligente&quot;)
+st.write(&quot;¡Bienvenido al proyecto final del curso!&quot;)
+
+# Inicializar historial de chat
+if &quot;messages&quot; not in st.session_state:
+    st.session_state.messages = []
+
+# Mostrar historial
+for message in st.session_state.messages:
+    with st.chat_message(message[&quot;role&quot;]):
+        st.markdown(message[&quot;content&quot;])
+
+# Input del usuario
+if prompt := st.chat_input(&quot;Escribe tu mensaje...&quot;):
+    st.session_state.messages.append({&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: prompt})
+    with st.chat_message(&quot;user&quot;):
+        st.markdown(prompt)
+
+    # Respuesta del chatbot
+    with st.chat_message(&quot;assistant&quot;):
+        response = chat_with_gpt(prompt, st.session_state.messages)
+        st.markdown(response)
+    
+    st.session_state.messages.append({&quot;role&quot;: &quot;assistant&quot;, &quot;content&quot;: response})</code></pre>
+          
+          <h3>Evaluación del Proyecto:</h3>
+          <ul>
+            <li>Funcionalidad del chatbot (40%)</li>
+            <li>Calidad de los prompts (30%)</li>
+            <li>Interfaz de usuario (20%)</li>
+            <li>Documentación (10%)</li>
+          </ul>
+        `,
+        completed: false
       }
     ]
   };
@@ -172,6 +452,53 @@ print(response.choices[0].message.content)</code></pre>
       router.push('/login?redirect=/curso/introduccion-llms/contenido');
     }
   }, [user]);
+
+  // Guardar progreso antes de salir de la página
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (isEnrolled && !isLoading && progress.completedLessons.length > 0) {
+        const currentLesson = courseData.lessons[progress.currentLesson];
+        saveProgress(
+          progress.currentLesson, 
+          progress.completedLessons,
+          currentLesson?.id,
+          currentLesson?.title,
+          'access',
+          1
+        );
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [progress.currentLesson, progress.completedLessons]); // Solo dependencias del progreso
+
+  // Guardar progreso cuando el usuario navegue a otra página
+  useEffect(() => {
+    const handleRouteChange = () => {
+      if (isEnrolled && !isLoading && progress.completedLessons.length > 0) {
+        const currentLesson = courseData.lessons[progress.currentLesson];
+        saveProgress(
+          progress.currentLesson, 
+          progress.completedLessons,
+          currentLesson?.id,
+          currentLesson?.title,
+          'access',
+          1
+        );
+      }
+    };
+
+    // Solo ejecutar cuando cambie la ruta, no cuando cambie el progreso
+    if (pathname && isEnrolled && !isLoading) {
+      // Usar un flag para evitar ejecuciones múltiples
+      const timeoutId = setTimeout(() => {
+        handleRouteChange();
+      }, 100);
+      
+      return () => clearTimeout(timeoutId);
+    }
+  }, [pathname]); // Solo dependencia de pathname para evitar ejecuciones múltiples
 
   const checkEnrollment = async () => {
     try {
@@ -189,13 +516,144 @@ print(response.choices[0].message.content)</code></pre>
     setSidebarOpen(!sidebarOpen);
   };
 
-  const markLessonComplete = async (lessonId: number) => {
-    // Aquí implementarías la lógica para marcar la lección como completada
-    console.log('Marcando lección como completada:', lessonId);
+  const handleManualLessonChange = async (newLessonIndex: number) => {
+    console.log('🔍 [DEBUG] handleManualLessonChange llamado con newLessonIndex:', newLessonIndex);
+    
+    // Guardar progreso de la lección actual antes de cambiar
+    const currentLesson = courseData.lessons[progress.currentLesson];
+    await saveProgress(
+      progress.currentLesson,
+      progress.completedLessons,
+      currentLesson?.id,
+      currentLesson?.title,
+      'access',
+      1
+    );
+    
+    // Cambiar a la nueva lección
+    setCurrentLesson(newLessonIndex);
   };
 
-  if (!user) {
-    return <div>Cargando...</div>;
+  const handleReturnToCourse = async () => {
+    console.log('🔍 [DEBUG] Regresando al curso');
+    
+    setIsSaving(true);
+    
+    try {
+      // Guardar progreso de la lección actual antes de salir
+      const currentLesson = courseData.lessons[progress.currentLesson];
+      await saveProgress(
+        progress.currentLesson,
+        progress.completedLessons,
+        currentLesson?.id,
+        currentLesson?.title,
+        'access',
+        1
+      );
+      
+      // Navegar de vuelta al curso
+      router.push('/curso/introduccion-llms');
+    } catch (error) {
+      console.error('Error guardando progreso:', error);
+      setIsSaving(false);
+    }
+  };
+
+  const handlePreviousLesson = async () => {
+    if (progress.currentLesson > 0) {
+      console.log('🔍 [DEBUG] Regresando a lección anterior:', progress.currentLesson - 1);
+      
+      // Guardar progreso de la lección actual antes de cambiar
+      const currentLesson = courseData.lessons[progress.currentLesson];
+      await saveProgress(
+        progress.currentLesson,
+        progress.completedLessons,
+        currentLesson?.id,
+        currentLesson?.title,
+        'access',
+        1
+      );
+      
+      // Cambiar a la lección anterior
+      setCurrentLesson(progress.currentLesson - 1);
+    }
+  };
+
+  const handleMarkLessonComplete = async (lessonId: number) => {
+    console.log('🔍 [DEBUG] handleMarkLessonComplete llamado con lessonId:', lessonId);
+    
+    // Obtener el índice actual de la lección
+    const currentLessonIndex = courseData.lessons.findIndex(lesson => lesson.id === lessonId);
+    const currentLesson = courseData.lessons[currentLessonIndex];
+    
+    console.log('🔍 [DEBUG] currentLessonIndex:', currentLessonIndex);
+    
+    // Crear la nueva lista de lecciones completadas
+    const newCompletedLessons = progress.completedLessons.includes(lessonId) 
+      ? progress.completedLessons 
+      : [...progress.completedLessons, lessonId];
+    
+    // Marcar la lección como completada (actualiza el estado inmediatamente)
+    markLessonComplete(lessonId);
+    
+    // Guardar progreso con información de completado
+    await saveProgress(
+      currentLessonIndex,
+      newCompletedLessons,
+      currentLesson.id,
+      currentLesson.title,
+      'complete',
+      5 // 5 minutos por completar una lección
+    );
+    
+    // Avanzar a la siguiente lección si no es la última
+    if (currentLessonIndex < courseData.lessons.length - 1) {
+      console.log('🔍 [DEBUG] Avanzando a lección:', currentLessonIndex + 1);
+      // Usar setTimeout para evitar conflictos de estado
+      setTimeout(() => {
+        setCurrentLesson(currentLessonIndex + 1);
+      }, 100);
+    } else {
+      console.log('🔍 [DEBUG] Es la última lección, no avanzar');
+    }
+  };
+
+  const isLessonCompleted = (lessonId: number) => {
+    return progress.completedLessons.includes(lessonId);
+  };
+
+  const isLessonAccessible = (lessonIndex: number) => {
+    // Si está inscrito, puede acceder a todas las lecciones
+    if (isEnrolled) return true;
+    
+    // Si no está inscrito, solo puede acceder a la primera lección
+    return lessonIndex === 0;
+  };
+
+  const getLessonStatus = (lessonIndex: number, lessonId: number) => {
+    if (isLessonCompleted(lessonId)) {
+      return '✅';
+    } else if (lessonIndex === progress.currentLesson) {
+      return '▶️';
+    } else if (isLessonAccessible(lessonIndex)) {
+      return '📖';
+    } else {
+      return '🔒';
+    }
+  };
+
+  // Función de debug para verificar el progreso
+  const debugProgress = () => {
+    console.log('🔍 [DEBUG] Estado actual del progreso:');
+    console.log('  - Lección actual:', progress.currentLesson);
+    console.log('  - Lecciones completadas:', progress.completedLessons);
+    console.log('  - Porcentaje de progreso:', progress.progressPercentage);
+    console.log('  - Estado:', progress.status);
+    console.log('  - Total de lecciones:', courseData.lessons.length);
+  };
+
+  if (!user || isLoading) {
+    return <div className="loading-container">Cargando...</div>;
   }
 
   if (!isEnrolled) {
@@ -224,7 +682,19 @@ print(response.choices[0].message.content)</code></pre>
                 <a href="/">Inicio</a> / <a href="/cursos-gratuitos">Cursos Gratuitos</a> / <a href="/curso/introduccion-llms">Introducción a LLMs</a> / <span>Contenido</span>
               </div>
               
-              <h1 className="course-title">{courseData.title}</h1>
+              <div className="header-main">
+                <h1 className="course-title">{courseData.title}</h1>
+                
+                <div className="header-actions">
+                  <button 
+                    className="btn btn-exit-course"
+                    onClick={handleReturnToCourse}
+                    disabled={isSaving}
+                  >
+                    {isSaving ? '💾 Guardando...' : '🏠 Salir del Curso'}
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -238,28 +708,47 @@ print(response.choices[0].message.content)</code></pre>
                 {/* Current Lesson */}
                 <div className="current-lesson">
                   <div className="lesson-header">
-                    <h2>Lección {currentLesson + 1}: {courseData.lessons[currentLesson].title}</h2>
+                    <h2>Lección {progress.currentLesson + 1}: {courseData.lessons[progress.currentLesson].title}</h2>
                     <div className="lesson-meta">
-                      <span className="lesson-type">{courseData.lessons[currentLesson].type}</span>
-                      <span className="lesson-duration">{courseData.lessons[currentLesson].duration}</span>
+                      <span className="lesson-type">{courseData.lessons[progress.currentLesson].type}</span>
+                      <span className="lesson-duration">{courseData.lessons[progress.currentLesson].duration}</span>
                     </div>
                   </div>
                   
                   <div className="lesson-content">
                     <div 
                       dangerouslySetInnerHTML={{ 
-                        __html: courseData.lessons[currentLesson].content 
+                        __html: courseData.lessons[progress.currentLesson].content 
                       }} 
                     />
                   </div>
                   
                   <div className="lesson-actions">
-                    <button 
-                      className="btn btn-primary"
-                      onClick={() => markLessonComplete(courseData.lessons[currentLesson].id)}
-                    >
-                      Marcar como completada
-                    </button>
+                    <div className="lesson-buttons">
+                      <button 
+                        className="btn btn-primary"
+                        onClick={handlePreviousLesson}
+                        disabled={progress.currentLesson === 0}
+                      >
+                        ← Lección Anterior
+                      </button>
+                      <button 
+                        className="btn btn-primary"
+                        onClick={() => handleMarkLessonComplete(courseData.lessons[progress.currentLesson].id)}
+                      >
+                        ✅ Marcar como completada
+                      </button>
+                    </div>
+                    {/* Botón de debug temporal */}
+                    <div style={{ marginTop: '1rem', textAlign: 'center' }}>
+                      <button 
+                        className="btn btn-outline"
+                        onClick={debugProgress}
+                        style={{ fontSize: '0.8rem', padding: '0.5rem 1rem' }}
+                      >
+                        🔍 Debug Progreso
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -268,13 +757,38 @@ print(response.choices[0].message.content)</code></pre>
               <div className="content-sidebar">
                 {/* Lessons Navigation */}
                 <div className="lessons-navigation">
-                  <h3>Lecciones del Curso</h3>
+                  <div className="navigation-header">
+                    <h3>Lecciones del Curso</h3>
+                    <div className="progress-indicator">
+                      <span className="progress-text">
+                        {progress.completedLessons.length} de {courseData.lessons.length} completadas
+                      </span>
+                      <div className="progress-bar">
+                        <div 
+                          className="progress-fill" 
+                          style={{ width: `${(progress.completedLessons.length / courseData.lessons.length) * 100}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                  {isEnrolled && (
+                    <div className="course-guidance">
+                      <p className="guidance-text">
+                        💡 <strong>Recomendación:</strong> Sigue el orden de las lecciones para una mejor experiencia de aprendizaje.
+                      </p>
+                    </div>
+                  )}
                   <div className="lessons-list">
                     {courseData.lessons.map((lesson, index) => (
                       <div 
                         key={lesson.id} 
-                        className={`lesson-item ${index === currentLesson ? 'active' : ''} ${lesson.completed ? 'completed' : ''}`}
-                        onClick={() => setCurrentLesson(index)}
+                        className={`lesson-item ${index === progress.currentLesson ? 'active' : ''} ${isLessonCompleted(lesson.id) ? 'completed' : ''} ${!isLessonAccessible(index) ? 'locked' : ''}`}
+                        onClick={() => {
+                          if (isLessonAccessible(index)) {
+                            console.log('🔍 [DEBUG] Navegando a lección:', index);
+                            handleManualLessonChange(index);
+                          }
+                        }}
                       >
                         <div className="lesson-number">{index + 1}</div>
                         <div className="lesson-content">
@@ -285,7 +799,7 @@ print(response.choices[0].message.content)</code></pre>
                           </div>
                         </div>
                         <div className="lesson-status">
-                          {lesson.completed ? '✅' : index === currentLesson ? '▶️' : '🔒'}
+                          {getLessonStatus(index, lesson.id)}
                         </div>
                       </div>
                     ))}
@@ -336,10 +850,123 @@ print(response.choices[0].message.content)</code></pre>
           color: white;
         }
 
+        .header-main {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 2rem;
+        }
+
         .course-title {
           font-size: 2.5rem;
           font-weight: 700;
           margin: 0;
+          flex: 1;
+        }
+
+        .header-actions {
+          display: flex;
+          gap: 1rem;
+          align-items: center;
+        }
+
+        .btn-outline-white {
+          background: transparent;
+          color: white;
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          padding: 0.75rem 1.5rem;
+          border-radius: 8px;
+          font-weight: 600;
+          font-size: 0.9rem;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          text-decoration: none;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .btn-outline-white:hover {
+          background: rgba(255, 255, 255, 0.1);
+          border-color: rgba(255, 255, 255, 0.5);
+          transform: translateY(-1px);
+        }
+
+        .btn-outline-white:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+          transform: none !important;
+        }
+
+        .btn-exit-course {
+          background: linear-gradient(135deg, #ef4444, #dc2626);
+          color: white;
+          border: 2px solid #dc2626;
+          padding: 0.75rem 1.5rem;
+          border-radius: 8px;
+          font-weight: 600;
+          font-size: 0.9rem;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          text-decoration: none;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+          position: relative;
+          overflow: hidden;
+        }
+
+        .btn-exit-course::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+          transition: left 0.5s;
+        }
+
+        .btn-exit-course:hover {
+          background: linear-gradient(135deg, #dc2626, #b91c1c);
+          border-color: #b91c1c;
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-exit-course:hover::before {
+          left: 100%;
+        }
+
+        .btn-exit-course:active {
+          transform: translateY(0);
+          box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-exit-course:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+          transform: none !important;
+          box-shadow: none !important;
+        }
+
+        @media (max-width: 768px) {
+          .header-main {
+            flex-direction: column;
+            gap: 1rem;
+            text-align: center;
+          }
+
+          .header-actions {
+            flex-direction: column;
+            width: 100%;
+          }
+
+          .btn-outline-white {
+            width: 100%;
+            justify-content: center;
+          }
         }
 
         .course-content {
@@ -450,6 +1077,99 @@ print(response.choices[0].message.content)</code></pre>
           border-top: 2px solid #f3f4f6;
         }
 
+        .lesson-buttons {
+          display: flex;
+          gap: 1rem;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .btn {
+          padding: 0.75rem 1.5rem;
+          border-radius: 8px;
+          font-weight: 600;
+          font-size: 0.9rem;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          border: none;
+          text-decoration: none;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .btn-primary {
+          background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+          color: white;
+        }
+
+        .btn-primary:hover {
+          background: linear-gradient(135deg, #2563eb, #1e40af);
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-secondary {
+          background: #f3f4f6;
+          color: #374151;
+          border: 2px solid #d1d5db;
+        }
+
+        .btn-secondary:hover {
+          background: #e5e7eb;
+          border-color: #9ca3af;
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-outline {
+          background: transparent;
+          color: #6b7280;
+          border: 2px solid #d1d5db;
+        }
+
+        .btn-outline:hover {
+          background: #f9fafb;
+          border-color: #9ca3af;
+          color: #374151;
+        }
+
+        .btn:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+          transform: none !important;
+          box-shadow: none !important;
+        }
+
+        @media (max-width: 768px) {
+          .lesson-buttons {
+            flex-direction: column;
+            gap: 0.75rem;
+          }
+          
+          .lesson-buttons .btn {
+            width: 100%;
+            justify-content: center;
+          }
+
+          .header-main {
+            flex-direction: column;
+            gap: 1rem;
+            text-align: center;
+          }
+
+          .header-actions {
+            flex-direction: column;
+            width: 100%;
+          }
+
+          .btn-outline-white,
+          .btn-exit-course {
+            width: 100%;
+            justify-content: center;
+          }
+        }
+
         .lessons-navigation {
           background: white;
           border-radius: 12px;
@@ -459,9 +1179,54 @@ print(response.choices[0].message.content)</code></pre>
           top: 2rem;
         }
 
+        .navigation-header {
+          margin-bottom: 1.5rem;
+        }
+
         .lessons-navigation h3 {
-          margin: 0 0 1rem 0;
+          margin: 0 0 0.75rem 0;
           color: #1f2937;
+        }
+
+        .progress-indicator {
+          margin-bottom: 1rem;
+        }
+
+        .progress-text {
+          display: block;
+          font-size: 0.8rem;
+          color: #6b7280;
+          margin-bottom: 0.5rem;
+        }
+
+        .progress-bar {
+          width: 100%;
+          height: 6px;
+          background: #e5e7eb;
+          border-radius: 3px;
+          overflow: hidden;
+        }
+
+        .progress-fill {
+          height: 100%;
+          background: linear-gradient(90deg, #22c55e, #16a34a);
+          border-radius: 3px;
+          transition: width 0.3s ease;
+        }
+
+        .course-guidance {
+          background: #eff6ff;
+          border: 1px solid #dbeafe;
+          border-radius: 8px;
+          padding: 0.75rem;
+          margin-bottom: 1rem;
+        }
+
+        .guidance-text {
+          margin: 0;
+          font-size: 0.8rem;
+          color: #1e40af;
+          line-height: 1.4;
         }
 
         .lessons-list {
@@ -494,6 +1259,16 @@ print(response.choices[0].message.content)</code></pre>
         .lesson-item.completed {
           background: #f0fdf4;
           border-color: #22c55e;
+        }
+
+        .lesson-item.locked {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+
+        .lesson-item.locked:hover {
+          background: #f9fafb;
+          border-color: #e5e7eb;
         }
 
         .lesson-number {

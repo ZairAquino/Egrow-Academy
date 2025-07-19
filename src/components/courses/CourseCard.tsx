@@ -42,25 +42,23 @@ export default function CourseCard({
 
   const CardContent = (
     <>
-      <div className="course-image relative">
-        <img src={image} alt={title} className="w-full h-48 object-cover rounded-t-lg" />
-        <div className={`absolute top-2 right-2 px-2 py-1 rounded-full text-xs font-medium ${getAccessBadgeColor(course)}`}>
-          {getAccessMessage(course)}
-        </div>
+      <div className="course-image-new">
+        <img src={image} alt={title} />
+        <span className="course-type-badge">{getAccessMessage(course)}</span>
       </div>
-      <div className="course-content p-4">
-        <span className="course-tag inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full mb-2">
-          {tag}
-        </span>
-        <h3 className="course-title text-lg font-semibold text-gray-900 mb-2">
+      <div className="course-content-new">
+        <div className="course-meta">
+          <span className="course-instructor">eGrow Academy</span>
+          <span className="course-rating">4.8/5</span>
+        </div>
+        <h3 className="course-title-new">
           {title}
         </h3>
-        <p className="course-description text-gray-600 text-sm mb-4 line-clamp-2">
+        <p className="course-description-new">
           {description}
         </p>
-        <div className="course-footer flex justify-between items-center text-xs text-gray-500">
-          <span className="course-duration">{duration}</span>
-          <span className="course-level">{level}</span>
+        <div className="course-link">
+          Ver Curso →
         </div>
       </div>
     </>
@@ -68,7 +66,7 @@ export default function CourseCard({
 
   if (link) {
     return (
-      <a href={link} target="_blank" rel="noopener noreferrer" className="course-card hover-lift bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden transition-all duration-300">
+      <a href={link} target="_blank" rel="noopener noreferrer" className="course-card-new">
         {CardContent}
       </a>
     );
@@ -77,7 +75,7 @@ export default function CourseCard({
   return (
     <>
       <div
-        className="course-card hover-lift cursor-pointer bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden transition-all duration-300"
+        className="course-card-new cursor-pointer"
         onClick={handleClick}
       >
         {CardContent}
