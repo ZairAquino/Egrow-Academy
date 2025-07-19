@@ -55,7 +55,9 @@ src/
 - **Email Service**: Resend para verificación de emails
 - **Validación**: DNS MX para verificación de dominios
 
-## 🚀 Instalación
+## 🚀 Instalación y Despliegue
+
+### **Desarrollo Local**
 
 1. **Clonar el repositorio**
    ```bash
@@ -101,6 +103,30 @@ src/
    ```bash
    npm run dev
    ```
+
+### **Despliegue en Producción**
+
+**⚠️ IMPORTANTE: Este es un proyecto Next.js que requiere un servidor. NO es compatible con GitHub Pages.**
+
+#### **Opción 1: Vercel (Recomendado)**
+```bash
+# Instalar Vercel CLI
+npm i -g vercel
+
+# Desplegar
+vercel --prod
+```
+
+#### **Opción 2: Netlify**
+```bash
+# Build del proyecto
+npm run build
+
+# Desplegar en Netlify
+```
+
+#### **Opción 3: Railway/Render**
+Configurar como aplicación Node.js con build command: `npm run build`
 
 ## 📚 Documentación
 
@@ -170,6 +196,13 @@ src/
 - ✅ **Validación de Correos**: 100% implementado
 - ✅ **Base de Datos**: 100% configurado
 - ✅ **Documentación**: 100% actualizada
+- ✅ **Sistema de Cursos**: 100% implementado con progreso persistente
+
+## 🌐 URLs de Despliegue
+
+- **Vercel (Producción)**: https://egrow-academy-jfk1qzvfd-egrow.vercel.app
+- **Dominio Personalizado**: egrowacademy.com (configurar en Vercel)
+- **GitHub Pages**: ❌ No compatible (solo archivos estáticos)
 
 ## 🚀 Próximos Pasos
 
