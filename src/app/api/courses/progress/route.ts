@@ -219,7 +219,7 @@ export async function POST(request: NextRequest) {
             userId: userId,
             courseId: courseId,
             enrolledAt: new Date(),
-            status: 'IN_PROGRESS',
+            status: 'ACTIVE',
             progressPercentage: 0
           }
         });
