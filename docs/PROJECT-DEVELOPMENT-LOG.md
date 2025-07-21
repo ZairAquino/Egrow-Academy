@@ -11,6 +11,27 @@
 
 ## 📅 **Historial de Cambios**
 
+### **2025-07-21 - Corrección de Error de TypeScript en Build de Vercel**
+
+#### ✅ **Problema Resuelto**
+1. **Error de compilación en Vercel**
+   - **Problema:** `Type '{ userId: string; }' is not assignable to type 'string'` en `src/app/api/resources/[slug]/access/route.ts`
+   - **Causa:** Uso incorrecto de `await` con función síncrona `verifyToken`
+   - **Solución:** Remover `await` y agregar manejo de excepciones con try-catch
+   - **Archivos modificados:** `src/app/api/resources/[slug]/access/route.ts`
+
+#### 🔧 **Cambios Técnicos**
+- **verifyToken:** Removido `await` innecesario de función síncrona
+- **Error Handling:** Agregado try-catch para manejar excepciones de tokens inválidos
+- **Type Safety:** Corregido manejo de tipos para evitar errores de TypeScript
+
+#### 🚀 **Estado Actual**
+- **Build de Vercel:** ✅ Compilación exitosa
+- **TypeScript:** ✅ Sin errores de tipos
+- **Autenticación:** ✅ Funcionando correctamente
+
+---
+
 ### **2025-07-21 - Corrección de Errores de Autenticación y Acceso a Cursos**
 
 #### ✅ **Problemas Resueltos**
