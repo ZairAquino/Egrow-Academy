@@ -100,18 +100,19 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
     });
 
     if (price) {
+      const stripeSubscription = subscription as Stripe.Subscription;
       await prisma.subscription.upsert({
         where: { stripeSubscriptionId: subscription.id },
         update: {
           status: subscription.status === 'active' ? 'ACTIVE' : 'CANCELED',
-          currentPeriodStart: new Date((subscription as Stripe.Subscription).current_period_start * 1000),
-          currentPeriodEnd: new Date((subscription as Stripe.Subscription).current_period_end * 1000),
+          currentPeriodStart: new Date(stripeSubscription.current_period_start * 1000),
+          currentPeriodEnd: new Date(stripeSubscription.current_period_end * 1000),
         },
         create: {
           stripeSubscriptionId: subscription.id,
           status: subscription.status === 'active' ? 'ACTIVE' : 'CANCELED',
-          currentPeriodStart: new Date((subscription as Stripe.Subscription).current_period_start * 1000),
-          currentPeriodEnd: new Date((subscription as Stripe.Subscription).current_period_end * 1000),
+          currentPeriodStart: new Date(stripeSubscription.current_period_start * 1000),
+          currentPeriodEnd: new Date(stripeSubscription.current_period_end * 1000),
           userId: userId,
           priceId: price.id,
         },
@@ -134,6 +135,7 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
     }
 
     // Actualizar estado de suscripción
+    const stripeSubscription = subscription as Stripe.Subscription;
     await prisma.subscription.updateMany({
       where: { 
         stripeSubscriptionId: subscription.id,
@@ -141,7 +143,7 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
       },
       data: {
         status: subscription.status === 'active' ? 'ACTIVE' : 'CANCELED',
-        currentPeriodEnd: new Date((subscription as Stripe.Subscription).current_period_end * 1000),
+        currentPeriodEnd: new Date(stripeSubscription.current_period_end * 1000),
       },
     });
 
@@ -161,6 +163,7 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
     }
 
     // Cancelar suscripción del usuario
+    const stripeSubscription = subscription as Stripe.Subscription;
     await prisma.subscription.updateMany({
       where: { 
         stripeSubscriptionId: subscription.id,
@@ -168,7 +171,7 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
       },
       data: {
         status: 'CANCELLED',
-        canceledAt: new Date((subscription as Stripe.Subscription).canceled_at! * 1000),
+        canceledAt: new Date(stripeSubscription.canceled_at! * 1000),
       },
     });
 
@@ -186,10 +189,11 @@ async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
 
       if (userId) {
         // Actualizar fecha de renovación
+        const stripeSubscription = subscription as Stripe.Subscription;
         await prisma.user.update({
           where: { id: userId },
           data: {
-            subscriptionEndDate: new Date((subscription as Stripe.Subscription).current_period_end * 1000),
+            subscriptionEndDate: new Date(stripeSubscription.current_period_end * 1000),
           },
         });
 
