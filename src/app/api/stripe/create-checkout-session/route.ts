@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
 
     let decoded;
     try {
-      decoded = await verifyToken(token);
+      decoded = verifyToken(token);
     } catch (error) {
       return NextResponse.json({ error: 'Token inválido' }, { status: 401 });
     }

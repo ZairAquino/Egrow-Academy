@@ -41,12 +41,19 @@ export function verifyToken(token: string): { userId: string } {
 }
 
 // Función para extraer token del header Authorization
-export function extractTokenFromHeader(request: NextRequest | null): string | null {
-  if (!request) {
+export function extractTokenFromHeader(requestOrHeader: NextRequest | string | null): string | null {
+  if (!requestOrHeader) {
     return null
   }
   
-  const authHeader = request.headers.get('authorization')
+  let authHeader: string | null
+  
+  if (typeof requestOrHeader === 'string') {
+    authHeader = requestOrHeader
+  } else {
+    authHeader = requestOrHeader.headers.get('authorization')
+  }
+  
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return null
   }

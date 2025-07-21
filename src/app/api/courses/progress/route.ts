@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
 
     let decoded;
     try {
-      decoded = await verifyToken(token);
+      decoded = verifyToken(token);
       console.log('🔍 [API] Token verificado, userId:', decoded.userId);
     } catch (tokenError) {
       console.error('🔍 [API] Error verificando token:', tokenError);
@@ -184,7 +184,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const decoded = await verifyToken(token);
+    const decoded = verifyToken(token);
     const userId = decoded.userId;
 
     // Buscar el curso por slug si es necesario

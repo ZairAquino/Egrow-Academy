@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
     console.log('🔍 [SUBSCRIPTION-STATUS] Verificando token...');
     let decoded;
     try {
-      decoded = await verifyToken(token);
+      decoded = verifyToken(token);
     } catch (error) {
       console.log('❌ [SUBSCRIPTION-STATUS] Token inválido');
       return NextResponse.json(

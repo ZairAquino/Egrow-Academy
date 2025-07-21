@@ -20,7 +20,7 @@ export async function GET(
 
     let decoded;
     try {
-      decoded = await verifyToken(token);
+      decoded = verifyToken(token);
     } catch (error) {
       return NextResponse.json(
         { hasAccess: false, error: 'Token inválido' },
