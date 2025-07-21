@@ -54,6 +54,9 @@ async function setupTestUser() {
           isActive: true,
           emailVerified: true,
         },
+        include: {
+          subscriptions: true,
+        },
       });
       
       console.log(`✅ Usuario creado: ${user.email}`);
