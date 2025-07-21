@@ -149,50 +149,45 @@ export default function ResourcePage() {
                          return (
                            <div 
                              key={topic.id} 
-                             className="course-card-new transform hover:scale-105 transition-all duration-300 hover:shadow-2xl"
+                             className="course-card-new"
                            >
                              {/* Image */}
-                             <div className="course-image-new overflow-hidden">
+                             <div className="course-image-new">
                                {isFirstTopic && (
                                  <img 
                                    src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=200&fit=crop&crop=center" 
                                    alt="ChatGPT"
-                                   className="transform hover:scale-110 transition-transform duration-500"
                                  />
                                )}
                                {isSecondTopic && (
                                  <img 
                                    src="https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=400&h=200&fit=crop&crop=center" 
                                    alt="Google Gemini"
-                                   className="transform hover:scale-110 transition-transform duration-500"
                                  />
                                )}
                                {isThirdTopic && (
                                  <img 
-                                   src="https://images.unsplash.com/photo-1673187733777-2ea8f697d4b9?w=400&h=200&fit=crop&crop=center" 
+                                   src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=400&h=200&fit=crop&crop=center" 
                                    alt="Manual GPT"
-                                   className="transform hover:scale-110 transition-transform duration-500"
                                  />
                                )}
-                               <span className="course-type-badge bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold shadow-lg">
+                               <span className="course-type-badge">
                                  {isFirstTopic ? 'ChatGPT' : isSecondTopic ? 'Manual GEM' : 'Manual GPT'}
                                </span>
                              </div>
                              
                              {/* Content */}
-                             <div className="course-content-new p-6">
-                               <div className="course-meta mb-3">
-                                 <span className="course-instructor bg-gradient-to-r from-green-500 to-emerald-600 bg-clip-text text-transparent font-bold">
-                                   eGrow Academy
-                                 </span>
+                             <div className="course-content-new">
+                               <div className="course-meta">
+                                 <span className="course-instructor">eGrow Academy</span>
                                </div>
                                
-                               <h3 className="course-title-new text-xl font-bold text-gray-900 mb-3 hover:text-blue-600 transition-colors duration-300">
+                               <h3 className="course-title-new">
                                  {topic.title}
                                </h3>
                                
                                {topic.description && (
-                                 <p className="course-description-new text-gray-600 leading-relaxed mb-4">
+                                 <p className="course-description-new">
                                    {topic.description}
                                  </p>
                                )}
@@ -204,7 +199,7 @@ export default function ResourcePage() {
                                      href="https://chatgpt.com/g/g-687e84aba36c8191a44042cc330db2f1-contexto-empresarial"
                                      target="_blank"
                                      rel="noopener noreferrer"
-                                     className="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white py-3 px-4 rounded-lg font-semibold hover:from-green-600 hover:to-emerald-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+                                     className="w-full inline-flex items-center justify-center gap-2"
                                    >
                                      <span>🔗</span>
                                      <span>Abrir ChatGPT</span>
@@ -216,7 +211,7 @@ export default function ResourcePage() {
                                      href="/resources/Manual GEM.pdf"
                                      target="_blank"
                                      rel="noopener noreferrer"
-                                     className="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 px-4 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+                                     className="w-full inline-flex items-center justify-center gap-2"
                                    >
                                      <span>📥</span>
                                      <span>Descargar Manual GEM</span>
@@ -228,7 +223,7 @@ export default function ResourcePage() {
                                      href="/resources/Manual GPT.pdf"
                                      target="_blank"
                                      rel="noopener noreferrer"
-                                     className="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 to-red-600 text-white py-3 px-4 rounded-lg font-semibold hover:from-orange-600 hover:to-red-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+                                     className="w-full inline-flex items-center justify-center gap-2"
                                    >
                                      <span>📥</span>
                                      <span>Descargar Manual GPT</span>
@@ -286,43 +281,41 @@ export default function ResourcePage() {
                   {/* Resource Info */}
                   <div className="border-t border-gray-200 pt-6 mt-6">
                     <div className="flex items-center gap-3 mb-6">
-                      <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg transform hover:rotate-12 transition-transform duration-300">
-                        <span className="text-white text-lg">ℹ️</span>
+                      <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <span className="text-blue-600 text-sm">ℹ️</span>
                       </div>
-                      <h3 className="text-xl font-bold text-gray-900 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                        Información del Recurso
-                      </h3>
+                      <h3 className="text-lg font-bold text-gray-900">Información del Recurso</h3>
                     </div>
                     
                     <div className="space-y-4">
-                      <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-5 border border-blue-100 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
-                        <div className="flex items-center gap-3 mb-3">
-                          <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-md">
-                            <span className="text-white text-sm">👤</span>
-                          </div>
-                          <span className="text-sm font-semibold text-gray-700">Autor</span>
+                      <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg border border-blue-100">
+                        <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+                          <span className="text-white text-xs">👤</span>
                         </div>
-                        <p className="text-gray-900 font-bold ml-11 text-lg">{resource.author || 'eGrow Academy'}</p>
+                        <div>
+                          <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Autor</span>
+                          <p className="text-sm font-semibold text-gray-900">{resource.author || 'eGrow Academy'}</p>
+                        </div>
                       </div>
                       
-                      <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-5 border border-green-100 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
-                        <div className="flex items-center gap-3 mb-3">
-                          <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center shadow-md">
-                            <span className="text-white text-sm">📂</span>
-                          </div>
-                          <span className="text-sm font-semibold text-gray-700">Categoría</span>
+                      <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg border border-green-100">
+                        <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                          <span className="text-white text-xs">📂</span>
                         </div>
-                        <p className="text-gray-900 font-bold ml-11 text-lg">{resource.category}</p>
+                        <div>
+                          <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Categoría</span>
+                          <p className="text-sm font-semibold text-gray-900">{resource.category}</p>
+                        </div>
                       </div>
                       
-                      <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-5 border border-purple-100 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
-                        <div className="flex items-center gap-3 mb-3">
-                          <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center shadow-md">
-                            <span className="text-white text-sm">📄</span>
-                          </div>
-                          <span className="text-sm font-semibold text-gray-700">Tipo</span>
+                      <div className="flex items-center gap-3 p-3 bg-purple-50 rounded-lg border border-purple-100">
+                        <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center">
+                          <span className="text-white text-xs">📄</span>
                         </div>
-                        <p className="text-gray-900 font-bold ml-11 text-lg">{resource.type}</p>
+                        <div>
+                          <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Tipo</span>
+                          <p className="text-sm font-semibold text-gray-900">{resource.type}</p>
+                        </div>
                       </div>
                     </div>
                   </div>
