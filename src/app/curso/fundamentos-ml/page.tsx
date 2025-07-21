@@ -282,6 +282,20 @@ export default function FundamentosMLPage() {
     }
   };
 
+  const getRemainingTime = () => {
+    const remainingLessons = courseData.lessons.length - completedLessons.length;
+    const averageMinutesPerLesson = 15; // Estimación promedio
+    const remainingMinutes = remainingLessons * averageMinutesPerLesson;
+    
+    if (remainingMinutes < 60) {
+      return `${Math.round(remainingMinutes)} min`;
+    } else {
+      const hours = Math.floor(remainingMinutes / 60);
+      const minutes = Math.round(remainingMinutes % 60);
+      return `${hours}h ${minutes}min`;
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="loading-container">
@@ -346,6 +360,35 @@ export default function FundamentosMLPage() {
               <div className="hero-image">
                 <img src={courseData.image} alt={courseData.title} />
               </div>
+              
+              {user && !isLoading && (
+                <div className="progress-card">
+                  <h3>Tu Progreso</h3>
+                  <div className="progress-bar">
+                    <div className="progress-fill" style={{ width: `${progressPercentage}%` }}></div>
+                  </div>
+                  <div className="progress-details">
+                    <p className="progress-text">
+                      {completedLessons.length}/{courseData.lessons.length} lecciones completadas
+                    </p>
+                    <p className="progress-remaining">
+                      {courseData.lessons.length - completedLessons.length} módulos restantes • {getRemainingTime()}
+                    </p>
+                  </div>
+                  {completedLessons.length > 0 && (
+                    <button 
+                      className="btn btn-outline btn-small btn-continue-progress"
+                      onClick={async () => {
+                        // Recargar progreso antes de navegar
+                        await loadUserProgress();
+                        router.push('/curso/fundamentos-ml/contenido');
+                      }}
+                    >
+                      🔄 Continuar donde lo dejaste
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </section>
@@ -599,6 +642,86 @@ export default function FundamentosMLPage() {
           height: auto;
           border-radius: 12px;
           box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .progress-card {
+          background: white;
+          padding: 2rem;
+          border-radius: 12px;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          margin-top: 2rem;
+          text-align: center;
+        }
+
+        .progress-card h3 {
+          margin: 0 0 1.5rem 0;
+          color: #1f2937;
+        }
+
+        .progress-bar {
+          height: 10px;
+          background-color: #e5e7eb;
+          border-radius: 5px;
+          margin-bottom: 1rem;
+          overflow: hidden;
+        }
+
+        .progress-fill {
+          height: 100%;
+          background: linear-gradient(135deg, #22c55e, #16a34a);
+          border-radius: 5px;
+          transition: width 0.3s ease-in-out;
+        }
+
+        .progress-details {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 1rem;
+          font-size: 0.9rem;
+          color: #6b7280;
+        }
+
+        .progress-text {
+          font-weight: 600;
+          color: #1f2937;
+        }
+
+        .progress-remaining {
+          font-weight: 600;
+          color: #1f2937;
+        }
+
+        .btn-outline {
+          background: none;
+          border: 1px solid #3b82f6;
+          color: #3b82f6;
+          padding: 0.75rem 1.5rem;
+          border-radius: 8px;
+          font-weight: 600;
+          font-size: 0.9rem;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .btn-outline:hover {
+          background-color: #3b82f6;
+          color: white;
+          box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2);
+        }
+
+        .btn-small {
+          padding: 0.75rem 1.5rem;
+          font-size: 0.9rem;
+        }
+
+        .btn-continue-progress {
+          background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+          color: white;
+        }
+
+        .btn-continue-progress:hover {
+          background: linear-gradient(135deg, #1d4ed8, #1e40af);
+          box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
         }
 
         .course-details {
