@@ -84,33 +84,32 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
   }
 }
 
-async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
+async function handleSubscriptionCreated(stripeSubscription: Stripe.Subscription) {
   try {
-    const userId = subscription.metadata?.userId;
-    const planId = subscription.metadata?.planId;
+    const userId = stripeSubscription.metadata?.userId;
+    const planId = stripeSubscription.metadata?.planId;
 
     if (!userId || !planId) {
-      console.error('Metadata faltante en subscription:', subscription.id);
+      console.error('Metadata faltante en subscription:', stripeSubscription.id);
       return;
     }
 
     // Crear o actualizar suscripción en la base de datos
     const price = await prisma.price.findFirst({
-      where: { stripePriceId: subscription.items.data[0].price.id }
+      where: { stripePriceId: stripeSubscription.items.data[0].price.id }
     });
 
     if (price) {
-      const stripeSubscription = subscription as Stripe.Subscription;
       await prisma.subscription.upsert({
-        where: { stripeSubscriptionId: subscription.id },
+        where: { stripeSubscriptionId: stripeSubscription.id },
         update: {
-          status: subscription.status === 'active' ? 'ACTIVE' : 'CANCELED',
+          status: stripeSubscription.status === 'active' ? 'ACTIVE' : 'CANCELED',
           currentPeriodStart: new Date(stripeSubscription.current_period_start * 1000),
           currentPeriodEnd: new Date(stripeSubscription.current_period_end * 1000),
         },
         create: {
-          stripeSubscriptionId: subscription.id,
-          status: subscription.status === 'active' ? 'ACTIVE' : 'CANCELED',
+          stripeSubscriptionId: stripeSubscription.id,
+          status: stripeSubscription.status === 'active' ? 'ACTIVE' : 'CANCELED',
           currentPeriodStart: new Date(stripeSubscription.current_period_start * 1000),
           currentPeriodEnd: new Date(stripeSubscription.current_period_end * 1000),
           userId: userId,
@@ -125,24 +124,23 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
   }
 }
 
-async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
+async function handleSubscriptionUpdated(stripeSubscription: Stripe.Subscription) {
   try {
-    const userId = subscription.metadata?.userId;
+    const userId = stripeSubscription.metadata?.userId;
 
     if (!userId) {
-      console.error('Metadata faltante en subscription update:', subscription.id);
+      console.error('Metadata faltante en subscription update:', stripeSubscription.id);
       return;
     }
 
     // Actualizar estado de suscripción
-    const stripeSubscription = subscription as Stripe.Subscription;
     await prisma.subscription.updateMany({
       where: { 
-        stripeSubscriptionId: subscription.id,
+        stripeSubscriptionId: stripeSubscription.id,
         userId: userId 
       },
       data: {
-        status: subscription.status === 'active' ? 'ACTIVE' : 'CANCELED',
+        status: stripeSubscription.status === 'active' ? 'ACTIVE' : 'CANCELED',
         currentPeriodEnd: new Date(stripeSubscription.current_period_end * 1000),
       },
     });
@@ -153,20 +151,19 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
   }
 }
 
-async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
+async function handleSubscriptionDeleted(stripeSubscription: Stripe.Subscription) {
   try {
-    const userId = subscription.metadata?.userId;
+    const userId = stripeSubscription.metadata?.userId;
 
     if (!userId) {
-      console.error('Metadata faltante en subscription deleted:', subscription.id);
+      console.error('Metadata faltante en subscription deleted:', stripeSubscription.id);
       return;
     }
 
     // Cancelar suscripción del usuario
-    const stripeSubscription = subscription as Stripe.Subscription;
     await prisma.subscription.updateMany({
       where: { 
-        stripeSubscriptionId: subscription.id,
+        stripeSubscriptionId: stripeSubscription.id,
         userId: userId 
       },
       data: {
@@ -189,11 +186,10 @@ async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
 
       if (userId) {
         // Actualizar fecha de renovación
-        const stripeSubscription = subscription as Stripe.Subscription;
         await prisma.user.update({
           where: { id: userId },
           data: {
-            subscriptionEndDate: new Date(stripeSubscription.current_period_end * 1000),
+            subscriptionEndDate: new Date(subscription.current_period_end * 1000),
           },
         });
 
