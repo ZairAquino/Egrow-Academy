@@ -289,7 +289,7 @@ export default function MyCoursesPage() {
         }
 
         .container {
-          max-width: 1200px;
+          max-width: 1400px;
           margin: 0 auto;
           padding: 0 1rem;
         }
@@ -355,8 +355,9 @@ export default function MyCoursesPage() {
 
         .courses-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-          gap: 2rem;
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          gap: 1.5rem;
+          max-width: 100%;
         }
 
         .loading-container,
@@ -464,9 +465,12 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
       <div className="course-header">
         <div className="course-image-wrapper">
           <img 
-            src={course.image} 
+            src={course.image || 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=250&fit=crop&crop=center'} 
             alt={course.title}
             className="course-image"
+            onError={(e) => {
+              e.currentTarget.src = 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=250&fit=crop&crop=center';
+            }}
           />
           <div className="status-badge-wrapper">
             {getStatusBadge()}
@@ -546,6 +550,9 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
           height: 180px;
           overflow: hidden;
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
 
         .course-image {
@@ -553,6 +560,23 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
           height: 100%;
           object-fit: cover;
           transition: transform 0.3s ease;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .course-image-wrapper::before {
+          content: '📚';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          font-size: 3rem;
+          color: rgba(255, 255, 255, 0.3);
+          z-index: 1;
+          display: none;
+        }
+
+        .course-image-wrapper:has(img[src*="unsplash"])::before {
+          display: block;
         }
 
         .course-card-modern:hover .course-image {
