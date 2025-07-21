@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
 import { verifyToken } from '@/lib/auth';
 import { SUBSCRIPTION_PLANS } from '@/lib/stripe';
+import { prisma } from '@/lib/prisma';
 
 export async function POST(request: NextRequest) {
   try {
@@ -26,6 +27,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Plan inválido' }, { status: 400 });
     }
 
+    // Obtener el usuario para obtener el email
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.userId },
+      select: { email: true }
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: 'Usuario no encontrado' }, { status: 404 });
+    }
+
     // Crear sesión de checkout
     const session = await stripe.checkout.sessions.create({
       line_items: [
@@ -47,7 +58,7 @@ export async function POST(request: NextRequest) {
       mode: 'subscription',
       success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/subscription`,
-      customer_email: decoded.email,
+      customer_email: user.email,
       metadata: {
         userId: decoded.userId,
         planId: plan.id,
