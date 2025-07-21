@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
         progress: true
       },
       orderBy: {
-        createdAt: 'desc'
+        enrolledAt: 'desc'
       }
     });
 
@@ -71,7 +71,7 @@ export async function GET(request: NextRequest) {
           lastAccessed: enrollment.progress?.lastAccessed,
           completedAt: enrollment.progress?.completedAt
         },
-        enrolledAt: enrollment.createdAt
+        enrolledAt: enrollment.enrolledAt
       };
     });
 
