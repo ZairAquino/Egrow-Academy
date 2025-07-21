@@ -138,15 +138,9 @@ export async function POST(request: NextRequest) {
     const passwordHash = await hashPassword(password)
     console.log('✅ [REGISTER] Contraseña hasheada correctamente')
 
-    console.log('✅ [REGISTER] Generando código de verificación')
+    console.log('✅ [REGISTER] Creando usuario en base de datos (MODO DEMO - Sin verificación)')
 
-    // Generar código de verificación
-    const verificationCode = generateVerificationCode()
-    const verificationExpires = new Date(Date.now() + 10 * 60 * 1000) // 10 minutos
-
-    console.log('✅ [REGISTER] Creando usuario en base de datos')
-
-    // Crear usuario NO verificado (requiere verificación por email)
+    // Crear usuario VERIFICADO automáticamente (MODO DEMO para presentación)
     const user = await prisma.user.create({
       data: {
         email,
@@ -154,41 +148,47 @@ export async function POST(request: NextRequest) {
         firstName: firstName.trim(),
         lastName: lastName.trim(),
         username: username?.trim() || null,
-        emailVerified: false, // Requiere verificación por email
-        verificationCode,
-        verificationExpires
+        emailVerified: true, // Verificado automáticamente (MODO DEMO)
+        verificationCode: null,
+        verificationExpires: null
       }
     })
 
     console.log('✅ [REGISTER] Usuario creado con ID:', user.id)
 
-    console.log('✅ [REGISTER] Enviando email de verificación')
+    // Generar token para login automático
+    const token = generateToken(user.id)
+    console.log('✅ [REGISTER] Token generado para login automático')
 
-    // Enviar email de verificación
-    const emailResult = await sendVerificationEmail(
-      email,
-      verificationCode,
-      user.firstName
-    )
+    // Crear sesión automáticamente
+    await prisma.session.create({
+      data: {
+        userId: user.id,
+        token,
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 días
+      }
+    })
 
-    if (!emailResult.success) {
-      console.error('❌ [REGISTER] Error enviando email:', emailResult.error)
-      return NextResponse.json(
-        { error: 'Error al enviar el email de verificación. Inténtalo más tarde.' },
-        { status: 500 }
-      )
-    }
-
-    console.log('✅ [REGISTER] Email de verificación enviado')
+    console.log('✅ [REGISTER] Sesión creada automáticamente')
 
     // Devolver usuario sin passwordHash
     const safeUser = createSafeUser(user)
 
-    // Crear respuesta SIN cookie (usuario no autenticado hasta verificar email)
+    // Crear respuesta CON cookie (usuario autenticado automáticamente)
     const response = NextResponse.json({
       user: safeUser,
-      message: '¡Cuenta creada exitosamente! Revisa tu correo electrónico para verificar tu cuenta.',
-      requiresVerification: true
+      token,
+      message: '¡Cuenta creada exitosamente! Ya puedes acceder a todos los cursos.',
+      requiresVerification: false
+    })
+
+    // Establecer cookie HTTP-only para mantener sesión
+    response.cookies.set('auth-token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60, // 7 días en segundos
+      path: '/'
     })
 
     console.log('✅ [REGISTER] Registro completado exitosamente')

@@ -11,24 +11,46 @@
 
 ## 📅 **Historial de Cambios**
 
-### **2025-07-21 - Corrección de Error de TypeScript en Build de Vercel**
+### **2025-07-21 - Deshabilitación Temporal de Verificación de Email para Presentación a Inversionistas**
 
-#### ✅ **Problema Resuelto**
-1. **Error de compilación en Vercel**
-   - **Problema:** `Type '{ userId: string; }' is not assignable to type 'string'` en `src/app/api/resources/[slug]/access/route.ts`
-   - **Causa:** Uso incorrecto de `await` con función síncrona `verifyToken`
-   - **Solución:** Remover `await` y agregar manejo de excepciones con try-catch
-   - **Archivos modificados:** `src/app/api/resources/[slug]/access/route.ts`
+#### ✅ **Cambios Realizados**
+1. **Registro de usuarios**
+   - **Modificación:** Usuarios se crean automáticamente como verificados
+   - **Login automático:** Se genera token y sesión inmediatamente después del registro
+   - **Archivos modificados:** `src/app/api/auth/register/route.ts`
+
+2. **Login de usuarios**
+   - **Modificación:** Verificación de email comentada temporalmente
+   - **Archivos modificados:** `src/app/api/auth/login/route.ts`
+
+3. **Páginas de verificación**
+   - **Modificación:** Página de verificación redirige automáticamente a la página principal
+   - **Archivos modificados:** `src/app/verify-email/page.tsx`
+
+4. **APIs de verificación**
+   - **Modificación:** APIs de verificación y reenvío deshabilitadas temporalmente
+   - **Archivos modificados:** `src/app/api/auth/verify-email/route.ts`, `src/app/api/auth/resend-verification/route.ts`
 
 #### 🔧 **Cambios Técnicos**
-- **verifyToken:** Removido `await` innecesario de función síncrona
-- **Error Handling:** Agregado try-catch para manejar excepciones de tokens inválidos
-- **Type Safety:** Corregido manejo de tipos para evitar errores de TypeScript
+- **Auto-verificación:** Usuarios se crean con `emailVerified: true`
+- **Login automático:** Token y cookie se establecen inmediatamente en el registro
+- **APIs deshabilitadas:** Retornan error 503 con mensaje explicativo
+- **Punto de restauración:** Tag git `v1.0.0-backup` creado para restaurar fácilmente
 
-#### 🚀 **Estado Actual**
-- **Build de Vercel:** ✅ Compilación exitosa
-- **TypeScript:** ✅ Sin errores de tipos
-- **Autenticación:** ✅ Funcionando correctamente
+#### 🚀 **Script de Restauración**
+- **Comando:** `npm run restore-email-verification`
+- **Función:** Restaura automáticamente toda la funcionalidad de verificación
+- **Archivo:** `scripts/restore-email-verification.ts`
+
+#### 📋 **Estado Actual**
+- **Registro:** ✅ Sin verificación de email (MODO DEMO)
+- **Login:** ✅ Sin verificación de email (MODO DEMO)
+- **Verificación:** ❌ Deshabilitada temporalmente
+- **Presentación:** ✅ Listo para inversionistas
+
+---
+
+### **2025-07-21 - Corrección de Error de TypeScript en Build de Vercel**
 
 ---
 

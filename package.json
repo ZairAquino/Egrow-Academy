@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate",
-    "init-stripe": "tsx scripts/init-stripe-products.ts"
+    "init-stripe": "tsx scripts/init-stripe-products.ts",
+    "restore-email-verification": "tsx scripts/restore-email-verification.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.12.0",
