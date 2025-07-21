@@ -24,7 +24,7 @@ export default function DesarrolloWebFullStackPage() {
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuth();
   const router = useRouter();
-  const { hasActiveSubscription, subscriptionLoading } = useSubscriptionAccess();
+  const { hasActiveSubscription, isLoading: subscriptionLoading } = useSubscriptionAccess();
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);

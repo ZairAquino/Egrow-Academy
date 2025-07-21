@@ -51,16 +51,16 @@ const subscriptionPlans: SubscriptionPlan[] = [
 ];
 
 export default function SubscriptionPage() {
-  const { user, isLoading } = useAuth();
+  const { user, status } = useAuth();
   const router = useRouter();
   const [selectedPlan, setSelectedPlan] = useState<string>('yearly');
   const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
-    if (!isLoading && !user) {
+    if (status !== 'loading' && !user) {
       router.push('/login?redirect=/subscription');
     }
-  }, [user, isLoading, router]);
+  }, [user, status, router]);
 
   const handleSubscribe = async (planId: string) => {
     if (!user) {
@@ -106,7 +106,7 @@ export default function SubscriptionPage() {
     return (plan.price / 12).toFixed(2);
   };
 
-  if (isLoading) {
+  if (status === 'loading') {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">

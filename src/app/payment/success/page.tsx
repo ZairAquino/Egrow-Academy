@@ -1,13 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import Footer from '@/components/layout/Footer';
 
-export default function PaymentSuccessPage() {
-  const { user, isLoading } = useAuth();
+function PaymentSuccessContent() {
+  const { user, status } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [sessionId, setSessionId] = useState<string>('');
@@ -22,12 +22,12 @@ export default function PaymentSuccessPage() {
   }, [searchParams]);
 
   useEffect(() => {
-    if (!isLoading && !user) {
+    if (status !== 'loading' && !user) {
       router.push('/login');
     }
-  }, [user, isLoading, router]);
+  }, [user, status, router]);
 
-  if (isLoading || isLoadingSession) {
+  if (status === 'loading' || isLoadingSession) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -171,5 +171,20 @@ export default function PaymentSuccessPage() {
         }
       `}</style>
     </>
+  );
+}
+
+export default function PaymentSuccessPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Cargando...</p>
+        </div>
+      </div>
+    }>
+      <PaymentSuccessContent />
+    </Suspense>
   );
 } 

@@ -87,7 +87,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       console.log('🔍 AuthContext - Token:', storedToken.substring(0, 50) + '...')
     }
     
-    const apiUser = await fetchUserFromAPI(storedToken)
+    const apiUser = await fetchUserFromAPI(storedToken || undefined)
     if (apiUser) {
       setUser(apiUser)
       setStatus('authenticated')
