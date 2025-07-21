@@ -34,12 +34,37 @@ export async function GET(request: NextRequest) {
 
     console.log('📝 [ENROLLMENT-STATUS] Verificando inscripción:', { courseId, userId });
 
-    // Verificar si el usuario está inscrito
+    // Buscar el curso por ID o slug (igual que en el endpoint de inscripción)
+    let course;
+    if (courseId.length === 25) { // Es un ID de Prisma (25 caracteres)
+      console.log('🔍 [ENROLLMENT-STATUS] Buscando curso por ID...');
+      course = await prisma.course.findUnique({
+        where: { id: courseId }
+      });
+    } else { // Es un slug
+      console.log('🔍 [ENROLLMENT-STATUS] Buscando curso por slug...');
+      course = await prisma.course.findUnique({
+        where: { slug: courseId }
+      });
+    }
+
+    if (!course) {
+      console.log('❌ [ENROLLMENT-STATUS] Curso no encontrado');
+      return NextResponse.json(
+        { error: 'Curso no encontrado' },
+        { status: 404 }
+      );
+    }
+
+    console.log('✅ [ENROLLMENT-STATUS] Curso encontrado:', course.title);
+    const actualCourseId = course.id;
+
+    // Verificar si el usuario está inscrito usando el ID real del curso
     const enrollment = await prisma.enrollment.findUnique({
       where: {
         userId_courseId: {
           userId,
-          courseId
+          courseId: actualCourseId
         }
       }
     });
