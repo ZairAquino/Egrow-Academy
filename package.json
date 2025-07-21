@@ -16,6 +16,7 @@
     "@stripe/stripe-js": "^7.5.0",
     "@types/node-fetch": "^2.6.12",
     "bcryptjs": "^3.0.2",
+    "dotenv": "^17.2.0",
     "email-validator": "^2.0.4",
     "jsonwebtoken": "^9.0.2",
     "next": "15.4.1",

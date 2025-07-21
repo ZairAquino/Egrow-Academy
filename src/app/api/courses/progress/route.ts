@@ -17,8 +17,11 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Course ID is required' }, { status: 400 });
     }
 
-    // Verificar token del usuario
-    const token = request.cookies.get('auth-token')?.value;
+    // Verificar token del usuario (buscar en cookies y headers)
+    const cookieToken = request.cookies.get('auth-token')?.value;
+    const headerToken = request.headers.get('authorization')?.replace('Bearer ', '');
+    const token = cookieToken || headerToken;
+    
     console.log('🔍 [API] Token encontrado:', !!token);
     
     if (!token) {
@@ -178,8 +181,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Course ID and current lesson are required' }, { status: 400 });
     }
 
-    // Verificar token del usuario
-    const token = request.cookies.get('auth-token')?.value;
+    // Verificar token del usuario (buscar en cookies y headers)
+    const cookieToken = request.cookies.get('auth-token')?.value;
+    const headerToken = request.headers.get('authorization')?.replace('Bearer ', '');
+    const token = cookieToken || headerToken;
+    
     if (!token) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }

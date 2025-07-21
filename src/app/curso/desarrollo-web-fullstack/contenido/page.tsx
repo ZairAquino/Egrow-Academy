@@ -240,9 +240,9 @@ function Counter() {
     console.log('🔍 [DEBUG] Cambiando a lección:', newLessonIndex);
     
     // Guardar progreso de la lección actual antes de cambiar
-    const currentLesson = courseData.lessons[progress.currentLesson];
+    const currentLesson = courseData.lessons[currentLessonIndex];
     await saveProgress(
-      progress.currentLesson,
+      currentLessonIndex,
       progress.completedLessons,
       currentLesson?.id,
       currentLesson?.title,
@@ -258,9 +258,9 @@ function Counter() {
     
     try {
       // Guardar progreso de la lección actual antes de salir
-      const currentLesson = courseData.lessons[progress.currentLesson];
+      const currentLesson = courseData.lessons[currentLessonIndex];
       await saveProgress(
-        progress.currentLesson,
+        currentLessonIndex,
         progress.completedLessons,
         currentLesson?.id,
         currentLesson?.title,
@@ -277,13 +277,13 @@ function Counter() {
   };
 
   const handlePreviousLesson = async () => {
-    if (progress.currentLesson > 0) {
-      console.log('🔍 [DEBUG] Regresando a lección anterior:', progress.currentLesson - 1);
+    if (currentLessonIndex > 0) {
+      console.log('🔍 [DEBUG] Regresando a lección anterior:', currentLessonIndex - 1);
       
       // Guardar progreso de la lección actual antes de cambiar
-      const currentLesson = courseData.lessons[progress.currentLesson];
+      const currentLesson = courseData.lessons[currentLessonIndex];
       await saveProgress(
-        progress.currentLesson,
+        currentLessonIndex,
         progress.completedLessons,
         currentLesson?.id,
         currentLesson?.title,
@@ -292,7 +292,7 @@ function Counter() {
       );
       
       // Cambiar a la lección anterior
-      setCurrentLesson(progress.currentLesson - 1);
+      setCurrentLesson(currentLessonIndex - 1);
     }
   };
 
@@ -350,7 +350,7 @@ function Counter() {
   const getLessonStatus = (lessonIndex: number, lessonId: number) => {
     if (isLessonCompleted(lessonId)) {
       return '✅';
-    } else if (lessonIndex === progress.currentLesson) {
+    } else if (lessonIndex === currentLessonIndex) {
       return '▶️';
     } else if (isLessonAccessible(lessonIndex)) {
       return '📖';
@@ -358,6 +358,8 @@ function Counter() {
       return '🔒';
     }
   };
+
+
 
   const debugProgress = () => {
     console.log('🔍 [DEBUG] Estado actual del progreso:');
@@ -370,6 +372,19 @@ function Counter() {
 
   if (!user || isLoading) {
     return <div className="loading-container">Cargando...</div>;
+  }
+
+  // Verificar que el progreso se haya cargado correctamente
+  if (!progress || progress.currentLesson === undefined) {
+    return <div className="loading-container">Cargando progreso del curso...</div>;
+  }
+
+  // Verificar que la lección actual esté dentro del rango válido
+  const currentLessonIndex = Math.min(progress.currentLesson, courseData.lessons.length - 1);
+  const currentLesson = courseData.lessons[currentLessonIndex];
+  
+  if (!currentLesson) {
+    return <div className="loading-container">Error: Lección no encontrada</div>;
   }
 
   if (!isEnrolled) {
@@ -446,17 +461,17 @@ function Counter() {
                 {/* Current Lesson */}
                 <div className="current-lesson">
                   <div className="lesson-header">
-                    <h2>Lección {progress.currentLesson + 1}: {courseData.lessons[progress.currentLesson].title}</h2>
+                    <h2>Lección {currentLessonIndex + 1}: {currentLesson.title}</h2>
                     <div className="lesson-meta">
-                      <span className="lesson-type">{courseData.lessons[progress.currentLesson].type}</span>
-                      <span className="lesson-duration">{courseData.lessons[progress.currentLesson].duration}</span>
+                      <span className="lesson-type">{currentLesson.type}</span>
+                      <span className="lesson-duration">{currentLesson.duration}</span>
                     </div>
                   </div>
                   
                   <div className="lesson-content">
                     <div 
                       dangerouslySetInnerHTML={{ 
-                        __html: courseData.lessons[progress.currentLesson].content 
+                        __html: currentLesson.content 
                       }} 
                     />
                   </div>
@@ -466,13 +481,13 @@ function Counter() {
                       <button 
                         className="btn btn-primary"
                         onClick={handlePreviousLesson}
-                        disabled={progress.currentLesson === 0}
+                        disabled={currentLessonIndex === 0}
                       >
                         ← Lección Anterior
                       </button>
                       <button 
                         className="btn btn-primary"
-                        onClick={() => handleMarkLessonComplete(courseData.lessons[progress.currentLesson].id)}
+                        onClick={() => handleMarkLessonComplete(currentLesson.id)}
                       >
                         ✅ Marcar como completada
                       </button>
@@ -503,7 +518,7 @@ function Counter() {
                     {courseData.lessons.map((lesson, index) => (
                       <div 
                         key={lesson.id} 
-                        className={`lesson-item ${index === progress.currentLesson ? 'active' : ''} ${isLessonCompleted(lesson.id) ? 'completed' : ''} ${!isLessonAccessible(index) ? 'locked' : ''}`}
+                        className={`lesson-item ${index === currentLessonIndex ? 'active' : ''} ${isLessonCompleted(lesson.id) ? 'completed' : ''} ${!isLessonAccessible(index) ? 'locked' : ''}`}
                         onClick={() => {
                           if (isLessonAccessible(index)) {
                             handleManualLessonChange(index);

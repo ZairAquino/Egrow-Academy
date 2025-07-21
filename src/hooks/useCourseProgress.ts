@@ -59,6 +59,16 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
       return;
     }
 
+    // Asegurar que el progreso tenga valores válidos por defecto
+    setProgress(prev => ({
+      ...prev,
+      currentLesson: 0,
+      completedLessons: [],
+      progressPercentage: 0,
+      status: 'NOT_STARTED',
+      totalLessons: 5
+    }));
+
     try {
       console.log('🔍 [DEBUG] Haciendo fetch a la API...');
       
@@ -75,7 +85,16 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
       if (response.ok) {
         const data = await response.json();
         console.log('🔍 [DEBUG] Datos recibidos de la API:', data);
-        setProgress(data);
+        
+        // Asegurar que currentLesson no exceda el número de lecciones disponibles
+        const maxLessonIndex = 4; // 5 lecciones (índices 0-4)
+        const safeCurrentLesson = Math.min(data.currentLesson || 0, maxLessonIndex);
+        
+        setProgress({
+          ...data,
+          currentLesson: safeCurrentLesson,
+          totalLessons: 5
+        });
       } else {
         // Fallback a localStorage si la API falla
         const localStorageKey = `course-progress-${courseId}`;
@@ -83,7 +102,16 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
         
         if (savedProgress) {
           const data = JSON.parse(savedProgress);
-          setProgress(data);
+          
+          // Asegurar que currentLesson no exceda el número de lecciones disponibles
+          const maxLessonIndex = 4; // 5 lecciones (índices 0-4)
+          const safeCurrentLesson = Math.min(data.currentLesson || 0, maxLessonIndex);
+          
+          setProgress({
+            ...data,
+            currentLesson: safeCurrentLesson,
+            totalLessons: 5
+          });
         } else {
           // Si no hay progreso guardado, usar valores por defecto
           const defaultProgress: CourseProgress = {
