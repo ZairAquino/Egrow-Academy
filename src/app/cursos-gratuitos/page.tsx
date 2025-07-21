@@ -35,6 +35,32 @@ export default function CursosGratuitosPage() {
       instructor: 'Dr. Maria Rodriguez',
       source: 'eGrow Academy',
       link: '/curso/introduccion-llms'
+    },
+    {
+      id: 'fundamentos-ml',
+      title: 'Fundamentos de Machine Learning',
+      description: 'Aprende los conceptos básicos de Machine Learning, desde algoritmos supervisados hasta no supervisados, y cómo implementarlos en Python.',
+      duration: '2.5 horas',
+      level: 'Principiante',
+      price: 'Gratis',
+      image: 'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=400&h=250&fit=crop&crop=center',
+      tag: 'eGrow Academy',
+      instructor: 'Dr. Carlos Mendoza',
+      source: 'eGrow Academy',
+      link: '/curso/fundamentos-ml'
+    },
+    {
+      id: 'computer-vision',
+      title: 'Computer Vision con Python',
+      description: 'Aprende a procesar y analizar imágenes usando OpenCV, detectar objetos, reconocer rostros y crear aplicaciones de visión por computadora.',
+      duration: '3 horas',
+      level: 'Intermedio',
+      price: 'Gratis',
+      image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=250&fit=crop&crop=center',
+      tag: 'eGrow Academy',
+      instructor: 'Dra. Ana Torres',
+      source: 'eGrow Academy',
+      link: '/curso/computer-vision'
     }
   ];
 
