@@ -28,7 +28,6 @@ export async function POST(request: NextRequest) {
 
     // Crear sesión de checkout
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
       line_items: [
         {
           price_data: {
@@ -39,7 +38,7 @@ export async function POST(request: NextRequest) {
             },
             unit_amount: Math.round(plan.price * 100), // Stripe usa centavos
             recurring: {
-              interval: plan.interval,
+              interval: plan.interval as 'month' | 'year',
             },
           },
           quantity: 1,
