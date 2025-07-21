@@ -47,7 +47,7 @@ async function checkStripeConfig() {
         console.log(`    Precio ${priceIndex + 1}:`);
         console.log(`      - ID: ${price.id}`);
         console.log(`      - Stripe ID: ${price.stripePriceId}`);
-        console.log(`      - Monto: $${price.unitAmount / 100}`);
+        console.log(`      - Monto: $${price.unitAmount ? price.unitAmount / 100 : 'N/A'}`);
         console.log(`      - Tipo: ${price.type}`);
         console.log(`      - Intervalo: ${price.interval}`);
       });
@@ -76,7 +76,7 @@ async function checkStripeConfig() {
       console.log(`  - Stripe ID: ${subscription.stripeSubscriptionId}`);
       console.log(`  - Estado: ${subscription.status}`);
       console.log(`  - Producto: ${subscription.price.product.name}`);
-      console.log(`  - Precio: $${subscription.price.unitAmount / 100}/${subscription.price.interval}`);
+      console.log(`  - Precio: $${subscription.price.unitAmount ? subscription.price.unitAmount / 100 : 'N/A'}/${subscription.price.interval}`);
       console.log(`  - Período actual: ${subscription.currentPeriodStart?.toLocaleDateString()} - ${subscription.currentPeriodEnd?.toLocaleDateString()}`);
     });
 
@@ -121,7 +121,7 @@ async function checkStripeConfig() {
       console.log(`  - Suscripciones activas: ${user.subscriptions.length}`);
       
       user.subscriptions.forEach((subscription, subIndex) => {
-        console.log(`    Suscripción ${subIndex + 1}: ${subscription.price.product.name} - $${subscription.price.unitAmount / 100}/${subscription.price.interval}`);
+        console.log(`    Suscripción ${subIndex + 1}: ${subscription.price.product.name} - $${subscription.price.unitAmount ? subscription.price.unitAmount / 100 : 'N/A'}/${subscription.price.interval}`);
       });
     });
 
