@@ -103,13 +103,13 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
       await prisma.subscription.upsert({
         where: { stripeSubscriptionId: subscription.id },
         update: {
-          status: subscription.status === 'active' ? 'ACTIVE' : 'INACTIVE',
+          status: subscription.status === 'active' ? 'ACTIVE' : 'CANCELED',
           currentPeriodStart: new Date(subscription.current_period_start * 1000),
           currentPeriodEnd: new Date(subscription.current_period_end * 1000),
         },
         create: {
           stripeSubscriptionId: subscription.id,
-          status: subscription.status === 'active' ? 'ACTIVE' : 'INACTIVE',
+          status: subscription.status === 'active' ? 'ACTIVE' : 'CANCELED',
           currentPeriodStart: new Date(subscription.current_period_start * 1000),
           currentPeriodEnd: new Date(subscription.current_period_end * 1000),
           userId: userId,
@@ -140,7 +140,7 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
         userId: userId 
       },
       data: {
-        status: subscription.status === 'active' ? 'ACTIVE' : 'INACTIVE',
+        status: subscription.status === 'active' ? 'ACTIVE' : 'CANCELED',
         currentPeriodEnd: new Date(subscription.current_period_end * 1000),
       },
     });
