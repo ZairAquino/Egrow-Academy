@@ -42,11 +42,13 @@ export interface ResourcesResponse {
     offset: number;
     hasMore: boolean;
   };
+  error?: string;
 }
 
 export interface ResourceResponse {
   success: boolean;
   data: Resource;
+  error?: string;
 }
 
 export function useResources(category?: string) {
