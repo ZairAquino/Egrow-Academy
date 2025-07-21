@@ -11,6 +11,42 @@
 
 ## 📅 **Historial de Cambios**
 
+### **2025-07-21 - Corrección de Errores de Autenticación y Acceso a Cursos**
+
+#### ✅ **Problemas Resueltos**
+1. **Error 401 en endpoints de cursos**
+   - **Problema:** Inconsistencia en el manejo de tokens entre endpoints
+   - **Solución:** Estandarizar búsqueda de tokens en cookies y headers
+   - **Archivos modificados:** `src/app/api/courses/progress/route.ts`
+
+2. **Error "Cannot read properties of undefined (reading 'title')"**
+   - **Problema:** Índice de lección fuera de rango (lección 9 en curso de 5 lecciones)
+   - **Solución:** Implementar validaciones de rango y resetear progreso
+   - **Archivos modificados:** `src/hooks/useCourseProgress.ts`, `src/app/curso/desarrollo-web-fullstack/contenido/page.tsx`
+
+3. **Validaciones de seguridad**
+   - **Problema:** Falta de validaciones para datos del curso
+   - **Solución:** Agregar validaciones robustas en componentes y hooks
+
+#### 🔧 **Cambios Técnicos**
+- **Token Handling:** Endpoints ahora buscan tokens en cookies y headers
+- **Range Validation:** Implementada validación de índices de lección
+- **Safe Data Access:** Uso de optional chaining y valores por defecto
+- **Progress Reset:** Script para resetear progreso a lección 0
+
+#### 📊 **Scripts de Prueba Creados**
+- `scripts/test-auth.ts` - Prueba de autenticación y base de datos
+- `scripts/test-api.ts` - Prueba de endpoints de la API
+- `scripts/reset-progress.ts` - Reseteo de progreso de usuario
+
+#### 🚀 **Estado Actual**
+- **Autenticación:** ✅ Funcionando correctamente
+- **API Endpoints:** ✅ Todos los endpoints responden correctamente
+- **Acceso a Cursos:** ✅ Sin errores de JavaScript
+- **Progreso:** ✅ Reseteado a lección 0
+
+---
+
 ### **2025-07-21 - Corrección de API de Progreso y Limpieza del Proyecto**
 
 #### ✅ **Problemas Resueltos**
