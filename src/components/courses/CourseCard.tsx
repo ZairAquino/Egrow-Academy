@@ -49,7 +49,6 @@ export default function CourseCard({
       <div className="course-content-new">
         <div className="course-meta">
           <span className="course-instructor">eGrow Academy</span>
-          <span className="course-rating">4.8/5</span>
         </div>
         <h3 className="course-title-new">
           {title}

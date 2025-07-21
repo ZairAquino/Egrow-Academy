@@ -163,8 +163,9 @@ const message = 'Hola ' + name + ', tienes ' + age + ' años';
 
 // Async/Await
 const fetchData = async () => {
-  const response = await fetch('/api/data');
-  return response.json();
+  // const response = await fetch('/api/data');
+  // return response.json();
+  return { message: 'Datos de ejemplo' };
 };</code></pre>
         `,
         completed: false

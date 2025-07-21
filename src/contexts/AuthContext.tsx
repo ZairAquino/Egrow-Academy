@@ -64,8 +64,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
       })
       
       if (response.ok) {
-        const data = await response.json()
-        return data.user
+        const contentType = response.headers.get('content-type')
+        if (contentType && contentType.includes('application/json')) {
+          const data = await response.json()
+          return data.user
+        } else {
+          console.error('Respuesta no es JSON:', contentType)
+          return null
+        }
       }
       return null
     } catch (error) {

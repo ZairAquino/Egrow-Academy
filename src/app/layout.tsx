@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 
 import Providers from "@/components/Providers";
+import UserProfile from "@/components/auth/UserProfile";
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -88,6 +89,11 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <Providers>
+          {/* User Profile Component - Fixed Position */}
+          <div className="user-profile-fixed">
+            <UserProfile />
+          </div>
+          
           {children}
         </Providers>
 

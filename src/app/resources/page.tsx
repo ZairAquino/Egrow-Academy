@@ -5,6 +5,8 @@ import dynamic from 'next/dynamic';
 import Sidebar from '@/components/layout/Sidebar';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Footer from '@/components/layout/Footer';
+import ResourceCard from '@/components/resources/ResourceCard';
+import { useResources } from '@/hooks/useResources';
 
 // Lazy load components
 const CompaniesMarquee = dynamic(() => import('@/components/ui/CompaniesMarquee'), {
@@ -22,38 +24,17 @@ export default function ResourcesPage() {
 
   const categories = [
     { id: 'todos', name: 'Todos los Recursos' },
-    { id: 'libros', name: 'Libros' },
-    { id: 'papers', name: 'Papers' },
-    { id: 'herramientas', name: 'Herramientas' },
-    { id: 'datasets', name: 'Datasets' },
-    { id: 'tutoriales', name: 'Tutoriales' },
-    { id: 'podcasts', name: 'Podcasts' }
+    { id: 'WEBINAR', name: 'Webinars' },
+    { id: 'MANUAL', name: 'Manuales' },
+    { id: 'TUTORIAL', name: 'Tutoriales' },
+    { id: 'PAPER', name: 'Papers' },
+    { id: 'HERRAMIENTA', name: 'Herramientas' },
+    { id: 'DATASET', name: 'Datasets' },
+    { id: 'PODCAST', name: 'Podcasts' },
+    { id: 'LIBRO', name: 'Libros' }
   ];
 
-  const resources = [
-    {
-      id: 1,
-      title: 'Manual GEM',
-      description: 'Manual completo sobre Google Gemini (GEM) - Guía práctica para el uso y desarrollo con modelos de IA de Google.',
-      category: 'papers',
-      author: 'Google AI',
-      type: 'Manual',
-      url: '/resources/Manual GEM.pdf',
-      rating: 4.8,
-      image: 'https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=400&h=250&fit=crop&crop=center'
-    },
-    {
-      id: 2,
-      title: 'Manual GPT',
-      description: 'Manual completo sobre GPT (Generative Pre-trained Transformer) - Guía práctica para el uso y desarrollo con modelos de lenguaje.',
-      category: 'papers',
-      author: 'OpenAI',
-      type: 'Manual',
-      url: '/resources/Manual GPT.pdf',
-      rating: 4.9,
-      image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=250&fit=crop&crop=center'
-    }
-  ];
+  const { resources, loading, error, pagination, loadMore } = useResources(selectedCategory);
 
   const filteredResources = selectedCategory === 'todos' 
     ? resources 
@@ -153,30 +134,39 @@ export default function ResourcesPage() {
             </div>
 
             {/* Resources Grid */}
-            <div className="resources-grid">
-              {filteredResources.map((resource) => (
-                <div key={resource.id} className="resource-card">
-                  <div className="resource-image">
-                    <img src={resource.image} alt={resource.title} />
-                    <span className="resource-type">{resource.type}</span>
-                  </div>
-                  <div className="resource-content">
-                    <div className="resource-meta">
-                      <span className="resource-author">{resource.author}</span>
-                      <span className="resource-rating">{resource.rating}/5</span>
-                    </div>
-                    <h3 className="resource-title">{resource.title}</h3>
-                    <p className="resource-description">{resource.description}</p>
-                    <a href={resource.url} target="_blank" rel="noopener noreferrer" className="resource-link">Ver Recurso →</a>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {filteredResources.length === 0 && (
-              <div className="no-resources">
-                <p>No se encontraron recursos en esta categoría.</p>
+            {loading ? (
+              <div className="flex justify-center items-center py-12">
+                <LoadingSpinner />
               </div>
+            ) : error ? (
+              <div className="text-center py-12">
+                <p className="text-red-600">Error: {error}</p>
+              </div>
+            ) : (
+              <>
+                <div className="courses-grid">
+                  {filteredResources.map((resource) => (
+                    <ResourceCard key={resource.id} resource={resource} />
+                  ))}
+                </div>
+
+                {filteredResources.length === 0 && (
+                  <div className="text-center py-12">
+                    <p className="text-gray-600">No se encontraron recursos en esta categoría.</p>
+                  </div>
+                )}
+
+                {pagination.hasMore && (
+                  <div className="text-center mt-8">
+                    <button
+                      onClick={loadMore}
+                      className="btn btn-primary"
+                    >
+                      Cargar más recursos
+                    </button>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </section>

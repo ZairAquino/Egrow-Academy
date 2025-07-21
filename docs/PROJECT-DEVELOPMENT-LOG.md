@@ -84,6 +84,164 @@
 
 ---
 
+### **2025-07-21 - Sistema de Recursos Dinámico**
+
+#### ✅ **Nuevas Funcionalidades Implementadas**
+1. **Sistema de Recursos con Base de Datos**
+   - Tablas: `resources`, `resource_topics`, `resource_access_logs`
+   - Categorías: WEBINAR, MANUAL, TUTORIAL, PAPER, HERRAMIENTA, DATASET, PODCAST, LIBRO
+   - Tipos: PDF, VIDEO, AUDIO, LINK, TOOL, DATASET
+   - Control de acceso con autenticación
+
+2. **APIs de Recursos**
+   - `GET /api/resources` - Listar recursos con filtros
+   - `GET /api/resources/[slug]` - Obtener recurso específico
+   - `GET /api/resources/[slug]/access` - Verificar acceso y registrar descargas
+
+3. **Componentes y Hooks**
+   - `ResourceCard` - Tarjetas de recursos con diseño moderno
+   - `useResources` - Hook para listar recursos
+   - `useResource` - Hook para recurso individual
+   - Página individual de recursos con temas
+
+4. **Recurso "Webinar: asistente virtual"**
+   - Creado con 6 temas basados en manuales GPT y GEM
+   - Requiere autenticación
+   - Incluye ambos archivos PDF como contenido
+
+#### 🔧 **Cambios Técnicos**
+- **Schema de Base de Datos:** Agregadas tablas para recursos
+- **Migración:** `20250721211726_add_resources_tables`
+- **Autenticación:** Integración con sistema existente
+- **UI/UX:** Diseño consistente con el resto de la plataforma
+
+#### 📊 **Estado Actual**
+- **Recursos:** 4 recursos creados
+  - ChatGPT: Contexto Empresarial (HERRAMIENTA, gratuito)
+  - Manual GEM - Google Gemini (MANUAL, premium)
+  - Manual GPT - OpenAI (MANUAL, premium)
+  - Webinar: asistente virtual (WEBINAR, premium)
+- **Temas:** 19 temas organizados en total
+- **Acceso:** Sistema de autenticación funcionando
+- **Descargas:** Contador de descargas implementado
+- **Tipos:** PDF y LINK soportados
+
+---
+
+### **2025-07-21 - Recursos Adicionales y Mejoras**
+
+#### ✅ **Nuevos Recursos Agregados**
+1. **ChatGPT: Contexto Empresarial**
+   - **Tipo:** HERRAMIENTA (LINK)
+   - **Autor:** Zair Aquino
+   - **URL:** https://chatgpt.com/g/g-687e84aba36c8191a44042cc330db2f1-contexto-empresarial
+   - **Características:** Gratuito, no requiere autenticación
+   - **Temas:** 3 temas sobre contexto empresarial
+
+2. **Manual GEM - Google Gemini**
+   - **Tipo:** MANUAL (PDF)
+   - **Autor:** Google AI
+   - **Archivo:** /resources/Manual GEM.pdf
+   - **Características:** Premium, requiere autenticación
+   - **Temas:** 5 temas sobre configuración y uso de Gemini
+
+3. **Manual GPT - OpenAI**
+   - **Tipo:** MANUAL (PDF)
+   - **Autor:** OpenAI
+   - **Archivo:** /resources/Manual GPT.pdf
+   - **Características:** Premium, requiere autenticación
+   - **Temas:** 5 temas sobre fundamentos y aplicaciones de GPT
+
+#### 🔧 **Mejoras Técnicas**
+- **Botones de Descarga:** Agregados botones de descarga directa en tarjetas
+- **Manejo de Tipos:** Soporte mejorado para recursos LINK vs PDF
+- **Ordenamiento:** Recursos ordenados por fecha de creación (más recientes primero)
+- **APIs Corregidas:** Parámetros async/await en rutas dinámicas
+
+#### 🎨 **Mejoras de UX**
+- **Preview Mejorado:** Descripciones breves y claras para cada recurso
+- **Acceso Directo:** Botón de descarga/abrir enlace sin necesidad de entrar al recurso
+- **Indicadores Visuales:** Iconos diferentes para PDF (📥) y LINK (🔗)
+- **Responsive:** Diseño adaptativo para móviles y desktop
+
+#### 📊 **Estado Final**
+- **Total de Recursos:** 1 recurso principal (Webinar)
+- **Contenido Integrado:** ChatGPT + Manual GEM + Manual GPT
+- **Categoría:** WEBINAR
+- **Acceso:** Requiere autenticación para ver contenido
+- **Funcionalidad:** 100% operativa
+
+---
+
+### **2025-07-21 - Reorganización del Sistema de Recursos**
+
+#### ✅ **Cambios Implementados**
+1. **Limpieza de Recursos**
+   - Eliminados recursos individuales (ChatGPT, Manual GEM, Manual GPT)
+   - Mantenido solo el webinar como recurso principal
+
+2. **Contenido Integrado en Webinar**
+   - **Tema 1:** GPT de Contexto (enlace directo a ChatGPT)
+   - **Tema 2:** Manual GEM - Google Gemini (descarga PDF)
+   - **Tema 3:** Manual GPT - OpenAI (descarga PDF)
+
+3. **Mejoras de Contenido**
+   - **Título actualizado:** "GPT de Contexto" (más claro y directo)
+   - **Descripción mejorada:** "GPT especializado para generar contexto de tu negocio"
+   - **Formato profesional:** Descripción más atractiva y profesional
+
+3. **Flujo de Usuario Simplificado**
+   - Solo una tarjeta visible en `/resources`
+   - Preview con descripción atractiva
+   - Botón "Iniciar Sesión" para usuarios no autenticados
+   - Botón "Ver Recurso" para usuarios autenticados
+
+#### 🎨 **Mejoras de UX**
+- **Tarjeta Única:** Diseño limpio con solo el webinar
+- **Contenido Organizado:** Los tres recursos integrados como temas del webinar
+- **Acceso Controlado:** Requiere autenticación para ver contenido completo
+- **Botones de Acción:** Enlaces directos y descargas en la página del webinar
+- **Estilos Corregidos:** Botones usando clases CSS correctas (.btn .btn-primary)
+- **Formato Mejorado:** Títulos y descripciones más profesionales
+- **Diseño Premium:** Tarjetas con gradientes, efectos hover y animaciones
+- **Recursos Principales:** Los 3 recursos principales destacados con diseño especial
+- **Interactividad:** Efectos de hover, transformaciones y transiciones suaves
+
+#### 🎨 **Mejoras de Diseño Implementadas**
+- **Títulos Actualizados:** "GPT de Contexto" con descripción profesional
+- **Tarjetas Premium:** Los 3 recursos principales con gradientes y efectos especiales
+- **Botones Mejorados:** Gradientes de colores, efectos hover y animaciones
+- **Efectos Visuales:** Líneas decorativas, badges animados y transiciones suaves
+- **Responsive Design:** Diseño adaptativo para todos los dispositivos
+- **CSS Avanzado:** Gradientes, animaciones keyframe y efectos de transformación
+
+#### 🎨 **Rediseño Completo de la Página del Webinar**
+- **Contenido Simplificado:** Eliminados recursos 4 y 5 (Implementación Práctica y Casos de Uso)
+- **Imagen Reducida:** Altura ajustada de 48 a 32 (h-48 → h-32)
+- **Valoraciones Eliminadas:** Quitadas de recursos, cursos y página del webinar
+- **Descargas Eliminadas:** Removidas de todas las tarjetas y páginas
+- **Diseño Moderno:** Nuevo layout con tarjetas más grandes y espaciado mejorado
+- **Iconos Específicos:** 🤖 para ChatGPT, 📘 para GEM, 📗 para GPT
+- **Efectos Hover Mejorados:** Transiciones más suaves y efectos de grupo
+- **Tipografía Actualizada:** Títulos más grandes y mejor jerarquía visual
+
+#### 🎨 **Nuevo Diseño de Cards Compactas**
+- **Layout en Grid:** 3 cards en fila (responsive: 1 columna en móvil, 3 en desktop)
+- **Imágenes de Demostración:** Cada recurso tiene su imagen específica de Unsplash
+- **Diseño Compacto:** Cards más pequeñas con mejor organización del contenido
+- **Imagen Eliminada del Sidebar:** Removida la imagen del webinar del sidebar
+- **Efectos Hover:** Escalado de imágenes y sombras en hover
+- **Botones Full-Width:** Botones que ocupan todo el ancho de la card
+- **Iconos de Colores:** Verde para ChatGPT, Azul para GEM, Púrpura para GPT
+
+#### 📊 **Estado Actual**
+- **Recursos Visibles:** 1 (Webinar: asistente virtual)
+- **Contenido Incluido:** 3 recursos integrados + 2 temas teóricos
+- **Acceso:** Requiere login para ver contenido
+- **Funcionalidad:** Preview gratuito, contenido completo con autenticación
+
+---
+
 ### **2025-07-21 - Configuración Inicial**
 
 #### ✅ **Funcionalidades Implementadas**
