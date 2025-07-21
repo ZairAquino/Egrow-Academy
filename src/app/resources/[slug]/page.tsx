@@ -324,30 +324,6 @@ export default function ResourcePage() {
                         </div>
                         <p className="text-gray-900 font-bold ml-11 text-lg">{resource.type}</p>
                       </div>
-                      
-                      {resource.fileSize && (
-                        <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-xl p-5 border border-orange-100 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
-                          <div className="flex items-center gap-3 mb-3">
-                            <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-red-600 rounded-full flex items-center justify-center shadow-md">
-                              <span className="text-white text-sm">💾</span>
-                            </div>
-                            <span className="text-sm font-semibold text-gray-700">Tamaño</span>
-                          </div>
-                          <p className="text-gray-900 font-bold ml-11 text-lg">{resource.fileSize}</p>
-                        </div>
-                      )}
-                      
-                      {resource.downloadCount && (
-                        <div className="bg-gradient-to-br from-cyan-50 to-blue-50 rounded-xl p-5 border border-cyan-100 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
-                          <div className="flex items-center gap-3 mb-3">
-                            <div className="w-8 h-8 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center shadow-md">
-                              <span className="text-white text-sm">📊</span>
-                            </div>
-                            <span className="text-sm font-semibold text-gray-700">Descargas</span>
-                          </div>
-                          <p className="text-gray-900 font-bold ml-11 text-lg">{resource.downloadCount.toLocaleString()}</p>
-                        </div>
-                      )}
                     </div>
                   </div>
                 </div>
