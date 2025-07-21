@@ -23,8 +23,10 @@ export async function GET(
       );
     }
 
-    const userId = await verifyToken(token);
-    if (!userId) {
+    let tokenData;
+    try {
+      tokenData = verifyToken(token);
+    } catch (error) {
       console.log('❌ [RESOURCE-ACCESS-API] Token inválido');
       return NextResponse.json(
         { success: false, error: 'Token inválido', requiresAuth: true },
@@ -32,6 +34,15 @@ export async function GET(
       );
     }
 
+    if (!tokenData || !tokenData.userId) {
+      console.log('❌ [RESOURCE-ACCESS-API] Token inválido');
+      return NextResponse.json(
+        { success: false, error: 'Token inválido', requiresAuth: true },
+        { status: 401 }
+      );
+    }
+
+    const userId = tokenData.userId;
     console.log(`✅ [RESOURCE-ACCESS-API] Token verificado, userId: ${userId}`);
 
     // Buscar el recurso
