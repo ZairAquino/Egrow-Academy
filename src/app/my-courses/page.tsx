@@ -355,8 +355,8 @@ export default function MyCoursesPage() {
 
         .courses-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-          gap: 1.5rem;
+          grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+          gap: 2rem;
           max-width: 100%;
         }
 
@@ -533,6 +533,9 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
           box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           position: relative;
+          height: 450px;
+          display: flex;
+          flex-direction: column;
         }
 
         .course-card-modern:hover {
@@ -547,20 +550,26 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
 
         .course-image-wrapper {
           position: relative;
-          height: 180px;
+          height: 200px;
           overflow: hidden;
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
           display: flex;
           align-items: center;
           justify-content: center;
+          border-radius: 12px 12px 0 0;
         }
 
         .course-image {
           width: 100%;
           height: 100%;
           object-fit: cover;
+          object-position: center;
           transition: transform 0.3s ease;
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .course-card-modern:hover .course-image {
+          transform: scale(1.05);
         }
 
         .course-image-wrapper::before {
@@ -619,6 +628,9 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
 
         .course-body {
           padding: 24px;
+          flex: 1;
+          display: flex;
+          flex-direction: column;
         }
 
         .course-title-modern {
@@ -695,6 +707,7 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
           display: flex;
           gap: 12px;
           flex-wrap: wrap;
+          margin-top: auto;
         }
 
         .course-action-btn {
