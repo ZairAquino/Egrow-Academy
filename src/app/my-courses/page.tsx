@@ -185,120 +185,138 @@ export default function MyCoursesPage() {
         <section className="section">
           <div className="container">
             <div className="tabs-container">
-              <div className="tabs">
-                <button
-                  onClick={() => setActiveTab('all')}
-                  className={`tab ${activeTab === 'all' ? 'active' : ''}`}
-                >
-                  Todos los Cursos ({stats.total})
-                </button>
-                <button
-                  onClick={() => setActiveTab('pending')}
-                  className={`tab ${activeTab === 'pending' ? 'active' : ''}`}
-                >
-                  En Progreso ({stats.pending})
-                </button>
-                <button
-                  onClick={() => setActiveTab('completed')}
-                  className={`tab ${activeTab === 'completed' ? 'active' : ''}`}
-                >
-                  Completados ({stats.completed})
-                </button>
-                <button
-                  onClick={() => setActiveTab('certificates')}
-                  className={`tab ${activeTab === 'certificates' ? 'active' : ''}`}
-                >
-                  Certificaciones ({stats.certificates})
-                </button>
-              </div>
-            </div>
-
-            {/* Courses Grid */}
-            <div className="courses-section">
-              {isLoading ? (
-                <div className="loading-container">
-                  <LoadingSpinner />
-                  <p>Cargando tus cursos...</p>
-                </div>
-              ) : error ? (
-                <div className="error-container">
-                  <p className="error-message">{error}</p>
-                  <button 
-                    onClick={() => window.location.reload()} 
-                    className="btn btn-secondary"
-                  >
-                    Reintentar
-                  </button>
-                </div>
-              ) : filteredCourses.length === 0 ? (
-                <div className="empty-state">
-                  <div className="empty-icon">📚</div>
-                  <h3>No hay cursos en esta categoría</h3>
-                  <p>
-                    {activeTab === 'all' && 'Aún no te has inscrito a ningún curso.'}
-                    {activeTab === 'pending' && 'No tienes cursos en progreso.'}
-                    {activeTab === 'completed' && 'No has completado ningún curso aún.'}
-                    {activeTab === 'certificates' && 'No tienes certificaciones disponibles.'}
-                  </p>
-                  <Link href="/courses" className="btn btn-primary">
-                    Explorar Cursos
-                  </Link>
-                </div>
-              ) : (
-                <div className="courses-grid">
-                  {filteredCourses.map((userCourse) => (
-                    <CourseCard
-                      key={userCourse.id}
-                      userCourse={userCourse}
-                    />
-                  ))}
-                </div>
-              )}
+              <button
+                className={`tab ${activeTab === 'all' ? 'active' : ''}`}
+                onClick={() => setActiveTab('all')}
+              >
+                Todos los Cursos ({stats.total})
+              </button>
+              <button
+                className={`tab ${activeTab === 'pending' ? 'active' : ''}`}
+                onClick={() => setActiveTab('pending')}
+              >
+                En Progreso ({stats.pending})
+              </button>
+              <button
+                className={`tab ${activeTab === 'completed' ? 'active' : ''}`}
+                onClick={() => setActiveTab('completed')}
+              >
+                Completados ({stats.completed})
+              </button>
+              <button
+                className={`tab ${activeTab === 'certificates' ? 'active' : ''}`}
+                onClick={() => setActiveTab('certificates')}
+              >
+                Certificaciones ({stats.certificates})
+              </button>
             </div>
           </div>
         </section>
+
+        {/* Courses Section */}
+        <section className="section">
+          <div className="container">
+            {isLoading ? (
+              <div className="loading-container">
+                <LoadingSpinner />
+                <p>Cargando tus cursos...</p>
+              </div>
+            ) : error ? (
+              <div className="error-container">
+                <p className="error-message">{error}</p>
+                <button 
+                  onClick={() => window.location.reload()} 
+                  className="btn btn-primary"
+                >
+                  Reintentar
+                </button>
+              </div>
+            ) : filteredCourses.length === 0 ? (
+              <div className="empty-container">
+                <div className="empty-icon">📚</div>
+                <h3>No hay cursos para mostrar</h3>
+                <p>
+                  {activeTab === 'all' && 'Aún no te has inscrito en ningún curso.'}
+                  {activeTab === 'pending' && 'No tienes cursos en progreso.'}
+                  {activeTab === 'completed' && 'No has completado ningún curso aún.'}
+                  {activeTab === 'certificates' && 'No tienes certificaciones disponibles.'}
+                </p>
+                <Link href="/courses" className="btn btn-primary">
+                  Explorar Cursos
+                </Link>
+              </div>
+            ) : (
+              <div className="courses-grid">
+                {filteredCourses.map((userCourse) => (
+                  <CourseCard key={userCourse.id} userCourse={userCourse} />
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+
+        <Footer />
       </main>
 
-      <Footer />
-
       <style jsx>{`
+        .main-content {
+          min-height: 100vh;
+          background: #f8fafc;
+        }
+
+        .hero {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          padding: 4rem 0;
+          text-align: center;
+        }
+
+        .hero-title {
+          font-size: 3rem;
+          font-weight: 700;
+          margin-bottom: 1rem;
+        }
+
+        .hero-description {
+          font-size: 1.25rem;
+          opacity: 0.9;
+          max-width: 600px;
+          margin: 0 auto;
+        }
+
+        .section {
+          padding: 3rem 0;
+        }
+
+        .container {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 1rem;
+        }
+
         .stats-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
           gap: 1.5rem;
-          margin-bottom: 2rem;
         }
 
         .stat-card {
           background: white;
-          padding: 1.5rem;
+          padding: 2rem;
           border-radius: 12px;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
           display: flex;
           align-items: center;
           gap: 1rem;
-          transition: transform 0.2s ease;
-        }
-
-        .stat-card:hover {
-          transform: translateY(-2px);
         }
 
         .stat-icon {
           font-size: 2rem;
-          width: 60px;
-          height: 60px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: linear-gradient(135deg, #667eea, #764ba2);
-          color: white;
-          border-radius: 12px;
         }
 
         .stat-number {
-          font-size: 1.5rem;
-          font-weight: bold;
+          font-size: 2rem;
+          font-weight: 700;
           color: #1f2937;
           margin: 0;
         }
@@ -306,22 +324,17 @@ export default function MyCoursesPage() {
         .stat-label {
           color: #6b7280;
           margin: 0;
-          font-size: 0.875rem;
         }
 
         .tabs-container {
-          margin-bottom: 2rem;
-        }
-
-        .tabs {
           display: flex;
           gap: 0.5rem;
-          border-bottom: 2px solid #e5e7eb;
-          overflow-x: auto;
+          margin-bottom: 2rem;
+          border-bottom: 1px solid #e5e7eb;
         }
 
         .tab {
-          padding: 0.75rem 1.5rem;
+          padding: 1rem 1.5rem;
           border: none;
           background: none;
           color: #6b7280;
@@ -329,29 +342,28 @@ export default function MyCoursesPage() {
           cursor: pointer;
           border-bottom: 2px solid transparent;
           transition: all 0.2s ease;
-          white-space: nowrap;
         }
 
         .tab:hover {
-          color: #374151;
+          color: #3b82f6;
         }
 
         .tab.active {
-          color: #667eea;
-          border-bottom-color: #667eea;
+          color: #3b82f6;
+          border-bottom-color: #3b82f6;
         }
 
         .courses-grid {
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-          gap: 1.5rem;
+          gap: 2rem;
         }
 
         .loading-container,
         .error-container,
-        .empty-state {
+        .empty-container {
           text-align: center;
-          padding: 3rem 1rem;
+          padding: 4rem 0;
         }
 
         .empty-icon {
@@ -364,25 +376,31 @@ export default function MyCoursesPage() {
           margin-bottom: 1rem;
         }
 
-        @media (max-width: 768px) {
-          .stats-grid {
-            grid-template-columns: repeat(2, 1fr);
-          }
+        .btn {
+          display: inline-flex;
+          align-items: center;
+          padding: 0.75rem 1.5rem;
+          border-radius: 8px;
+          font-weight: 500;
+          text-decoration: none;
+          border: none;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
 
-          .tabs {
-            flex-wrap: wrap;
-          }
+        .btn-primary {
+          background: #3b82f6;
+          color: white;
+        }
 
-          .courses-grid {
-            grid-template-columns: 1fr;
-          }
+        .btn-primary:hover {
+          background: #2563eb;
         }
       `}</style>
     </>
   );
 }
 
-// Componente de tarjeta de curso
 function CourseCard({ userCourse }: { userCourse: UserCourse }) {
   const { course } = userCourse;
   const isCompleted = userCourse.status === 'COMPLETED' || userCourse.progressPercentage === 100;
@@ -394,7 +412,28 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
         return (
           <Link 
             href={course.certificateUrl || `/certificate/${course.id}`}
-            className="course-btn course-btn-success"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              padding: '8px 16px',
+              backgroundColor: '#10b981',
+              color: 'white',
+              fontSize: '14px',
+              fontWeight: '500',
+              borderRadius: '8px',
+              textDecoration: 'none',
+              transition: 'all 0.2s ease',
+              minWidth: '120px',
+              justifyContent: 'center'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#059669';
+              e.currentTarget.style.transform = 'translateY(-1px)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = '#10b981';
+              e.currentTarget.style.transform = 'translateY(0)';
+            }}
           >
             🏆 Ver Certificado
           </Link>
@@ -403,7 +442,28 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
       return (
         <Link 
           href={`/curso/${course.id}`} 
-          className="course-btn course-btn-secondary"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            padding: '8px 16px',
+            backgroundColor: '#6b7280',
+            color: 'white',
+            fontSize: '14px',
+            fontWeight: '500',
+            borderRadius: '8px',
+            textDecoration: 'none',
+            transition: 'all 0.2s ease',
+            minWidth: '120px',
+            justifyContent: 'center'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = '#4b5563';
+            e.currentTarget.style.transform = 'translateY(-1px)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = '#6b7280';
+            e.currentTarget.style.transform = 'translateY(0)';
+          }}
         >
           🔄 Repasar Curso
         </Link>
@@ -414,7 +474,28 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
       return (
         <Link 
           href={`/curso/${course.id}`} 
-          className="course-btn course-btn-primary"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            padding: '8px 16px',
+            backgroundColor: '#3b82f6',
+            color: 'white',
+            fontSize: '14px',
+            fontWeight: '500',
+            borderRadius: '8px',
+            textDecoration: 'none',
+            transition: 'all 0.2s ease',
+            minWidth: '120px',
+            justifyContent: 'center'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = '#2563eb';
+            e.currentTarget.style.transform = 'translateY(-1px)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = '#3b82f6';
+            e.currentTarget.style.transform = 'translateY(0)';
+          }}
         >
           ▶️ Continuar
         </Link>
@@ -424,7 +505,28 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
     return (
       <Link 
         href={`/curso/${course.id}`} 
-        className="course-btn course-btn-primary"
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          padding: '8px 16px',
+          backgroundColor: '#3b82f6',
+          color: 'white',
+          fontSize: '14px',
+          fontWeight: '500',
+          borderRadius: '8px',
+          textDecoration: 'none',
+          transition: 'all 0.2s ease',
+          minWidth: '120px',
+          justifyContent: 'center'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.backgroundColor = '#2563eb';
+          e.currentTarget.style.transform = 'translateY(-1px)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.backgroundColor = '#3b82f6';
+          e.currentTarget.style.transform = 'translateY(0)';
+        }}
       >
         🚀 Comenzar
       </Link>
@@ -434,262 +536,212 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
   const getStatusBadge = () => {
     if (isCompleted) {
       return (
-        <span className="status-badge status-badge-completed">
+        <span style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          padding: '4px 12px',
+          borderRadius: '20px',
+          fontSize: '12px',
+          fontWeight: '500',
+          backgroundColor: '#dcfce7',
+          color: '#166534'
+        }}>
           ✅ Completado
         </span>
       );
     }
     if (isInProgress) {
       return (
-        <span className="status-badge status-badge-progress">
+        <span style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          padding: '4px 12px',
+          borderRadius: '20px',
+          fontSize: '12px',
+          fontWeight: '500',
+          backgroundColor: '#fef3c7',
+          color: '#92400e'
+        }}>
           ⏳ En Progreso
         </span>
       );
     }
     return (
-      <span className="status-badge status-badge-enrolled">
+      <span style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        padding: '4px 12px',
+        borderRadius: '20px',
+        fontSize: '12px',
+        fontWeight: '500',
+        backgroundColor: '#dbeafe',
+        color: '#1e40af'
+      }}>
         📚 Inscrito
       </span>
     );
   };
 
   return (
-    <div className="course-card">
-      <div className="course-image-container">
+    <div style={{
+      background: 'white',
+      borderRadius: '12px',
+      overflow: 'hidden',
+      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+      transition: 'all 0.3s ease'
+    }}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.transform = 'translateY(-4px)';
+      e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.15)';
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.transform = 'translateY(0)';
+      e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
+    }}
+    >
+      <div style={{
+        position: 'relative',
+        height: '200px',
+        overflow: 'hidden'
+      }}>
         <img 
           src={course.image} 
           alt={course.title}
-          className="course-image"
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover'
+          }}
         />
-        <div className="course-status-badge">
+        <div style={{
+          position: 'absolute',
+          top: '12px',
+          right: '12px'
+        }}>
           {getStatusBadge()}
         </div>
       </div>
       
-      <div className="course-content">
-        <h3 className="course-title">
+      <div style={{
+        padding: '24px'
+      }}>
+        <h3 style={{
+          fontSize: '20px',
+          fontWeight: '600',
+          color: '#1f2937',
+          margin: '0 0 8px 0',
+          lineHeight: '1.4'
+        }}>
           {course.title}
         </h3>
         
-        <p className="course-description">
+        <p style={{
+          color: '#6b7280',
+          fontSize: '14px',
+          lineHeight: '1.5',
+          margin: '0 0 16px 0'
+        }}>
           {course.description}
         </p>
         
-        <div className="course-meta">
-          <span className="meta-item">
+        <div style={{
+          display: 'flex',
+          gap: '16px',
+          marginBottom: '16px'
+        }}>
+          <span style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px',
+            fontSize: '12px',
+            color: '#6b7280'
+          }}>
             <span>⏱️</span>
             {course.duration}
           </span>
-          <span className="meta-item">
+          <span style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px',
+            fontSize: '12px',
+            color: '#6b7280'
+          }}>
             <span>📊</span>
             {course.level}
           </span>
         </div>
 
         {isInProgress && (
-          <div className="progress-container">
-            <div className="progress-header">
+          <div style={{
+            marginBottom: '16px'
+          }}>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              fontSize: '12px',
+              color: '#6b7280',
+              marginBottom: '4px'
+            }}>
               <span>Progreso</span>
               <span>{Math.round(userCourse.progressPercentage)}%</span>
             </div>
-            <div className="progress-bar">
+            <div style={{
+              width: '100%',
+              height: '8px',
+              backgroundColor: '#e5e7eb',
+              borderRadius: '4px',
+              overflow: 'hidden'
+            }}>
               <div 
-                className="progress-fill"
-                style={{ width: `${userCourse.progressPercentage}%` }}
+                style={{
+                  height: '100%',
+                  background: 'linear-gradient(90deg, #3b82f6, #1d4ed8)',
+                  borderRadius: '4px',
+                  transition: 'width 0.3s ease',
+                  width: `${userCourse.progressPercentage}%`
+                }}
               ></div>
             </div>
           </div>
         )}
 
-        <div className="course-actions">
+        <div style={{
+          display: 'flex',
+          gap: '8px',
+          flexWrap: 'wrap'
+        }}>
           {getActionButton()}
           
           {isCompleted && course.hasCertificate && (
-            <button className="course-btn course-btn-outline">
+            <button style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              padding: '8px 16px',
+              backgroundColor: 'transparent',
+              color: '#6b7280',
+              border: '1px solid #d1d5db',
+              borderRadius: '8px',
+              fontSize: '14px',
+              fontWeight: '500',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              minWidth: '120px',
+              justifyContent: 'center'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#f9fafb';
+              e.currentTarget.style.borderColor = '#9ca3af';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.borderColor = '#d1d5db';
+            }}
+            >
               📥 Descargar PDF
             </button>
           )}
         </div>
       </div>
-
-      <style jsx>{`
-        .course-card {
-          background: white;
-          border-radius: 12px;
-          overflow: hidden;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-          transition: all 0.3s ease;
-        }
-
-        .course-card:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-        }
-
-        .course-image-container {
-          position: relative;
-          height: 200px;
-          overflow: hidden;
-        }
-
-        .course-image {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-
-        .course-status-badge {
-          position: absolute;
-          top: 12px;
-          right: 12px;
-        }
-
-        .status-badge {
-          display: inline-flex;
-          align-items: center;
-          padding: 4px 12px;
-          border-radius: 20px;
-          font-size: 12px;
-          font-weight: 500;
-        }
-
-        .status-badge-completed {
-          background: #dcfce7;
-          color: #166534;
-        }
-
-        .status-badge-progress {
-          background: #fef3c7;
-          color: #92400e;
-        }
-
-        .status-badge-enrolled {
-          background: #dbeafe;
-          color: #1e40af;
-        }
-
-        .course-content {
-          padding: 24px;
-        }
-
-        .course-title {
-          font-size: 20px;
-          font-weight: 600;
-          color: #1f2937;
-          margin: 0 0 8px 0;
-          line-height: 1.4;
-        }
-
-        .course-description {
-          color: #6b7280;
-          font-size: 14px;
-          line-height: 1.5;
-          margin: 0 0 16px 0;
-        }
-
-        .course-meta {
-          display: flex;
-          gap: 16px;
-          margin-bottom: 16px;
-        }
-
-        .meta-item {
-          display: flex;
-          align-items: center;
-          gap: 4px;
-          font-size: 12px;
-          color: #6b7280;
-        }
-
-        .progress-container {
-          margin-bottom: 16px;
-        }
-
-        .progress-header {
-          display: flex;
-          justify-content: space-between;
-          font-size: 12px;
-          color: #6b7280;
-          margin-bottom: 4px;
-        }
-
-        .progress-bar {
-          width: 100%;
-          height: 8px;
-          background: #e5e7eb;
-          border-radius: 4px;
-          overflow: hidden;
-        }
-
-        .progress-fill {
-          height: 100%;
-          background: linear-gradient(90deg, #3b82f6, #1d4ed8);
-          border-radius: 4px;
-          transition: width 0.3s ease;
-        }
-
-        .course-actions {
-          display: flex;
-          gap: 8px;
-          flex-wrap: wrap;
-        }
-
-        .course-btn {
-          display: inline-flex;
-          align-items: center;
-          padding: 8px 16px;
-          border-radius: 8px;
-          font-size: 14px;
-          font-weight: 500;
-          text-decoration: none;
-          border: none;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          min-width: 120px;
-          justify-content: center;
-        }
-
-        .course-btn-primary {
-          background: #3b82f6;
-          color: white;
-        }
-
-        .course-btn-primary:hover {
-          background: #2563eb;
-          transform: translateY(-1px);
-        }
-
-        .course-btn-secondary {
-          background: #6b7280;
-          color: white;
-        }
-
-        .course-btn-secondary:hover {
-          background: #4b5563;
-          transform: translateY(-1px);
-        }
-
-        .course-btn-success {
-          background: #10b981;
-          color: white;
-        }
-
-        .course-btn-success:hover {
-          background: #059669;
-          transform: translateY(-1px);
-        }
-
-        .course-btn-outline {
-          background: transparent;
-          color: #6b7280;
-          border: 1px solid #d1d5db;
-        }
-
-        .course-btn-outline:hover {
-          background: #f9fafb;
-          border-color: #9ca3af;
-        }
-      `}</style>
     </div>
   );
 } 
