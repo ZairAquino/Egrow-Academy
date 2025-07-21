@@ -6,8 +6,7 @@ export async function GET(request: NextRequest) {
   try {
     // Verificar token desde cookies o headers
     const cookieToken = request.cookies.get('auth-token')?.value
-    const authHeader = request.headers.get('authorization')
-    const headerToken = extractTokenFromHeader(authHeader)
+    const headerToken = extractTokenFromHeader(request)
     
     const token = cookieToken || headerToken
 
@@ -18,15 +17,16 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // Verificar token
+    // Verificar token JWT
     const { userId } = verifyToken(token)
 
-    // Verificar sesión en base de datos
+    // Verificar si es una sesión de base de datos
     const session = await prisma.session.findUnique({
       where: { token }
     })
 
-    if (!session || session.expiresAt < new Date()) {
+    // Si es una sesión de BD, verificar que no haya expirado
+    if (session && session.expiresAt < new Date()) {
       return NextResponse.json(
         { error: 'Sesión expirada' },
         { status: 401 }

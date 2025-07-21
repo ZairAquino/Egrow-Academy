@@ -416,6 +416,46 @@ export default function CommunityPage() {
                 </div>
               </div>
 
+              <div className="faq-item">
+                <div className="faq-question">
+                  <h3>¿Puedo cancelar mi suscripción en cualquier momento?</h3>
+                  <span className="faq-toggle">+</span>
+                </div>
+                <div className="faq-answer">
+                  <p>Sí, puedes cancelar tu suscripción en cualquier momento desde tu panel de control. Tendrás acceso hasta el final del período facturado.</p>
+                </div>
+              </div>
+
+              <div className="faq-item">
+                <div className="faq-question">
+                  <h3>¿Qué métodos de pago aceptan para las suscripciones?</h3>
+                  <span className="faq-toggle">+</span>
+                </div>
+                <div className="faq-answer">
+                  <p>Aceptamos todas las tarjetas de crédito y débito principales, así como PayPal y transferencias bancarias.</p>
+                </div>
+              </div>
+
+              <div className="faq-item">
+                <div className="faq-question">
+                  <h3>¿Hay garantía de devolución para las suscripciones?</h3>
+                  <span className="faq-toggle">+</span>
+                </div>
+                <div className="faq-answer">
+                  <p>Ofrecemos una garantía de satisfacción de 30 días. Si no estás satisfecho, te reembolsamos el 100%.</p>
+                </div>
+              </div>
+
+              <div className="faq-item">
+                <div className="faq-question">
+                  <h3>¿Los cursos se actualizan regularmente?</h3>
+                  <span className="faq-toggle">+</span>
+                </div>
+                <div className="faq-answer">
+                  <p>Sí, actualizamos nuestro contenido regularmente para mantenerlo al día con las últimas tecnologías y tendencias.</p>
+                </div>
+              </div>
+
               {/* Ask Question CTA */}
               <div className="ask-question-cta">
                 <div className="cta-content">

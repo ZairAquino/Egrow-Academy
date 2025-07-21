@@ -81,11 +81,16 @@ export default function LoginForm() {
       // Guardar email en localStorage si es Gmail
       saveEmailToStorage(formData.email)
 
+      // Guardar token en localStorage para uso en APIs
+      if (data.token) {
+        localStorage.setItem('authToken', data.token)
+        console.log('🔑 Token guardado en localStorage:', data.token.substring(0, 50) + '...')
+      } else {
+        console.error('❌ No se recibió token en la respuesta del login')
+      }
+
       // Mostrar mensaje de éxito
       setSuccess(data.message || '¡Inicio de sesión exitoso!')
-      
-      // El token se guarda automáticamente en cookies HTTP-only
-      // Ya no necesitamos localStorage para el token
       
       // Refrescar el contexto de autenticación
       await refreshUser()

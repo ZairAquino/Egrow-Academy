@@ -20,6 +20,7 @@ const nextConfig: NextConfig = {
   },
   poweredByHeader: false,
   compress: true,
+
 };
 
 export default nextConfig;

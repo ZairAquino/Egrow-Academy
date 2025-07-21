@@ -42,7 +42,8 @@ export default function CoursesPage() {
     { id: 'todos', name: 'Todos los Cursos' },
     { id: 'cursos-cortos', name: 'Cursos Cortos' },
     { id: 'gratuitos', name: 'Cursos Gratuitos' },
-    { id: 'premium', name: 'Cursos Premium' },
+    { id: 'especializados', name: 'Cursos Especializados' },
+    { id: 'desarrollo-web', name: 'Desarrollo Web' },
     { id: 'machine-learning', name: 'Machine Learning' },
     { id: 'deep-learning', name: 'Deep Learning' },
     { id: 'nlp', name: 'NLP' },
@@ -65,6 +66,20 @@ export default function CoursesPage() {
       link: '/curso/introduccion-llms',
       isFree: true,
       requiresAuth: false
+    },
+    {
+      id: 'desarrollo-web-fullstack',
+      title: 'Desarrollo Web Full Stack con React y Node.js',
+      description: 'Aprende a crear aplicaciones web completas desde cero. Domina React, Node.js, Express, MongoDB y despliegue en la nube.',
+      category: 'desarrollo-web',
+      duration: '25 horas',
+      level: 'Intermedio',
+      price: '$99.99',
+      image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=250&fit=crop&crop=center',
+      tag: 'Especializado',
+      link: '/curso/desarrollo-web-fullstack',
+      isFree: false,
+      requiresAuth: true
     }
   ];
 
@@ -73,7 +88,7 @@ export default function CoursesPage() {
       return courses;
     } else if (selectedCategory === 'gratuitos') {
       return courses.filter(course => course.isFree);
-    } else if (selectedCategory === 'premium') {
+    } else if (selectedCategory === 'especializados') {
       return courses.filter(course => !course.isFree);
     } else if (selectedCategory === 'cursos-cortos') {
       return courses.filter(course => course.category === 'cursos-cortos');

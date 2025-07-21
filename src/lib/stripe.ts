@@ -1,55 +1,65 @@
 import Stripe from 'stripe';
 
-// Configuración de Stripe con manejo de errores
-let stripe: Stripe | null = null;
+// Configuración del servidor
+export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2024-12-18.acacia',
+});
 
-try {
-  if (process.env.STRIPE_SECRET_KEY) {
-    stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-      apiVersion: '2025-06-30.basil',
-    });
+// Configuración del cliente
+export const getStripe = () => {
+  if (typeof window !== 'undefined') {
+    return require('@stripe/stripe-js').loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
   }
-} catch (error) {
-  console.warn('Stripe no está configurado correctamente:', error);
-}
-
-// Configuración del cliente de Stripe para el frontend
-export const getStripeClient = () => {
-  if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
-    console.warn('NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY no está configurada');
-    return null;
-  }
-  
-  try {
-    return new Stripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY, {
-      apiVersion: '2025-06-30.basil',
-    });
-  } catch (error) {
-    console.warn('Error inicializando Stripe client:', error);
-    return null;
-  }
+  return null;
 };
 
-// Tipos para los productos de Stripe
-export interface StripeProduct {
-  id: string;
-  name: string;
-  description?: string;
-  active: boolean;
-  metadata?: Record<string, string>;
-}
+// Tipos de productos de Stripe
+export const STRIPE_PRODUCTS = {
+  MONTHLY_SUBSCRIPTION: 'prod_monthly_subscription',
+  YEARLY_SUBSCRIPTION: 'prod_yearly_subscription',
+};
 
-export interface StripePrice {
-  id: string;
-  productId: string;
-  active: boolean;
-  currency: string;
-  type: 'one_time' | 'recurring';
-  unitAmount?: number;
-  interval?: 'day' | 'week' | 'month' | 'year';
-  intervalCount?: number;
-  trialPeriodDays?: number;
-}
+// Precios de Stripe
+export const STRIPE_PRICES = {
+  MONTHLY: 'price_monthly_subscription',
+  YEARLY: 'price_yearly_subscription',
+};
+
+// Configuración de planes
+export const SUBSCRIPTION_PLANS = {
+  monthly: {
+    id: 'monthly',
+    name: 'Plan Mensual',
+    price: 19.99,
+    interval: 'month',
+    stripePriceId: STRIPE_PRICES.MONTHLY,
+    features: [
+      'Acceso a todos los cursos especializados',
+      'Contenido actualizado mensualmente',
+      'Certificados de finalización',
+      'Soporte técnico prioritario',
+      'Acceso a la comunidad exclusiva',
+      'Proyectos prácticos incluidos'
+    ]
+  },
+  yearly: {
+    id: 'yearly',
+    name: 'Plan Anual',
+    price: 199.99,
+    interval: 'year',
+    stripePriceId: STRIPE_PRICES.YEARLY,
+    popular: true,
+    savings: 'Ahorra 40%',
+    features: [
+      'Todo lo del plan mensual',
+      '2 meses gratis',
+      'Acceso anticipado a nuevos cursos',
+      'Mentorías grupales mensuales',
+      'Recursos premium adicionales',
+      'Garantía de satisfacción de 30 días'
+    ]
+  }
+};
 
 // Funciones para crear productos y precios
 export const createStripeProduct = async (productData: {

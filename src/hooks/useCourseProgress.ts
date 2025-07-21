@@ -45,7 +45,7 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
     startedAt: new Date().toISOString(),
     lastAccessed: new Date().toISOString(),
     lessonProgress: [],
-    totalLessons: 10
+    totalLessons: 5
   });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -61,7 +61,17 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
 
     try {
       console.log('🔍 [DEBUG] Haciendo fetch a la API...');
-      const response = await fetch(`/api/courses/progress?courseId=${courseId}`);
+      
+      // Obtener token del localStorage
+      const token = localStorage.getItem('authToken');
+      
+      const response = await fetch(`/api/courses/progress?courseId=${courseId}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` })
+        }
+      });
+      
       if (response.ok) {
         const data = await response.json();
         console.log('🔍 [DEBUG] Datos recibidos de la API:', data);
@@ -102,8 +112,8 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
   }, [courseId, isEnrolled]);
 
   const saveProgress = useCallback(async (
-    currentLesson: number, 
-    completedLessons: number[], 
+    currentLesson?: number, 
+    completedLessons?: number[], 
     lessonNumber?: number,
     lessonTitle?: string,
     action?: 'access' | 'complete',
@@ -112,15 +122,24 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
     if (!isEnrolled) return;
 
     try {
+      // Usar el estado actual si no se proporcionan parámetros
+      const currentProgress = progress;
+      const lessonToSave = currentLesson ?? currentProgress.currentLesson;
+      const lessonsToSave = completedLessons ?? currentProgress.completedLessons;
+      
+      // Obtener token del localStorage
+      const token = localStorage.getItem('authToken');
+      
       const response = await fetch('/api/courses/progress', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` })
         },
         body: JSON.stringify({
           courseId,
-          currentLesson,
-          completedLessons,
+          currentLesson: lessonToSave,
+          completedLessons: lessonsToSave,
           lessonNumber,
           lessonTitle,
           action,
@@ -138,19 +157,19 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
         // Fallback a localStorage si la API falla
         const localStorageKey = `course-progress-${courseId}`;
         const progressData: CourseProgress = {
-          currentLesson,
-          completedLessons,
-          progressPercentage: Math.round((completedLessons.length / 10) * 100),
-          status: completedLessons.length === 0 ? 'NOT_STARTED' : 
-                  completedLessons.length === 10 ? 'COMPLETED' : 'IN_PROGRESS',
-          totalTimeSpent: 0,
-          totalSessions: 0,
-          averageSessionTime: 0,
-          longestSession: 0,
-          startedAt: new Date().toISOString(),
+          currentLesson: lessonToSave,
+          completedLessons: lessonsToSave,
+          progressPercentage: Math.round((lessonsToSave.length / currentProgress.totalLessons) * 100),
+          status: lessonsToSave.length === 0 ? 'NOT_STARTED' : 
+                  lessonsToSave.length === currentProgress.totalLessons ? 'COMPLETED' : 'IN_PROGRESS',
+          totalTimeSpent: currentProgress.totalTimeSpent,
+          totalSessions: currentProgress.totalSessions,
+          averageSessionTime: currentProgress.averageSessionTime,
+          longestSession: currentProgress.longestSession,
+          startedAt: currentProgress.startedAt,
           lastAccessed: new Date().toISOString(),
-          lessonProgress: [],
-          totalLessons: 10
+          lessonProgress: currentProgress.lessonProgress,
+          totalLessons: currentProgress.totalLessons
         };
         
         localStorage.setItem(localStorageKey, JSON.stringify(progressData));
@@ -160,7 +179,7 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
       console.error('Error guardando progreso:', error);
       setError('Error al guardar el progreso');
     }
-  }, [courseId, isEnrolled]);
+  }, [courseId, isEnrolled, progress]);
 
   const markLessonComplete = useCallback((lessonId: number) => {
     setProgress(prev => {

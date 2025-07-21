@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 import { SafeUser } from '@/types/auth'
+import { NextRequest } from 'next/server'
 
 // Función para hashear contraseñas
 export async function hashPassword(password: string): Promise<string> {
@@ -40,7 +41,12 @@ export function verifyToken(token: string): { userId: string } {
 }
 
 // Función para extraer token del header Authorization
-export function extractTokenFromHeader(authHeader: string | null): string | null {
+export function extractTokenFromHeader(request: NextRequest | null): string | null {
+  if (!request) {
+    return null
+  }
+  
+  const authHeader = request.headers.get('authorization')
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return null
   }

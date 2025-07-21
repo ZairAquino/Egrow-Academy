@@ -289,7 +289,7 @@ export default function MyCoursesPage() {
         }
 
         .container {
-          max-width: 1400px;
+          max-width: 1000px;
           margin: 0 auto;
           padding: 0 1rem;
         }
@@ -355,9 +355,10 @@ export default function MyCoursesPage() {
 
         .courses-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-          gap: 2rem;
-          max-width: 100%;
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 1.5rem;
+          max-width: 1000px;
+          margin: 0 auto;
         }
 
         .loading-container,
@@ -527,15 +528,13 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
       <style jsx>{`
         .course-card-modern {
           background: #ffffff;
-          border: 1px solid #e5e7eb;
+          border: 2px solid #3b82f6;
           border-radius: 16px;
           overflow: hidden;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          transition: all 0.3s ease;
           position: relative;
-          height: 450px;
-          display: flex;
-          flex-direction: column;
+          min-height: 380px;
         }
 
         .course-card-modern:hover {
@@ -550,22 +549,24 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
 
         .course-image-wrapper {
           position: relative;
-          height: 200px;
+          height: 250px;
           overflow: hidden;
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
           display: flex;
           align-items: center;
           justify-content: center;
           border-radius: 12px 12px 0 0;
+          text-align: center;
         }
 
         .course-image {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          object-position: center;
+          object-position: center center;
           transition: transform 0.3s ease;
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          display: block;
         }
 
         .course-card-modern:hover .course-image {
@@ -627,33 +628,29 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
         }
 
         .course-body {
-          padding: 24px;
-          flex: 1;
-          display: flex;
-          flex-direction: column;
+          padding: 20px;
         }
 
         .course-title-modern {
-          font-size: 18px;
+          font-size: 20px;
           font-weight: 700;
-          color: #111827;
+          color: #1f2937;
           margin: 0 0 12px 0;
           line-height: 1.4;
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
+          background: #f3f4f6;
+          padding: 8px;
+          border-radius: 8px;
         }
 
         .course-description-modern {
-          color: #6b7280;
+          color: #374151;
           font-size: 14px;
           line-height: 1.6;
           margin: 0 0 16px 0;
-          display: -webkit-box;
-          -webkit-line-clamp: 3;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
+          background: #f9fafb;
+          padding: 8px;
+          border-radius: 6px;
+          border-left: 3px solid #3b82f6;
         }
 
         .course-meta-modern {
@@ -707,7 +704,7 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
           display: flex;
           gap: 12px;
           flex-wrap: wrap;
-          margin-top: auto;
+          margin-top: 20px;
         }
 
         .course-action-btn {

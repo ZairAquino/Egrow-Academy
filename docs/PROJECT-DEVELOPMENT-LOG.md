@@ -298,6 +298,43 @@ GitHub: https://github.com/ZairAquino/Egrow-Academy
 - ✅ **Contadores dinámicos** en pestañas
 - ✅ **Integración** con UserProfile
 
+### **FASE 12: Curso Especializado y Sistema de Suscripciones** *(En Progreso)*
+
+#### **12.1 Curso Especializado "Desarrollo Web Full Stack":**
+- ✅ **Curso completo** con 15 lecciones detalladas
+- ✅ **Contenido estructurado** desde HTML/CSS hasta despliegue
+- ✅ **Precio especializado** de $99.99
+- ✅ **Duración extendida** de 25 horas
+- ✅ **Nivel intermedio** con tecnologías modernas
+- ✅ **Categoría "Desarrollo Web"** para mejor organización
+
+#### **12.2 Página del Curso Especializado:**
+- ✅ **Diseño atractivo** con gradientes y elementos especializados
+- ✅ **Verificación de suscripción** en tiempo real
+- ✅ **Protección de contenido** basada en estado de suscripción
+- ✅ **Temario completo** con 15 lecciones
+- ✅ **Información detallada** del curso e instructor
+
+#### **12.3 APIs de Verificación:**
+```typescript
+// Endpoints implementados:
+/api/courses/desarrollo-web-fullstack → Datos del curso premium
+/api/auth/subscription-status → Verificar suscripción activa
+```
+
+#### **12.4 Sistema de Acceso Controlado:**
+- ✅ **Verificación automática** de suscripción premium
+- ✅ **Bloqueo de contenido** para usuarios sin suscripción
+- ✅ **Botones dinámicos** según estado de suscripción
+- ✅ **Redirección a suscripción premium** para usuarios no suscritos
+
+#### **12.5 Organización de Categorías:**
+- ✅ **Categoría "Desarrollo Web"** agregada
+- ✅ **"Cursos Premium"** cambiado a **"Cursos Especializados"** (solo en categorías)
+- ✅ **Suscripción mantiene término "Premium"** para eGrow Academy
+- ✅ **Filtros actualizados** para mejor organización
+- ✅ **Lógica clara:** Cursos especializados requieren suscripción premium
+
 #### **11.6 Características de UX:**
 - ✅ **Estados de carga** con spinners
 - ✅ **Manejo de errores** con reintentos
@@ -399,5 +436,75 @@ src/
 
 ---
 
+## FASE 13: Sistema de Suscripciones con Stripe
+
+### Objetivo
+Implementar sistema completo de suscripciones con Stripe para cursos premium.
+
+### Cambios Realizados
+- ✅ Instalación de Stripe (`stripe` y `@stripe/stripe-js`)
+- ✅ Configuración de Stripe (`src/lib/stripe.ts`)
+- ✅ Página de suscripción (`src/app/subscription/page.tsx`)
+- ✅ API de checkout (`src/app/api/stripe/create-checkout-session/route.ts`)
+- ✅ Webhook de Stripe (`src/app/api/stripe/webhook/route.ts`)
+- ✅ Página de éxito de pago (`src/app/payment/success/page.tsx`)
+- ✅ Integración con sistema de autenticación
+- ✅ Manejo de eventos de suscripción (crear, actualizar, cancelar)
+
+### Características Implementadas
+- 💳 **Planes de Suscripción**: Mensual ($19.99) y Anual ($199.99)
+- 🎨 **Diseño Consistente**: Página de suscripción con diseño coherente con la plataforma
+- 🔒 **Seguridad**: Verificación de autenticación en todas las APIs
+- 📧 **Webhooks**: Manejo automático de eventos de Stripe
+- ✅ **Confirmación**: Página de éxito con detalles de la suscripción
+- 📱 **Responsive**: Diseño adaptativo para móviles
+- 📋 **FAQ Integrado**: Preguntas de suscripción agregadas a la sección FAQ de la comunidad
+
+### Archivos Creados/Modificados
+- `src/lib/stripe.ts` - Configuración de Stripe
+- `src/app/subscription/page.tsx` - Página de suscripción
+- `src/app/api/stripe/create-checkout-session/route.ts` - API de checkout
+- `src/app/api/stripe/webhook/route.ts` - Webhook de Stripe
+- `src/app/payment/success/page.tsx` - Página de éxito
+- `env.example` - Variables de entorno de Stripe
+
+### Configuración Requerida
+```env
+# Stripe Configuration
+STRIPE_SECRET_KEY="sk_test_..."
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="pk_test_..."
+STRIPE_WEBHOOK_SECRET="whsec_..."
+NEXT_PUBLIC_BASE_URL="http://localhost:3000"
+```
+
+### Próximos Pasos
+- 🔄 Configurar productos y precios en Stripe Dashboard
+- 🔄 Configurar webhook endpoint en Stripe
+- 🔄 Pruebas de integración con tarjetas de prueba
+- 🔄 Implementar cancelación de suscripciones
+- 🔄 Panel de gestión de suscripciones para usuarios
+
+### Scripts de Configuración
+```bash
+# Configurar productos y precios en Stripe
+npx tsx scripts/setup-stripe-products.ts
+
+# Simular suscripción para pruebas
+npx tsx scripts/simulate-subscription.ts
+
+# Limpiar suscripciones de prueba
+npx tsx scripts/clean-test-subscriptions.ts
+```
+
+### Variables de Entorno Requeridas
+```env
+STRIPE_SECRET_KEY=sk_test_...
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+NEXT_PUBLIC_BASE_URL=http://localhost:3001
+```
+
+---
+
 *Registro completo del desarrollo de eGrow Academy Platform*  
-*Actualizado el 21 de Julio, 2025 - Sistema de Mis Cursos y Certificados implementado*
+*Actualizado el 21 de Julio, 2025 - Sistema de Suscripciones con Stripe implementado*

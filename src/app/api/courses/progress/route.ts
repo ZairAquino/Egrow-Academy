@@ -37,15 +37,38 @@ export async function GET(request: NextRequest) {
     
     const userId = decoded.userId;
 
+    // Buscar el curso por slug si es necesario
+    let actualCourseId = courseId;
+    
+    // Verificar si es un UUID válido (contiene solo caracteres hexadecimales y guiones)
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(courseId);
+    
+    if (!isUUID) {
+      // Si no es un UUID, buscar por slug
+      console.log('🔍 [API] Buscando curso por slug:', courseId);
+      const course = await prisma.course.findFirst({
+        where: { slug: courseId }
+      });
+      if (course) {
+        actualCourseId = course.id;
+        console.log('🔍 [API] Curso encontrado por slug:', course.title, 'ID:', actualCourseId);
+      } else {
+        console.error('🔍 [API] Curso no encontrado con slug:', courseId);
+        return NextResponse.json({ error: 'Course not found' }, { status: 404 });
+      }
+    } else {
+      console.log('🔍 [API] CourseId parece ser un UUID válido:', courseId);
+    }
+
     // Buscar la inscripción del usuario
-    console.log('🔍 [API] Buscando inscripción para userId:', userId, 'courseId:', courseId);
+    console.log('🔍 [API] Buscando inscripción para userId:', userId, 'courseId:', actualCourseId);
     
     let enrollment;
     try {
       enrollment = await prisma.enrollment.findFirst({
         where: {
           userId: userId,
-          courseId: courseId
+          courseId: actualCourseId
         }
       });
       console.log('🔍 [API] Inscripción encontrada:', !!enrollment);
@@ -104,74 +127,37 @@ export async function GET(request: NextRequest) {
             }
           }
         });
+        progress = newProgress;
         console.log('🔍 [API] Nuevo progreso creado exitosamente');
       } catch (createError) {
         console.error('🔍 [API] Error creando progreso:', createError);
-        return NextResponse.json({ error: 'Database error' }, { status: 500 });
+        return NextResponse.json({ error: 'Error creating progress' }, { status: 500 });
       }
-      return NextResponse.json({
-        currentLesson: newProgress.currentLesson,
-        completedLessons: newProgress.completedLessons,
-        progressPercentage: Number(newProgress.progressPercentage),
-        status: newProgress.status,
-        totalTimeSpent: newProgress.totalTimeSpent,
-        totalSessions: newProgress.totalSessions,
-        averageSessionTime: newProgress.averageSessionTime,
-        longestSession: newProgress.longestSession,
-        startedAt: newProgress.startedAt,
-        lastAccessed: newProgress.lastAccessed,
-        completedAt: newProgress.completedAt,
-        lessonProgress: newProgress.lessonProgress,
-        courseSpecificData: newProgress.courseSpecificData,
-        totalLessons: 10
-      });
     }
 
-    // Calcular completedLessons basándose en lessonProgress
-    const actualCompletedLessons = progress.lessonProgress
-      .filter(lesson => lesson.isCompleted)
-      .map(lesson => lesson.lessonNumber);
-    
-    // Calcular porcentaje real basándose en lecciones completadas
-    const actualProgressPercentage = Math.round((actualCompletedLessons.length / 10) * 100);
-    
-    // Determinar estado real
-    let actualStatus = progress.status;
-    if (actualCompletedLessons.length === 0) {
-      actualStatus = 'NOT_STARTED';
-    } else if (actualCompletedLessons.length === 10) {
-      actualStatus = 'COMPLETED';
-    } else {
-      actualStatus = 'IN_PROGRESS';
-    }
-
-    const responseData = {
+    // Formatear la respuesta
+    const response = {
       currentLesson: progress.currentLesson,
-      completedLessons: actualCompletedLessons,
-      progressPercentage: actualProgressPercentage,
-      status: actualStatus,
-      totalTimeSpent: progress.totalTimeSpent,
-      totalSessions: progress.totalSessions,
-      averageSessionTime: progress.averageSessionTime,
-      longestSession: progress.longestSession,
-      startedAt: progress.startedAt,
-      lastAccessed: progress.lastAccessed,
-      completedAt: progress.completedAt,
-      lessonProgress: progress.lessonProgress,
-      courseSpecificData: progress.courseSpecificData,
-      totalLessons: 10
+      completedLessons: progress.completedLessons,
+      progressPercentage: progress.progressPercentage,
+      status: progress.status,
+      totalTimeSpent: progress.totalTimeSpent || 0,
+      totalSessions: progress.totalSessions || 0,
+      averageSessionTime: progress.averageSessionTime || 0,
+      longestSession: progress.longestSession || 0,
+      startedAt: progress.startedAt?.toISOString() || new Date().toISOString(),
+      lastAccessed: progress.lastAccessed?.toISOString() || new Date().toISOString(),
+      completedAt: progress.completedAt?.toISOString() || null,
+      lessonProgress: progress.lessonProgress || [],
+      totalLessons: 5 // Número fijo de lecciones para este curso
     };
-    
-    console.log('🔍 [API] Enviando respuesta exitosa:', responseData);
-    return NextResponse.json(responseData);
+
+    console.log('🔍 [API] Respuesta enviada exitosamente');
+    return NextResponse.json(response);
 
   } catch (error) {
-    console.error('🔍 [API] Error general en GET /api/courses/progress:', error);
-    console.error('🔍 [API] Stack trace:', error instanceof Error ? error.stack : 'No stack trace');
-    return NextResponse.json({ 
-      error: 'Internal server error',
-      details: error instanceof Error ? error.message : 'Unknown error'
-    }, { status: 500 });
+    console.error('🔍 [API] Error general:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
@@ -201,11 +187,34 @@ export async function POST(request: NextRequest) {
     const decoded = await verifyToken(token);
     const userId = decoded.userId;
 
+    // Buscar el curso por slug si es necesario
+    let actualCourseId = courseId;
+    
+    // Verificar si es un UUID válido (contiene solo caracteres hexadecimales y guiones)
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(courseId);
+    
+    if (!isUUID) {
+      // Si no es un UUID, buscar por slug
+      console.log('🔍 [API] Buscando curso por slug:', courseId);
+      const course = await prisma.course.findFirst({
+        where: { slug: courseId }
+      });
+      if (course) {
+        actualCourseId = course.id;
+        console.log('🔍 [API] Curso encontrado por slug:', course.title, 'ID:', actualCourseId);
+      } else {
+        console.error('🔍 [API] Curso no encontrado con slug:', courseId);
+        return NextResponse.json({ error: 'Course not found' }, { status: 404 });
+      }
+    } else {
+      console.log('🔍 [API] CourseId parece ser un UUID válido:', courseId);
+    }
+
     // Buscar la inscripción del usuario
     let enrollment = await prisma.enrollment.findFirst({
       where: {
         userId: userId,
-        courseId: courseId
+        courseId: actualCourseId
       }
     });
 
@@ -217,7 +226,7 @@ export async function POST(request: NextRequest) {
         enrollment = await prisma.enrollment.create({
           data: {
             userId: userId,
-            courseId: courseId,
+            courseId: actualCourseId,
             enrolledAt: new Date(),
             status: 'ACTIVE',
             progressPercentage: 0
