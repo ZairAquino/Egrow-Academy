@@ -113,7 +113,7 @@ export async function GET(request: NextRequest) {
       userId: enrollment.userId,
       courseTitle: enrollment.course.title,
       userName: userName,
-      completedAt: enrollment.completedAt || enrollment.updatedAt,
+      completedAt: enrollment.completedAt || new Date(),
       certificateNumber: certificateNumber,
       hasCertificate: true
     };
