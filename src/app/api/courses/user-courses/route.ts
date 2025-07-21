@@ -63,10 +63,10 @@ export async function GET(request: NextRequest) {
           title: enrollment.course.title,
           description: enrollment.course.description,
           slug: enrollment.course.slug,
-          category: enrollment.course.category,
-          level: enrollment.course.level,
-          duration: enrollment.course.duration,
-          image: enrollment.course.image,
+          difficulty: enrollment.course.difficulty,
+                  difficulty: enrollment.course.difficulty,
+        durationHours: enrollment.course.durationHours,
+        imageUrl: enrollment.course.imageUrl,
           totalLessons: totalLessons
         },
         progress: {

@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
         difficulty: course.difficulty,
         durationHours: course.durationHours,
         price: course.price,
-        image: course.image,
+        imageUrl: course.imageUrl,
         status: course.status,
         lessons: course.lessons.map(lesson => ({
           id: lesson.id,

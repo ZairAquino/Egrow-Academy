@@ -12,9 +12,9 @@ interface Course {
   id: string;
   title: string;
   description: string;
-  image: string;
-  duration: string;
-  level: string;
+  imageUrl: string;
+  durationHours: number;
+  difficulty: string;
   progress: number;
   status: 'enrolled' | 'in_progress' | 'completed';
   lastAccessed?: Date;
@@ -466,7 +466,7 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
       <div className="course-header">
         <div className="course-image-wrapper">
           <img 
-            src={course.image || 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=250&fit=crop&crop=center'} 
+            src={course.imageUrl || 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=250&fit=crop&crop=center'} 
             alt={course.title}
             className="course-image"
             onError={(e) => {
@@ -491,11 +491,11 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
         <div className="course-meta-modern">
           <span className="meta-item-modern">
             <span className="meta-icon">⏱️</span>
-            {course.duration}
+            {course.durationHours ? `${course.durationHours} horas` : '2 horas'}
           </span>
           <span className="meta-item-modern">
             <span className="meta-icon">📊</span>
-            {course.level}
+            {course.difficulty || 'Principiante'}
           </span>
         </div>
 
