@@ -1,16 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
-import { verifyToken, extractTokenFromHeader } from '@/lib/auth';
+import { verifyToken } from '@/lib/auth';
 
 const prisma = new PrismaClient();
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    // Verificar autenticación usando header Authorization
-    const token = extractTokenFromHeader(request);
+    // Verificar autenticación usando cookies
+    const token = request.cookies.get('auth-token')?.value;
     if (!token) {
       return NextResponse.json(
         { hasAccess: false, error: 'No autenticado' },
@@ -18,8 +18,10 @@ export async function GET(
       );
     }
 
-    const decoded = verifyToken(token);
-    if (!decoded) {
+    let decoded;
+    try {
+      decoded = await verifyToken(token);
+    } catch (error) {
       return NextResponse.json(
         { hasAccess: false, error: 'Token inválido' },
         { status: 401 }
@@ -27,7 +29,7 @@ export async function GET(
     }
 
     const userId = decoded.userId;
-    const courseSlug = params.slug;
+    const { slug: courseSlug } = await params;
 
     // Buscar el curso
     const course = await prisma.course.findUnique({
