@@ -412,28 +412,7 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
         return (
           <Link 
             href={course.certificateUrl || `/certificate/${course.id}`}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              padding: '8px 16px',
-              backgroundColor: '#10b981',
-              color: 'white',
-              fontSize: '14px',
-              fontWeight: '500',
-              borderRadius: '8px',
-              textDecoration: 'none',
-              transition: 'all 0.2s ease',
-              minWidth: '120px',
-              justifyContent: 'center'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#059669';
-              e.currentTarget.style.transform = 'translateY(-1px)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = '#10b981';
-              e.currentTarget.style.transform = 'translateY(0)';
-            }}
+            className="course-action-btn certificate-btn"
           >
             🏆 Ver Certificado
           </Link>
@@ -442,28 +421,7 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
       return (
         <Link 
           href={`/curso/${course.id}`} 
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            padding: '8px 16px',
-            backgroundColor: '#6b7280',
-            color: 'white',
-            fontSize: '14px',
-            fontWeight: '500',
-            borderRadius: '8px',
-            textDecoration: 'none',
-            transition: 'all 0.2s ease',
-            minWidth: '120px',
-            justifyContent: 'center'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = '#4b5563';
-            e.currentTarget.style.transform = 'translateY(-1px)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = '#6b7280';
-            e.currentTarget.style.transform = 'translateY(0)';
-          }}
+          className="course-action-btn review-btn"
         >
           🔄 Repasar Curso
         </Link>
@@ -474,28 +432,7 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
       return (
         <Link 
           href={`/curso/${course.id}`} 
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            padding: '8px 16px',
-            backgroundColor: '#3b82f6',
-            color: 'white',
-            fontSize: '14px',
-            fontWeight: '500',
-            borderRadius: '8px',
-            textDecoration: 'none',
-            transition: 'all 0.2s ease',
-            minWidth: '120px',
-            justifyContent: 'center'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = '#2563eb';
-            e.currentTarget.style.transform = 'translateY(-1px)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = '#3b82f6';
-            e.currentTarget.style.transform = 'translateY(0)';
-          }}
+          className="course-action-btn continue-btn"
         >
           ▶️ Continuar
         </Link>
@@ -505,28 +442,7 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
     return (
       <Link 
         href={`/curso/${course.id}`} 
-        style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          padding: '8px 16px',
-          backgroundColor: '#3b82f6',
-          color: 'white',
-          fontSize: '14px',
-          fontWeight: '500',
-          borderRadius: '8px',
-          textDecoration: 'none',
-          transition: 'all 0.2s ease',
-          minWidth: '120px',
-          justifyContent: 'center'
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.backgroundColor = '#2563eb';
-          e.currentTarget.style.transform = 'translateY(-1px)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = '#3b82f6';
-          e.currentTarget.style.transform = 'translateY(0)';
-        }}
+        className="course-action-btn start-btn"
       >
         🚀 Comenzar
       </Link>
@@ -535,213 +451,318 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
 
   const getStatusBadge = () => {
     if (isCompleted) {
-      return (
-        <span style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          padding: '4px 12px',
-          borderRadius: '20px',
-          fontSize: '12px',
-          fontWeight: '500',
-          backgroundColor: '#dcfce7',
-          color: '#166534'
-        }}>
-          ✅ Completado
-        </span>
-      );
+      return <span className="status-badge completed">✅ Completado</span>;
     }
     if (isInProgress) {
-      return (
-        <span style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          padding: '4px 12px',
-          borderRadius: '20px',
-          fontSize: '12px',
-          fontWeight: '500',
-          backgroundColor: '#fef3c7',
-          color: '#92400e'
-        }}>
-          ⏳ En Progreso
-        </span>
-      );
+      return <span className="status-badge progress">⏳ En Progreso</span>;
     }
-    return (
-      <span style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        padding: '4px 12px',
-        borderRadius: '20px',
-        fontSize: '12px',
-        fontWeight: '500',
-        backgroundColor: '#dbeafe',
-        color: '#1e40af'
-      }}>
-        📚 Inscrito
-      </span>
-    );
+    return <span className="status-badge enrolled">📚 Inscrito</span>;
   };
 
   return (
-    <div style={{
-      background: 'white',
-      borderRadius: '12px',
-      overflow: 'hidden',
-      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-      transition: 'all 0.3s ease'
-    }}
-    onMouseEnter={(e) => {
-      e.currentTarget.style.transform = 'translateY(-4px)';
-      e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.15)';
-    }}
-    onMouseLeave={(e) => {
-      e.currentTarget.style.transform = 'translateY(0)';
-      e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
-    }}
-    >
-      <div style={{
-        position: 'relative',
-        height: '200px',
-        overflow: 'hidden'
-      }}>
-        <img 
-          src={course.image} 
-          alt={course.title}
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover'
-          }}
-        />
-        <div style={{
-          position: 'absolute',
-          top: '12px',
-          right: '12px'
-        }}>
-          {getStatusBadge()}
+    <div className="course-card-modern">
+      <div className="course-header">
+        <div className="course-image-wrapper">
+          <img 
+            src={course.image} 
+            alt={course.title}
+            className="course-image"
+          />
+          <div className="status-badge-wrapper">
+            {getStatusBadge()}
+          </div>
         </div>
       </div>
       
-      <div style={{
-        padding: '24px'
-      }}>
-        <h3 style={{
-          fontSize: '20px',
-          fontWeight: '600',
-          color: '#1f2937',
-          margin: '0 0 8px 0',
-          lineHeight: '1.4'
-        }}>
+      <div className="course-body">
+        <h3 className="course-title-modern">
           {course.title}
         </h3>
         
-        <p style={{
-          color: '#6b7280',
-          fontSize: '14px',
-          lineHeight: '1.5',
-          margin: '0 0 16px 0'
-        }}>
+        <p className="course-description-modern">
           {course.description}
         </p>
         
-        <div style={{
-          display: 'flex',
-          gap: '16px',
-          marginBottom: '16px'
-        }}>
-          <span style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '4px',
-            fontSize: '12px',
-            color: '#6b7280'
-          }}>
-            <span>⏱️</span>
+        <div className="course-meta-modern">
+          <span className="meta-item-modern">
+            <span className="meta-icon">⏱️</span>
             {course.duration}
           </span>
-          <span style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '4px',
-            fontSize: '12px',
-            color: '#6b7280'
-          }}>
-            <span>📊</span>
+          <span className="meta-item-modern">
+            <span className="meta-icon">📊</span>
             {course.level}
           </span>
         </div>
 
         {isInProgress && (
-          <div style={{
-            marginBottom: '16px'
-          }}>
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              fontSize: '12px',
-              color: '#6b7280',
-              marginBottom: '4px'
-            }}>
+          <div className="progress-modern">
+            <div className="progress-header-modern">
               <span>Progreso</span>
               <span>{Math.round(userCourse.progressPercentage)}%</span>
             </div>
-            <div style={{
-              width: '100%',
-              height: '8px',
-              backgroundColor: '#e5e7eb',
-              borderRadius: '4px',
-              overflow: 'hidden'
-            }}>
+            <div className="progress-bar-modern">
               <div 
-                style={{
-                  height: '100%',
-                  background: 'linear-gradient(90deg, #3b82f6, #1d4ed8)',
-                  borderRadius: '4px',
-                  transition: 'width 0.3s ease',
-                  width: `${userCourse.progressPercentage}%`
-                }}
+                className="progress-fill-modern"
+                style={{ width: `${userCourse.progressPercentage}%` }}
               ></div>
             </div>
           </div>
         )}
 
-        <div style={{
-          display: 'flex',
-          gap: '8px',
-          flexWrap: 'wrap'
-        }}>
+        <div className="course-actions-modern">
           {getActionButton()}
           
           {isCompleted && course.hasCertificate && (
-            <button style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              padding: '8px 16px',
-              backgroundColor: 'transparent',
-              color: '#6b7280',
-              border: '1px solid #d1d5db',
-              borderRadius: '8px',
-              fontSize: '14px',
-              fontWeight: '500',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
-              minWidth: '120px',
-              justifyContent: 'center'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#f9fafb';
-              e.currentTarget.style.borderColor = '#9ca3af';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'transparent';
-              e.currentTarget.style.borderColor = '#d1d5db';
-            }}
-            >
+            <button className="course-action-btn download-btn">
               📥 Descargar PDF
             </button>
           )}
         </div>
       </div>
+
+      <style jsx>{`
+        .course-card-modern {
+          background: #ffffff;
+          border: 1px solid #e5e7eb;
+          border-radius: 16px;
+          overflow: hidden;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          position: relative;
+        }
+
+        .course-card-modern:hover {
+          transform: translateY(-8px);
+          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+          border-color: #d1d5db;
+        }
+
+        .course-header {
+          position: relative;
+        }
+
+        .course-image-wrapper {
+          position: relative;
+          height: 180px;
+          overflow: hidden;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .course-image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.3s ease;
+        }
+
+        .course-card-modern:hover .course-image {
+          transform: scale(1.05);
+        }
+
+        .status-badge-wrapper {
+          position: absolute;
+          top: 12px;
+          right: 12px;
+          z-index: 10;
+        }
+
+        .status-badge {
+          display: inline-flex;
+          align-items: center;
+          padding: 6px 12px;
+          border-radius: 20px;
+          font-size: 11px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-badge.completed {
+          background: linear-gradient(135deg, #10b981, #059669);
+          color: white;
+        }
+
+        .status-badge.progress {
+          background: linear-gradient(135deg, #f59e0b, #d97706);
+          color: white;
+        }
+
+        .status-badge.enrolled {
+          background: linear-gradient(135deg, #3b82f6, #2563eb);
+          color: white;
+        }
+
+        .course-body {
+          padding: 24px;
+        }
+
+        .course-title-modern {
+          font-size: 18px;
+          font-weight: 700;
+          color: #111827;
+          margin: 0 0 12px 0;
+          line-height: 1.4;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
+        .course-description-modern {
+          color: #6b7280;
+          font-size: 14px;
+          line-height: 1.6;
+          margin: 0 0 16px 0;
+          display: -webkit-box;
+          -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
+        .course-meta-modern {
+          display: flex;
+          gap: 16px;
+          margin-bottom: 20px;
+        }
+
+        .meta-item-modern {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 12px;
+          color: #9ca3af;
+          font-weight: 500;
+        }
+
+        .meta-icon {
+          font-size: 14px;
+        }
+
+        .progress-modern {
+          margin-bottom: 20px;
+        }
+
+        .progress-header-modern {
+          display: flex;
+          justify-content: space-between;
+          font-size: 12px;
+          color: #6b7280;
+          margin-bottom: 8px;
+          font-weight: 600;
+        }
+
+        .progress-bar-modern {
+          width: 100%;
+          height: 6px;
+          background: #f3f4f6;
+          border-radius: 3px;
+          overflow: hidden;
+        }
+
+        .progress-fill-modern {
+          height: 100%;
+          background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+          border-radius: 3px;
+          transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .course-actions-modern {
+          display: flex;
+          gap: 12px;
+          flex-wrap: wrap;
+        }
+
+        .course-action-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          padding: 10px 20px;
+          border-radius: 12px;
+          font-size: 13px;
+          font-weight: 600;
+          text-decoration: none;
+          border: none;
+          cursor: pointer;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          min-width: 130px;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .course-action-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .start-btn {
+          background: linear-gradient(135deg, #3b82f6, #2563eb);
+          color: white;
+        }
+
+        .start-btn:hover {
+          background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        }
+
+        .continue-btn {
+          background: linear-gradient(135deg, #10b981, #059669);
+          color: white;
+        }
+
+        .continue-btn:hover {
+          background: linear-gradient(135deg, #059669, #047857);
+        }
+
+        .certificate-btn {
+          background: linear-gradient(135deg, #f59e0b, #d97706);
+          color: white;
+        }
+
+        .certificate-btn:hover {
+          background: linear-gradient(135deg, #d97706, #b45309);
+        }
+
+        .review-btn {
+          background: linear-gradient(135deg, #6b7280, #4b5563);
+          color: white;
+        }
+
+        .review-btn:hover {
+          background: linear-gradient(135deg, #4b5563, #374151);
+        }
+
+        .download-btn {
+          background: transparent;
+          color: #6b7280;
+          border: 2px solid #e5e7eb;
+        }
+
+        .download-btn:hover {
+          background: #f9fafb;
+          border-color: #d1d5db;
+          color: #374151;
+        }
+
+        @media (max-width: 768px) {
+          .course-card-modern {
+            margin: 0 16px;
+          }
+          
+          .course-body {
+            padding: 20px;
+          }
+          
+          .course-actions-modern {
+            flex-direction: column;
+          }
+          
+          .course-action-btn {
+            width: 100%;
+            min-width: auto;
+          }
+        }
+      `}</style>
     </div>
   );
 } 
