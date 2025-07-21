@@ -6,9 +6,9 @@ export async function GET(request: NextRequest) {
   try {
     console.log('🔍 [SUBSCRIPTION-STATUS] Iniciando verificación...');
     
-    // Obtener el token del header Authorization
-    const token = extractTokenFromHeader(request);
-    console.log('🔍 [SUBSCRIPTION-STATUS] Token extraído:', token ? 'SÍ' : 'NO');
+    // Obtener el token de las cookies
+    const token = request.cookies.get('auth-token')?.value;
+    console.log('🔍 [SUBSCRIPTION-STATUS] Token encontrado:', !!token);
     
     if (!token) {
       console.log('❌ [SUBSCRIPTION-STATUS] No hay token');
@@ -20,7 +20,16 @@ export async function GET(request: NextRequest) {
 
     // Verificar el token
     console.log('🔍 [SUBSCRIPTION-STATUS] Verificando token...');
-    const decoded = verifyToken(token);
+    let decoded;
+    try {
+      decoded = await verifyToken(token);
+    } catch (error) {
+      console.log('❌ [SUBSCRIPTION-STATUS] Token inválido');
+      return NextResponse.json(
+        { error: 'Token inválido' },
+        { status: 401 }
+      );
+    }
     const userId = decoded.userId;
     console.log('🔍 [SUBSCRIPTION-STATUS] Token verificado, userId:', userId);
 

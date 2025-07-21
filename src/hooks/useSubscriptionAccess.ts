@@ -39,9 +39,9 @@ export const useSubscriptionAccess = (): SubscriptionStatus => {
         const response = await fetch('/api/auth/subscription-status', {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
+          credentials: 'include', // Incluir cookies
         });
 
         if (!response.ok) {
@@ -94,9 +94,9 @@ export const useCourseAccess = (courseSlug: string) => {
         const response = await fetch(`/api/courses/${courseSlug}/access`, {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
+          credentials: 'include', // Incluir cookies
         });
 
         if (!response.ok) {

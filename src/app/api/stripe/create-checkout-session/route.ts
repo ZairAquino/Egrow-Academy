@@ -6,13 +6,15 @@ import { SUBSCRIPTION_PLANS } from '@/lib/stripe';
 export async function POST(request: NextRequest) {
   try {
     // Verificar autenticación
-    const token = request.cookies.get('token')?.value;
+    const token = request.cookies.get('auth-token')?.value;
     if (!token) {
       return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
     }
 
-    const decoded = verifyToken(token);
-    if (!decoded) {
+    let decoded;
+    try {
+      decoded = await verifyToken(token);
+    } catch (error) {
       return NextResponse.json({ error: 'Token inválido' }, { status: 401 });
     }
 
