@@ -70,15 +70,11 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
       return;
     }
 
-    // Actualizar usuario con información de suscripción
+    // Actualizar usuario con stripeCustomerId
     await prisma.user.update({
       where: { id: userId },
       data: {
         stripeCustomerId: session.customer as string,
-        subscriptionStatus: 'ACTIVE',
-        subscriptionPlan: planId,
-        subscriptionStartDate: new Date(),
-        subscriptionEndDate: new Date(Date.now() + (planId === 'yearly' ? 365 : 30) * 24 * 60 * 60 * 1000),
       },
     });
 
@@ -98,17 +94,29 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
       return;
     }
 
-    // Actualizar usuario con información de suscripción
-    await prisma.user.update({
-      where: { id: userId },
-      data: {
-        stripeSubscriptionId: subscription.id,
-        subscriptionStatus: subscription.status === 'active' ? 'ACTIVE' : 'INACTIVE',
-        subscriptionPlan: planId,
-        subscriptionStartDate: new Date(subscription.current_period_start * 1000),
-        subscriptionEndDate: new Date(subscription.current_period_end * 1000),
-      },
+    // Crear o actualizar suscripción en la base de datos
+    const price = await prisma.price.findFirst({
+      where: { stripePriceId: subscription.items.data[0].price.id }
     });
+
+    if (price) {
+      await prisma.subscription.upsert({
+        where: { stripeSubscriptionId: subscription.id },
+        update: {
+          status: subscription.status === 'active' ? 'ACTIVE' : 'INACTIVE',
+          currentPeriodStart: new Date(subscription.current_period_start * 1000),
+          currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+        },
+        create: {
+          stripeSubscriptionId: subscription.id,
+          status: subscription.status === 'active' ? 'ACTIVE' : 'INACTIVE',
+          currentPeriodStart: new Date(subscription.current_period_start * 1000),
+          currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+          userId: userId,
+          priceId: price.id,
+        },
+      });
+    }
 
     console.log(`Suscripción creada para usuario ${userId}`);
   } catch (error) {
@@ -126,11 +134,14 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
     }
 
     // Actualizar estado de suscripción
-    await prisma.user.update({
-      where: { id: userId },
+    await prisma.subscription.updateMany({
+      where: { 
+        stripeSubscriptionId: subscription.id,
+        userId: userId 
+      },
       data: {
-        subscriptionStatus: subscription.status === 'active' ? 'ACTIVE' : 'INACTIVE',
-        subscriptionEndDate: new Date(subscription.current_period_end * 1000),
+        status: subscription.status === 'active' ? 'ACTIVE' : 'INACTIVE',
+        currentPeriodEnd: new Date(subscription.current_period_end * 1000),
       },
     });
 
@@ -150,11 +161,14 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
     }
 
     // Cancelar suscripción del usuario
-    await prisma.user.update({
-      where: { id: userId },
+    await prisma.subscription.updateMany({
+      where: { 
+        stripeSubscriptionId: subscription.id,
+        userId: userId 
+      },
       data: {
-        subscriptionStatus: 'CANCELLED',
-        subscriptionEndDate: new Date(subscription.canceled_at! * 1000),
+        status: 'CANCELLED',
+        canceledAt: new Date(subscription.canceled_at! * 1000),
       },
     });
 
