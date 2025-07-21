@@ -314,18 +314,18 @@ export default function ComputerVisionPage() {
         {/* Hero Section */}
         <section className="hero-section">
           <div className="container">
-            <div className="hero-content">
-              <div className="hero-text">
+            <div className="course-hero">
+              <div className="course-info">
                 <div className="course-badges">
                   <span className="badge badge-free">Gratis</span>
                   <span className="badge badge-level">{courseData.level}</span>
                   <span className="badge badge-duration">Duración: {courseData.duration}</span>
                 </div>
                 
-                <h1 className="hero-title">{courseData.title}</h1>
-                <p className="hero-description">{courseData.description}</p>
+                <h1 className="course-title-large">{courseData.title}</h1>
+                <p className="course-description">{courseData.description}</p>
                 
-                <div className="hero-actions">
+                <div className="course-actions">
                   {completedLessons.length > 0 ? (
                     <div className="course-actions-with-progress">
                       <div className="progress-summary">
@@ -339,56 +339,71 @@ export default function ComputerVisionPage() {
                       <button 
                         className="btn btn-primary btn-large btn-continue-course"
                         onClick={async () => {
+                          // Recargar progreso antes de navegar
                           await loadUserProgress();
                           router.push('/curso/computer-vision/contenido');
                         }}
                       >
-                        🚀 Continuar Curso
+                        🚀 Continuar con el curso
                       </button>
                     </div>
                   ) : (
                     <button 
-                      className="btn btn-primary btn-large"
+                      className="btn btn-primary btn-large btn-start-course"
                       onClick={handleEnrollClick}
+                      disabled={isLoading}
                     >
-                      🎯 Inscribirse Gratis
+                      {isLoading ? '⏳ Inscribiéndote...' : '🎯 Comenzar Curso Gratis'}
                     </button>
                   )}
                 </div>
-              </div>
-              
-              <div className="hero-image">
-                <img src={courseData.image} alt={courseData.title} />
-              </div>
-              
-              {user && !isLoading && (
-                <div className="progress-card">
-                  <h3>Tu Progreso</h3>
-                  <div className="progress-bar">
-                    <div className="progress-fill" style={{ width: `${progressPercentage}%` }}></div>
+                
+                <div className="course-meta">
+                  <div className="course-badges-secondary">
+                    <span className="badge badge-language">🌍 {courseData.language}</span>
+                    <span className="badge badge-includes">📦 Proyecto práctico incluido</span>
+                    <span className="badge badge-access">🔓 Acceso de por vida</span>
                   </div>
-                  <div className="progress-details">
-                    <p className="progress-text">
-                      {completedLessons.length}/{courseData.lessons.length} lecciones completadas
-                    </p>
-                    <p className="progress-remaining">
-                      {courseData.lessons.length - completedLessons.length} módulos restantes • {getRemainingTime()}
-                    </p>
-                  </div>
-                  {completedLessons.length > 0 && (
-                    <button 
-                      className="btn btn-outline btn-small btn-continue-progress"
-                      onClick={async () => {
-                        // Recargar progreso antes de navegar
-                        await loadUserProgress();
-                        router.push('/curso/computer-vision/contenido');
-                      }}
-                    >
-                      🔄 Continuar donde lo dejaste
-                    </button>
-                  )}
                 </div>
-              )}
+              </div>
+              
+              <div className="course-preview">
+                <div className="preview-video">
+                  <img src={courseData.image} alt={courseData.title} />
+                  <div className="play-button">
+                    <span>▶</span>
+                  </div>
+                </div>
+                
+                {user && !isLoading && (
+                  <div className="progress-card">
+                    <h3>Tu Progreso</h3>
+                    <div className="progress-bar">
+                      <div className="progress-fill" style={{ width: `${progressPercentage}%` }}></div>
+                    </div>
+                    <div className="progress-details">
+                      <p className="progress-text">
+                        {completedLessons.length}/{courseData.lessons.length} lecciones completadas
+                      </p>
+                      <p className="progress-remaining">
+                        {courseData.lessons.length - completedLessons.length} módulos restantes • {getRemainingTime()}
+                      </p>
+                    </div>
+                    {completedLessons.length > 0 && (
+                      <button 
+                        className="btn btn-outline btn-small btn-continue-progress"
+                        onClick={async () => {
+                          // Recargar progreso antes de navegar
+                          await loadUserProgress();
+                          router.push('/curso/computer-vision/contenido');
+                        }}
+                      >
+                        🔄 Continuar donde lo dejaste
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </section>
