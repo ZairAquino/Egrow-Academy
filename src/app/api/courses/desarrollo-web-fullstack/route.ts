@@ -42,10 +42,10 @@ export async function GET(request: NextRequest) {
         lessons: course.lessons.map(lesson => ({
           id: lesson.id,
           title: lesson.title,
-          description: lesson.description,
+          content: lesson.content,
           order: lesson.order,
           duration: lesson.duration,
-          type: lesson.type
+          videoUrl: lesson.videoUrl
         }))
       }
     });
