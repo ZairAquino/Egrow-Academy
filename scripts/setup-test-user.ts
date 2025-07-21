@@ -97,7 +97,7 @@ async function setupTestUser() {
             active: true,
             currency: 'usd',
             type: 'RECURRING',
-            unitAmount: 1999, // $19.99
+            unitAmount: 699, // $6.99
             interval: 'MONTH',
             intervalCount: 1,
             productId: product.id,

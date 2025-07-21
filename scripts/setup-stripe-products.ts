@@ -22,7 +22,7 @@ async function setupStripeProducts() {
     console.log('💰 Creando precio mensual...');
     const monthlyPrice = await createStripePrice({
       productId: monthlyProduct.id,
-      unitAmount: 1999, // $19.99 en centavos
+              unitAmount: 699, // $6.99 en centavos
       currency: 'usd',
       type: 'recurring',
       interval: 'month',
@@ -44,7 +44,7 @@ async function setupStripeProducts() {
     console.log('💰 Creando precio anual...');
     const yearlyPrice = await createStripePrice({
       productId: yearlyProduct.id,
-      unitAmount: 19999, // $199.99 en centavos
+              unitAmount: 5999, // $59.99 en centavos
       currency: 'usd',
       type: 'recurring',
       interval: 'year',
@@ -157,9 +157,9 @@ async function setupStripeProducts() {
     console.log('✅ Productos y precios configurados exitosamente!');
     console.log('\n📋 Resumen:');
     console.log(`- Producto Mensual: ${monthlyProduct.id}`);
-    console.log(`- Precio Mensual: ${monthlyPrice.id} ($19.99/mes)`);
+          console.log(`- Precio Mensual: ${monthlyPrice.id} ($6.99/mes)`);
     console.log(`- Producto Anual: ${yearlyProduct.id}`);
-    console.log(`- Precio Anual: ${yearlyPrice.id} ($199.99/año)`);
+          console.log(`- Precio Anual: ${yearlyPrice.id} ($59.99/año)`);
 
     // 8. Actualizar las constantes en stripe.ts
     console.log('\n🔄 Actualizando constantes en stripe.ts...');

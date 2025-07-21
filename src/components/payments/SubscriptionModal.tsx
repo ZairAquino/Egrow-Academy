@@ -84,7 +84,7 @@ export default function SubscriptionModal({
         {/* Price */}
         <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-4 mb-6">
           <div className="text-center">
-            <div className="text-3xl font-bold text-gray-900">$19.99</div>
+                            <div className="text-3xl font-bold text-gray-900">$6.99</div>
             <div className="text-sm text-gray-600">por mes</div>
             <div className="text-xs text-gray-500 mt-1">Cancelar en cualquier momento</div>
           </div>
@@ -93,7 +93,7 @@ export default function SubscriptionModal({
         {/* Actions */}
         <div className="space-y-3">
           <SubscriptionButton
-            amount={1999} // $19.99 en centavos
+            amount={699} // $6.99 en centavos
             currency="usd"
             description="Suscripción Premium - eGrow Academy"
             onSuccess={() => {

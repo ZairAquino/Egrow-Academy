@@ -9,12 +9,12 @@ async function createStripeProducts() {
     console.log('📋 Productos a crear en Stripe Dashboard:');
     console.log('');
     console.log('1️⃣ eGrow Academy Premium - Mensual');
-    console.log('   - Precio: $19.99/mes');
+    console.log('   - Precio: $6.99/mes');
     console.log('   - Descripción: Acceso completo a todos los cursos premium');
     console.log('   - Incluye: Desarrollo Web Full Stack, LLMs, y futuros cursos');
     console.log('');
     console.log('2️⃣ eGrow Academy Premium - Anual');
-    console.log('   - Precio: $199.99/año (2 meses gratis)');
+    console.log('   - Precio: $59.99/año (2 meses gratis)');
     console.log('   - Descripción: Acceso completo a todos los cursos premium');
     console.log('   - Incluye: Desarrollo Web Full Stack, LLMs, y futuros cursos');
     console.log('');
@@ -31,8 +31,8 @@ async function createStripeProducts() {
     console.log('   Imagen: (opcional) Logo de eGrow Academy');
     console.log('');
     console.log('4️⃣ Configura los precios:');
-    console.log('   Precio 1: $19.99 USD / mes');
-    console.log('   Precio 2: $199.99 USD / año');
+    console.log('   Precio 1: $6.99 USD / mes');
+    console.log('   Precio 2: $59.99 USD / año');
     console.log('');
     console.log('5️⃣ Configuración adicional:');
     console.log('   - Marca "One-time" como NO (es una suscripción)');

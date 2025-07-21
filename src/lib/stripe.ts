@@ -30,7 +30,7 @@ export const SUBSCRIPTION_PLANS = {
   monthly: {
     id: 'monthly',
     name: 'Plan Mensual',
-    price: 19.99,
+    price: 6.99,
     interval: 'month',
     stripePriceId: STRIPE_PRICES.MONTHLY,
     features: [
@@ -45,7 +45,7 @@ export const SUBSCRIPTION_PLANS = {
   yearly: {
     id: 'yearly',
     name: 'Plan Anual',
-    price: 199.99,
+    price: 59.99,
     interval: 'year',
     stripePriceId: STRIPE_PRICES.YEARLY,
     popular: true,
