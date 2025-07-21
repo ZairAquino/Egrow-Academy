@@ -37,11 +37,7 @@ export async function GET(request: NextRequest) {
             }
           }
         },
-        progress: {
-          include: {
-            lesson: true
-          }
-        }
+        progress: true
       },
       orderBy: {
         createdAt: 'desc'
@@ -52,7 +48,7 @@ export async function GET(request: NextRequest) {
     
     // Formatear respuesta
     const userCourses = enrollments.map(enrollment => {
-      const completedLessons = enrollment.progress.filter(p => p.completed).length;
+      const completedLessons = enrollment.progress?.completedLessons?.length || 0;
       const totalLessons = enrollment.course.lessons.length;
       const progressPercentage = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
       
@@ -64,7 +60,6 @@ export async function GET(request: NextRequest) {
           description: enrollment.course.description,
           slug: enrollment.course.slug,
           difficulty: enrollment.course.difficulty,
-                  difficulty: enrollment.course.difficulty,
         durationHours: enrollment.course.durationHours,
         imageUrl: enrollment.course.imageUrl,
           totalLessons: totalLessons
@@ -73,8 +68,8 @@ export async function GET(request: NextRequest) {
           completedLessons,
           totalLessons,
           progressPercentage,
-          lastAccessed: enrollment.lastAccessed,
-          completedAt: enrollment.completedAt
+          lastAccessed: enrollment.progress?.lastAccessed,
+          completedAt: enrollment.progress?.completedAt
         },
         enrolledAt: enrollment.createdAt
       };
