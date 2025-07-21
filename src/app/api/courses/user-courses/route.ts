@@ -71,7 +71,7 @@ export async function GET(request: NextRequest) {
         id: enrollment.id,
         courseId: enrollment.courseId,
         course: {
-          id: enrollment.course.id,
+          id: enrollment.course.slug, // Usar slug en lugar de id para navegación
           title: enrollment.course.title,
           description: enrollment.course.description || enrollment.course.shortDescription || '',
           image: enrollment.course.imageUrl || 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=250&fit=crop&crop=center',
@@ -80,7 +80,7 @@ export async function GET(request: NextRequest) {
           progress: progressPercentage,
           status: isCompleted ? 'completed' : progressPercentage > 0 ? 'in_progress' : 'enrolled',
           hasCertificate: isCompleted, // Por ahora, todos los cursos completados tienen certificado
-          certificateUrl: isCompleted ? `/certificate/${enrollment.course.id}` : undefined
+          certificateUrl: isCompleted ? `/certificate/${enrollment.course.slug}` : undefined
         },
         enrolledAt: enrollment.enrolledAt,
         completedAt: enrollment.completedAt,

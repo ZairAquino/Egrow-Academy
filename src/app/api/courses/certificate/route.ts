@@ -33,22 +33,24 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Obtener courseId de los query parameters
+    // Obtener courseSlug de los query parameters
     const { searchParams } = new URL(request.url);
-    const courseId = searchParams.get('courseId');
+    const courseSlug = searchParams.get('courseId'); // Mantener el nombre del parámetro por compatibilidad
 
-    if (!courseId) {
+    if (!courseSlug) {
       return NextResponse.json(
-        { error: 'ID del curso no proporcionado' },
+        { error: 'Slug del curso no proporcionado' },
         { status: 400 }
       );
     }
 
-    // Obtener el enrollment del usuario para este curso
+    // Obtener el enrollment del usuario para este curso usando el slug
     const enrollment = await prisma.enrollment.findFirst({
       where: {
         userId: userId,
-        courseId: courseId,
+        course: {
+          slug: courseSlug
+        },
         status: {
           in: ['ACTIVE', 'COMPLETED']
         }
@@ -97,7 +99,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Generar número de certificado único
-    const certificateNumber = `EGC-${courseId.slice(-6).toUpperCase()}-${userId.slice(-6).toUpperCase()}-${Date.now().toString(36).toUpperCase()}`;
+    const certificateNumber = `EGC-${courseSlug.toUpperCase()}-${userId.slice(-6).toUpperCase()}-${Date.now().toString(36).toUpperCase()}`;
 
     // Obtener nombre completo del usuario
     const userName = enrollment.user.firstName && enrollment.user.lastName 
