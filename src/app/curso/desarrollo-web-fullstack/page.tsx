@@ -462,7 +462,7 @@ export default function DesarrolloWebFullStackPage() {
                               <span className="lesson-duration">{lesson.duration}</span>
                             </div>
                           </div>
-                          <p className="lesson-description">{lesson.description}</p>
+                          <p className="lesson-description">{lesson.title}</p>
                         </div>
                         <div className="lesson-status">
                           {completedLessons.includes(index) ? '✅' : '🔒'}
