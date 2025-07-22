@@ -35,7 +35,7 @@ async function updateWebhookEvents() {
     
     // Actualizar el webhook
     const updatedWebhook = await stripe.webhookEndpoints.update(webhook.id, {
-      enabled_events: newEvents,
+      enabled_events: newEvents as Stripe.WebhookEndpointUpdateParams.EnabledEvent[],
     });
     
     console.log('✅ Webhook actualizado exitosamente');
