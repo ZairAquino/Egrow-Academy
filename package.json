@@ -9,7 +9,9 @@
     "lint": "next lint",
     "postinstall": "prisma generate",
     "init-stripe": "tsx scripts/init-stripe-products.ts",
-    "restore-email-verification": "tsx scripts/restore-email-verification.ts"
+    "restore-email-verification": "tsx scripts/restore-email-verification.ts",
+    "fix-build": "tsx scripts/fix-build-issues.ts",
+    "prepare-deploy": "tsx scripts/prepare-for-deploy.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.12.0",

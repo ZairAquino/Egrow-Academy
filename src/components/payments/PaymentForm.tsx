@@ -88,10 +88,8 @@ function CheckoutForm({
 
   const handleRetry = () => {
     setError(null);
-    // Limpiar el formulario de Stripe para permitir un nuevo intento
-    if (elements) {
-      elements.clear();
-    }
+    // Los elementos de Stripe se limpian automáticamente al re-renderizar
+    // No es necesario llamar a clear() ya que no existe en la API
   };
 
   const formatAmount = (amount: number, currency: string) => {
