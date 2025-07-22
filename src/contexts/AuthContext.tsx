@@ -141,6 +141,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
     refreshUser()
   }, [])
 
+  // Effect para actualizar automáticamente cada 30 segundos
+  useEffect(() => {
+    if (status === 'authenticated' && user) {
+      const interval = setInterval(() => {
+        refreshUser()
+      }, 30000) // 30 segundos
+
+      return () => clearInterval(interval)
+    }
+  }, [status, user])
+
   const value: AuthContextType = {
     user,
     status,

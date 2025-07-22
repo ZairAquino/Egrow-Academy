@@ -4,6 +4,7 @@ import { useState } from 'react';
 import LoginForm from '@/components/auth/LoginForm';
 import Sidebar from '@/components/layout/Sidebar';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function LoginPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -57,13 +58,16 @@ export default function LoginPage() {
               <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
                 <Link href="/" style={{
                   textDecoration: 'none',
-                  color: '#667eea',
-                  fontSize: '2rem',
-                  fontWeight: 'bold',
                   marginBottom: '1rem',
                   display: 'inline-block'
                 }}>
-                  🎓 eGrow Academy
+                  <Image 
+                    src="/images/egacademylogoblanco.png" 
+                    alt="eGrow Academy" 
+                    width={250}
+                    height={75}
+                    style={{ marginBottom: '1rem' }}
+                  />
                 </Link>
                 <h1 style={{
                   fontSize: '1.75rem',

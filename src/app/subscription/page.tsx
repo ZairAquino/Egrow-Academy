@@ -124,7 +124,7 @@ export default function SubscriptionPage() {
         <div className="subscription-header">
           <div className="subscription-header-content">
             <Link href="/" className="subscription-logo">
-              <img src="/images/Logo2.png" alt="eGrow Academy" />
+              <img src="/images/egacademylogoblanco.png" alt="eGrow Academy" />
               <span className="subscription-logo-text">eGrow Academy</span>
             </Link>
             <Link href="/courses" className="subscription-back-link">

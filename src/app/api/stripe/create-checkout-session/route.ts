@@ -27,14 +27,46 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Plan inválido' }, { status: 400 });
     }
 
-    // Obtener el usuario para obtener el email
+    // Obtener el usuario
     const user = await prisma.user.findUnique({
       where: { id: decoded.userId },
-      select: { email: true }
+      select: { 
+        email: true, 
+        firstName: true, 
+        lastName: true,
+        stripeCustomerId: true 
+      }
     });
 
     if (!user) {
       return NextResponse.json({ error: 'Usuario no encontrado' }, { status: 404 });
+    }
+
+    let stripeCustomerId = user.stripeCustomerId;
+
+    // Si el usuario no tiene stripeCustomerId, crear uno
+    if (!stripeCustomerId) {
+      console.log('🔧 [CHECKOUT] Creando customer de Stripe para:', user.email);
+      
+      const customer = await stripe.customers.create({
+        email: user.email,
+        name: `${user.firstName || ''} ${user.lastName || ''}`.trim(),
+        metadata: {
+          userId: decoded.userId,
+        },
+      });
+
+      stripeCustomerId = customer.id;
+
+      // Actualizar el usuario con el stripeCustomerId
+      await prisma.user.update({
+        where: { id: decoded.userId },
+        data: { stripeCustomerId: customer.id },
+      });
+
+      console.log('✅ [CHECKOUT] Customer creado y asignado:', customer.id);
+    } else {
+      console.log('✅ [CHECKOUT] Usando customer existente:', stripeCustomerId);
     }
 
     // Crear sesión de checkout
@@ -58,7 +90,7 @@ export async function POST(request: NextRequest) {
       mode: 'subscription',
       success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/subscription`,
-      customer_email: user.email,
+      customer: stripeCustomerId, // Usar el customer en lugar de customer_email
       metadata: {
         userId: decoded.userId,
         planId: plan.id,
@@ -73,9 +105,10 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    console.log('✅ [CHECKOUT] Sesión creada:', session.id);
     return NextResponse.json({ sessionId: session.id, url: session.url });
   } catch (error) {
-    console.error('Error creando sesión de checkout:', error);
+    console.error('❌ [CHECKOUT] Error creando sesión de checkout:', error);
     return NextResponse.json(
       { error: 'Error interno del servidor' },
       { status: 500 }

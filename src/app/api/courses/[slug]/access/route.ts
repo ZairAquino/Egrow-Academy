@@ -62,10 +62,12 @@ export async function GET(
       return NextResponse.json({ hasAccess: true });
     }
 
-    // Para cursos premium, verificar suscripción activa
+    // Para cursos premium, verificar acceso premium
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      include: {
+      select: {
+        id: true,
+        membershipLevel: true,
         subscriptions: {
           where: {
             status: 'ACTIVE',
@@ -91,10 +93,11 @@ export async function GET(
       );
     }
 
-    // Verificar si tiene suscripción activa
+    // Lógica mejorada: considerar tanto suscripción activa como membershipLevel
     const hasActiveSubscription = user.subscriptions.length > 0;
+    const hasPremiumAccess = hasActiveSubscription || user.membershipLevel === 'PREMIUM';
 
-    if (!hasActiveSubscription) {
+    if (!hasPremiumAccess) {
       return NextResponse.json({
         hasAccess: false,
         error: 'Se requiere suscripción premium',

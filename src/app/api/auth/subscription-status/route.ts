@@ -33,6 +33,25 @@ export async function GET(request: NextRequest) {
     const userId = decoded.userId;
     console.log('🔍 [SUBSCRIPTION-STATUS] Token verificado, userId:', userId);
 
+    // Obtener información del usuario
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        membershipLevel: true,
+        stripeCustomerId: true
+      }
+    });
+
+    if (!user) {
+      console.log('❌ [SUBSCRIPTION-STATUS] Usuario no encontrado');
+      return NextResponse.json(
+        { error: 'Usuario no encontrado' },
+        { status: 404 }
+      );
+    }
+
+    console.log('🔍 [SUBSCRIPTION-STATUS] Membership Level:', user.membershipLevel);
+
     // Buscar suscripción activa del usuario
     console.log('🔍 [SUBSCRIPTION-STATUS] Buscando suscripción...');
     const activeSubscription = await prisma.subscription.findFirst({
@@ -54,8 +73,14 @@ export async function GET(request: NextRequest) {
 
     console.log('🔍 [SUBSCRIPTION-STATUS] Suscripción encontrada:', !!activeSubscription);
 
+    // Lógica mejorada: considerar tanto suscripción activa como membershipLevel
+    const hasActiveSubscription = !!activeSubscription || user.membershipLevel === 'PREMIUM';
+
+    console.log('🔍 [SUBSCRIPTION-STATUS] Acceso premium:', hasActiveSubscription);
+
     return NextResponse.json({
-      hasActiveSubscription: !!activeSubscription,
+      hasActiveSubscription,
+      membershipLevel: user.membershipLevel,
       subscription: activeSubscription ? {
         id: activeSubscription.id,
         status: activeSubscription.status,

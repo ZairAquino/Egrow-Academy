@@ -58,22 +58,26 @@ export default function Sidebar({ isOpen, onToggle, hideToggle = false }: Sideba
       {/* Sidebar */}
       <nav className={`sidebar ${isOpen ? 'open' : ''}`} role="navigation" aria-label="Navegación principal">
         <div className="sidebar-header">
-          <div className="sidebar-logo">
+          <div className="sidebar-logo" style={{ width: '100%', padding: '0 12px' }}>
             <Link href="/" style={{
               display: 'flex',
               alignItems: 'center',
+              justifyContent: 'center',
               textDecoration: 'none',
-              color: 'inherit'
+              color: 'inherit',
+              width: '100%',
+              padding: '8px 0'
             }} onClick={handleLinkClick}>
               <Image 
-                src="/images/Logo2.png" 
+                src="/images/eGrowAcademylogo.png" 
                 alt="Logo" 
                 className="logo-image"
-                width={40}
-                height={40}
+                width={150}
+                height={45}
                 priority
+                style={{ flexShrink: 0 }}
               />
-              <span className="logo-text">eGrow-academy</span>
+
             </Link>
           </div>
         </div>

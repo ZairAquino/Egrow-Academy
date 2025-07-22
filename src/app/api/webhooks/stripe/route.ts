@@ -39,6 +39,10 @@ export async function POST(request: NextRequest) {
 
     // Manejar diferentes tipos de eventos
     switch (event.type) {
+      case 'checkout.session.completed':
+        await handleCheckoutSessionCompleted(event.data.object as Stripe.Checkout.Session);
+        break;
+
       case 'payment_intent.succeeded':
         await handlePaymentIntentSucceeded(event.data.object as Stripe.PaymentIntent);
         break;
@@ -266,5 +270,114 @@ async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
     console.log('✅ [WEBHOOK] Factura fallida procesada');
   } catch (error) {
     console.error('❌ [WEBHOOK] Error al procesar factura fallida:', error);
+  }
+}
+
+async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) {
+  try {
+    console.log('✅ [WEBHOOK] Checkout completado:', session.id);
+    
+    // Obtener el userId del metadata
+    const userId = session.metadata?.userId;
+    if (!userId) {
+      console.error('❌ [WEBHOOK] No se encontró userId en el metadata del checkout');
+      return;
+    }
+
+    // Buscar el usuario
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      console.error('❌ [WEBHOOK] Usuario no encontrado:', userId);
+      return;
+    }
+
+    // Actualizar el nivel de membresía del usuario a PREMIUM
+    await prisma.user.update({
+      where: { id: userId },
+      data: { membershipLevel: 'PREMIUM' },
+    });
+
+    console.log('✅ [WEBHOOK] Usuario actualizado a PREMIUM:', user.email);
+
+    // Crear una suscripción activa si no existe
+    const existingSubscription = await prisma.subscription.findFirst({
+      where: {
+        userId: userId,
+        status: 'ACTIVE',
+        currentPeriodEnd: {
+          gt: new Date(),
+        },
+      },
+    });
+
+    if (!existingSubscription) {
+      console.log('🔧 [WEBHOOK] Creando suscripción activa...');
+      
+      // Buscar o crear un precio de suscripción
+      let price = await prisma.price.findFirst({
+        where: {
+          active: true,
+          type: 'RECURRING'
+        }
+      });
+
+      if (!price) {
+        // Buscar o crear un producto
+        let product = await prisma.product.findFirst({
+          where: { active: true }
+        });
+        
+        if (!product) {
+          product = await prisma.product.create({
+            data: {
+              stripeProductId: `prod_webhook_${Date.now()}`,
+              name: 'eGrow Academy Premium',
+              description: 'Suscripción premium a eGrow Academy',
+              active: true
+            }
+          });
+        }
+        
+        // Crear precio
+        price = await prisma.price.create({
+          data: {
+            stripePriceId: `price_webhook_${Date.now()}`,
+            active: true,
+            currency: 'usd',
+            type: 'RECURRING',
+            unitAmount: 699,
+            interval: 'MONTH',
+            productId: product.id
+          }
+        });
+      }
+
+      // Crear suscripción
+      const subscription = await prisma.subscription.create({
+        data: {
+          userId: userId,
+          stripeSubscriptionId: `sub_webhook_${Date.now()}`,
+          priceId: price.id,
+          status: 'ACTIVE',
+          currentPeriodStart: new Date(),
+          currentPeriodEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 días
+          cancelAtPeriodEnd: false,
+          metadata: {
+            createdByWebhook: true,
+            checkoutSessionId: session.id
+          }
+        }
+      });
+
+      console.log('✅ [WEBHOOK] Suscripción creada:', subscription.id);
+    } else {
+      console.log('✅ [WEBHOOK] Usuario ya tiene suscripción activa');
+    }
+
+  } catch (error) {
+    console.error('❌ [WEBHOOK] Error al procesar checkout completado:', error);
   }
 } 

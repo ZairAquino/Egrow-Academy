@@ -54,15 +54,17 @@ export default function SubscriptionButton({
   };
 
   const handlePaymentSuccess = (paymentId: string) => {
-    alert('¡Pago exitoso! Tu suscripción premium está activa.');
+    // No mostrar alert aquí, la página de éxito se encarga de mostrar el mensaje
     closeModal();
     onSuccess?.(paymentId);
-    // Recargar la página para actualizar el estado del usuario
-    window.location.reload();
+    // Redirigir a la página de éxito
+    window.location.href = '/payment/success';
   };
 
   const handlePaymentError = (error: string) => {
-    alert(`Error en el pago: ${error}`);
+    // No mostrar alert y no cerrar el modal
+    // El error se maneja dentro del PaymentForm
+    console.log('Error en el pago:', error);
     onError?.(error);
   };
 
@@ -116,6 +118,23 @@ export default function SubscriptionButton({
                 onSuccess={handlePaymentSuccess}
                 onError={handlePaymentError}
               />
+              
+              <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+                <div className="flex items-start">
+                  <div className="flex-shrink-0">
+                    <svg className="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div className="ml-3">
+                    <h3 className="text-sm font-medium text-blue-800">Información importante</h3>
+                    <p className="mt-1 text-sm text-blue-700">
+                      Si tu pago no se procesa, puedes intentar con otra tarjeta o método de pago. 
+                      El formulario se reiniciará automáticamente para un nuevo intento.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

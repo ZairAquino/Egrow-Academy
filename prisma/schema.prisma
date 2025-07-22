@@ -36,6 +36,8 @@ model User {
   sessions            Session[]
   subscriptions       Subscription[]
 
+  @@index([membershipLevel])
+  @@index([email, membershipLevel])
   @@map("users")
 }
 
@@ -260,6 +262,8 @@ model Subscription {
   price                Price              @relation(fields: [priceId], references: [id])
   user                 User               @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([userId, status, currentPeriodEnd])
+  @@index([status, currentPeriodEnd])
   @@map("subscriptions")
 }
 

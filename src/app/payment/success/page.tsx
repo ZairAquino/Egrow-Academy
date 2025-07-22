@@ -1,24 +1,35 @@
 'use client';
 
-import { useEffect, useState, Suspense } from 'react';
+import { useEffect, useState, Suspense, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import Footer from '@/components/layout/Footer';
 
 function PaymentSuccessContent() {
-  const { user, status } = useAuth();
+  const { user, status, refreshUser } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [sessionId, setSessionId] = useState<string>('');
   const [isLoadingSession, setIsLoadingSession] = useState(true);
+  const [countdown, setCountdown] = useState(5);
+  const [emailSent, setEmailSent] = useState(false);
+  const [shouldRedirect, setShouldRedirect] = useState(false);
 
   useEffect(() => {
     const sessionIdParam = searchParams.get('session_id');
+    console.log('🔍 [PAYMENT-SUCCESS] Session ID recibido:', sessionIdParam);
+    
     if (sessionIdParam) {
       setSessionId(sessionIdParam);
     }
-    setIsLoadingSession(false);
+    
+    // Siempre marcar como no cargando después de un breve delay
+    const timer = setTimeout(() => {
+      setIsLoadingSession(false);
+    }, 1000);
+
+    return () => clearTimeout(timer);
   }, [searchParams]);
 
   useEffect(() => {
@@ -27,12 +38,95 @@ function PaymentSuccessContent() {
     }
   }, [user, status, router]);
 
-  if (status === 'loading' || isLoadingSession) {
+  // Efecto para envío de email de bienvenida
+  useEffect(() => {
+    if (user && !isLoadingSession && !emailSent) {
+      console.log('🔄 [PAYMENT-SUCCESS] Enviando email de bienvenida...');
+      
+      const sendWelcomeEmail = async () => {
+        try {
+          const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+          
+          if (!token) {
+            console.log('⚠️ [PAYMENT-SUCCESS] No hay token disponible para enviar email');
+            return;
+          }
+
+          const response = await fetch('/api/email/send-premium-welcome', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              userId: user.id
+            }),
+          });
+
+          if (response.ok) {
+            console.log('✅ [PAYMENT-SUCCESS] Email de bienvenida premium enviado exitosamente');
+            setEmailSent(true);
+          } else {
+            console.log('⚠️ [PAYMENT-SUCCESS] Error enviando email de bienvenida:', response.status);
+          }
+        } catch (error) {
+          console.log('⚠️ [PAYMENT-SUCCESS] Error enviando email de bienvenida:', error);
+        }
+      };
+
+      sendWelcomeEmail();
+    }
+  }, [user, isLoadingSession, emailSent]);
+
+  // Función para manejar la redirección
+  const handleRedirect = useCallback(() => {
+    console.log('🚀 [PAYMENT-SUCCESS] Redirigiendo al inicio...');
+    setShouldRedirect(true);
+  }, []);
+
+  // Efecto para countdown
+  useEffect(() => {
+    if (user && !isLoadingSession) {
+      const timer = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            handleRedirect();
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }
+  }, [user, isLoadingSession, handleRedirect]);
+
+  // Efecto para redirección
+  useEffect(() => {
+    if (shouldRedirect) {
+      router.push('/?payment_success=true');
+    }
+  }, [shouldRedirect, router]);
+
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Cargando...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isLoadingSession) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
           <p className="mt-4 text-gray-600">Verificando pago...</p>
+          <p className="text-sm text-gray-500 mt-2">Esto puede tomar unos segundos</p>
         </div>
       </div>
     );
@@ -46,7 +140,7 @@ function PaymentSuccessContent() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-6">
               <Link href="/" className="flex items-center space-x-2">
-                <img src="/images/Logo2.png" alt="eGrow Academy" className="h-8 w-auto" />
+                <img src="/images/egacademylogoblanco.png" alt="eGrow Academy" className="h-8 w-auto" />
                 <span className="text-xl font-bold text-gray-900">eGrow Academy</span>
               </Link>
             </div>
@@ -65,11 +159,23 @@ function PaymentSuccessContent() {
 
             {/* Success Message */}
             <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              ¡Pago Exitoso!
+              ¡Pago Exitoso! 🎉
             </h1>
-            <p className="text-xl text-gray-600 mb-8">
+            <p className="text-xl text-gray-600 mb-4">
               Tu suscripción a eGrow Academy ha sido activada correctamente
             </p>
+            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-8">
+              <div className="flex items-center justify-center">
+                <span className="text-lg font-semibold mr-2">¡Ahora eres miembro Premium!</span>
+                <span className="text-2xl">⭐</span>
+              </div>
+              <p className="text-center mt-2 text-sm">
+                Serás redirigido al inicio en {countdown} segundos...
+              </p>
+              <p className="text-center mt-2 text-sm">
+                📧 Recibirás un email de bienvenida con todos los detalles de tu suscripción premium
+              </p>
+            </div>
 
             {/* Session ID */}
             {sessionId && (
@@ -112,6 +218,12 @@ function PaymentSuccessContent() {
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
+                href="/?payment_success=true"
+                className="bg-green-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-green-700 transition-colors"
+              >
+                Ir al Inicio Ahora
+              </Link>
+              <Link
                 href="/courses"
                 className="bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-700 transition-colors"
               >
@@ -123,6 +235,14 @@ function PaymentSuccessContent() {
               >
                 Mis Cursos
               </Link>
+              <button
+                onClick={() => {
+                  window.location.reload();
+                }}
+                className="border-2 border-orange-600 text-orange-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-orange-50 transition-colors"
+              >
+                🔄 Actualizar Estado
+              </button>
             </div>
 
             {/* Additional Info */}
@@ -131,10 +251,11 @@ function PaymentSuccessContent() {
                 ¿Qué sigue?
               </h3>
               <ul className="text-left space-y-2 text-gray-600">
-                <li>• Recibirás un email de confirmación con los detalles de tu suscripción</li>
-                <li>• Puedes acceder a tus cursos desde "Mis Cursos" en cualquier momento</li>
-                <li>• Tu suscripción se renovará automáticamente según el plan elegido</li>
-                <li>• Puedes cancelar tu suscripción desde tu perfil en cualquier momento</li>
+                <li>• 📧 Recibirás un email de bienvenida premium con todos los detalles de acceso</li>
+                <li>• 🎯 Puedes acceder a tus cursos premium desde "Mis Cursos" en cualquier momento</li>
+                <li>• ⚡ Tu suscripción se renovará automáticamente según el plan elegido</li>
+                <li>• 🔧 Puedes cancelar tu suscripción desde tu perfil en cualquier momento</li>
+                <li>• 💎 Disfruta de contenido exclusivo y soporte prioritario</li>
               </ul>
             </div>
 

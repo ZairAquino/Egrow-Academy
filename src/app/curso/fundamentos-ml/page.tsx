@@ -263,15 +263,40 @@ export default function FundamentosMLPage() {
           progressPercentage: Math.round((data.completedLessons?.length || 0) / courseData.lessons.length * 100)
         });
       } else {
-        console.error('❌ [DEBUG] Error en la respuesta de la API:', response.status);
-        console.error('❌ [DEBUG] Response text:', await response.text());
-        
+        // Si es 404, intentar crear inscripción automática (no es un error real)
         if (response.status === 404) {
-          console.log('🔄 [DEBUG] Intentando crear inscripción automática...');
-          setTimeout(() => {
-            loadUserProgress();
-          }, 1000);
-          return;
+          console.log('🔄 [DEBUG] Usuario no inscrito, creando inscripción automática...');
+          
+          try {
+            const enrollResponse = await fetch('/api/courses/enroll', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ courseId: courseData.id }),
+              credentials: 'include',
+            });
+            
+            if (enrollResponse.ok) {
+              console.log('✅ [DEBUG] Inscripción automática exitosa, recargando progreso...');
+              // Recargar el progreso después de la inscripción
+              setTimeout(() => {
+                loadUserProgress();
+              }, 500);
+              return;
+            } else {
+              console.log('⚠️ [DEBUG] Error en inscripción automática:', enrollResponse.status);
+              const enrollErrorText = await enrollResponse.text();
+              console.log('⚠️ [DEBUG] Error details:', enrollErrorText);
+            }
+          } catch (enrollError) {
+            console.log('⚠️ [DEBUG] Error en inscripción automática:', enrollError);
+          }
+        } else {
+          // Solo mostrar como error si no es 404
+          console.error('❌ [DEBUG] Error en la respuesta de la API:', response.status);
+          const errorText = await response.text();
+          console.error('❌ [DEBUG] Response text:', errorText);
         }
       }
     } catch (error) {

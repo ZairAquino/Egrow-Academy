@@ -427,10 +427,11 @@ button, a, input, select, textarea {
 }
 
 .logo-image {
-    width: 40px;
-    height: 40px;
+    width: 150px;
+    height: 45px;
     border-radius: 8px;
-    object-fit: cover;
+    object-fit: contain;
+    flex-shrink: 0;
 }
 
 .sidebar-logo .logo-text {
@@ -1849,9 +1850,6 @@ button, a, input, select, textarea {
   }
 }
 
-.companies-marquee:hover .marquee-content {
-  animation-play-state: paused;
-}
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -4980,4 +4978,9 @@ input:checked + .toggle-slider:before {
   .user-profile-fixed .avatar-text {
     font-size: 12px;
   }
+}
+
+/* Main Content */
+.main-content {
+  min-height: 100vh;
 }

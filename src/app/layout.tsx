@@ -94,7 +94,10 @@ export default function RootLayout({
             <UserProfile />
           </div>
           
-          {children}
+          {/* Main Content */}
+          <main className="main-content">
+            {children}
+          </main>
         </Providers>
 
       </body>

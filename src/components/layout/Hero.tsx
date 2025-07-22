@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useAuth } from '@/contexts/AuthContext';
 import SubscriptionButton from '@/components/payments/SubscriptionButton';
 
@@ -9,6 +10,7 @@ export default function Hero() {
 
   return (
     <section className="hero gradient-bg">
+
       <div className="container">
         <div className="hero-content">
           <h1 className="hero-title">
@@ -21,18 +23,72 @@ export default function Hero() {
             en IA hoy mismo.
           </p>
           
-          {/* Botones removidos - solo se mantiene el contenido informativo */}
-
-          {user && user.membershipLevel === 'PREMIUM' && (
-            <div className="premium-badge">
-              <span className="premium-icon">👑</span>
-              <span>Miembro Premium</span>
+          {/* Logo blanco debajo del texto */}
+          <div className="hero-bottom-logo">
+            <div className="logo-animation-wrapper">
+              <Image 
+                src={user && user.membershipLevel === 'PREMIUM' ? "/images/logop.png" : "/images/logog.png"}
+                alt="eGrow Academy" 
+                width={95}
+                height={95}
+                priority
+                className="hero-bottom-logo-image"
+              />
             </div>
-          )}
+          </div>
+          
+          {/* Botones removidos - solo se mantiene el contenido informativo */}
         </div>
       </div>
 
       <style jsx>{`
+        .hero-bottom-logo {
+          display: flex;
+          justify-content: center;
+          margin-top: 32px;
+        }
+
+        .hero-bottom-logo-image {
+          height: auto;
+          max-height: 71px;
+          width: auto;
+          max-width: 95px;
+          opacity: 0.9;
+          transition: all 0.3s ease;
+        }
+
+        .logo-animation-wrapper:hover .hero-bottom-logo-image {
+          transform: scale(1.1) rotate(5deg);
+          filter: brightness(1.2);
+        }
+
+        @keyframes logoFloat {
+          0%, 100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
+        }
+
+        /* Asegurar que la animación funcione en el contenedor también */
+        .hero-bottom-logo {
+          display: flex;
+          justify-content: center;
+          margin-top: 32px;
+        }
+
+        .logo-animation-wrapper {
+          animation: logoFloat 3s ease-in-out infinite;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .logo-animation-wrapper:hover {
+          animation-play-state: paused;
+        }
+
         .hero-actions {
           display: flex;
           gap: 16px;
@@ -89,6 +145,11 @@ export default function Hero() {
         }
 
         @media (max-width: 768px) {
+          .hero-bottom-logo-image {
+            max-width: 76px;
+            max-height: 57px;
+          }
+
           .hero-actions {
             flex-direction: column;
             align-items: center;
@@ -97,6 +158,13 @@ export default function Hero() {
           .hero-button {
             width: 100%;
             max-width: 280px;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .hero-bottom-logo-image {
+            max-width: 66px;
+            max-height: 48px;
           }
         }
       `}</style>

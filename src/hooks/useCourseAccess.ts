@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useSubscriptionStatus } from './useSubscriptionStatus';
 
 interface Course {
   id: string;
@@ -11,6 +12,7 @@ interface Course {
 
 export function useCourseAccess() {
   const { user, status } = useAuth();
+  const { hasPremiumAccess } = useSubscriptionStatus();
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
 
@@ -26,7 +28,8 @@ export function useCourseAccess() {
     if (course.category === 'cursos-cortos') {
       return isAuthenticated;
     }
-    return user?.membershipLevel === 'PREMIUM';
+    // Usar el hook de suscripción que maneja automáticamente la verificación
+    return hasPremiumAccess;
   };
 
   const handleCourseAccess = (course: Course): boolean => {
@@ -34,7 +37,7 @@ export function useCourseAccess() {
       return true;
     }
     
-    if (course.category !== 'cursos-cortos' && user?.membershipLevel !== 'PREMIUM') {
+    if (course.category !== 'cursos-cortos' && !hasPremiumAccess) {
       setSelectedCourse(course);
       setShowSubscriptionModal(true);
       return false;
@@ -61,7 +64,7 @@ export function useCourseAccess() {
     if (course.category === 'cursos-cortos') {
       return isAuthenticated ? 'Acceso Libre' : 'Requiere Login';
     }
-    return user?.membershipLevel === 'PREMIUM' ? 'Premium' : 'Requiere Premium';
+    return hasPremiumAccess ? 'Premium' : 'Requiere Premium';
   };
 
   const getAccessBadgeColor = (course: Course): string => {
@@ -71,7 +74,7 @@ export function useCourseAccess() {
     if (course.category === 'cursos-cortos') {
       return isAuthenticated ? 'bg-blue-100 text-blue-800' : 'bg-yellow-100 text-yellow-800';
     }
-    return user?.membershipLevel === 'PREMIUM' ? 'bg-purple-100 text-purple-800' : 'bg-red-100 text-red-800';
+    return hasPremiumAccess ? 'bg-purple-100 text-purple-800' : 'bg-red-100 text-red-800';
   };
 
   return {

@@ -123,7 +123,7 @@ export default function CertificatePage() {
                     <div className="certificate-header">
                       <div className="logo-section">
                         <img 
-                          src="/images/Logo2.png" 
+                          src="/images/egacademylogoblanco.png" 
                           alt="eGrow Academy" 
                           className="logo"
                         />

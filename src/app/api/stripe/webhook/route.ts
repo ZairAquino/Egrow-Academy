@@ -70,15 +70,16 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
       return;
     }
 
-    // Actualizar usuario con stripeCustomerId
+    // Actualizar usuario con stripeCustomerId y membershipLevel
     await prisma.user.update({
       where: { id: userId },
       data: {
         stripeCustomerId: session.customer as string,
+        membershipLevel: 'PREMIUM',
       },
     });
 
-    console.log(`Usuario ${userId} suscrito al plan ${planId}`);
+    console.log(`✅ Usuario ${userId} actualizado a PREMIUM con plan ${planId}`);
   } catch (error) {
     console.error('Error manejando checkout session completed:', error);
   }
@@ -93,6 +94,14 @@ async function handleSubscriptionCreated(stripeSubscription: Stripe.Subscription
       console.error('Metadata faltante en subscription:', stripeSubscription.id);
       return;
     }
+
+    // Actualizar usuario a PREMIUM
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        membershipLevel: 'PREMIUM',
+      },
+    });
 
     // Crear o actualizar suscripción en la base de datos
     const price = await prisma.price.findFirst({
@@ -118,7 +127,7 @@ async function handleSubscriptionCreated(stripeSubscription: Stripe.Subscription
       });
     }
 
-    console.log(`Suscripción creada para usuario ${userId}`);
+    console.log(`✅ Suscripción creada y usuario ${userId} actualizado a PREMIUM`);
   } catch (error) {
     console.error('Error manejando subscription created:', error);
   }
@@ -160,6 +169,14 @@ async function handleSubscriptionDeleted(stripeSubscription: Stripe.Subscription
       return;
     }
 
+    // Actualizar usuario a GRATUITO
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        membershipLevel: 'GRATUITO',
+      },
+    });
+
     // Cancelar suscripción del usuario
     await prisma.subscription.updateMany({
       where: { 
@@ -172,7 +189,7 @@ async function handleSubscriptionDeleted(stripeSubscription: Stripe.Subscription
       },
     });
 
-    console.log(`Suscripción cancelada para usuario ${userId}`);
+    console.log(`❌ Suscripción cancelada y usuario ${userId} vuelto a GRATUITO`);
   } catch (error) {
     console.error('Error manejando subscription deleted:', error);
   }

@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 
 // PÁGINA TEMPORALMENTE DESHABILITADA PARA DEMO
 // Los usuarios se verifican automáticamente al registrarse
@@ -35,18 +36,16 @@ function VerifyEmailContent() {
         textAlign: 'center'
       }}>
         <div style={{
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-          color: 'white',
-          width: '80px',
-          height: '80px',
-          borderRadius: '50%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
           margin: '0 auto 1rem',
-          fontSize: '2rem'
+          textAlign: 'center'
         }}>
-          🔄
+          <Image 
+            src="/images/egacademylogoblanco.png" 
+            alt="eGrow Academy" 
+            width={200}
+            height={60}
+            style={{ marginBottom: '1rem' }}
+          />
         </div>
         <h1 style={{
           fontSize: '1.875rem',

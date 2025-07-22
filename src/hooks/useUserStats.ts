@@ -10,32 +10,80 @@ interface UserStats {
 
 export function useUserStats() {
   const { user, status } = useAuth();
-  const [stats, setStats] = useState<UserStats | null>(null);
+  const [stats, setStats] = useState<UserStats | null>({
+    totalEnrolled: 0,
+    completedCourses: 0,
+    certificates: 0,
+    totalHoursLearned: 0
+  });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const loadUserStats = async () => {
-      if (status !== 'authenticated' || !user) {
-        setIsLoading(false);
-        return;
-      }
+    // Debounce para evitar llamadas excesivas
+    const timeoutId = setTimeout(async () => {
+      const loadUserStats = async () => {
+        if (status !== 'authenticated' || !user) {
+          setIsLoading(false);
+          setStats({
+            totalEnrolled: 0,
+            completedCourses: 0,
+            certificates: 0,
+            totalHoursLearned: 0
+          });
+          return;
+        }
+
+        // Evitar llamadas si ya tenemos stats y el usuario no ha cambiado
+        if (stats && stats.totalEnrolled > 0 && user) {
+          setIsLoading(false);
+          return;
+        }
 
       try {
+        // Obtener el token del localStorage
+        const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+        
+        const headers: Record<string, string> = {
+          'Content-Type': 'application/json',
+        };
+        
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+        
         const response = await fetch('/api/courses/user-courses', {
+          headers,
           credentials: 'include'
         });
 
         if (response.ok) {
           const data = await response.json();
-          const apiStats = data.stats;
           
-          // Transformar las estadísticas de la API al formato esperado
+          // Validar que data existe y tiene la estructura esperada
+          if (!data) {
+            setStats({
+              totalEnrolled: 0,
+              completedCourses: 0,
+              certificates: 0,
+              totalHoursLearned: 0
+            });
+            return;
+          }
+          
+          // Calcular estadísticas basadas en los cursos del usuario
+          const totalEnrolled = data.total || 0;
+          const courses = data.courses || [];
+          const completedCourses = courses.filter((course: any) => 
+            course?.progress?.progressPercentage === 100
+          ).length || 0;
+          
+          // Transformar las estadísticas al formato esperado
           setStats({
-            totalEnrolled: apiStats.total || 0,
-            completedCourses: apiStats.completed || 0,
-            certificates: apiStats.certificates || 0,
-            totalHoursLearned: apiStats.total * 2 // Estimación: 2 horas por curso
+            totalEnrolled: totalEnrolled,
+            completedCourses: completedCourses,
+            certificates: completedCourses, // Un certificado por curso completado
+            totalHoursLearned: totalEnrolled * 2 // Estimación: 2 horas por curso
           });
         } else {
           setError('Error al cargar estadísticas');
@@ -43,13 +91,23 @@ export function useUserStats() {
       } catch (error) {
         console.error('Error loading user stats:', error);
         setError('Error de conexión');
+        // Establecer stats por defecto en caso de error
+        setStats({
+          totalEnrolled: 0,
+          completedCourses: 0,
+          certificates: 0,
+          totalHoursLearned: 0
+        });
       } finally {
         setIsLoading(false);
       }
     };
 
     loadUserStats();
-  }, [user, status]);
+    }, 500); // 500ms de debounce
+
+    return () => clearTimeout(timeoutId);
+  }, [user, status, stats]);
 
   return {
     stats,

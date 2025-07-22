@@ -8,7 +8,7 @@ import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Footer from '@/components/layout/Footer';
 import UserProfile from '@/components/auth/UserProfile';
 import { useAuth } from '@/contexts/AuthContext';
-import { useSubscriptionAccess } from '@/hooks/useSubscriptionAccess';
+import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
 
 // Lazy load components
 const CompaniesMarquee = dynamic(() => import('@/components/ui/CompaniesMarquee'), {
@@ -24,7 +24,7 @@ export default function DesarrolloWebFullStackPage() {
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuth();
   const router = useRouter();
-  const { hasActiveSubscription, isLoading: subscriptionLoading } = useSubscriptionAccess();
+  const { hasPremiumAccess, isLoading: subscriptionLoading } = useSubscriptionStatus();
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -36,8 +36,8 @@ export default function DesarrolloWebFullStackPage() {
       return;
     }
 
-    // Verificar si tiene suscripción premium
-    if (!hasActiveSubscription) {
+    // Verificar si tiene acceso premium
+    if (!hasPremiumAccess) {
       router.push('/subscription');
       return;
     }
@@ -216,17 +216,40 @@ export default function DesarrolloWebFullStackPage() {
           progressPercentage: Math.round((data.completedLessons?.length || 0) / courseData.lessons.length * 100)
         });
       } else {
-        console.error('❌ [DEBUG] Error en la respuesta de la API:', response.status);
-        console.error('❌ [DEBUG] Response text:', await response.text());
-        
-        // Si es 404, intentar crear inscripción automática
+        // Si es 404, intentar crear inscripción automática (no es un error real)
         if (response.status === 404) {
-          console.log('🔄 [DEBUG] Intentando crear inscripción automática...');
-          // La API ya maneja la creación automática, pero podemos intentar de nuevo
-          setTimeout(() => {
-            loadUserProgress();
-          }, 1000);
-          return;
+          console.log('🔄 [DEBUG] Usuario no inscrito, creando inscripción automática...');
+          
+          try {
+            const enrollResponse = await fetch('/api/courses/enroll', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ courseId: courseData.id }),
+              credentials: 'include',
+            });
+            
+            if (enrollResponse.ok) {
+              console.log('✅ [DEBUG] Inscripción automática exitosa, recargando progreso...');
+              // Recargar el progreso después de la inscripción
+              setTimeout(() => {
+                loadUserProgress();
+              }, 500);
+              return;
+            } else {
+              console.log('⚠️ [DEBUG] Error en inscripción automática:', enrollResponse.status);
+              const enrollErrorText = await enrollResponse.text();
+              console.log('⚠️ [DEBUG] Error details:', enrollErrorText);
+            }
+          } catch (enrollError) {
+            console.log('⚠️ [DEBUG] Error en inscripción automática:', enrollError);
+          }
+        } else {
+          // Solo mostrar como error si no es 404
+          console.error('❌ [DEBUG] Error en la respuesta de la API:', response.status);
+          const errorText = await response.text();
+          console.error('❌ [DEBUG] Response text:', errorText);
         }
       }
     } catch (error) {
@@ -266,8 +289,8 @@ export default function DesarrolloWebFullStackPage() {
     console.log('  - Lección actual:', currentLesson);
     console.log('  - Lecciones completadas:', completedLessons.length);
     console.log('  - Porcentaje:', progressPercentage);
-    console.log('  - Tiene suscripción:', hasActiveSubscription);
-  }, [currentLesson, completedLessons, progressPercentage, hasActiveSubscription]);
+    console.log('  - Tiene acceso premium:', hasPremiumAccess);
+  }, [currentLesson, completedLessons, progressPercentage, hasPremiumAccess]);
 
   if (isLoading || subscriptionLoading) {
     return (
@@ -312,13 +335,37 @@ export default function DesarrolloWebFullStackPage() {
                   
                   <div className="course-actions">
                     {user ? (
-                      hasActiveSubscription ? (
-                        <button 
-                          className="btn btn-primary btn-large"
-                          onClick={handleEnrollClick}
-                        >
-                          {completedLessons.length > 0 ? 'Continuar Curso' : 'Comenzar Curso Premium'}
-                        </button>
+                      hasPremiumAccess ? (
+                        completedLessons.length > 0 ? (
+                          <div className="course-actions-with-progress">
+                            <div className="progress-summary">
+                              <p className="progress-status">
+                                📚 <strong>Progreso actual:</strong> Lección {currentLesson + 1} de {courseData.lessons.length}
+                              </p>
+                              <p className="progress-detail">
+                                {completedLessons.length} lecciones completadas • {Math.round(progressPercentage)}% del curso
+                              </p>
+                            </div>
+                            <button 
+                              className="btn btn-primary btn-large btn-continue-course"
+                              onClick={async () => {
+                                // Recargar progreso antes de navegar
+                                await loadUserProgress();
+                                router.push('/curso/desarrollo-web-fullstack/contenido');
+                              }}
+                            >
+                              🚀 Continuar con el curso
+                            </button>
+                          </div>
+                        ) : (
+                          <button 
+                            className="btn btn-primary btn-large btn-start-course"
+                            onClick={handleEnrollClick}
+                            disabled={isLoading}
+                          >
+                            {isLoading ? '⏳ Inscribiéndote...' : '🎯 Comenzar Curso Premium'}
+                          </button>
+                        )
                       ) : (
                         <button 
                           className="btn btn-secondary btn-large"
@@ -336,10 +383,52 @@ export default function DesarrolloWebFullStackPage() {
                       </button>
                     )}
                   </div>
+                  
+                  <div className="course-meta">
+                    <div className="course-badges-secondary">
+                      <span className="badge badge-language">🌍 {courseData.language}</span>
+                      <span className="badge badge-includes">📦 Proyecto práctico incluido</span>
+                      <span className="badge badge-access">🔓 Acceso de por vida</span>
+                    </div>
+                  </div>
                 </div>
                 
-                <div className="course-image">
-                  <img src={courseData.image} alt={courseData.title} />
+                <div className="course-preview">
+                  <div className="preview-video">
+                    <img src={courseData.image} alt={courseData.title} />
+                    <div className="play-button">
+                      <span>▶</span>
+                    </div>
+                  </div>
+                  
+                  {user && hasPremiumAccess && !isLoading && (
+                    <div className="progress-card">
+                      <h3>Tu Progreso</h3>
+                      <div className="progress-bar">
+                        <div className="progress-fill" style={{ width: `${progressPercentage}%` }}></div>
+                      </div>
+                      <div className="progress-details">
+                        <p className="progress-text">
+                          {completedLessons.length}/{courseData.lessons.length} lecciones completadas
+                        </p>
+                        <p className="progress-remaining">
+                          {courseData.lessons.length - completedLessons.length} módulos restantes • {getRemainingTime()}
+                        </p>
+                      </div>
+                      {completedLessons.length > 0 && (
+                        <button 
+                          className="btn btn-outline btn-small btn-continue-progress"
+                          onClick={async () => {
+                            // Recargar progreso antes de navegar
+                            await loadUserProgress();
+                            router.push('/curso/desarrollo-web-fullstack/contenido');
+                          }}
+                        >
+                          🔄 Continuar donde lo dejaste
+                        </button>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -352,70 +441,75 @@ export default function DesarrolloWebFullStackPage() {
             <div className="content-layout">
               {/* Main Content */}
               <div className="main-content-area">
-                {/* Course Overview */}
-                <div className="course-overview">
-                  <h2>Descripción del Curso</h2>
-                  <p>{courseData.description}</p>
-                  
-                  <div className="course-stats">
-                    <div className="stat">
-                      <span className="stat-number">{courseData.lessons.length}</span>
-                      <span className="stat-label">Lecciones</span>
-                    </div>
-                    <div className="stat">
-                      <span className="stat-number">{courseData.duration}</span>
-                      <span className="stat-label">Duración</span>
-                    </div>
-                    <div className="stat">
-                      <span className="stat-number">{courseData.level}</span>
-                      <span className="stat-label">Nivel</span>
-                    </div>
-                    <div className="stat">
-                      <span className="stat-number">{progressPercentage}%</span>
-                      <span className="stat-label">Completado</span>
-                    </div>
+                {/* Course Curriculum */}
+                <div className="curriculum-section">
+                  <h2>Contenido del Curso</h2>
+                  <div className="curriculum-stats">
+                    <span>{courseData.lessons.length} lecciones</span>
+                    <span>{courseData.duration}</span>
+                    <span>Acceso de por vida</span>
                   </div>
-                </div>
-
-                {/* What You Will Learn */}
-                <div className="course-section">
-                  <h2>Lo que aprenderás</h2>
-                  <ul className="learning-list">
-                    {courseData.whatYouWillLearn.map((item, index) => (
-                      <li key={index}>{item}</li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Tools */}
-                <div className="course-section">
-                  <h2>Herramientas que usarás</h2>
-                  <div className="tools-grid">
-                    {courseData.tools.map((tool, index) => (
-                      <div key={index} className="tool-item">
-                        {tool}
+                  
+                  <div className="lessons-list">
+                    {courseData.lessons.map((lesson, index) => (
+                      <div key={lesson.id} className={`lesson-item ${completedLessons.includes(index) ? 'completed' : ''}`}>
+                        <div className="lesson-number">{index + 1}</div>
+                        <div className="lesson-content">
+                          <div className="lesson-header">
+                            <h3>{lesson.title}</h3>
+                            <div className="lesson-meta">
+                              <span className="lesson-type">{lesson.type}</span>
+                              <span className="lesson-duration">{lesson.duration}</span>
+                            </div>
+                          </div>
+                          <p className="lesson-description">{lesson.description}</p>
+                        </div>
+                        <div className="lesson-status">
+                          {completedLessons.includes(index) ? '✅' : '🔒'}
+                        </div>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                {/* Course Curriculum */}
-                <div className="course-section">
-                  <h2>Contenido del Curso</h2>
-                  <div className="lessons-list">
-                    {courseData.lessons.map((lesson, index) => (
-                      <div key={lesson.id} className="lesson-item">
-                        <div className="lesson-number">{index + 1}</div>
-                        <div className="lesson-content">
-                          <h3>{lesson.title}</h3>
-                          <div className="lesson-meta">
-                            <span className="lesson-type">{lesson.type}</span>
-                            <span className="lesson-duration">{lesson.duration}</span>
-                          </div>
-                        </div>
-                        <div className="lesson-status">
-                          {completedLessons.includes(lesson.id) ? '✅' : '🔒'}
-                        </div>
+                {/* What You'll Learn */}
+                <div className="learning-objectives">
+                  <h2>Lo que Aprenderás</h2>
+                  
+                  <div className="course-introduction">
+                    <p>
+                      El <strong>Desarrollo Web Full Stack</strong> es una disciplina que combina el desarrollo frontend 
+                      y backend para crear aplicaciones web completas y funcionales. En este curso integral, aprenderás 
+                      a construir aplicaciones web modernas desde cero, utilizando las tecnologías más demandadas 
+                      en la industria actual.
+                    </p>
+                    
+                    <p>
+                      Desde la configuración del entorno de desarrollo hasta el despliegue en producción, 
+                      cubriremos todos los aspectos necesarios para convertirte en un desarrollador full stack 
+                      competente. Utilizaremos React para el frontend, Node.js y Express para el backend, 
+                      y bases de datos modernas para crear aplicaciones escalables y robustas.
+                    </p>
+                  </div>
+
+                  <div className="learning-objectives-list">
+                    {courseData.whatYouWillLearn.map((item, index) => (
+                      <div key={index} className="learning-objective">
+                        <span className="objective-icon">✓</span>
+                        <span className="objective-text">{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Tools and Technologies */}
+                <div className="tools-section">
+                  <h2>Herramientas y Tecnologías</h2>
+                  <div className="tools-grid">
+                    {courseData.tools.map((tool, index) => (
+                      <div key={index} className="tool-item">
+                        <span className="tool-icon">🛠️</span>
+                        <span className="tool-name">{tool}</span>
                       </div>
                     ))}
                   </div>
@@ -555,6 +649,320 @@ export default function DesarrolloWebFullStackPage() {
         .course-description {
           font-size: 1.1rem;
           line-height: 1.6;
+          margin-bottom: 2rem;
+        }
+
+        .course-actions-with-progress {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .progress-summary {
+          background: rgba(255, 255, 255, 0.1);
+          padding: 1rem;
+          border-radius: 8px;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .progress-status {
+          font-size: 1rem;
+          margin-bottom: 0.5rem;
+          color: white;
+        }
+
+        .progress-detail {
+          font-size: 0.9rem;
+          color: rgba(255, 255, 255, 0.8);
+          margin: 0;
+        }
+
+        .course-meta {
+          margin-top: 2rem;
+        }
+
+        .course-badges-secondary {
+          display: flex;
+          gap: 0.5rem;
+          flex-wrap: wrap;
+        }
+
+        .badge-language, .badge-includes, .badge-access {
+          background: rgba(255, 255, 255, 0.15);
+          color: white;
+          font-size: 0.8rem;
+        }
+
+        .course-preview {
+          position: relative;
+        }
+
+        .preview-video {
+          position: relative;
+          border-radius: 12px;
+          overflow: hidden;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .preview-video img {
+          width: 100%;
+          height: auto;
+          display: block;
+        }
+
+        .play-button {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 60px;
+          height: 60px;
+          background: rgba(255, 255, 255, 0.9);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .play-button:hover {
+          background: white;
+          transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .play-button span {
+          font-size: 1.5rem;
+          color: #333;
+        }
+
+        .progress-card {
+          background: white;
+          border-radius: 12px;
+          padding: 1.5rem;
+          margin-top: 1rem;
+          box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-card h3 {
+          color: #333;
+          margin-bottom: 1rem;
+          font-size: 1.2rem;
+        }
+
+        .progress-bar {
+          width: 100%;
+          height: 8px;
+          background: #e5e7eb;
+          border-radius: 4px;
+          overflow: hidden;
+          margin-bottom: 1rem;
+        }
+
+        .progress-fill {
+          height: 100%;
+          background: linear-gradient(90deg, #10b981, #059669);
+          transition: width 0.3s ease;
+        }
+
+        .progress-details {
+          margin-bottom: 1rem;
+        }
+
+        .progress-text {
+          font-size: 0.9rem;
+          color: #6b7280;
+          margin-bottom: 0.25rem;
+        }
+
+        .progress-remaining {
+          font-size: 0.8rem;
+          color: #9ca3af;
+          margin: 0;
+        }
+
+        .btn-continue-progress {
+          width: 100%;
+          padding: 0.75rem;
+          background: transparent;
+          border: 2px solid #10b981;
+          color: #10b981;
+          border-radius: 8px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .btn-continue-progress:hover {
+          background: #10b981;
+          color: white;
+        }
+
+        .curriculum-section {
+          margin-bottom: 3rem;
+        }
+
+        .curriculum-stats {
+          display: flex;
+          gap: 2rem;
+          margin-bottom: 2rem;
+          color: #6b7280;
+          font-size: 0.9rem;
+        }
+
+        .lessons-list {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .lesson-item {
+          display: flex;
+          align-items: center;
+          padding: 1rem;
+          border: 1px solid #e5e7eb;
+          border-radius: 8px;
+          transition: all 0.3s ease;
+        }
+
+        .lesson-item:hover {
+          border-color: #10b981;
+          box-shadow: 0 2px 8px rgba(16, 185, 129, 0.1);
+        }
+
+        .lesson-item.completed {
+          background: #f0fdf4;
+          border-color: #10b981;
+        }
+
+        .lesson-number {
+          width: 40px;
+          height: 40px;
+          background: #f3f4f6;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 600;
+          color: #6b7280;
+          margin-right: 1rem;
+        }
+
+        .lesson-item.completed .lesson-number {
+          background: #10b981;
+          color: white;
+        }
+
+        .lesson-content {
+          flex: 1;
+        }
+
+        .lesson-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          margin-bottom: 0.5rem;
+        }
+
+        .lesson-header h3 {
+          margin: 0;
+          font-size: 1rem;
+          color: #1f2937;
+        }
+
+        .lesson-meta {
+          display: flex;
+          gap: 0.5rem;
+          font-size: 0.8rem;
+          color: #6b7280;
+        }
+
+        .lesson-type, .lesson-duration {
+          background: #f3f4f6;
+          padding: 0.25rem 0.5rem;
+          border-radius: 4px;
+        }
+
+        .lesson-description {
+          font-size: 0.9rem;
+          color: #6b7280;
+          margin: 0;
+        }
+
+        .lesson-status {
+          font-size: 1.2rem;
+          margin-left: 1rem;
+        }
+
+        .learning-objectives {
+          margin-bottom: 3rem;
+        }
+
+        .course-introduction {
+          margin-bottom: 2rem;
+        }
+
+        .course-introduction p {
+          font-size: 1rem;
+          line-height: 1.7;
+          color: #374151;
+          margin-bottom: 1rem;
+        }
+
+        .learning-objectives-list {
+          display: grid;
+          gap: 1rem;
+        }
+
+        .learning-objective {
+          display: flex;
+          align-items: flex-start;
+          gap: 0.75rem;
+        }
+
+        .objective-icon {
+          color: #10b981;
+          font-weight: bold;
+          font-size: 1.1rem;
+          margin-top: 0.1rem;
+        }
+
+        .objective-text {
+          font-size: 1rem;
+          color: #374151;
+          line-height: 1.6;
+        }
+
+        .tools-section {
+          margin-bottom: 3rem;
+        }
+
+        .tools-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 1rem;
+          margin-top: 1rem;
+        }
+
+        .tool-item {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 1rem;
+          background: #f9fafb;
+          border-radius: 8px;
+          border: 1px solid #e5e7eb;
+        }
+
+        .tool-icon {
+          font-size: 1.2rem;
+        }
+
+        .tool-name {
+          font-size: 0.9rem;
+          color: #374151;
+          font-weight: 500;
+        }
           margin-bottom: 2rem;
           opacity: 0.9;
         }

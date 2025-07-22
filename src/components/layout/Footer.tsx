@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Footer() {
   return (
@@ -7,7 +8,13 @@ export default function Footer() {
         <div className="footer-grid">
           <div className="footer-brand">
             <Link href="/" className="footer-logo-link">
-              <h3 className="footer-logo">eGrow-academy</h3>
+              <Image 
+                src="/images/eGrowAcademylogoblanco.png" 
+                alt="eGrow Academy" 
+                width={200}
+                height={60}
+                className="footer-logo-image"
+              />
             </Link>
             <p>Haciendo la IA accesible para todos</p>
             <div className="social-media-links" style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
