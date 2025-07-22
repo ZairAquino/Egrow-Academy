@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import Sidebar from '@/components/layout/Sidebar';
@@ -14,7 +14,7 @@ import Footer from '@/components/layout/Footer';
 import WelcomeModal from '@/components/ui/WelcomeModal';
 
 
-export default function Home() {
+function HomeContent() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showSuccessNotification, setShowSuccessNotification] = useState(false);
   const searchParams = useSearchParams();
@@ -63,7 +63,14 @@ export default function Home() {
       </main>
 
       <Footer />
-
     </>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <HomeContent />
+    </Suspense>
   );
 }
