@@ -52,7 +52,7 @@ async function fixIncorrectSubscriptions() {
         }
       });
 
-      if (correctPrice) {
+      if (correctPrice && correctPrice.unitAmount) {
         console.log(`    ✅ Encontrado precio correcto: $${correctPrice.unitAmount / 100}`);
         
         // Actualizar la suscripción para usar el precio correcto
