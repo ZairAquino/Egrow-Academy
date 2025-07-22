@@ -95,24 +95,33 @@ export default function ResourcePage() {
         <section className="hero gradient-bg">
           <div className="container">
             <div className="hero-content">
-              <div className="flex items-center gap-2 mb-4">
-                <span className="px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="px-4 py-2 rounded-full text-sm font-bold bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg transform hover:scale-105 transition-transform duration-300">
                   {resource.category}
-                </span>
-                <span className="px-3 py-1 rounded-full text-sm font-medium bg-white/90 text-gray-700">
+                </div>
+                <div className="px-4 py-2 rounded-full text-sm font-bold bg-white/90 text-gray-700 shadow-md backdrop-blur-sm">
                   {resource.type}
-                </span>
+                </div>
               </div>
-              <h1 className="hero-title">
-                {resource.title}
+              
+              {/* Título centrado con gradiente */}
+              <h1 className="hero-title text-5xl md:text-6xl font-extrabold mb-6 text-center">
+                <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent">
+                  {resource.title}
+                </span>
               </h1>
-              <p className="hero-description">
-                Webinar completo que incluye acceso a ChatGPT especializado en contexto empresarial, 
-                manuales detallados de GPT y GEM para crear asistentes virtuales inteligentes.
+              
+              <p className="hero-description text-xl md:text-2xl leading-relaxed text-white/90 mb-8 max-w-4xl text-center mx-auto">
+                {resource.description}
               </p>
-              <div className="flex items-center gap-4 mt-6">
-                <div className="flex items-center gap-2">
-                  <span className="text-white">📚 {resource.topics?.length || 0} recursos incluidos</span>
+              
+              <div className="flex items-center justify-center gap-6 mt-8">
+                <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-6 py-3 border border-white/20">
+                  <span className="text-2xl">📚</span>
+                  <div>
+                    <div className="text-white font-bold text-lg">{resource.topics?.length || 0}</div>
+                    <div className="text-white/80 text-sm">recursos incluidos</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -126,8 +135,15 @@ export default function ResourcePage() {
               {/* Main Content */}
               <div className="lg:col-span-2">
                 <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-6">Descripción</h2>
-                  <p className="text-gray-600 leading-relaxed text-lg">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                      <span className="text-white text-lg">📖</span>
+                    </div>
+                    <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                      Descripción
+                    </h2>
+                  </div>
+                  <p className="text-gray-700 leading-relaxed text-lg font-medium">
                     {resource.description}
                   </p>
                 </div>
@@ -136,8 +152,15 @@ export default function ResourcePage() {
                  {resource.topics && resource.topics.length > 0 && (
                    <div className="bg-white rounded-xl shadow-lg p-8">
                      <div className="text-center mb-8">
-                       <h2 className="text-3xl font-bold text-gray-900 mb-2">Recursos Incluidos</h2>
-                       <p className="text-gray-600">Accede a todos los materiales del webinar</p>
+                       <div className="flex items-center justify-center gap-3 mb-4">
+                         <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg">
+                           <span className="text-white text-xl">🎁</span>
+                         </div>
+                         <h2 className="text-4xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+                           Recursos Incluidos
+                         </h2>
+                       </div>
+                       <p className="text-gray-600 text-lg font-medium">Accede a todos los materiales del webinar</p>
                      </div>
                      
                      <div className="courses-grid">
@@ -280,41 +303,62 @@ export default function ResourcePage() {
 
                   {/* Resource Info */}
                   <div className="border-t border-gray-200 pt-6 mt-6">
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                        <span className="text-blue-600 text-sm">ℹ️</span>
-                      </div>
+                    <div className="text-center mb-6">
                       <h3 className="text-lg font-bold text-gray-900">Información del Recurso</h3>
                     </div>
                     
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg border border-blue-100">
-                        <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
-                          <span className="text-white text-xs">👤</span>
+                    <div className="grid grid-cols-3 gap-3">
+                      <div 
+                        className="resource-info-card"
+                        style={{
+                          '--bg-start': '#eff6ff',
+                          '--bg-end': '#dbeafe',
+                          '--border-color': '#3b82f6',
+                          '--text-color': '#1e40af',
+                          '--label-color': '#2563eb'
+                        } as React.CSSProperties}
+                      >
+                        <div className="resource-info-value">
+                          {resource.author || 'eGrow Academy'}
                         </div>
-                        <div>
-                          <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Autor</span>
-                          <p className="text-sm font-semibold text-gray-900">{resource.author || 'eGrow Academy'}</p>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg border border-green-100">
-                        <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                          <span className="text-white text-xs">📂</span>
-                        </div>
-                        <div>
-                          <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Categoría</span>
-                          <p className="text-sm font-semibold text-gray-900">{resource.category}</p>
+                        <div className="resource-info-label">
+                          Autor
                         </div>
                       </div>
                       
-                      <div className="flex items-center gap-3 p-3 bg-purple-50 rounded-lg border border-purple-100">
-                        <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center">
-                          <span className="text-white text-xs">📄</span>
+                      <div 
+                        className="resource-info-card"
+                        style={{
+                          '--bg-start': '#eff6ff',
+                          '--bg-end': '#dbeafe',
+                          '--border-color': '#3b82f6',
+                          '--text-color': '#1e40af',
+                          '--label-color': '#2563eb'
+                        } as React.CSSProperties}
+                      >
+                        <div className="resource-info-value">
+                          {resource.category}
                         </div>
-                        <div>
-                          <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Tipo</span>
-                          <p className="text-sm font-semibold text-gray-900">{resource.type}</p>
+                        <div className="resource-info-label">
+                          Categoría
+                        </div>
+                      </div>
+                      
+                      <div 
+                        className="resource-info-card"
+                        style={{
+                          '--bg-start': '#eff6ff',
+                          '--bg-end': '#dbeafe',
+                          '--border-color': '#3b82f6',
+                          '--text-color': '#1e40af',
+                          '--label-color': '#2563eb'
+                        } as React.CSSProperties}
+                      >
+                        <div className="resource-info-value">
+                          {resource.type}
+                        </div>
+                        <div className="resource-info-label">
+                          Tipo
                         </div>
                       </div>
                     </div>
@@ -327,6 +371,40 @@ export default function ResourcePage() {
       </main>
 
       <Footer />
+
+      <style jsx>{`
+        .resource-info-card {
+          background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
+          border: 2px solid var(--border-color);
+          border-radius: 8px;
+          padding: 1rem;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          text-align: center;
+          transition: all 0.3s ease;
+        }
+        
+        .resource-info-card:hover {
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+          transform: translateY(-1px);
+        }
+        
+        .resource-info-value {
+          font-size: 1rem;
+          font-weight: 700;
+          margin-bottom: 0.25rem;
+          color: var(--text-color);
+          line-height: 1.2;
+        }
+        
+        .resource-info-label {
+          font-size: 0.625rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          color: var(--label-color);
+          line-height: 1;
+        }
+      `}</style>
     </>
   );
 } 

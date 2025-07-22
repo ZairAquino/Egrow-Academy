@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Footer from '@/components/layout/Footer'
 
 export const metadata: Metadata = {
   title: 'Política de Privacidad - eGrow Academy',
@@ -410,6 +411,7 @@ export default function PoliticaPrivacidadPage() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   )
 } 

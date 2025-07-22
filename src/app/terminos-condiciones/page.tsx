@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Footer from '@/components/layout/Footer'
 
 export const metadata: Metadata = {
   title: 'Términos y Condiciones - eGrow Academy',
@@ -338,6 +339,7 @@ export default function TerminosCondicionesPage() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   )
 } 

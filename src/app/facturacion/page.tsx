@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Footer from '@/components/layout/Footer'
 
 export const metadata: Metadata = {
   title: 'Facturación - eGrow Academy',
@@ -282,6 +283,7 @@ export default function FacturacionPage() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   )
 } 
