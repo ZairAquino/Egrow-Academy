@@ -48,24 +48,34 @@ export default function MyCoursesPage() {
   // Cargar cursos del usuario
   useEffect(() => {
     const loadUserCourses = async () => {
+      console.log('🔍 [MY-COURSES] Estado actual:', { status, hasUser: !!user });
+      
       if (status !== 'authenticated' || !user) {
+        console.log('❌ [MY-COURSES] No se puede cargar - status:', status, 'user:', !!user);
         setIsLoading(false);
         return;
       }
 
       try {
+        console.log('🔍 [MY-COURSES] Cargando cursos...');
+        
         const response = await fetch('/api/courses/user-courses', {
-          credentials: 'include'
+          credentials: 'include' // Incluir cookies automáticamente
         });
+
+        console.log('🔍 [MY-COURSES] Response status:', response.status);
 
         if (response.ok) {
           const data = await response.json();
+          console.log('✅ [MY-COURSES] Cursos cargados:', data.courses?.length || 0);
           setCourses(data.courses || []);
         } else {
+          const errorText = await response.text();
+          console.error('❌ [MY-COURSES] Error response:', errorText);
           setError('Error al cargar los cursos');
         }
       } catch (error) {
-        console.error('Error loading courses:', error);
+        console.error('❌ [MY-COURSES] Error loading courses:', error);
         setError('Error de conexión');
       } finally {
         setIsLoading(false);
@@ -146,74 +156,78 @@ export default function MyCoursesPage() {
         </section>
 
         {/* Stats Section */}
-        <section className="section bg-gray-50">
+        <section className="section">
           <div className="container">
             <div className="stats-grid">
               <div className="stat-card">
                 <div className="stat-icon">📚</div>
                 <div className="stat-content">
-                  <h3 className="stat-number">{stats.total}</h3>
-                  <p className="stat-label">Total Cursos</p>
+                  <div className="stat-number">{stats.total}</div>
+                  <div className="stat-label">Total Cursos</div>
                 </div>
               </div>
               <div className="stat-card">
                 <div className="stat-icon">⏳</div>
                 <div className="stat-content">
-                  <h3 className="stat-number">{stats.pending}</h3>
-                  <p className="stat-label">En Progreso</p>
+                  <div className="stat-number">{stats.pending}</div>
+                  <div className="stat-label">En Progreso</div>
                 </div>
               </div>
               <div className="stat-card">
                 <div className="stat-icon">✅</div>
                 <div className="stat-content">
-                  <h3 className="stat-number">{stats.completed}</h3>
-                  <p className="stat-label">Completados</p>
+                  <div className="stat-number">{stats.completed}</div>
+                  <div className="stat-label">Completados</div>
                 </div>
               </div>
               <div className="stat-card">
                 <div className="stat-icon">🏆</div>
                 <div className="stat-content">
-                  <h3 className="stat-number">{stats.certificates}</h3>
-                  <p className="stat-label">Certificaciones</p>
+                  <div className="stat-number">{stats.certificates}</div>
+                  <div className="stat-label">Certificados</div>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Tabs Section */}
+        {/* Filters */}
         <section className="section">
           <div className="container">
-            <div className="tabs-container">
-              <button
-                className={`tab ${activeTab === 'all' ? 'active' : ''}`}
+            <div className="filters-container">
+              <button 
+                className={`filter-btn ${activeTab === 'all' ? 'active' : ''}`}
                 onClick={() => setActiveTab('all')}
               >
-                Todos los Cursos ({stats.total})
+                <span className="filter-icon">📚</span>
+                Todos ({stats.total})
               </button>
-              <button
-                className={`tab ${activeTab === 'pending' ? 'active' : ''}`}
+              <button 
+                className={`filter-btn ${activeTab === 'pending' ? 'active' : ''}`}
                 onClick={() => setActiveTab('pending')}
               >
+                <span className="filter-icon">⏳</span>
                 En Progreso ({stats.pending})
               </button>
-              <button
-                className={`tab ${activeTab === 'completed' ? 'active' : ''}`}
+              <button 
+                className={`filter-btn ${activeTab === 'completed' ? 'active' : ''}`}
                 onClick={() => setActiveTab('completed')}
               >
+                <span className="filter-icon">✅</span>
                 Completados ({stats.completed})
               </button>
-              <button
-                className={`tab ${activeTab === 'certificates' ? 'active' : ''}`}
+              <button 
+                className={`filter-btn ${activeTab === 'certificates' ? 'active' : ''}`}
                 onClick={() => setActiveTab('certificates')}
               >
-                Certificaciones ({stats.certificates})
+                <span className="filter-icon">🏆</span>
+                Certificados ({stats.certificates})
               </button>
             </div>
           </div>
         </section>
 
-        {/* Courses Section */}
+        {/* Courses Grid */}
         <section className="section">
           <div className="container">
             {isLoading ? (
@@ -223,26 +237,18 @@ export default function MyCoursesPage() {
               </div>
             ) : error ? (
               <div className="error-container">
-                <p className="error-message">{error}</p>
-                <button 
-                  onClick={() => window.location.reload()} 
-                  className="btn btn-primary"
-                >
+                <div className="error-message">{error}</div>
+                <button onClick={() => window.location.reload()} className="btn btn-primary">
                   Reintentar
                 </button>
               </div>
             ) : filteredCourses.length === 0 ? (
               <div className="empty-container">
                 <div className="empty-icon">📚</div>
-                <h3>No hay cursos para mostrar</h3>
-                <p>
-                  {activeTab === 'all' && 'Aún no te has inscrito en ningún curso.'}
-                  {activeTab === 'pending' && 'No tienes cursos en progreso.'}
-                  {activeTab === 'completed' && 'No has completado ningún curso aún.'}
-                  {activeTab === 'certificates' && 'No tienes certificaciones disponibles.'}
-                </p>
+                <h3>No tienes cursos inscritos</h3>
+                <p>Explora nuestros cursos y comienza tu aprendizaje</p>
                 <Link href="/courses" className="btn btn-primary">
-                  Explorar Cursos
+                  Ver Cursos
                 </Link>
               </div>
             ) : (
@@ -259,105 +265,11 @@ export default function MyCoursesPage() {
       </main>
 
       <style jsx>{`
-        .main-content {
-          min-height: 100vh;
-          background: #f8fafc;
-        }
-
-        .hero {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          padding: 4rem 0;
-          text-align: center;
-        }
-
-        .hero-title {
-          font-size: 3rem;
-          font-weight: 700;
-          margin-bottom: 1rem;
-        }
-
-        .hero-description {
-          font-size: 1.25rem;
-          opacity: 0.9;
-          max-width: 600px;
-          margin: 0 auto;
-        }
-
-        .section {
-          padding: 3rem 0;
-        }
-
-        .container {
-          max-width: 1000px;
-          margin: 0 auto;
-          padding: 0 1rem;
-        }
-
-        .stats-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-          gap: 1.5rem;
-        }
-
-        .stat-card {
-          background: white;
-          padding: 2rem;
-          border-radius: 12px;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-          display: flex;
-          align-items: center;
-          gap: 1rem;
-        }
-
-        .stat-icon {
-          font-size: 2rem;
-        }
-
-        .stat-number {
-          font-size: 2rem;
-          font-weight: 700;
-          color: #1f2937;
-          margin: 0;
-        }
-
-        .stat-label {
-          color: #6b7280;
-          margin: 0;
-        }
-
-        .tabs-container {
-          display: flex;
-          gap: 0.5rem;
-          margin-bottom: 2rem;
-          border-bottom: 1px solid #e5e7eb;
-        }
-
-        .tab {
-          padding: 1rem 1.5rem;
-          border: none;
-          background: none;
-          color: #6b7280;
-          font-weight: 500;
-          cursor: pointer;
-          border-bottom: 2px solid transparent;
-          transition: all 0.2s ease;
-        }
-
-        .tab:hover {
-          color: #3b82f6;
-        }
-
-        .tab.active {
-          color: #3b82f6;
-          border-bottom-color: #3b82f6;
-        }
-
         .courses-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
           gap: 1.5rem;
-          max-width: 1000px;
+          max-width: 1200px;
           margin: 0 auto;
         }
 
@@ -409,46 +321,28 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
   const isInProgress = userCourse.status === 'ACTIVE' && userCourse.progressPercentage > 0;
 
   const getActionButton = () => {
-    if (isCompleted) {
-      if (course.hasCertificate) {
-        return (
-          <Link 
-            href={course.certificateUrl || `/certificate/${course.id}`}
-            className="course-action-btn certificate-btn"
-          >
-            🏆 Ver Certificado
-          </Link>
-        );
-      }
-      return (
-        <Link 
-          href={`/curso/${course.id}`} 
-          className="course-action-btn review-btn"
-        >
-          🔄 Repasar Curso
-        </Link>
-      );
-    }
-
-    if (isInProgress) {
-      return (
-        <Link 
-          href={`/curso/${course.id}`} 
-          className="course-action-btn continue-btn"
-        >
-          ▶️ Continuar
-        </Link>
-      );
-    }
-
     return (
       <Link 
-        href={`/curso/${course.id}`} 
-        className="course-action-btn start-btn"
+        href={`/curso/${course.slug}`} 
+        className="course-action-btn continue-btn"
       >
-        🚀 Comenzar
+        ▶️ Continuar Curso
       </Link>
     );
+  };
+
+  const getCertificateButton = () => {
+    if (isCompleted && course.hasCertificate) {
+      return (
+        <Link 
+          href={course.certificateUrl || `/certificate/${course.slug}`}
+          className="course-action-btn certificate-btn"
+        >
+          🏆 Descargar Certificado
+        </Link>
+      );
+    }
+    return null;
   };
 
   const getStatusBadge = () => {
@@ -462,134 +356,113 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
   };
 
   return (
-    <div className="course-card-modern">
-      <div className="course-header">
-        <div className="course-image-wrapper">
-          <img 
-            src={course.imageUrl || 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=250&fit=crop&crop=center'} 
-            alt={course.title}
-            className="course-image"
-            onError={(e) => {
-              e.currentTarget.src = 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=250&fit=crop&crop=center';
-            }}
-          />
-          <div className="status-badge-wrapper">
-            {getStatusBadge()}
-          </div>
+    <div className="course-card">
+      <div className="course-image">
+        <img 
+          src={course.imageUrl || 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=400&fit=crop&crop=center&q=85'} 
+          alt={course.title}
+          onError={(e) => {
+            e.currentTarget.src = 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=400&fit=crop&crop=center&q=85';
+          }}
+        />
+        <div className="status-badge-wrapper">
+          {getStatusBadge()}
         </div>
       </div>
       
-      <div className="course-body">
-        <h3 className="course-title-modern">
-          {course.title}
-        </h3>
-        
-        <p className="course-description-modern">
-          {course.description}
-        </p>
-        
-        <div className="course-meta-modern">
-          <span className="meta-item-modern">
-            <span className="meta-icon">⏱️</span>
-            {course.durationHours ? `${course.durationHours} horas` : '2 horas'}
-          </span>
-          <span className="meta-item-modern">
-            <span className="meta-icon">📊</span>
-            {course.difficulty || 'Principiante'}
-          </span>
-        </div>
-
-        {isInProgress && (
-          <div className="progress-modern">
-            <div className="progress-header-modern">
-              <span>Progreso</span>
-              <span>{Math.round(userCourse.progressPercentage)}%</span>
-            </div>
-            <div className="progress-bar-modern">
-              <div 
-                className="progress-fill-modern"
-                style={{ width: `${userCourse.progressPercentage}%` }}
-              ></div>
-            </div>
-          </div>
-        )}
-
-        <div className="course-actions-modern">
-          {getActionButton()}
+              <div className="course-content">
+          <h3 className="course-title">
+            {course.title}
+          </h3>
           
-          {isCompleted && course.hasCertificate && (
-            <button className="course-action-btn download-btn">
-              📥 Descargar PDF
-            </button>
+          <p className="course-description">
+            {course.description}
+          </p>
+
+          {/* Información adicional para cursos completados */}
+          {isCompleted && (
+            <div className="course-completion-info">
+              <div className="completion-badge">
+                <span className="completion-icon">✅</span>
+                <span className="completion-text">Curso Completado</span>
+              </div>
+              {course.hasCertificate && (
+                <div className="certificate-info">
+                  <span className="certificate-icon">🏆</span>
+                  <span className="certificate-text">Certificación Disponible</span>
+                </div>
+              )}
+            </div>
           )}
+          
+          <div className="course-meta">
+            <span className="meta-item">
+              <span className="meta-icon">⏱️</span>
+              {course.durationHours ? `${course.durationHours} horas` : '2 horas'}
+            </span>
+            <span className="meta-item">
+              <span className="meta-icon">📊</span>
+              {course.difficulty || 'Principiante'}
+            </span>
+            {course.hasCertificate && (
+              <span className="meta-item">
+                <span className="meta-icon">🏆</span>
+                Certificación
+              </span>
+            )}
+          </div>
+
+          {isInProgress && (
+            <div className="progress-section">
+              <div className="progress-header">
+                <span>Progreso</span>
+                <span>{Math.round(userCourse.progressPercentage)}%</span>
+              </div>
+              <div className="progress-bar">
+                <div 
+                  className="progress-fill"
+                  style={{ width: `${userCourse.progressPercentage}%` }}
+                ></div>
+              </div>
+            </div>
+          )}
+
+          <div className="course-actions">
+            {getActionButton()}
+            {getCertificateButton()}
+          </div>
         </div>
-      </div>
 
       <style jsx>{`
-        .course-card-modern {
-          background: #ffffff;
-          border: 2px solid #3b82f6;
-          border-radius: 16px;
+        .course-card {
+          background: white;
+          border-radius: 12px;
           overflow: hidden;
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          border: 1px solid #e2e8f0;
           transition: all 0.3s ease;
-          position: relative;
-          min-height: 380px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .course-card-modern:hover {
-          transform: translateY(-8px);
-          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-          border-color: #d1d5db;
-        }
-
-        .course-header {
-          position: relative;
-        }
-
-        .course-image-wrapper {
-          position: relative;
-          height: 250px;
-          overflow: hidden;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border-radius: 12px 12px 0 0;
-          text-align: center;
+        .course-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+          border-color: #3b82f6;
         }
 
         .course-image {
+          position: relative;
+          height: 160px;
+          overflow: hidden;
+        }
+
+        .course-image img {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          object-position: center center;
           transition: transform 0.3s ease;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          display: block;
         }
 
-        .course-card-modern:hover .course-image {
-          transform: scale(1.05);
-        }
-
-        .course-image-wrapper::before {
-          content: '📚';
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          font-size: 3rem;
-          color: rgba(255, 255, 255, 0.3);
-          z-index: 1;
-          display: none;
-        }
-
-        .course-image-wrapper:has(img[src*="unsplash"])::before {
-          display: block;
-        }
-
-        .course-card-modern:hover .course-image {
+        .course-card:hover .course-image img {
           transform: scale(1.05);
         }
 
@@ -597,204 +470,201 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
           position: absolute;
           top: 12px;
           right: 12px;
-          z-index: 10;
         }
 
         .status-badge {
-          display: inline-flex;
-          align-items: center;
-          padding: 6px 12px;
-          border-radius: 20px;
-          font-size: 11px;
-          font-weight: 600;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          padding: 4px 8px;
+          border-radius: 6px;
+          font-size: 0.75rem;
+          font-weight: 500;
+          backdrop-filter: blur(8px);
         }
 
         .status-badge.completed {
-          background: linear-gradient(135deg, #10b981, #059669);
+          background: rgba(34, 197, 94, 0.9);
           color: white;
         }
 
         .status-badge.progress {
-          background: linear-gradient(135deg, #f59e0b, #d97706);
+          background: rgba(59, 130, 246, 0.9);
           color: white;
         }
 
         .status-badge.enrolled {
-          background: linear-gradient(135deg, #3b82f6, #2563eb);
+          background: rgba(107, 114, 128, 0.9);
           color: white;
         }
 
-        .course-body {
-          padding: 20px;
+        .course-content {
+          padding: 1.25rem;
         }
 
-        .course-title-modern {
-          font-size: 20px;
-          font-weight: 700;
+        .course-title {
+          font-size: 1.125rem;
+          font-weight: 600;
           color: #1f2937;
-          margin: 0 0 12px 0;
+          margin: 0 0 0.5rem 0;
           line-height: 1.4;
-          background: #f3f4f6;
-          padding: 8px;
-          border-radius: 8px;
         }
 
-        .course-description-modern {
-          color: #374151;
-          font-size: 14px;
-          line-height: 1.6;
-          margin: 0 0 16px 0;
-          background: #f9fafb;
-          padding: 8px;
-          border-radius: 6px;
-          border-left: 3px solid #3b82f6;
+        .course-description {
+          color: #6b7280;
+          font-size: 0.875rem;
+          line-height: 1.5;
+          margin: 0 0 1rem 0;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
         }
 
-        .course-meta-modern {
+        .course-meta {
           display: flex;
-          gap: 16px;
-          margin-bottom: 20px;
+          gap: 1rem;
+          margin-bottom: 1rem;
+          padding-bottom: 1rem;
+          border-bottom: 1px solid #f3f4f6;
         }
 
-        .meta-item-modern {
+        .meta-item {
           display: flex;
           align-items: center;
-          gap: 6px;
-          font-size: 12px;
-          color: #9ca3af;
+          gap: 0.25rem;
+          font-size: 0.75rem;
+          color: #6b7280;
           font-weight: 500;
         }
 
         .meta-icon {
-          font-size: 14px;
+          font-size: 0.875rem;
         }
 
-        .progress-modern {
-          margin-bottom: 20px;
+        .progress-section {
+          margin-bottom: 1rem;
         }
 
-        .progress-header-modern {
+        .progress-header {
           display: flex;
           justify-content: space-between;
-          font-size: 12px;
+          font-size: 0.75rem;
           color: #6b7280;
-          margin-bottom: 8px;
-          font-weight: 600;
+          margin-bottom: 0.5rem;
+          font-weight: 500;
         }
 
-        .progress-bar-modern {
+        .progress-bar {
           width: 100%;
-          height: 6px;
+          height: 4px;
           background: #f3f4f6;
-          border-radius: 3px;
+          border-radius: 2px;
           overflow: hidden;
         }
 
-        .progress-fill-modern {
+        .progress-fill {
           height: 100%;
           background: linear-gradient(90deg, #3b82f6, #1d4ed8);
-          border-radius: 3px;
-          transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+          border-radius: 2px;
+          transition: width 0.6s ease;
         }
 
-        .course-actions-modern {
+        .course-actions {
           display: flex;
-          gap: 12px;
+          gap: 0.5rem;
           flex-wrap: wrap;
-          margin-top: 20px;
         }
 
         .course-action-btn {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          padding: 10px 20px;
-          border-radius: 12px;
-          font-size: 13px;
+          padding: 0.75rem 1rem;
+          border-radius: 8px;
+          font-size: 0.875rem;
           font-weight: 600;
           text-decoration: none;
           border: none;
           cursor: pointer;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          min-width: 130px;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .course-action-btn:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-        }
-
-        .start-btn {
-          background: linear-gradient(135deg, #3b82f6, #2563eb);
-          color: white;
-        }
-
-        .start-btn:hover {
-          background: linear-gradient(135deg, #2563eb, #1d4ed8);
+          transition: all 0.2s ease;
+          flex: 1;
+          min-width: 140px;
+          text-align: center;
         }
 
         .continue-btn {
-          background: linear-gradient(135deg, #10b981, #059669);
+          background: linear-gradient(135deg, #3b82f6, #2563eb);
           color: white;
+          box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
         }
 
         .continue-btn:hover {
-          background: linear-gradient(135deg, #059669, #047857);
-        }
-
-        .certificate-btn {
-          background: linear-gradient(135deg, #f59e0b, #d97706);
-          color: white;
-        }
-
-        .certificate-btn:hover {
-          background: linear-gradient(135deg, #d97706, #b45309);
+          background: linear-gradient(135deg, #2563eb, #1d4ed8);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
         }
 
         .review-btn {
-          background: linear-gradient(135deg, #6b7280, #4b5563);
+          background: linear-gradient(135deg, #f59e0b, #d97706);
           color: white;
+          box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
         }
 
         .review-btn:hover {
-          background: linear-gradient(135deg, #4b5563, #374151);
+          background: linear-gradient(135deg, #d97706, #b45309);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
         }
 
-        .download-btn {
-          background: transparent;
-          color: #6b7280;
-          border: 2px solid #e5e7eb;
+        .certificate-btn {
+          background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+          color: white;
+          box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
         }
 
-        .download-btn:hover {
-          background: #f9fafb;
-          border-color: #d1d5db;
-          color: #374151;
+        .certificate-btn:hover {
+          background: linear-gradient(135deg, #7c3aed, #6d28d9);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
         }
 
-        @media (max-width: 768px) {
-          .course-card-modern {
-            margin: 0 16px;
-          }
-          
-          .course-body {
-            padding: 20px;
-          }
-          
-          .course-actions-modern {
-            flex-direction: column;
-          }
-          
-          .course-action-btn {
-            width: 100%;
-            min-width: auto;
-          }
+        .course-completion-info {
+          margin-bottom: 1rem;
+          padding: 0.75rem;
+          background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+          border-radius: 8px;
+          border-left: 4px solid #10b981;
+        }
+
+        .completion-badge {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          margin-bottom: 0.5rem;
+        }
+
+        .completion-icon {
+          font-size: 1rem;
+        }
+
+        .completion-text {
+          font-size: 0.875rem;
+          font-weight: 600;
+          color: #10b981;
+        }
+
+        .certificate-info {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .certificate-icon {
+          font-size: 1rem;
+        }
+
+        .certificate-text {
+          font-size: 0.875rem;
+          font-weight: 500;
+          color: #8b5cf6;
         }
       `}</style>
     </div>

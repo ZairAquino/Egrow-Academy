@@ -39,7 +39,9 @@ function HomeContent() {
       }, 5000);
       return () => clearTimeout(timer);
     }
-  }, [searchParams, refreshUser]);
+  }, [searchParams]); // Removemos refreshUser de las dependencias
+
+
 
   return (
     <>

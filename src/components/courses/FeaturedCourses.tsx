@@ -3,6 +3,15 @@ import Link from 'next/link';
 
 const featuredCourses = [
   {
+    image: "/images/v-5.png",
+    title: "Monetiza con la IA",
+    description: "Descubre cómo generar ingresos utilizando inteligencia artificial. Aprende estrategias prácticas para monetizar herramientas de IA y crear fuentes de ingresos pasivos.",
+    tag: "⭐ Curso Destacado",
+    duration: "3 horas",
+    level: "Intermedio",
+    link: "/curso/monetiza-ia"
+  },
+  {
     image: "https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=400&h=250&fit=crop",
     title: "ChatGPT y LLMs: Guía Completa",
     description: "Aprende a construir aplicaciones con ChatGPT, Claude y otros LLMs modernos.",

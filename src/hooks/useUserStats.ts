@@ -75,7 +75,7 @@ export function useUserStats() {
           const totalEnrolled = data.total || 0;
           const courses = data.courses || [];
           const completedCourses = courses.filter((course: any) => 
-            course?.progress?.progressPercentage === 100
+            course?.progressPercentage === 100 || course?.status === 'COMPLETED'
           ).length || 0;
           
           // Transformar las estadísticas al formato esperado
@@ -107,7 +107,7 @@ export function useUserStats() {
     }, 500); // 500ms de debounce
 
     return () => clearTimeout(timeoutId);
-  }, [user, status, stats]);
+  }, [user, status]); // Removemos stats de las dependencias para evitar bucle
 
   return {
     stats,

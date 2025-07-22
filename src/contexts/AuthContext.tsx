@@ -47,20 +47,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [token, setToken] = useState<string | null>(null)
 
   // Función para obtener usuario desde el endpoint /api/auth/me
-  const fetchUserFromAPI = async (authToken?: string): Promise<User | null> => {
+  const fetchUserFromAPI = async (): Promise<User | null> => {
     try {
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-      }
-      
-      // Si tenemos token, lo incluimos en el header
-      if (authToken) {
-        headers['Authorization'] = `Bearer ${authToken}`
-      }
-      
       const response = await fetch('/api/auth/me', {
         method: 'GET',
-        headers,
+        credentials: 'include', // Incluir cookies automáticamente
       })
       
       if (response.ok) {
@@ -84,53 +75,34 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const refreshUser = async () => {
     setStatus('loading')
     
-    // Obtener token del localStorage o sessionStorage
-    const storedToken = localStorage.getItem('authToken') || sessionStorage.getItem('authToken')
-    setToken(storedToken)
+    console.log('🔍 AuthContext - Verificando autenticación...')
     
-    console.log('🔍 AuthContext - Token encontrado:', storedToken ? 'SÍ' : 'NO')
-    if (storedToken) {
-      console.log('🔍 AuthContext - Token:', storedToken.substring(0, 50) + '...')
-    }
-    
-    const apiUser = await fetchUserFromAPI(storedToken || undefined)
+    // El token se maneja automáticamente a través de cookies
+    const apiUser = await fetchUserFromAPI()
     if (apiUser) {
       setUser(apiUser)
       setStatus('authenticated')
+      setToken('cookie-based') // Indicador de que usa cookies
       console.log('✅ AuthContext - Usuario autenticado:', apiUser.email)
     } else {
       setUser(null)
       setStatus('unauthenticated')
       setToken(null)
       console.log('❌ AuthContext - Usuario no autenticado')
-      // Limpiar token si no es válido
-      localStorage.removeItem('authToken')
-      sessionStorage.removeItem('authToken')
     }
   }
 
   // Función de logout
   const logout = async () => {
     try {
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-      }
-      
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`
-      }
-      
       await fetch('/api/auth/logout', {
         method: 'POST',
-        headers,
+        credentials: 'include', // Incluir cookies automáticamente
       })
       
       setUser(null)
       setStatus('unauthenticated')
       setToken(null)
-      // Limpiar token del almacenamiento
-      localStorage.removeItem('authToken')
-      sessionStorage.removeItem('authToken')
     } catch (error) {
       console.error('Error during logout:', error)
     }
@@ -150,7 +122,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       return () => clearInterval(interval)
     }
-  }, [status, user])
+  }, []) // Sin dependencias para evitar bucle infinito
 
   const value: AuthContextType = {
     user,

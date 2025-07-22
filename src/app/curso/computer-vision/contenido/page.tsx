@@ -772,6 +772,12 @@ if __name__ == "__main__":
   };
 
   const handleMarkLessonComplete = async (lessonId: number) => {
+    // Si el curso ya está completado, no permitir marcar lecciones como completadas
+    if (isCourseCompleted()) {
+      alert('Este curso ya está completado. Estás en modo de revisión.');
+      return;
+    }
+
     const currentLessonIndex = courseData.lessons.findIndex(lesson => lesson.id === lessonId);
     const currentLesson = courseData.lessons[currentLessonIndex];
     
@@ -797,17 +803,79 @@ if __name__ == "__main__":
     }
   };
 
+  const handleCompleteCourse = async () => {
+    if (!isEnrolled) return;
+    
+    // Si el curso ya está completado, mostrar mensaje
+    if (isCourseCompleted()) {
+      alert('Este curso ya está completado. Puedes revisar el contenido cuando quieras.');
+      return;
+    }
+    
+    // Verificar si todas las lecciones están completadas
+    const allLessonsCompleted = courseData.lessons.every(lesson => 
+      progress.completedLessons.includes(lesson.id)
+    );
+    
+    if (!allLessonsCompleted) {
+      alert('Debes completar todas las lecciones antes de poder terminar el curso.');
+      return;
+    }
+    
+    setIsSaving(true);
+    try {
+      const response = await fetch('/api/courses/complete-course', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          courseSlug: 'computer-vision'
+        })
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('✅ Curso marcado como completado:', result);
+        
+        // Redirigir a la página de inicio del curso
+        router.push('/curso/computer-vision');
+      } else {
+        const error = await response.json();
+        console.error('❌ Error al completar curso:', error);
+        alert('Error al completar el curso. Por favor, intenta de nuevo.');
+      }
+    } catch (error) {
+      console.error('❌ Error al completar curso:', error);
+      alert('Error de conexión. Por favor, intenta de nuevo.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   const isLessonCompleted = (lessonId: number) => {
     return progress.completedLessons.includes(lessonId);
   };
 
   const isLessonAccessible = (lessonIndex: number) => {
+    // Si está inscrito, puede acceder a todas las lecciones
     if (isEnrolled) return true;
+    
+    // Si no está inscrito, solo puede acceder a la primera lección
     return lessonIndex === 0;
+  };
+
+  const isCourseCompleted = () => {
+    return progress.status === 'COMPLETED' || progress.progressPercentage === 100;
   };
 
   const getLessonStatus = (lessonIndex: number, lessonId: number) => {
     if (isLessonCompleted(lessonId)) {
+      // Si el curso está completado, mostrar estado de revisión
+      if (isCourseCompleted()) {
+        return '📖';
+      }
       return '✅';
     } else if (lessonIndex === progress.currentLesson) {
       return '▶️';
@@ -816,6 +884,12 @@ if __name__ == "__main__":
     } else {
       return '🔒';
     }
+  };
+
+  const areAllLessonsCompleted = () => {
+    return courseData.lessons.every(lesson => 
+      progress.completedLessons.includes(lesson.id)
+    );
   };
 
   if (!user || isLoading) {
@@ -974,6 +1048,41 @@ if __name__ == "__main__":
                         </div>
                       </div>
                     ))}
+                  </div>
+                  
+                  {/* Botón Terminar Curso */}
+                  <div className="complete-course-section">
+                    {isCourseCompleted() ? (
+                      <div className="course-completed-message">
+                        <div className="completion-badge">
+                          <span className="completion-icon">🏆</span>
+                          <span className="completion-text">¡Curso Completado!</span>
+                        </div>
+                        <p className="completion-info">
+                          Has completado exitosamente este curso. Puedes revisar el contenido cuando quieras.
+                        </p>
+                        <div className="completion-stats">
+                          <span>📊 Progreso: 100%</span>
+                          <span>✅ Lecciones: {courseData.lessons.length}/{courseData.lessons.length}</span>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <button 
+                          className={`btn btn-complete-course ${!areAllLessonsCompleted() ? 'disabled' : ''}`}
+                          onClick={handleCompleteCourse}
+                          disabled={isSaving || !areAllLessonsCompleted()}
+                        >
+                          {isSaving ? '🔄 Procesando...' : '🏆 Terminar Curso'}
+                        </button>
+                        <p className="complete-course-info">
+                          {areAllLessonsCompleted() 
+                            ? '¡Felicidades! Has completado todas las lecciones. Puedes terminar el curso.'
+                            : `Completa todas las lecciones (${progress.completedLessons.length}/${courseData.lessons.length}) para poder terminar el curso`
+                          }
+                        </p>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
@@ -1395,6 +1504,98 @@ if __name__ == "__main__":
         .lesson-status {
           margin-left: auto;
           font-size: 1.2rem;
+        }
+
+        .complete-course-section {
+          margin-top: 2rem;
+          padding-top: 1.5rem;
+          border-top: 2px solid #e5e7eb;
+          text-align: center;
+        }
+
+        .btn-complete-course {
+          background: linear-gradient(135deg, #10b981, #059669);
+          color: white;
+          border: none;
+          padding: 1rem 2rem;
+          border-radius: 12px;
+          font-size: 1rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          width: 100%;
+          box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-complete-course:hover:not(:disabled) {
+          background: linear-gradient(135deg, #059669, #047857);
+          transform: translateY(-2px);
+          box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-complete-course:disabled,
+        .btn-complete-course.disabled {
+          opacity: 0.4;
+          cursor: not-allowed;
+          transform: none;
+          box-shadow: none;
+          background: linear-gradient(135deg, #9ca3af, #6b7280);
+        }
+
+        .btn-complete-course:disabled:hover,
+        .btn-complete-course.disabled:hover {
+          background: linear-gradient(135deg, #9ca3af, #6b7280);
+          transform: none;
+          box-shadow: none;
+        }
+
+        .complete-course-info {
+          margin-top: 0.75rem;
+          font-size: 0.8rem;
+          color: #6b7280;
+          line-height: 1.4;
+        }
+
+        .course-completed-message {
+          text-align: center;
+          padding: 2rem;
+          background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+          border-radius: 12px;
+          border: 2px solid #22c55e;
+        }
+
+        .completion-badge {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          margin-bottom: 1rem;
+        }
+
+        .completion-icon {
+          font-size: 2rem;
+        }
+
+        .completion-text {
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: #16a34a;
+        }
+
+        .completion-info {
+          font-size: 1rem;
+          color: #374151;
+          margin-bottom: 1rem;
+          line-height: 1.5;
+        }
+
+        .completion-stats {
+          display: flex;
+          justify-content: center;
+          gap: 2rem;
+          font-size: 0.9rem;
+          color: #6b7280;
+          font-weight: 500;
         }
 
         @media (max-width: 768px) {

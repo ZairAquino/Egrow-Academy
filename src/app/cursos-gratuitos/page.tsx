@@ -25,7 +25,21 @@ export default function CursosGratuitosPage() {
   };
 
   const freeCourses = [
-    // Nuestro Curso Propio
+    // Curso Destacado - Monetización con IA
+    {
+      id: 'monetiza-ia',
+      title: 'Monetiza con la IA',
+      description: 'Descubre cómo generar ingresos utilizando inteligencia artificial. Aprende estrategias prácticas para monetizar herramientas de IA y crear fuentes de ingresos pasivos.',
+      duration: '3 horas',
+      level: 'Intermedio',
+      price: 'Gratis',
+      image: '/images/v-5.png',
+      tag: 'eGrow Academy',
+      instructor: 'Dr. Juan Pérez',
+      source: 'eGrow Academy',
+      link: '/curso/monetiza-ia'
+    },
+    // Otros Cursos
     {
       id: 'introduccion-llms',
       title: 'Introducción a Large Language Models (LLMs)',

@@ -57,6 +57,20 @@ export default function CoursesPage() {
 
   const courses: Course[] = [
     {
+      id: 'monetiza-ia',
+      title: 'Monetiza con la IA',
+      description: 'Descubre cómo generar ingresos utilizando inteligencia artificial. Aprende estrategias prácticas para monetizar herramientas de IA y crear fuentes de ingresos pasivos.',
+      category: 'llms',
+      duration: '3 horas',
+      level: 'Intermedio',
+      price: 'Gratis',
+      image: '/images/v-5.png',
+      tag: 'eGrow Academy',
+      link: '/curso/monetiza-ia',
+      isFree: true,
+      requiresAuth: false
+    },
+    {
       id: 'introduccion-llms',
       title: 'Introducción a Large Language Models (LLMs)',
       description: 'Aprende los fundamentos de los modelos de lenguaje grandes, desde GPT hasta Claude, y cómo implementarlos en aplicaciones reales.',

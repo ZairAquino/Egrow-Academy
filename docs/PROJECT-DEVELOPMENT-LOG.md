@@ -5,11 +5,79 @@
 - **Base de datos:** PostgreSQL con Prisma ORM
 - **Autenticación:** JWT personalizado
 - **Pagos:** Stripe (configuración en progreso)
+- **Upload de Archivos:** UploadThing (configurado)
 - **Deploy:** Vercel
 
 ---
 
 ## 📅 **Historial de Cambios**
+
+### **2025-01-27 - Configuración de UploadThing para Gestión de Archivos**
+
+#### ✅ **Funcionalidad Implementada**
+1. **Sistema de Upload de Archivos**
+   - **UploadThing:** Configurado para subida directa a cloud storage
+   - **Endpoints:** 4 endpoints configurados (videos, recursos, avatares, general)
+   - **Autenticación:** Todos los endpoints requieren autenticación
+   - **Validación:** Límites de tamaño y tipos de archivo
+
+2. **Componentes Creados**
+   - **FileUpload:** Componente reutilizable para subida básica
+   - **CourseResourceUpload:** Gestión completa de recursos de cursos
+   - **UI Components:** Button, Card, Badge para la interfaz
+   - **Demo Page:** Página de demostración en `/admin/upload-demo`
+
+3. **Configuración Técnica**
+   - **API Route:** `/api/uploadthing/route.ts` para manejar subidas
+   - **Configuración:** `src/lib/uploadthing.ts` con endpoints personalizados
+   - **Cliente:** `src/lib/uploadthing-config.ts` para componentes React
+   - **Dependencias:** Instaladas todas las librerías necesarias
+
+#### 🔧 **Endpoints Configurados**
+- **courseVideo:** Videos hasta 1GB (MP4, MOV, AVI)
+- **courseResource:** PDFs (50MB), imágenes (10MB), documentos (5MB)
+- **userAvatar:** Imágenes de perfil hasta 5MB
+- **generalResource:** Recursos generales con límites amplios
+
+#### 🎨 **Características del UI**
+- **Drag & Drop:** Interfaz intuitiva para subida de archivos
+- **Progreso Visual:** Indicador de progreso en tiempo real
+- **Validación:** Mensajes de error y éxito
+- **Responsive:** Diseño mobile-first
+- **Gestión:** Vista de archivos subidos con opciones de eliminación
+
+#### 📚 **Documentación**
+- **Setup Guide:** `docs/UPLOADTHING-SETUP.md` con instrucciones completas
+- **Demo Page:** Página de prueba en `/admin/upload-demo`
+- **Ejemplos:** Código de ejemplo para integración
+
+#### 🚀 **Próximos Pasos**
+1. **Configurar credenciales** de UploadThing (AWS S3 o Cloudflare R2)
+2. **Integrar con base de datos** para guardar metadatos de archivos
+3. **Implementar en páginas de cursos** para gestión de contenido
+4. **Crear panel de administración** para gestión de recursos
+
+#### 📊 **Archivos Creados/Modificados**
+- `src/lib/uploadthing.ts` - Configuración principal
+- `src/lib/uploadthing-config.ts` - Configuración del cliente
+- `src/app/api/uploadthing/route.ts` - Ruta API
+- `src/components/ui/FileUpload.tsx` - Componente de subida
+- `src/components/courses/CourseResourceUpload.tsx` - Gestión de recursos
+- `src/app/admin/upload-demo/page.tsx` - Página de demostración
+- `src/components/ui/button.tsx` - Componente Button
+- `src/components/ui/card.tsx` - Componente Card
+- `src/components/ui/badge.tsx` - Componente Badge
+- `src/lib/utils.ts` - Función utilitaria cn
+- `docs/UPLOADTHING-SETUP.md` - Documentación completa
+
+#### 🎯 **Beneficios para el Proyecto**
+- **Mejor UX:** Subida directa sin recargas de página
+- **Escalabilidad:** CDN global para distribución de contenido
+- **Gestión:** Organización automática de recursos por curso
+- **Rendimiento:** Optimización automática de archivos
+- **Seguridad:** URLs seguras con expiración
+
+---
 
 ### **2025-07-21 - Deshabilitación Temporal de Verificación de Email para Presentación a Inversionistas**
 

@@ -2961,6 +2961,12 @@ button, a, input, select, textarea {
     align-items: start;
 }
 
+.course-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
 .course-badges {
     display: flex;
     gap: 0.5rem;

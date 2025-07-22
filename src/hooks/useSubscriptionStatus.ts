@@ -65,14 +65,14 @@ export function useSubscriptionStatus() {
         error: 'Error de conexión'
       }));
     }
-  }, [isAuthenticated, user?.membershipLevel, refreshUser, hasChecked]);
+  }, [isAuthenticated, user?.membershipLevel, hasChecked]); // Removemos refreshUser
 
   // Verificación inicial SOLO UNA VEZ
   useEffect(() => {
     if (isAuthenticated && !hasChecked) {
       checkSubscriptionStatus();
     }
-  }, [isAuthenticated, hasChecked, checkSubscriptionStatus]);
+  }, [isAuthenticated, hasChecked]); // Removemos checkSubscriptionStatus
 
   // Actualizar cuando cambia el usuario
   useEffect(() => {
