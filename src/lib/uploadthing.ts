@@ -1,14 +1,25 @@
 import { createUploadthing, type FileRouter } from "uploadthing/next";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { verifyToken, extractTokenFromHeader } from "@/lib/auth";
+import { headers } from "next/headers";
 
 const f = createUploadthing();
 
 // Middleware para verificar autenticación
 const auth = async () => {
-  const session = await getServerSession(authOptions);
-  if (!session?.user) throw new Error("No autorizado");
-  return session.user;
+  const headersList = headers();
+  const authHeader = headersList.get('authorization');
+  const token = extractTokenFromHeader(authHeader);
+  
+  if (!token) {
+    throw new Error("No autorizado");
+  }
+  
+  try {
+    const { userId } = verifyToken(token);
+    return { userId };
+  } catch (error) {
+    throw new Error("Token inválido");
+  }
 };
 
 export const uploadRouter = {

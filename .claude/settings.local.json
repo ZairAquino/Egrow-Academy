@@ -11,7 +11,13 @@
       "Bash(mkdir:*)",
       "Bash(npx ts-node:*)",
       "Bash(copy:*)",
-      "Bash(cp:*)"
+      "Bash(cp:*)",
+      "Bash(npm install:*)",
+      "Bash(npx prisma generate:*)",
+      "Bash(taskkill:*)",
+      "Bash(rm:*)",
+      "Bash(next build)",
+      "Bash(npx next:*)"
     ],
     "deny": []
   }
