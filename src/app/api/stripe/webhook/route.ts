@@ -169,11 +169,11 @@ async function handleSubscriptionDeleted(stripeSubscription: Stripe.Subscription
       return;
     }
 
-    // Actualizar usuario a GRATUITO
+    // Actualizar usuario a FREE
     await prisma.user.update({
       where: { id: userId },
       data: {
-        membershipLevel: 'GRATUITO',
+        membershipLevel: 'FREE',
       },
     });
 
@@ -189,7 +189,7 @@ async function handleSubscriptionDeleted(stripeSubscription: Stripe.Subscription
       },
     });
 
-    console.log(`❌ Suscripción cancelada y usuario ${userId} vuelto a GRATUITO`);
+    console.log(`❌ Suscripción cancelada y usuario ${userId} vuelto a FREE`);
   } catch (error) {
     console.error('Error manejando subscription deleted:', error);
   }
