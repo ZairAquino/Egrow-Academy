@@ -43,7 +43,7 @@ async function listAllUsers() {
     
     // Mostrar estadísticas
     const premiumUsers = users.filter(u => u.membershipLevel === 'PREMIUM');
-    const freeUsers = users.filter(u => u.membershipLevel === 'FREE' || u.membershipLevel === 'GRATUITO');
+    const freeUsers = users.filter(u => u.membershipLevel === 'FREE');
     
     console.log('📈 Estadísticas:');
     console.log(`   Usuarios Premium: ${premiumUsers.length}`);
