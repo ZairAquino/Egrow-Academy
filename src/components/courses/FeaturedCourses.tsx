@@ -9,7 +9,8 @@ const featuredCourses = [
     tag: "⭐ Curso Destacado",
     duration: "3 horas",
     level: "Intermedio",
-    link: "/curso/monetiza-ia"
+    link: "/curso/monetiza-ia",
+    isFree: true
   },
   {
     image: "https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=400&h=250&fit=crop",
@@ -18,7 +19,8 @@ const featuredCourses = [
     tag: "Curso Gratuito",
     duration: "3 horas",
     level: "Principiante",
-    link: "https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/"
+    link: "https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/",
+    isFree: true
   }
 ];
 
@@ -46,7 +48,7 @@ export default function FeaturedCourses() {
               duration={course.duration}
               level={course.level}
               category={course.tag}
-              isFree={course.tag === "Curso Gratuito"}
+              isFree={course.isFree || course.tag === "Curso Gratuito"}
               requiresAuth={false}
               link={course.link}
             />

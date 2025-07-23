@@ -7,6 +7,7 @@ import UserProfile from '@/components/auth/UserProfile';
 import Footer from '@/components/layout/Footer';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCourseProgress } from '@/hooks/useCourseProgress';
+import VideoPlayer from '@/components/courses/VideoPlayer';
 
 export default function ContenidoMonetizaIAPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -36,6 +37,7 @@ export default function ContenidoMonetizaIAPage() {
         duration: '12 min',
         type: 'video',
         description: 'Intro | Herramientas - Checklist de apps y presets listos para facturar',
+        videoUrl: 'https://www.youtube.com/watch?v=fOXqNPy_nDs',
         content: `
           <h2>M0 - AI Money‑Toolkit</h2>
           <h3>Intro | Herramientas</h3>
@@ -55,6 +57,13 @@ export default function ContenidoMonetizaIAPage() {
           
           <h3>Presets Listos para Usar:</h3>
           <p>Descarga plantillas y configuraciones pre-optimizadas que puedes implementar hoy mismo para empezar a generar ingresos.</p>
+          
+          <h3>Recursos de esta lección:</h3>
+          <ul>
+            <li><a href="#" class="resource-link">📋 Checklist completo de herramientas</a></li>
+            <li><a href="#" class="resource-link">⚙️ Configuraciones pre-optimizadas</a></li>
+            <li><a href="#" class="resource-link">🎯 Guía de implementación paso a paso</a></li>
+          </ul>
         `
       },
       {
@@ -63,6 +72,7 @@ export default function ContenidoMonetizaIAPage() {
         duration: '18 min',
         type: 'video',
         description: 'Intro Ventas - Script de oferta listo para DM / llamada',
+        videoUrl: 'https://www.youtube.com/watch?v=9J4due6xNmQ',
         content: `
           <h2>M1 - Venta sin Fricción</h2>
           <h3>Intro Ventas</h3>
@@ -139,8 +149,9 @@ para tu situación, tengo algo que puede interesarte..."</code></pre>
         id: 4,
         title: 'M2 - Soporte que Retiene',
         duration: '25 min',
-        type: 'lab',
+        type: 'video',
         description: 'Servicio al Cliente - Plantilla post‑venta "fan for life"',
+        videoUrl: 'https://www.youtube.com/watch?v=V02uxR3TMYo',
         content: `
           <h2>M2 - Soporte que Retiene</h2>
           <h3>Servicio al Cliente</h3>
@@ -336,6 +347,7 @@ recurso que acabo de crear...</code></pre>
         duration: '45 min',
         type: 'project',
         description: 'Final - Plan de iteración + métrica clave',
+        videoUrl: 'https://www.youtube.com/watch?v=Gln-qdxlBFM',
         content: `
           <h2>M4 - Escala, Repite, Monetiza</h2>
           <h3>Final</h3>
@@ -666,6 +678,21 @@ Estrategias para aumentar RPH:
                   </div>
                   
                   <div className="lesson-content">
+                    {/* Video de la lección */}
+                    {courseData.lessons[progress.currentLesson].videoUrl && (
+                      <div className="lesson-video">
+                        <VideoPlayer
+                          videoUrl={courseData.lessons[progress.currentLesson].videoUrl}
+                          title={courseData.lessons[progress.currentLesson].title}
+                          onComplete={() => {
+                            // Opcional: marcar como completada cuando termine el video
+                            console.log('Video completado');
+                          }}
+                        />
+                      </div>
+                    )}
+                    
+                    {/* Contenido de la lección */}
                     <div 
                       dangerouslySetInnerHTML={{ 
                         __html: courseData.lessons[progress.currentLesson].content 

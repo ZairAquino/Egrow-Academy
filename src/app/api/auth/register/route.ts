@@ -138,9 +138,13 @@ export async function POST(request: NextRequest) {
     const passwordHash = await hashPassword(password)
     console.log('✅ [REGISTER] Contraseña hasheada correctamente')
 
-    console.log('✅ [REGISTER] Creando usuario en base de datos (MODO DEMO - Sin verificación)')
+    // Generar código de verificación
+    const verificationCode = generateVerificationCode()
+    const verificationCodeExpires = new Date(Date.now() + 10 * 60 * 1000) // 10 minutos
+    
+    console.log('✅ [REGISTER] Código de verificación generado:', verificationCode)
 
-    // Crear usuario VERIFICADO automáticamente (MODO DEMO para presentación)
+    // Crear usuario NO VERIFICADO (requiere verificación)
     const user = await prisma.user.create({
       data: {
         email,
@@ -148,50 +152,45 @@ export async function POST(request: NextRequest) {
         firstName: firstName.trim(),
         lastName: lastName.trim(),
         username: username?.trim() || null,
-        emailVerified: true, // Verificado automáticamente (MODO DEMO)
-        verificationCode: null,
-        verificationExpires: null
+        emailVerified: false, // Requiere verificación
+        verificationCode,
+        verificationCodeExpires
       }
     })
 
     console.log('✅ [REGISTER] Usuario creado con ID:', user.id)
 
-    // Generar token para login automático
-    const token = generateToken(user.id)
-    console.log('✅ [REGISTER] Token generado para login automático')
+    // Enviar email de verificación
+    console.log('📧 [REGISTER] Enviando email de verificación')
+    const emailResult = await sendVerificationEmail(email, verificationCode, firstName.trim())
+    
+    if (!emailResult.success) {
+      console.error('❌ [REGISTER] Error enviando email de verificación:', emailResult.error)
+      
+      // Eliminar usuario creado si falla el envío de email
+      await prisma.user.delete({
+        where: { id: user.id }
+      })
+      
+      return NextResponse.json(
+        { error: 'Error al enviar el email de verificación. Inténtalo nuevamente.' },
+        { status: 500 }
+      )
+    }
 
-    // Crear sesión automáticamente
-    await prisma.session.create({
-      data: {
-        userId: user.id,
-        token,
-        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 días
-      }
-    })
-
-    console.log('✅ [REGISTER] Sesión creada automáticamente')
+    console.log('✅ [REGISTER] Email de verificación enviado exitosamente')
 
     // Devolver usuario sin passwordHash
     const safeUser = createSafeUser(user)
 
-    // Crear respuesta CON cookie (usuario autenticado automáticamente)
+    // Crear respuesta SIN cookie (usuario no autenticado hasta verificar)
     const response = NextResponse.json({
       user: safeUser,
-      token,
-      message: '¡Cuenta creada exitosamente! Ya puedes acceder a todos los cursos.',
-      requiresVerification: false
+      message: '¡Cuenta creada exitosamente! Revisa tu email para verificar tu cuenta.',
+      requiresVerification: true
     })
 
-    // Establecer cookie HTTP-only para mantener sesión
-    response.cookies.set('auth-token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60, // 7 días en segundos
-      path: '/'
-    })
-
-    console.log('✅ [REGISTER] Registro completado exitosamente')
+    console.log('✅ [REGISTER] Registro completado exitosamente, pendiente de verificación')
     return response
   } catch (error) {
     console.error('💥 [REGISTER] Error completo:', error)

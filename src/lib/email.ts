@@ -1,4 +1,8 @@
 import { Resend } from 'resend'
+import * as dotenv from 'dotenv'
+
+// Cargar variables de entorno
+dotenv.config()
 
 // Inicializar Resend
 const resend = new Resend(process.env.RESEND_API_KEY)
@@ -23,9 +27,15 @@ export async function sendVerificationEmail(
     console.log('🔍 [EMAIL] Código generado:', code)
     console.log('🔍 [EMAIL] API Key configurada:', !!process.env.RESEND_API_KEY)
     
+    // Verificar que la API key esté configurada
+    if (!process.env.RESEND_API_KEY) {
+      console.error('❌ [EMAIL] No hay API key de Resend configurada')
+      return { success: false, error: 'Configuración de email incompleta' }
+    }
+    
     const { data, error } = await resend.emails.send({
-      from: 'noreply@egrow-academy.com', // Dominio personalizado verificado
-      to: [email],
+      from: 'noreply@egrowacademy.com', // Usar dominio verificado
+      to: [email], // Enviar al email real del usuario
       subject: '🔐 Verifica tu cuenta - eGrow Academy',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
@@ -90,9 +100,15 @@ export async function sendWelcomeEmail(
   firstName: string
 ): Promise<{ success: boolean; error?: string }> {
   try {
+    // Verificar que la API key esté configurada
+    if (!process.env.RESEND_API_KEY) {
+      console.error('❌ [EMAIL] No hay API key de Resend configurada')
+      return { success: false, error: 'Configuración de email incompleta' }
+    }
+    
     const { data, error } = await resend.emails.send({
-      from: 'noreply@egrow-academy.com', // Dominio personalizado verificado
-      to: [email],
+      from: 'noreply@egrowacademy.com', // Usar dominio verificado
+      to: [email], // Enviar al email real del usuario
       subject: '🎉 ¡Bienvenido a eGrow Academy!',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
@@ -161,7 +177,7 @@ export async function sendPremiumWelcomeEmail(
     console.log('🔍 [EMAIL] Iniciando envío de bienvenida premium a:', email)
     
     const { data, error } = await resend.emails.send({
-      from: 'noreply@egrow-academy.com',
+      from: 'noreply@egrowacademy.com', // Usar dominio verificado
       to: [email],
       subject: '⭐ ¡Bienvenido a eGrow Academy Premium!',
       html: `

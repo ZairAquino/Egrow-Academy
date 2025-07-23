@@ -33,8 +33,8 @@ export function verifyToken(token: string): { userId: string } {
   }
   
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET) as { userId: string }
-    return decoded
+    const decoded = jwt.verify(token, process.env.JWT_SECRET) as { userId: string; iat?: number; exp?: number }
+    return { userId: decoded.userId }
   } catch (error) {
     throw new Error('Token inválido')
   }

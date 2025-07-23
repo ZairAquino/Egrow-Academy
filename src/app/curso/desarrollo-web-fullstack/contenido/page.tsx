@@ -7,6 +7,7 @@ import UserProfile from '@/components/auth/UserProfile';
 import Footer from '@/components/layout/Footer';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCourseProgress } from '@/hooks/useCourseProgress';
+import VideoPlayer from '@/components/courses/VideoPlayer';
 
 export default function ContenidoCursoPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -47,6 +48,7 @@ export default function ContenidoCursoPage() {
         duration: '15 min',
         type: 'video',
         description: 'Conceptos fundamentales del desarrollo web full stack',
+        videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', // URL de ejemplo
         content: `
           <h2>Bienvenido al Desarrollo Web Full Stack</h2>
           <p>En este curso aprenderás a crear aplicaciones web completas desde el frontend hasta el backend.</p>
@@ -63,9 +65,13 @@ export default function ContenidoCursoPage() {
             <li><strong>Despliegue:</strong> Vercel, Heroku, Git</li>
           </ul>
           
-          <div class="video-container">
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
-          </div>
+          <h3>Recursos adicionales:</h3>
+          <p>Descarga los materiales complementarios para esta lección:</p>
+          <ul>
+            <li><a href="#" class="resource-link">📄 Guía de instalación de herramientas</a></li>
+            <li><a href="#" class="resource-link">📋 Checklist de configuración</a></li>
+            <li><a href="#" class="resource-link">🎯 Objetivos de aprendizaje</a></li>
+          </ul>
         `,
         completed: false
       },
@@ -75,6 +81,7 @@ export default function ContenidoCursoPage() {
         duration: '20 min',
         type: 'video',
         description: 'Instalación y configuración de herramientas de desarrollo',
+        videoUrl: 'https://www.youtube.com/watch?v=8Xa2cPwKOPY', // URL de ejemplo
         content: `
           <h2>Configuración del Entorno de Desarrollo</h2>
           <p>Antes de comenzar a programar, necesitamos configurar nuestro entorno de desarrollo.</p>
@@ -97,6 +104,13 @@ git --version
 # Configurar Git
 git config --global user.name "Tu Nombre"
 git config --global user.email "tu@email.com"</code></pre>
+          
+          <h3>Recursos de esta lección:</h3>
+          <ul>
+            <li><a href="#" class="resource-link">📥 Enlaces de descarga de herramientas</a></li>
+            <li><a href="#" class="resource-link">📖 Guía paso a paso de instalación</a></li>
+            <li><a href="#" class="resource-link">🔧 Configuración de extensiones VS Code</a></li>
+          </ul>
         `,
         completed: false
       },
@@ -541,6 +555,22 @@ function Counter() {
                   </div>
                   
                   <div className="lesson-content">
+                    {/* Video de la lección */}
+                    {currentLesson.videoUrl && (
+                      <div className="lesson-video mb-6">
+                        <VideoPlayer
+                          videoUrl={currentLesson.videoUrl}
+                          title={currentLesson.title}
+                          onComplete={() => {
+                            // Opcional: marcar como completada cuando termine el video
+                            console.log('Video completado');
+                          }}
+                          className="w-full h-96 rounded-lg"
+                        />
+                      </div>
+                    )}
+                    
+                    {/* Contenido de la lección */}
                     <div 
                       dangerouslySetInnerHTML={{ 
                         __html: currentLesson.content 
@@ -619,7 +649,7 @@ function Counter() {
                         <div className="completion-badge">
                           <span className="completion-icon">🏆</span>
                           <span className="completion-text">¡Curso Completado!</span>
-                        </div>
+                </div>
                         <p className="completion-info">
                           Has completado exitosamente este curso. Puedes revisar el contenido cuando quieras.
                         </p>

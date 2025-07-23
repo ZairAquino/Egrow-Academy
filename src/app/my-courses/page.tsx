@@ -195,28 +195,28 @@ export default function MyCoursesPage() {
         <section className="section">
           <div className="container">
             <div className="filters-container">
-              <button 
+              <button
                 className={`filter-btn ${activeTab === 'all' ? 'active' : ''}`}
                 onClick={() => setActiveTab('all')}
               >
                 <span className="filter-icon">📚</span>
                 Todos ({stats.total})
               </button>
-              <button 
+              <button
                 className={`filter-btn ${activeTab === 'pending' ? 'active' : ''}`}
                 onClick={() => setActiveTab('pending')}
               >
                 <span className="filter-icon">⏳</span>
                 En Progreso ({stats.pending})
               </button>
-              <button 
+              <button
                 className={`filter-btn ${activeTab === 'completed' ? 'active' : ''}`}
                 onClick={() => setActiveTab('completed')}
               >
                 <span className="filter-icon">✅</span>
                 Completados ({stats.completed})
               </button>
-              <button 
+              <button
                 className={`filter-btn ${activeTab === 'certificates' ? 'active' : ''}`}
                 onClick={() => setActiveTab('certificates')}
               >
@@ -321,14 +321,14 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
   const isInProgress = userCourse.status === 'ACTIVE' && userCourse.progressPercentage > 0;
 
   const getActionButton = () => {
-    return (
-      <Link 
+        return (
+          <Link 
         href={`/curso/${course.slug}`} 
         className="course-action-btn continue-btn"
-      >
+          >
         ▶️ Continuar Curso
-      </Link>
-    );
+          </Link>
+        );
   };
 
   const getCertificateButton = () => {
@@ -358,27 +358,27 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
   return (
     <div className="course-card">
       <div className="course-image">
-        <img 
+          <img 
           src={course.imageUrl || 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=400&fit=crop&crop=center&q=85'} 
-          alt={course.title}
-          onError={(e) => {
+            alt={course.title}
+            onError={(e) => {
             e.currentTarget.src = 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=400&fit=crop&crop=center&q=85';
-          }}
-        />
-        <div className="status-badge-wrapper">
-          {getStatusBadge()}
+            }}
+          />
+          <div className="status-badge-wrapper">
+            {getStatusBadge()}
         </div>
       </div>
       
               <div className="course-content">
           <h3 className="course-title">
-            {course.title}
-          </h3>
-          
+          {course.title}
+        </h3>
+        
           <p className="course-description">
-            {course.description}
-          </p>
-
+          {course.description}
+        </p>
+        
           {/* Información adicional para cursos completados */}
           {isCompleted && (
             <div className="course-completion-info">
@@ -397,41 +397,41 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
           
           <div className="course-meta">
             <span className="meta-item">
-              <span className="meta-icon">⏱️</span>
-              {course.durationHours ? `${course.durationHours} horas` : '2 horas'}
-            </span>
+            <span className="meta-icon">⏱️</span>
+            {course.durationHours ? `${course.durationHours} horas` : '2 horas'}
+          </span>
             <span className="meta-item">
-              <span className="meta-icon">📊</span>
-              {course.difficulty || 'Principiante'}
-            </span>
+            <span className="meta-icon">📊</span>
+            {course.difficulty || 'Principiante'}
+          </span>
             {course.hasCertificate && (
               <span className="meta-item">
                 <span className="meta-icon">🏆</span>
                 Certificación
               </span>
             )}
-          </div>
+        </div>
 
-          {isInProgress && (
+        {isInProgress && (
             <div className="progress-section">
               <div className="progress-header">
-                <span>Progreso</span>
-                <span>{Math.round(userCourse.progressPercentage)}%</span>
-              </div>
-              <div className="progress-bar">
-                <div 
-                  className="progress-fill"
-                  style={{ width: `${userCourse.progressPercentage}%` }}
-                ></div>
-              </div>
+              <span>Progreso</span>
+              <span>{Math.round(userCourse.progressPercentage)}%</span>
             </div>
-          )}
+              <div className="progress-bar">
+              <div 
+                  className="progress-fill"
+                style={{ width: `${userCourse.progressPercentage}%` }}
+              ></div>
+            </div>
+          </div>
+        )}
 
           <div className="course-actions">
-            {getActionButton()}
+          {getActionButton()}
             {getCertificateButton()}
-          </div>
         </div>
+      </div>
 
       <style jsx>{`
         .course-card {
@@ -649,18 +649,18 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
           font-size: 0.875rem;
           font-weight: 600;
           color: #10b981;
-        }
-
+          }
+          
         .certificate-info {
           display: flex;
           align-items: center;
           gap: 0.5rem;
-        }
-
+          }
+          
         .certificate-icon {
           font-size: 1rem;
-        }
-
+          }
+          
         .certificate-text {
           font-size: 0.875rem;
           font-weight: 500;

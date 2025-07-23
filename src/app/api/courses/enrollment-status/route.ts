@@ -3,6 +3,14 @@ import { prisma } from '@/lib/prisma';
 import { verifyToken } from '@/lib/auth';
 
 export async function GET(request: NextRequest) {
+  return await checkEnrollmentStatus(request);
+}
+
+export async function POST(request: NextRequest) {
+  return await checkEnrollmentStatus(request);
+}
+
+async function checkEnrollmentStatus(request: NextRequest) {
   try {
     console.log('🔍 [ENROLLMENT-STATUS] Verificando estado de inscripción');
 
@@ -20,9 +28,19 @@ export async function GET(request: NextRequest) {
     const { userId } = verifyToken(token);
     console.log('✅ [ENROLLMENT-STATUS] Token válido para usuario:', userId);
 
-    // Obtener courseId de los query parameters
+    // Obtener courseId de los query parameters o del body
     const { searchParams } = new URL(request.url);
-    const courseId = searchParams.get('courseId');
+    let courseId = searchParams.get('courseId');
+    
+    // Si no está en query params, intentar leer del body
+    if (!courseId) {
+      try {
+        const body = await request.json();
+        courseId = body.courseId;
+      } catch (error) {
+        console.log('❌ [ENROLLMENT-STATUS] No se pudo leer el body');
+      }
+    }
 
     if (!courseId) {
       console.log('❌ [ENROLLMENT-STATUS] No se proporcionó courseId');

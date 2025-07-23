@@ -9,6 +9,19 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      // UploadThing domains
+      {
+        protocol: 'https',
+        hostname: 'uploadthing.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'utfs.io',
+        port: '',
+        pathname: '/**',
+      },
     ],
     formats: ['image/webp', 'image/avif'],
   },

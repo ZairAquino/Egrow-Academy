@@ -12,6 +12,101 @@
 
 ## 📅 **Historial de Cambios**
 
+### **2025-01-27 - Sistema Completo de Videos para Lecciones**
+
+#### ✅ **Nuevas Funcionalidades Implementadas**
+1. **VideoPlayer Component**
+   - **Reproductor personalizado:** Controles completos (play/pause, volumen, progreso, pantalla completa)
+   - **Interfaz moderna:** Diseño minimalista con controles que se ocultan automáticamente
+   - **Responsive:** Adaptable a diferentes tamaños de pantalla
+   - **Accesibilidad:** Controles de teclado y navegación por tab
+   - **Características:** Barra de progreso, control de volumen, reinicio, pantalla completa
+
+2. **LessonVideoUpload Component**
+   - **Subida de videos:** Integración completa con UploadThing
+   - **Gestión de videos:** Subir, eliminar y reemplazar videos
+   - **Validación:** Verificación de tipos de archivo y tamaños
+   - **Estados visuales:** Indicadores de carga, éxito y error
+   - **Información de ayuda:** Guías sobre formatos y especificaciones
+
+3. **API para Gestión de Videos**
+   - **PUT /api/courses/lessons/[lessonId]/video:** Actualizar video de lección
+   - **DELETE /api/courses/lessons/[lessonId]/video:** Eliminar video de lección
+   - **Autenticación:** Verificación de permisos de instructor
+   - **Validación:** Comprobación de datos y permisos
+
+4. **Hook useLessonVideo**
+   - **Gestión de estado:** Control del estado del video en lecciones
+   - **Operaciones CRUD:** Actualizar y eliminar videos
+   - **Manejo de errores:** Gestión centralizada de errores
+   - **Integración con auth:** Verificación de permisos
+
+5. **Página de Administración**
+   - **Panel de gestión:** `/admin/lesson-video-upload`
+   - **Selección de cursos:** Interfaz para elegir curso y lección
+   - **Vista previa:** Visualización de videos actuales
+   - **Gestión completa:** Subida y eliminación de videos
+
+6. **Integración en Páginas de Curso**
+   - **VideoPlayer integrado:** En páginas de contenido de cursos
+   - **Detección automática:** Muestra video si existe en la lección
+   - **Responsive design:** Adaptable a diferentes dispositivos
+   - **Experiencia mejorada:** Contenido multimedia enriquecido
+
+#### 🔧 **Archivos Creados/Modificados**
+- `src/components/courses/VideoPlayer.tsx` - Reproductor de video personalizado
+- `src/components/courses/LessonVideoUpload.tsx` - Componente de subida de videos
+- `src/app/api/courses/lessons/[lessonId]/video/route.ts` - API para gestión de videos
+- `src/hooks/useLessonVideo.ts` - Hook para gestión de videos
+- `src/app/admin/lesson-video-upload/page.tsx` - Página de administración
+- `src/app/curso/desarrollo-web-fullstack/contenido/page.tsx` - Integración de VideoPlayer
+- `src/app/curso/monetiza-ia/contenido/page.tsx` - Integración de VideoPlayer con video de YouTube
+
+#### 🎨 **Características del VideoPlayer**
+- **Controles intuitivos:** Play/pause, volumen, progreso, pantalla completa
+- **Auto-hide:** Los controles se ocultan automáticamente durante la reproducción
+- **Progreso visual:** Barra de progreso con tiempo actual/total
+- **Control de volumen:** Slider de volumen con mute/unmute
+- **Pantalla completa:** Soporte nativo para pantalla completa
+- **Responsive:** Adaptable a móviles, tablets y desktop
+
+#### 📊 **Especificaciones Técnicas**
+- **Formatos soportados:** MP4, MOV, AVI (configurado en UploadThing)
+- **Tamaño máximo:** 1GB por video
+- **Resolución recomendada:** 1920x1080 (Full HD)
+- **Duración recomendada:** 5-30 minutos por lección
+- **CDN:** Distribución global a través de UploadThing
+
+#### 🚀 **Flujo de Trabajo**
+1. **Instructor accede** a `/admin/lesson-video-upload`
+2. **Selecciona curso** y lección específica
+3. **Sube video** usando UploadThing
+4. **Video se guarda** en la base de datos
+5. **Estudiantes ven** el video en la página del curso
+6. **Experiencia mejorada** con reproductor personalizado
+
+#### 🎯 **Beneficios para eGrow Academy**
+- **Contenido multimedia:** Lecciones más atractivas y efectivas
+- **Experiencia premium:** Reproductor personalizado y profesional
+- **Gestión fácil:** Panel de administración intuitivo
+- **Escalabilidad:** CDN global para distribución de videos
+- **Analytics:** Seguimiento de progreso de video (futuro)
+
+#### 📹 **Videos Implementados**
+- **Curso "Monetiza con IA":** Video de introducción en lección "AI Money‑Toolkit"
+  - **URL:** https://www.youtube.com/watch?v=fOXqNPy_nDs
+  - **Posición:** Primera lección del curso
+  - **Tipo:** Video de introducción y motivación
+  - **Integración:** VideoPlayer personalizado con controles completos
+
+#### 🔧 **Configuración Pendiente**
+- **UploadThing:** Requiere configuración de credenciales para subida de videos
+- **Variables de entorno:** UPLOADTHING_SECRET y UPLOADTHING_APP_ID necesarias
+- **Almacenamiento:** Configurar servicio de almacenamiento (AWS S3, Cloudflare R2)
+- **Página de demo:** `/admin/video-demo` para probar funcionalidad actual
+
+---
+
 ### **2025-01-27 - Configuración de UploadThing para Gestión de Archivos**
 
 #### ✅ **Funcionalidad Implementada**

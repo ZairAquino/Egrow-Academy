@@ -23,7 +23,7 @@ model User {
   updatedAt           DateTime            @updatedAt
   lastLogin           DateTime?
   verificationCode    String?
-  verificationExpires DateTime?
+  verificationCodeExpires DateTime?
   stripeCustomerId    String?             @unique
   comments            Comment[]
   posts               CommunityPost[]

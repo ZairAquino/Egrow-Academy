@@ -529,7 +529,9 @@ export default function MonetizaIAPage() {
                 <div className="instructor-card">
                   <h3>Tu Instructor</h3>
                   <div className="instructor-info">
-                    <img src={courseData.instructor.image} alt={courseData.instructor.name} className="instructor-avatar" />
+                    <div className="instructor-avatar-container">
+                      <img src={courseData.instructor.image} alt={courseData.instructor.name} className="instructor-avatar" />
+                    </div>
                     <div className="instructor-details">
                       <h4>{courseData.instructor.name}</h4>
                       <p className="instructor-title">{courseData.instructor.title}</p>
@@ -1095,35 +1097,48 @@ export default function MonetizaIAPage() {
 
         .instructor-info {
           display: flex;
-          gap: 1rem;
-          align-items: flex-start;
+          flex-direction: column;
+          gap: 1.5rem;
+          align-items: center;
+          text-align: center;
+        }
+
+        .instructor-avatar-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
         }
 
         .instructor-avatar {
-          width: 80px;
-          height: 80px;
+          width: 180px;
+          height: 180px;
           border-radius: 50%;
           object-fit: cover;
           flex-shrink: 0;
+          border: 4px solid #f3f4f6;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .instructor-details h4 {
           margin: 0 0 0.5rem 0;
           color: #1f2937;
-          font-size: 1.1rem;
+          font-size: 1.25rem;
+          font-weight: 700;
         }
 
         .instructor-title {
-          margin: 0 0 0.5rem 0;
+          margin: 0 0 0.75rem 0;
           color: #22c55e;
           font-weight: 600;
+          font-size: 1rem;
         }
 
         .instructor-bio {
           margin: 0;
-          font-size: 0.9rem;
-          line-height: 1.5;
+          font-size: 0.95rem;
+          line-height: 1.6;
           color: #6b7280;
+          max-width: 280px;
         }
 
         .prerequisites-list {
