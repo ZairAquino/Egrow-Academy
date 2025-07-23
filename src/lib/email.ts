@@ -15,7 +15,7 @@ export function generateVerificationCode(): string {
 }
 
 /**
- * Envía un código de verificación por email
+ * Envía un código de verificación por email (VERSIÓN TEMPORAL)
  */
 export async function sendVerificationEmail(
   email: string,
@@ -35,7 +35,7 @@ export async function sendVerificationEmail(
     
     const { data, error } = await resend.emails.send({
       from: 'onboarding@resend.dev', // Usar dominio de Resend temporalmente
-      to: [email], // Enviar al email real del usuario
+      to: [email], // Enviar al email del usuario
       subject: '🔐 Verifica tu cuenta - eGrow Academy',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
@@ -69,6 +69,7 @@ export async function sendVerificationEmail(
                 <strong>⚠️ Importante:</strong> Si no solicitaste este código, puedes ignorar este email de forma segura.
               </p>
             </div>
+            
           </div>
           
           <div style="text-align: center; margin-top: 20px; color: #9ca3af; font-size: 14px;">
@@ -93,7 +94,7 @@ export async function sendVerificationEmail(
 }
 
 /**
- * Envía un email de bienvenida después de la verificación
+ * Envía un email de bienvenida después de la verificación (VERSIÓN TEMPORAL)
  */
 export async function sendWelcomeEmail(
   email: string,
@@ -108,7 +109,7 @@ export async function sendWelcomeEmail(
     
     const { data, error } = await resend.emails.send({
       from: 'onboarding@resend.dev', // Usar dominio de Resend temporalmente
-      to: [email], // Enviar al email real del usuario
+      to: [email], // Enviar al email del usuario
       subject: '🎉 ¡Bienvenido a eGrow Academy!',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
@@ -141,6 +142,7 @@ export async function sendWelcomeEmail(
                 🎯 Explorar Cursos
               </a>
             </div>
+            
           </div>
           
           <div style="text-align: center; margin-top: 20px; color: #9ca3af; font-size: 14px;">
@@ -152,7 +154,7 @@ export async function sendWelcomeEmail(
     })
 
     if (error) {
-      console.error('❌ [EMAIL] Error enviando email de bienvenida:', error)
+      console.error('❌ [EMAIL] Error enviando email:', error)
       return { success: false, error: 'Error al enviar el email de bienvenida' }
     }
 
@@ -165,7 +167,7 @@ export async function sendWelcomeEmail(
 }
 
 /**
- * Envía un email de bienvenida premium después del pago exitoso
+ * Envía un email de bienvenida premium (VERSIÓN TEMPORAL)
  */
 export async function sendPremiumWelcomeEmail(
   email: string,
@@ -178,7 +180,7 @@ export async function sendPremiumWelcomeEmail(
     
     const { data, error } = await resend.emails.send({
       from: 'onboarding@resend.dev', // Usar dominio de Resend temporalmente
-      to: [email],
+      to: [email], // Enviar al email del usuario
       subject: '⭐ ¡Bienvenido a eGrow Academy Premium!',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
@@ -195,85 +197,18 @@ export async function sendPremiumWelcomeEmail(
               cursos especializados y recursos exclusivos de Inteligencia Artificial.
             </p>
             
-            <div style="background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%); border-radius: 8px; padding: 20px; margin: 20px 0;">
-              <h3 style="color: #000; margin-top: 0; text-align: center;">🌟 Tu Acceso Premium Incluye:</h3>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
-                <div style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 6px;">
-                  <h4 style="color: #000; margin: 0 0 8px 0;">📚 Cursos Especializados</h4>
-                  <ul style="color: #000; margin: 0; padding-left: 20px; font-size: 14px;">
-                    <li>Machine Learning Avanzado</li>
-                    <li>Deep Learning con PyTorch</li>
-                    <li>NLP y Transformers</li>
-                    <li>Computer Vision</li>
-                  </ul>
-                </div>
-                <div style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 6px;">
-                  <h4 style="color: #000; margin: 0 0 8px 0;">🎯 Recursos Exclusivos</h4>
-                  <ul style="color: #000; margin: 0; padding-left: 20px; font-size: 14px;">
-                    <li>Certificados de finalización</li>
-                    <li>Proyectos prácticos</li>
-                    <li>Soporte prioritario</li>
-                    <li>Comunidad exclusiva</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            
-            <div style="background: #ecfdf5; border: 1px solid #10b981; border-radius: 8px; padding: 20px; margin: 20px 0;">
-              <h3 style="color: #065f46; margin-top: 0;">🚀 Próximos Pasos:</h3>
-              <ol style="color: #047857; line-height: 1.8;">
-                <li><strong>Explora nuestros cursos premium</strong> - Accede a contenido especializado</li>
-                <li><strong>Completa tu perfil</strong> - Personaliza tu experiencia de aprendizaje</li>
-                <li><strong>Únete a la comunidad</strong> - Conecta con otros profesionales</li>
-                <li><strong>Descarga recursos</strong> - Accede a materiales exclusivos</li>
-              </ol>
-            </div>
-            
-            <div style="text-align: center; margin: 30px 0;">
-              <a href="${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/courses" 
-                 style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block; margin: 0 10px;">
-                🎯 Explorar Cursos Premium
-              </a>
-              <a href="${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/my-courses" 
-                 style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block; margin: 0 10px;">
-                📚 Mis Cursos
-              </a>
-            </div>
-            
-            <div style="background: #fef3c7; border: 1px solid #f59e0b; border-radius: 8px; padding: 15px; margin: 20px 0;">
-              <h4 style="color: #92400e; margin-top: 0;">💡 Consejo del Día:</h4>
-              <p style="color: #92400e; margin: 0; font-size: 14px;">
-                Comienza con el curso "Machine Learning Fundamentals" si eres principiante, 
-                o salta directamente a "Deep Learning con PyTorch" si ya tienes experiencia.
-              </p>
-            </div>
-          </div>
-          
-          <div style="background: #f3f4f6; padding: 20px; border-radius: 10px; margin-top: 20px;">
-            <h3 style="color: #374151; margin-top: 0;">📞 ¿Necesitas Ayuda?</h3>
-            <p style="color: #6b7280; line-height: 1.6;">
-              Nuestro equipo de soporte está disponible para ayudarte en tu viaje de aprendizaje. 
-              No dudes en contactarnos si tienes alguna pregunta.
-            </p>
-            <div style="text-align: center; margin-top: 15px;">
-              <a href="${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/contacto" 
-                 style="color: #667eea; text-decoration: none; font-weight: bold;">
-                Contactar Soporte →
-              </a>
-            </div>
           </div>
           
           <div style="text-align: center; margin-top: 20px; color: #9ca3af; font-size: 14px;">
             <p>© 2024 eGrow Academy. Todos los derechos reservados.</p>
             <p>Este es un email automático, por favor no respondas a este mensaje.</p>
-            <p>Tu suscripción premium se renueva automáticamente. Puedes cancelarla desde tu perfil en cualquier momento.</p>
           </div>
         </div>
       `
     })
 
     if (error) {
-      console.error('❌ [EMAIL] Error enviando email de bienvenida premium:', error)
+      console.error('❌ [EMAIL] Error enviando email:', error)
       return { success: false, error: 'Error al enviar el email de bienvenida premium' }
     }
 
