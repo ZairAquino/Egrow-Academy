@@ -34,7 +34,7 @@ export async function sendVerificationEmail(
     }
     
     const { data, error } = await resend.emails.send({
-      from: 'noreply@egrowacademy.com', // Usar dominio verificado
+      from: 'onboarding@resend.dev', // Usar dominio de Resend temporalmente
       to: [email], // Enviar al email real del usuario
       subject: '🔐 Verifica tu cuenta - eGrow Academy',
       html: `
@@ -107,7 +107,7 @@ export async function sendWelcomeEmail(
     }
     
     const { data, error } = await resend.emails.send({
-      from: 'noreply@egrowacademy.com', // Usar dominio verificado
+      from: 'onboarding@resend.dev', // Usar dominio de Resend temporalmente
       to: [email], // Enviar al email real del usuario
       subject: '🎉 ¡Bienvenido a eGrow Academy!',
       html: `
@@ -177,7 +177,7 @@ export async function sendPremiumWelcomeEmail(
     console.log('🔍 [EMAIL] Iniciando envío de bienvenida premium a:', email)
     
     const { data, error } = await resend.emails.send({
-      from: 'noreply@egrowacademy.com', // Usar dominio verificado
+      from: 'onboarding@resend.dev', // Usar dominio de Resend temporalmente
       to: [email],
       subject: '⭐ ¡Bienvenido a eGrow Academy Premium!',
       html: `
