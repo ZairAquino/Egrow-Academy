@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import Image from 'next/image'
@@ -323,6 +323,47 @@ function VerifyEmailContent() {
   )
 }
 
+function LoadingFallback() {
+  return (
+    <div style={{ 
+      minHeight: '100vh', 
+      display: 'flex', 
+      alignItems: 'center', 
+      justifyContent: 'center',
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      padding: '1rem'
+    }}>
+      <div style={{
+        background: 'white',
+        borderRadius: '20px',
+        padding: '2rem',
+        boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+        maxWidth: '500px',
+        width: '100%',
+        textAlign: 'center'
+      }}>
+        <div style={{
+          margin: '0 auto 1rem',
+          textAlign: 'center'
+        }}>
+          <Image 
+            src="/images/egacademylogoblanco.png" 
+            alt="eGrow Academy" 
+            width={200}
+            height={60}
+            style={{ marginBottom: '1rem' }}
+          />
+        </div>
+        <p>Cargando...</p>
+      </div>
+    </div>
+  )
+}
+
 export default function VerifyEmailPage() {
-  return <VerifyEmailContent />
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <VerifyEmailContent />
+    </Suspense>
+  )
 } 
