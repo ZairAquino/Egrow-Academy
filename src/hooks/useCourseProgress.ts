@@ -51,10 +51,7 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
   const [error, setError] = useState<string | null>(null);
 
   const loadProgress = useCallback(async () => {
-    console.log('🔍 [DEBUG] loadProgress llamado con isEnrolled:', isEnrolled);
-    
     if (!isEnrolled) {
-      console.log('🔍 [DEBUG] No está inscrito, no cargando progreso');
       setIsLoading(false);
       return;
     }
@@ -70,8 +67,6 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
     }));
 
     try {
-      console.log('🔍 [DEBUG] Haciendo fetch a la API...');
-      
       // Obtener token del localStorage
       const token = localStorage.getItem('authToken');
       
@@ -84,7 +79,6 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
       
       if (response.ok) {
         const data = await response.json();
-        console.log('🔍 [DEBUG] Datos recibidos de la API:', data);
         
         // Asegurar que currentLesson no exceda el número de lecciones disponibles
         const maxLessonIndex = 4; // 5 lecciones (índices 0-4)
@@ -226,9 +220,7 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
   }, []);
 
   const setCurrentLesson = useCallback((lessonIndex: number) => {
-    console.log('🔍 [DEBUG] setCurrentLesson llamado con lessonIndex:', lessonIndex);
     setProgress(prev => {
-      console.log('🔍 [DEBUG] Estado anterior:', prev.currentLesson, 'Nuevo estado:', lessonIndex);
       return {
         ...prev,
         currentLesson: lessonIndex
@@ -239,7 +231,6 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
   const progressPercentage = progress.progressPercentage;
 
   useEffect(() => {
-    console.log('🔍 [DEBUG] useEffect ejecutado con courseId:', courseId, 'isEnrolled:', isEnrolled);
     loadProgress();
   }, [courseId, isEnrolled]); // Removido loadProgress de las dependencias
 

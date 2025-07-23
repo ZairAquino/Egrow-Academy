@@ -18,15 +18,7 @@ export const useSubscriptionAccess = (): SubscriptionStatus => {
 
   useEffect(() => {
     const checkSubscriptionStatus = async () => {
-      console.log('🔍 useSubscriptionAccess - Verificando estado:', {
-        isAuthenticated,
-        hasUser: !!user,
-        hasToken: !!token,
-        userEmail: user?.email
-      });
-
       if (!isAuthenticated || !user || !token) {
-        console.log('❌ useSubscriptionAccess - Faltan datos para verificar suscripción');
         setSubscriptionStatus({
           hasActiveSubscription: false,
           isLoading: false,
@@ -35,7 +27,6 @@ export const useSubscriptionAccess = (): SubscriptionStatus => {
       }
 
       try {
-        console.log('🔍 useSubscriptionAccess - Llamando API de suscripción...');
         const response = await fetch('/api/auth/subscription-status', {
           method: 'GET',
           headers: {
@@ -49,7 +40,6 @@ export const useSubscriptionAccess = (): SubscriptionStatus => {
         }
 
         const data = await response.json();
-        console.log('✅ useSubscriptionAccess - Respuesta de API:', data);
         
         setSubscriptionStatus({
           hasActiveSubscription: data.hasActiveSubscription,

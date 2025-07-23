@@ -5,15 +5,10 @@ import { prisma } from '@/lib/prisma';
 // GET - Obtener progreso del usuario en un curso
 export async function GET(request: NextRequest) {
   try {
-    console.log('🔍 [API] GET /api/courses/progress iniciado');
-    
     const { searchParams } = new URL(request.url);
     const courseId = searchParams.get('courseId');
     
-    console.log('🔍 [API] Course ID:', courseId);
-    
     if (!courseId) {
-      console.log('🔍 [API] Error: Course ID is required');
       return NextResponse.json({ error: 'Course ID is required' }, { status: 400 });
     }
 
@@ -22,19 +17,14 @@ export async function GET(request: NextRequest) {
     const headerToken = request.headers.get('authorization')?.replace('Bearer ', '');
     const token = cookieToken || headerToken;
     
-    console.log('🔍 [API] Token encontrado:', !!token);
-    
     if (!token) {
-      console.log('🔍 [API] Error: No auth token');
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     let decoded;
     try {
       decoded = verifyToken(token);
-      console.log('🔍 [API] Token verificado, userId:', decoded.userId);
     } catch (tokenError) {
-      console.error('🔍 [API] Error verificando token:', tokenError);
       return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
     }
     
@@ -48,24 +38,17 @@ export async function GET(request: NextRequest) {
     
     if (!isUUID) {
       // Si no es un UUID, buscar por slug
-      console.log('🔍 [API] Buscando curso por slug:', courseId);
       const course = await prisma.course.findFirst({
         where: { slug: courseId }
       });
       if (course) {
         actualCourseId = course.id;
-        console.log('🔍 [API] Curso encontrado por slug:', course.title, 'ID:', actualCourseId);
       } else {
-        console.error('🔍 [API] Curso no encontrado con slug:', courseId);
         return NextResponse.json({ error: 'Course not found' }, { status: 404 });
       }
-    } else {
-      console.log('🔍 [API] CourseId parece ser un UUID válido:', courseId);
     }
 
     // Buscar la inscripción del usuario
-    console.log('🔍 [API] Buscando inscripción para userId:', userId, 'courseId:', actualCourseId);
-    
     let enrollment;
     try {
       enrollment = await prisma.enrollment.findFirst({
@@ -74,19 +57,15 @@ export async function GET(request: NextRequest) {
           courseId: actualCourseId
         }
       });
-      console.log('🔍 [API] Inscripción encontrada:', !!enrollment);
     } catch (enrollmentError) {
-      console.error('🔍 [API] Error buscando inscripción:', enrollmentError);
       return NextResponse.json({ error: 'Database error' }, { status: 500 });
     }
 
     if (!enrollment) {
-      console.log('🔍 [API] Error: Usuario no inscrito en el curso');
       return NextResponse.json({ error: 'User not enrolled in this course' }, { status: 404 });
     }
 
     // Obtener el progreso guardado
-    console.log('🔍 [API] Buscando progreso para enrollmentId:', enrollment.id);
     
     let progress;
     try {
@@ -102,15 +81,12 @@ export async function GET(request: NextRequest) {
           }
         }
       });
-      console.log('🔍 [API] Progreso encontrado:', !!progress);
     } catch (progressError) {
-      console.error('🔍 [API] Error buscando progreso:', progressError);
       return NextResponse.json({ error: 'Database error' }, { status: 500 });
     }
 
     // Si no existe, crear un registro inicial
     if (!progress) {
-      console.log('🔍 [API] Creando nuevo registro de progreso');
       let newProgress;
       try {
         newProgress = await prisma.courseProgress.create({
@@ -131,9 +107,7 @@ export async function GET(request: NextRequest) {
           }
         });
         progress = newProgress;
-        console.log('🔍 [API] Nuevo progreso creado exitosamente');
       } catch (createError) {
-        console.error('🔍 [API] Error creando progreso:', createError);
         return NextResponse.json({ error: 'Error creating progress' }, { status: 500 });
       }
     }
@@ -155,11 +129,9 @@ export async function GET(request: NextRequest) {
       totalLessons: 5 // Número fijo de lecciones para este curso
     };
 
-    console.log('🔍 [API] Respuesta enviada exitosamente');
     return NextResponse.json(response);
 
   } catch (error) {
-    console.error('🔍 [API] Error general:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -201,19 +173,14 @@ export async function POST(request: NextRequest) {
     
     if (!isUUID) {
       // Si no es un UUID, buscar por slug
-      console.log('🔍 [API] Buscando curso por slug:', courseId);
       const course = await prisma.course.findFirst({
         where: { slug: courseId }
       });
       if (course) {
         actualCourseId = course.id;
-        console.log('🔍 [API] Curso encontrado por slug:', course.title, 'ID:', actualCourseId);
       } else {
-        console.error('🔍 [API] Curso no encontrado con slug:', courseId);
         return NextResponse.json({ error: 'Course not found' }, { status: 404 });
       }
-    } else {
-      console.log('🔍 [API] CourseId parece ser un UUID válido:', courseId);
     }
 
     // Buscar la inscripción del usuario
@@ -238,9 +205,7 @@ export async function POST(request: NextRequest) {
             progressPercentage: 0
           }
         });
-        console.log('🔍 [API] Inscripción automática creada exitosamente');
       } catch (enrollmentError) {
-        console.error('🔍 [API] Error creando inscripción automática:', enrollmentError);
         return NextResponse.json({ error: 'Error creating enrollment' }, { status: 500 });
       }
     }

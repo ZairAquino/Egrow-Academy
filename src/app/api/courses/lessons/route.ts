@@ -6,8 +6,6 @@ const prisma = new PrismaClient();
 
 export async function GET(request: NextRequest) {
   try {
-    console.log('🔍 [API] GET /api/courses/lessons iniciado');
-    
     // Obtener courseId de los query parameters
     const { searchParams } = new URL(request.url);
     const courseId = searchParams.get('courseId');
@@ -18,8 +16,6 @@ export async function GET(request: NextRequest) {
         { status: 400 }
       );
     }
-    
-    console.log('🔍 [API] Course ID:', courseId);
     
     // Verificar autenticación
     const cookieToken = request.cookies.get('auth-token')?.value;
@@ -34,7 +30,6 @@ export async function GET(request: NextRequest) {
     }
     
     const tokenData = await verifyToken(token);
-    console.log('🔍 [API] Token data completo:', tokenData);
     
     if (!tokenData || !tokenData.userId) {
       return NextResponse.json(
@@ -44,8 +39,6 @@ export async function GET(request: NextRequest) {
     }
     
     const userId = tokenData.userId;
-    console.log('🔍 [API] Token verificado, userId:', userId);
-    console.log('🔍 [API] Tipo de userId:', typeof userId);
     
     // Buscar el curso por slug
     const course = await prisma.course.findUnique({
@@ -58,8 +51,6 @@ export async function GET(request: NextRequest) {
         { status: 404 }
       );
     }
-    
-    console.log('🔍 [API] Curso encontrado:', course.title);
     
     // Verificar que el usuario esté inscrito
     const enrollment = await prisma.enrollment.findFirst({
@@ -76,8 +67,6 @@ export async function GET(request: NextRequest) {
       );
     }
     
-    console.log('🔍 [API] Usuario inscrito, obteniendo lecciones...');
-    
     // Obtener las lecciones del curso
     const lessons = await prisma.lesson.findMany({
       where: { courseId: course.id },
@@ -91,8 +80,6 @@ export async function GET(request: NextRequest) {
         order: true
       }
     });
-    
-    console.log(`✅ [API] Lecciones encontradas: ${lessons.length}`);
     
     // Formatear las lecciones para el frontend
     const formattedLessons = lessons.map(lesson => ({

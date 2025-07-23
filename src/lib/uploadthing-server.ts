@@ -32,7 +32,7 @@ export const uploadRouter = {
   })
     .middleware(auth)
     .onUploadComplete(async ({ metadata, file }) => {
-      console.log("Video subido:", file.url);
+      // Video subido exitosamente
       return { uploadedBy: metadata.userId };
     }),
 
@@ -44,7 +44,7 @@ export const uploadRouter = {
   })
     .middleware(auth)
     .onUploadComplete(async ({ metadata, file }) => {
-      console.log("Recurso subido:", file.url);
+      // Recurso subido exitosamente
       return { uploadedBy: metadata.userId };
     }),
 
@@ -54,7 +54,7 @@ export const uploadRouter = {
   })
     .middleware(auth)
     .onUploadComplete(async ({ metadata, file }) => {
-      console.log("Avatar subido:", file.url);
+      // Avatar subido exitosamente
       return { uploadedBy: metadata.userId };
     }),
 
@@ -67,7 +67,7 @@ export const uploadRouter = {
   })
     .middleware(auth)
     .onUploadComplete(async ({ metadata, file }) => {
-      console.log("Recurso general subido:", file.url);
+      // Recurso general subido exitosamente
       return { uploadedBy: metadata.userId };
     }),
 
@@ -80,7 +80,7 @@ export const uploadRouter = {
   })
     .middleware(auth)
     .onUploadComplete(async ({ metadata, file }) => {
-      console.log("Recurso de webinar subido:", file.url);
+      // Recurso de webinar subido exitosamente
       return { uploadedBy: metadata.userId };
     }),
 } satisfies FileRouter;

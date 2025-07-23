@@ -4,8 +4,6 @@ import { verifyToken, extractTokenFromHeader } from '@/lib/auth';
 
 export async function GET(request: NextRequest) {
   try {
-    console.log('🔍 [USER-COURSES] Obteniendo cursos del usuario...');
-    
     // Verificar token desde cookies o headers (igual que /api/auth/me)
     const cookieToken = request.cookies.get('auth-token')?.value;
     const headerToken = extractTokenFromHeader(request);
@@ -13,7 +11,6 @@ export async function GET(request: NextRequest) {
     const token = cookieToken || headerToken;
 
     if (!token) {
-      console.log('❌ [USER-COURSES] No hay token');
       return NextResponse.json(
         { error: 'No autorizado' },
         { status: 401 }
@@ -22,7 +19,6 @@ export async function GET(request: NextRequest) {
 
     // Verificar token JWT
     const { userId } = verifyToken(token);
-    console.log('🔍 [USER-COURSES] Token verificado, userId:', userId);
 
     // Verificar si es una sesión de base de datos
     const session = await prisma.session.findUnique({
@@ -31,7 +27,6 @@ export async function GET(request: NextRequest) {
 
     // Si es una sesión de BD, verificar que no haya expirado
     if (session && session.expiresAt < new Date()) {
-      console.log('❌ [USER-COURSES] Sesión expirada');
       return NextResponse.json(
         { error: 'Sesión expirada' },
         { status: 401 }
@@ -60,8 +55,6 @@ export async function GET(request: NextRequest) {
       }
     });
 
-    console.log('✅ [USER-COURSES] Enrollments encontrados:', enrollments.length);
-    
     // Formatear respuesta
     const userCourses = enrollments.map(enrollment => {
       const completedLessons = enrollment.progress?.completedLessons?.length || 0;

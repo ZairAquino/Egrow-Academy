@@ -15,7 +15,26 @@ export function generateVerificationCode(): string {
 }
 
 /**
- * Envía un código de verificación por email (VERSIÓN TEMPORAL)
+ * Obtiene la dirección de email remitente según el entorno
+ */
+function getFromEmail(): string {
+  // Debug: mostrar variables de entorno
+  console.log('🔍 [EMAIL DEBUG] RESEND_FROM_EMAIL:', process.env.RESEND_FROM_EMAIL)
+  console.log('🔍 [EMAIL DEBUG] NODE_ENV:', process.env.NODE_ENV)
+  
+  // Usar el dominio verificado si está configurado
+  if (process.env.RESEND_FROM_EMAIL) {
+    console.log('✅ [EMAIL DEBUG] Usando dominio configurado:', process.env.RESEND_FROM_EMAIL)
+    return process.env.RESEND_FROM_EMAIL
+  }
+  
+  // Fallback al dominio verificado por defecto
+  console.log('⚠️ [EMAIL DEBUG] Usando dominio por defecto: noreply@egrowacademy.com')
+  return 'noreply@egrowacademy.com'
+}
+
+/**
+ * Envía un código de verificación por email
  */
 export async function sendVerificationEmail(
   email: string,
@@ -23,19 +42,17 @@ export async function sendVerificationEmail(
   firstName: string
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    console.log('🔍 [EMAIL] Iniciando envío de verificación a:', email)
-    console.log('🔍 [EMAIL] Código generado:', code)
-    console.log('🔍 [EMAIL] API Key configurada:', !!process.env.RESEND_API_KEY)
-    
     // Verificar que la API key esté configurada
     if (!process.env.RESEND_API_KEY) {
       console.error('❌ [EMAIL] No hay API key de Resend configurada')
       return { success: false, error: 'Configuración de email incompleta' }
     }
     
+    const fromEmail = getFromEmail()
+    
     const { data, error } = await resend.emails.send({
-      from: 'onboarding@resend.dev', // Usar dominio de Resend temporalmente
-      to: [email], // Enviar al email del usuario
+      from: fromEmail,
+      to: [email],
       subject: '🔐 Verifica tu cuenta - eGrow Academy',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
@@ -85,7 +102,7 @@ export async function sendVerificationEmail(
       return { success: false, error: 'Error al enviar el email de verificación' }
     }
 
-    console.log('✅ [EMAIL] Email de verificación enviado a:', email)
+    console.log('✅ [EMAIL] Email de verificación enviado exitosamente a:', email)
     return { success: true }
   } catch (error) {
     console.error('💥 [EMAIL] Error completo:', error)
@@ -94,7 +111,7 @@ export async function sendVerificationEmail(
 }
 
 /**
- * Envía un email de bienvenida después de la verificación (VERSIÓN TEMPORAL)
+ * Envía un email de bienvenida después de la verificación
  */
 export async function sendWelcomeEmail(
   email: string,
@@ -107,9 +124,11 @@ export async function sendWelcomeEmail(
       return { success: false, error: 'Configuración de email incompleta' }
     }
     
+    const fromEmail = getFromEmail()
+    
     const { data, error } = await resend.emails.send({
-      from: 'onboarding@resend.dev', // Usar dominio de Resend temporalmente
-      to: [email], // Enviar al email del usuario
+      from: fromEmail,
+      to: [email],
       subject: '🎉 ¡Bienvenido a eGrow Academy!',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
@@ -158,7 +177,7 @@ export async function sendWelcomeEmail(
       return { success: false, error: 'Error al enviar el email de bienvenida' }
     }
 
-    console.log('✅ [EMAIL] Email de bienvenida enviado a:', email)
+    console.log('✅ [EMAIL] Email de bienvenida enviado exitosamente a:', email)
     return { success: true }
   } catch (error) {
     console.error('💥 [EMAIL] Error completo:', error)
@@ -167,7 +186,7 @@ export async function sendWelcomeEmail(
 }
 
 /**
- * Envía un email de bienvenida premium (VERSIÓN TEMPORAL)
+ * Envía un email de bienvenida premium
  */
 export async function sendPremiumWelcomeEmail(
   email: string,
@@ -176,11 +195,11 @@ export async function sendPremiumWelcomeEmail(
   membershipLevel: string = 'PREMIUM'
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    console.log('🔍 [EMAIL] Iniciando envío de bienvenida premium a:', email)
+    const fromEmail = getFromEmail()
     
     const { data, error } = await resend.emails.send({
-      from: 'onboarding@resend.dev', // Usar dominio de Resend temporalmente
-      to: [email], // Enviar al email del usuario
+      from: fromEmail,
+      to: [email],
       subject: '⭐ ¡Bienvenido a eGrow Academy Premium!',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
@@ -212,7 +231,7 @@ export async function sendPremiumWelcomeEmail(
       return { success: false, error: 'Error al enviar el email de bienvenida premium' }
     }
 
-    console.log('✅ [EMAIL] Email de bienvenida premium enviado a:', email)
+    console.log('✅ [EMAIL] Email de bienvenida premium enviado exitosamente a:', email)
     return { success: true }
   } catch (error) {
     console.error('💥 [EMAIL] Error completo:', error)

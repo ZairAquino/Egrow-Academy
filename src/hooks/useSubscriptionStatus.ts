@@ -45,7 +45,6 @@ export function useSubscriptionStatus() {
 
         // Solo actualizar contexto si hay discrepancia
         if (data.hasActiveSubscription && user?.membershipLevel !== 'PREMIUM') {
-          console.log('🔄 Actualizando contexto de autenticación...');
           refreshUser();
         }
         

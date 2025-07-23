@@ -17,7 +17,12 @@
       "Bash(taskkill:*)",
       "Bash(rm:*)",
       "Bash(next build)",
-      "Bash(npx next:*)"
+      "Bash(npx next:*)",
+      "Bash(echo $NODE_ENV)",
+      "Bash(npm run tsx:*)",
+      "Bash(npx tsx:*)",
+      "Bash(git reset:*)",
+      "Bash(curl:*)"
     ],
     "deny": []
   }
