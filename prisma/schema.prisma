@@ -16,6 +16,7 @@ model User {
   username            String?             @unique
   profileImage        String?
   bio                 String?
+  country             String?
   membershipLevel     MembershipLevel     @default(FREE)
   isActive            Boolean             @default(true)
   emailVerified       Boolean             @default(false)
@@ -25,6 +26,7 @@ model User {
   verificationCode    String?
   verificationCodeExpires DateTime?
   stripeCustomerId    String?             @unique
+  hasBeenPremium      Boolean             @default(false)
   comments            Comment[]
   posts               CommunityPost[]
   courses             Course[]            @relation("CourseInstructor")
@@ -32,6 +34,7 @@ model User {
   likes               Like[]
   payments            Payment[]
   questions           Question[]
+  ratings             Rating[]
   resourceAccessLogs  ResourceAccessLog[]
   sessions            Session[]
   subscriptions       Subscription[]
@@ -76,6 +79,7 @@ model Course {
   enrollments      Enrollment[]
   lessons          Lesson[]
   payments         Payment[]
+  ratings          Rating[]
 
   @@map("courses")
 }
@@ -84,6 +88,7 @@ model Comment {
   id         String         @id @default(cuid())
   content    String
   type       CommentType
+  rating     Int?           // Valoración de 1-5 estrellas
   createdAt  DateTime       @default(now())
   updatedAt  DateTime       @updatedAt
   userId     String
@@ -129,6 +134,7 @@ model CommunityPost {
   comments  Comment[] @relation("PostComments")
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   likes     Like[]
+  ratings   Rating[]
 
   @@map("community_posts")
 }
@@ -443,4 +449,32 @@ enum ResourceStatus {
   DRAFT
   PUBLISHED
   ARCHIVED
+}
+
+model Rating {
+  id        String   @id @default(cuid())
+  rating    Int      // Valoración de 1-5 estrellas
+  comment   String?  // Comentario opcional
+  type      RatingType
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relaciones
+  userId    String
+  courseId  String?
+  postId    String?
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course    Course?  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  post      CommunityPost? @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId, type]) // Un usuario solo puede valorar un curso una vez
+  @@unique([userId, postId, type])   // Un usuario solo puede valorar un post una vez
+  @@map("ratings")
+}
+
+enum RatingType {
+  COURSE_COMPLETION
+  COMMUNITY_POST
+  COURSE_COMMENT
 }

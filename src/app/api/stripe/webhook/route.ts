@@ -76,6 +76,7 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
       data: {
         stripeCustomerId: session.customer as string,
         membershipLevel: 'PREMIUM',
+        hasBeenPremium: true,
       },
     });
 
@@ -100,6 +101,7 @@ async function handleSubscriptionCreated(stripeSubscription: Stripe.Subscription
       where: { id: userId },
       data: {
         membershipLevel: 'PREMIUM',
+        hasBeenPremium: true,
       },
     });
 

@@ -10,6 +10,7 @@ export interface RegisterData {
   firstName: string
   lastName: string
   username?: string
+  country?: string
 }
 
 // Tipo para datos de login

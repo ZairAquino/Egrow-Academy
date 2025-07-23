@@ -1,43 +1,22 @@
 'use client';
 
-import { useState } from 'react';
+import Link from 'next/link';
 
 export default function Newsletter() {
-  const [email, setEmail] = useState('');
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Aquí puedes agregar la lógica para suscribir al newsletter
-    console.log('Email suscrito:', email);
-    setEmail('');
-  };
-
   return (
     <section className="section newsletter-section">
       <div className="container">
         <div className="newsletter-content">
-          <h2 className="section-title">The Batch Newsletter</h2>
-          <p className="newsletter-description">
-            Mantente actualizado con las últimas noticias de IA. Únete a más
-            de 400,000 suscriptores y recibe actualizaciones semanales sobre
-            investigación de IA, noticias de la industria y más.
-          </p>
-          <form onSubmit={handleSubmit} className="newsletter-form">
-            <input
-              type="email"
-              placeholder="Tu correo electrónico"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="newsletter-input"
-            />
-            <button type="submit" className="btn btn-primary">
-              Suscribirse
-            </button>
-          </form>
-          <p className="newsletter-note">
-            Al suscribirte, aceptas recibir comunicaciones de eGrow-academy.
-          </p>
+          {/* Botón de suscripción a planes premium */}
+          <div className="premium-subscription-section">
+            <h3 className="premium-title">¿Quieres acceso completo?</h3>
+            <p className="premium-description">
+              Obtén acceso a todos nuestros cursos premium y recursos exclusivos
+            </p>
+            <Link href="/subscription" className="btn btn-secondary premium-btn">
+              Ver Planes de Suscripción
+            </Link>
+          </div>
         </div>
       </div>
     </section>

@@ -11,13 +11,14 @@ export async function POST(request: NextRequest) {
     console.log('🔍 [REGISTER] Iniciando proceso de registro')
     
     const body: RegisterData = await request.json()
-    const { email, password, firstName, lastName, username } = body
+    const { email, password, firstName, lastName, username, country } = body
     
     console.log('📝 [REGISTER] Datos recibidos:', { 
       email, 
       firstName, 
       lastName, 
       username: username || 'no username',
+      country: country || 'no country',
       passwordLength: password?.length || 0 
     })
 
@@ -152,6 +153,7 @@ export async function POST(request: NextRequest) {
         firstName: firstName.trim(),
         lastName: lastName.trim(),
         username: username?.trim() || null,
+        country: country?.trim() || null,
         emailVerified: false, // Requiere verificación
         verificationCode,
         verificationCodeExpires

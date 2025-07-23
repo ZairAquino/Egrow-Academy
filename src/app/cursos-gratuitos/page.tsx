@@ -223,14 +223,43 @@ export default function CursosGratuitosPage() {
           </div>
         </section>
 
-        {/* CTA Section */}
-        <section className="section cta-section">
+        {/* CTA Section - Moved from footer to body */}
+        <section className="section cta-section" style={{
+          background: 'white',
+          color: '#2d3748',
+          padding: '4rem 0'
+        }}>
           <div className="container">
-            <div className="cta-content">
-              <h2>¿Listo para llevar tu aprendizaje al siguiente nivel?</h2>
-              <p>¿Te gustaron nuestros cursos gratuitos? Descubre nuestros cursos premium con certificaciones y proyectos avanzados</p>
+            <div className="cta-content" style={{ textAlign: 'center' }}>
+              <h2 style={{
+                fontSize: '2.5rem',
+                fontWeight: 'bold',
+                marginBottom: '1rem',
+                color: '#2d3748'
+              }}>
+                ¿Te gustaron nuestros cursos gratuitos?
+              </h2>
+              <p style={{
+                fontSize: '1.2rem',
+                marginBottom: '2rem',
+                color: '#718096',
+                maxWidth: '600px',
+                margin: '0 auto 2rem auto'
+              }}>
+                Descubre nuestros cursos premium con certificaciones y proyectos avanzados
+              </p>
               <div className="cta-button-center">
-                <a href="/courses" className="btn btn-primary">Ver Todos los Cursos</a>
+                <a href="/courses" className="btn btn-primary" style={{
+                  fontSize: '1.1rem',
+                  padding: '1rem 2rem',
+                  backgroundColor: '#3b82f6',
+                  color: 'white',
+                  border: '2px solid #3b82f6',
+                  fontWeight: '600',
+                  transition: 'all 0.3s ease'
+                }}>
+                  Ver Todos los Cursos
+                </a>
               </div>
             </div>
           </div>
@@ -291,6 +320,25 @@ export default function CursosGratuitosPage() {
           .hero-bottom-logo-image {
             max-width: 66px;
             max-height: 48px;
+          }
+        }
+
+        /* Estilos para el botón CTA */
+        .cta-section .btn-primary:hover {
+          background: #2563eb !important;
+          color: white !important;
+          border-color: #2563eb !important;
+          transform: translateY(-2px);
+          box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        @media (max-width: 768px) {
+          .cta-section h2 {
+            font-size: 2rem !important;
+          }
+          
+          .cta-section p {
+            font-size: 1rem !important;
           }
         }
       `}</style>

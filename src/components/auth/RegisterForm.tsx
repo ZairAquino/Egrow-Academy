@@ -19,10 +19,11 @@ export default function RegisterForm() {
     confirmPassword: '',
     firstName: '',
     lastName: '',
-    username: ''
+    username: '',
+    country: ''
   })
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -83,7 +84,8 @@ export default function RegisterForm() {
           password: formData.password,
           firstName: formData.firstName,
           lastName: formData.lastName,
-          username: formData.username || undefined
+          username: formData.username || undefined,
+          country: formData.country || undefined
         }),
       })
 
@@ -284,6 +286,58 @@ export default function RegisterForm() {
             onFocus={handleFocus}
             onBlur={handleBlur}
           />
+        </div>
+
+        <div>
+          <label htmlFor="country" style={{
+            display: 'block',
+            fontSize: '0.9rem',
+            fontWeight: '600',
+            color: '#374151',
+            marginBottom: '0.5rem'
+          }}>
+            🌍 País <span style={{ color: '#9ca3af', fontWeight: 'normal' }}>(opcional)</span>
+          </label>
+          <select
+            name="country"
+            id="country"
+            value={formData.country}
+            onChange={handleChange}
+            style={inputStyle}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+          >
+            <option value="">Selecciona tu país</option>
+            <option value="Argentina">Argentina</option>
+            <option value="Bolivia">Bolivia</option>
+            <option value="Brasil">Brasil</option>
+            <option value="Chile">Chile</option>
+            <option value="Colombia">Colombia</option>
+            <option value="Costa Rica">Costa Rica</option>
+            <option value="Cuba">Cuba</option>
+            <option value="Ecuador">Ecuador</option>
+            <option value="El Salvador">El Salvador</option>
+            <option value="España">España</option>
+            <option value="Guatemala">Guatemala</option>
+            <option value="Honduras">Honduras</option>
+            <option value="México">México</option>
+            <option value="Nicaragua">Nicaragua</option>
+            <option value="Panamá">Panamá</option>
+            <option value="Paraguay">Paraguay</option>
+            <option value="Perú">Perú</option>
+            <option value="Puerto Rico">Puerto Rico</option>
+            <option value="República Dominicana">República Dominicana</option>
+            <option value="Uruguay">Uruguay</option>
+            <option value="Venezuela">Venezuela</option>
+            <option value="Estados Unidos">Estados Unidos</option>
+            <option value="Canadá">Canadá</option>
+            <option value="Reino Unido">Reino Unido</option>
+            <option value="Francia">Francia</option>
+            <option value="Alemania">Alemania</option>
+            <option value="Italia">Italia</option>
+            <option value="Portugal">Portugal</option>
+            <option value="Otro">Otro</option>
+          </select>
         </div>
 
         <div>

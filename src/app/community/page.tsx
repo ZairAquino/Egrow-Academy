@@ -1,12 +1,15 @@
 'use client';
 
-import { useState, Suspense, useEffect } from 'react';
+import { useState, Suspense, useEffect, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Sidebar from '@/components/layout/Sidebar';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Footer from '@/components/layout/Footer';
 import { useAuth } from '@/contexts/AuthContext';
+import { useRouter } from 'next/navigation';
+import { useCommunityPosts, CommunityPost } from '@/hooks/useCommunityPosts';
+import { useCommunityStats } from '@/hooks/useCommunityStats';
 
 // Lazy load components
 const CompaniesMarquee = dynamic(() => import('@/components/ui/CompaniesMarquee'), {
@@ -16,10 +19,137 @@ const CompaniesMarquee = dynamic(() => import('@/components/ui/CompaniesMarquee'
 
 export default function CommunityPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showCreateDiscussionModal, setShowCreateDiscussionModal] = useState(false);
+  const [discussionForm, setDiscussionForm] = useState({
+    title: '',
+    content: '',
+    category: 'general'
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showCommentModal, setShowCommentModal] = useState<string | null>(null);
+  const [commentContent, setCommentContent] = useState('');
+  const [isSubmittingComment, setIsSubmittingComment] = useState(false);
   const { user } = useAuth();
+  const router = useRouter();
+  const { posts, loading, error, createPost, toggleLike, createComment } = useCommunityPosts();
+  const { stats: communityStats, loading: statsLoading } = useCommunityStats();
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
+  };
+
+  const handleCreateDiscussion = () => {
+    if (!user) {
+      // Redirigir al login si no está autenticado
+      router.push('/login?redirect=/community');
+      return;
+    }
+    
+    // Mostrar modal para crear discusión
+    setShowCreateDiscussionModal(true);
+  };
+
+  const handleSubmitDiscussion = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!discussionForm.title.trim() || !discussionForm.content.trim()) {
+      alert('Por favor completa todos los campos requeridos');
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      await createPost(
+        discussionForm.title.trim(),
+        discussionForm.content.trim(),
+        discussionForm.category
+      );
+      
+      setShowCreateDiscussionModal(false);
+      setDiscussionForm({ title: '', content: '', category: 'general' });
+      alert('¡Discusión creada exitosamente!');
+    } catch (error) {
+      console.error('Error al crear discusión:', error);
+      alert(error instanceof Error ? error.message : 'Error al crear la discusión');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const closeModal = () => {
+    setShowCreateDiscussionModal(false);
+    setDiscussionForm({ title: '', content: '', category: 'general' });
+  };
+
+  const handleLike = async (postId: string) => {
+    try {
+      if (!user) {
+        router.push('/login?redirect=/community');
+        return;
+      }
+      await toggleLike(postId);
+    } catch (error) {
+      console.error('Error al procesar like:', error);
+      alert(error instanceof Error ? error.message : 'Error al procesar el like');
+    }
+  };
+
+  const handleComment = (postId: string) => {
+    if (!user) {
+      router.push('/login?redirect=/community');
+      return;
+    }
+    setShowCommentModal(postId);
+  };
+
+  const handleSubmitComment = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!showCommentModal || !commentContent.trim()) {
+      alert('Por favor escribe un comentario');
+      return;
+    }
+
+    try {
+      setIsSubmittingComment(true);
+      await createComment(showCommentModal, commentContent.trim());
+      setShowCommentModal(null);
+      setCommentContent('');
+      alert('¡Comentario agregado exitosamente!');
+    } catch (error) {
+      console.error('Error al crear comentario:', error);
+      alert(error instanceof Error ? error.message : 'Error al crear el comentario');
+    } finally {
+      setIsSubmittingComment(false);
+    }
+  };
+
+  const closeCommentModal = () => {
+    setShowCommentModal(null);
+    setCommentContent('');
+  };
+
+  // Función para formatear el tiempo relativo
+  const formatTimeAgo = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+    if (diffInSeconds < 60) {
+      return 'hace un momento';
+    } else if (diffInSeconds < 3600) {
+      const minutes = Math.floor(diffInSeconds / 60);
+      return `hace ${minutes} ${minutes === 1 ? 'minuto' : 'minutos'}`;
+    } else if (diffInSeconds < 86400) {
+      const hours = Math.floor(diffInSeconds / 3600);
+      return `hace ${hours} ${hours === 1 ? 'hora' : 'horas'}`;
+    } else if (diffInSeconds < 2592000) {
+      const days = Math.floor(diffInSeconds / 86400);
+      return `hace ${days} ${days === 1 ? 'día' : 'días'}`;
+    } else {
+      const months = Math.floor(diffInSeconds / 2592000);
+      return `hace ${months} ${months === 1 ? 'mes' : 'meses'}`;
+    }
   };
 
   useEffect(() => {
@@ -45,45 +175,199 @@ export default function CommunityPage() {
     };
   }, []);
 
-  const communityStats = [
-    { number: '25K+', label: 'Miembros Activos' },
-    { number: '150+', label: 'Países' },
-    { number: '500+', label: 'Eventos Mensuales' },
-    { number: '95%', label: 'Satisfacción' }
-  ];
+  // Estadísticas dinámicas de la comunidad
+  const getDisplayStats = () => {
+    if (!communityStats) {
+      return [
+        { number: '...', label: 'Miembros Activos' },
+        { number: '...', label: 'Países' },
+        { number: '...', label: 'Interacciones' },
+        { number: '...', label: 'Miembros Premium' }
+      ];
+    }
 
-  const upcomingEvents = [
+    return [
+      { number: communityStats.activeMembers.toLocaleString(), label: 'Miembros Activos' },
+      { number: communityStats.countriesCount.toString(), label: 'Países' },
+      { number: communityStats.totalInteractions.toLocaleString(), label: 'Interacciones' },
+      { number: communityStats.premiumMembers.toLocaleString(), label: 'Miembros Premium' }
+    ];
+  };
+
+  const getForumStats = () => {
+    if (!communityStats) {
+      return {
+        discussions: '...',
+        activeMembers: '...',
+        responses: '...'
+      };
+    }
+
+    return {
+      discussions: posts.length.toString(),
+      activeMembers: communityStats.activeMembers.toString(),
+      responses: communityStats.breakdown.comments.toString()
+    };
+  };
+
+  const [filteredEvents, setFilteredEvents] = useState<any[]>([]);
+
+  const allEvents = useMemo(() => [
     {
       id: 1,
-      title: 'Workshop: Introducción a Transformers',
-      date: '2024-01-20',
-      time: '14:00 - 16:00',
-      type: 'Online',
-      attendees: 45,
-      instructor: 'Dr. Sarah Chen',
-      image: 'https://via.placeholder.com/400x250/667eea/ffffff?text=Transformers+Workshop'
+      title: '🎉 Lanzamiento: Monetizar con IA',
+      date: '2025-07-25',
+      time: '12:00 - 13:30',
+      type: 'Lanzamiento',
+      attendees: 127,
+      instructor: 'Equipo eGrow Academy',
+      image: '/images/monetiza-ia.png',
+      description: 'Descubre cómo crear múltiples fuentes de ingresos usando inteligencia artificial. Aprende estrategias prácticas para monetizar tus habilidades en IA.',
+      category: 'Lanzamiento de Curso'
     },
     {
       id: 2,
-      title: 'Meetup: IA en Startups',
-      date: '2024-01-25',
-      time: '19:00 - 21:00',
-      type: 'Presencial',
-      attendees: 32,
-      instructor: 'Alex Johnson',
-      image: 'https://via.placeholder.com/400x250/764ba2/ffffff?text=AI+Startups+Meetup'
+      title: '🚀 Workshop: ChatGPT Avanzado',
+      date: '2025-08-12',
+      time: '15:00 - 17:00',
+      type: 'Workshop',
+      attendees: 89,
+      instructor: 'Dr. Ana Martínez',
+      image: '/images/robot.png',
+      description: 'Aprende técnicas avanzadas de prompt engineering y optimización de ChatGPT para proyectos profesionales.',
+      category: 'Workshop Práctico'
     },
     {
       id: 3,
-      title: 'Webinar: Ética en IA',
-      date: '2024-01-30',
-      time: '15:00 - 16:30',
-      type: 'Online',
-      attendees: 78,
-      instructor: 'Prof. Michael Rodriguez',
-      image: 'https://via.placeholder.com/400x250/f093fb/ffffff?text=AI+Ethics+Webinar'
+      title: '💡 Webinar: IA en Marketing Digital',
+      date: '2025-08-20',
+      time: '20:00 - 21:30',
+      type: 'Webinar',
+      attendees: 156,
+      instructor: 'Carlos López',
+      image: '/images/v-5.png',
+      description: 'Descubre cómo implementar estrategias de IA en tu marketing digital para maximizar resultados.',
+      category: 'Webinar Gratuito'
+    },
+    {
+      id: 4,
+      title: '🎯 Masterclass: Prompt Engineering',
+      date: '2025-08-28',
+      time: '18:00 - 19:30',
+      type: 'Masterclass',
+      attendees: 203,
+      instructor: 'María García',
+      image: '/images/p1.png',
+      description: 'Domina el arte del prompt engineering para obtener resultados excepcionales de cualquier IA.',
+      category: 'Masterclass Premium'
+    },
+    {
+      id: 5,
+      title: '🤖 Meetup: IA y Automatización',
+      date: '2025-09-05',
+      time: '19:00 - 21:00',
+      type: 'Meetup',
+      attendees: 67,
+      instructor: 'Equipo eGrow Academy',
+      image: '/images/Zair.jpeg',
+      description: 'Conecta con otros profesionales y comparte experiencias sobre implementación de IA en empresas.',
+      category: 'Networking'
     }
-  ];
+  ], []); // Dependencias vacías para que no se recree
+
+  // Función para filtrar eventos válidos (eventos futuros y recientes)
+  const filterValidEvents = (events: any[]) => {
+    const today = new Date();
+    const threeDaysAgo = new Date(today);
+    threeDaysAgo.setDate(today.getDate() - 3);
+
+    return events.filter(event => {
+      const eventDate = new Date(event.date);
+      // Mostrar eventos futuros y eventos que ocurrieron en los últimos 3 días
+      return eventDate >= threeDaysAgo;
+    });
+  };
+
+  // Función para calcular días restantes hasta que se elimine el evento
+  const getDaysUntilRemoval = (eventDate: string) => {
+    const today = new Date();
+    const eventDateObj = new Date(eventDate);
+    const threeDaysAfterEvent = new Date(eventDateObj);
+    threeDaysAfterEvent.setDate(eventDateObj.getDate() + 3);
+    
+    const diffTime = threeDaysAfterEvent.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    return diffDays;
+  };
+
+  // Función para verificar si un evento está próximo a expirar
+  const isEventExpiringSoon = (eventDate: string) => {
+    const daysUntilRemoval = getDaysUntilRemoval(eventDate);
+    return daysUntilRemoval <= 1;
+  };
+
+  // Función para formatear la fecha de manera amigable
+  const formatEventDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    
+    if (date.toDateString() === today.toDateString()) {
+      return 'Hoy';
+    } else if (date.toDateString() === tomorrow.toDateString()) {
+      return 'Mañana';
+    } else {
+      return date.toLocaleDateString('es-ES', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    }
+  };
+
+  // Efecto para actualizar eventos filtrados
+  useEffect(() => {
+    const validEvents = filterValidEvents(allEvents);
+    setFilteredEvents(validEvents);
+  }, [allEvents]);
+
+
+
+
+
+
+
+
+
+  // Limpiar eventos pasados cada hora
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const validEvents = filterValidEvents(allEvents);
+      setFilteredEvents(validEvents);
+    }, 60 * 60 * 1000); // 1 hora
+    return () => clearInterval(interval);
+  }, []); // Sin dependencias para evitar recrear el intervalo
+
+  const handleEventRegistration = async (eventId: number) => {
+    if (!user) {
+      router.push('/login?redirect=/community');
+      return;
+    }
+
+    try {
+      // Aquí se implementaría la lógica para registrar al usuario al evento
+      // y enviar recordatorios por email
+      alert('¡Te has registrado exitosamente! Te enviaremos recordatorios por email.');
+    } catch (error) {
+      console.error('Error al registrar al evento:', error);
+      alert('Error al registrarse al evento. Por favor, intenta de nuevo.');
+    }
+  };
+
+
 
   const communityFeatures = [
     {
@@ -118,32 +402,7 @@ export default function CommunityPage() {
     }
   ];
 
-  const testimonials = [
-    {
-      id: 1,
-      name: 'María García',
-      role: 'Data Scientist',
-      company: 'TechCorp',
-      content: 'La comunidad de eGrow Academy me ayudó a conseguir mi primer trabajo en IA. Los mentores son increíbles.',
-      avatar: 'https://via.placeholder.com/80x80/667eea/ffffff?text=MG'
-    },
-    {
-      id: 2,
-      name: 'Carlos López',
-      role: 'ML Engineer',
-      company: 'AI Startup',
-      content: 'Los eventos y workshops me mantienen actualizado con las últimas tendencias. Excelente networking.',
-      avatar: 'https://via.placeholder.com/80x80/764ba2/ffffff?text=CL'
-    },
-    {
-      id: 3,
-      name: 'Ana Martínez',
-      role: 'AI Researcher',
-      company: 'Universidad',
-      content: 'La calidad de las discusiones y recursos compartidos es excepcional. Una comunidad muy valiosa.',
-      avatar: 'https://via.placeholder.com/80x80/f093fb/ffffff?text=AM'
-    }
-  ];
+
 
   return (
     <>
@@ -220,9 +479,21 @@ export default function CommunityPage() {
               <div className="stats-container">
                 <h3 className="stats-title">Nuestra Comunidad en Números</h3>
                 <div className="stats-grid-vertical">
-                  {communityStats.map((stat, index) => (
+                  {getDisplayStats().map((stat, index) => (
                     <div key={index} className="stat-card">
-                      <div className="stat-number">{stat.number}</div>
+                      <div className="stat-number">
+                        {statsLoading ? (
+                          <div className="stat-loading">
+                            <div className="loading-dots">
+                              <span></span>
+                              <span></span>
+                              <span></span>
+                            </div>
+                          </div>
+                        ) : (
+                          stat.number
+                        )}
+                      </div>
                       <div className="stat-label">{stat.label}</div>
                     </div>
                   ))}
@@ -247,116 +518,148 @@ export default function CommunityPage() {
               <div className="forum-header">
                 <div className="forum-stats">
                   <div className="stat-item">
-                    <span className="stat-number">245</span>
+                    <span className="stat-number">
+                      {statsLoading ? (
+                        <span className="loading-dots">...</span>
+                      ) : (
+                        getForumStats().discussions
+                      )}
+                    </span>
                     <span className="stat-text">Discusiones</span>
                   </div>
                   <div className="stat-item">
-                    <span className="stat-number">89</span>
+                    <span className="stat-number">
+                      {statsLoading ? (
+                        <span className="loading-dots">...</span>
+                      ) : (
+                        getForumStats().activeMembers
+                      )}
+                    </span>
                     <span className="stat-text">Miembros Activos</span>
                   </div>
                   <div className="stat-item">
-                    <span className="stat-number">1.2K</span>
+                    <span className="stat-number">
+                      {statsLoading ? (
+                        <span className="loading-dots">...</span>
+                      ) : (
+                        getForumStats().responses
+                      )}
+                    </span>
                     <span className="stat-text">Respuestas</span>
                   </div>
                 </div>
-                <button className="btn btn-primary forum-cta">💬 Crear Nueva Discusión</button>
+                <button 
+                  className="btn btn-primary forum-cta" 
+                  onClick={handleCreateDiscussion}
+                >
+                  💬 Crear Nueva Discusión
+                </button>
               </div>
 
               {/* Recent Discussions */}
               <div className="forum-content">
                 <div className="forum-section-title">
-                  <h3>💬 Discusiones Recientes sobre Cursos</h3>
-                  <span className="view-all">Ver todas →</span>
+                  <h3>💬 Discusiones Recientes</h3>
+                  <a href="/community/foro" className="btn btn-primary forum-cta">
+                    <span className="btn-text">Ver todas</span>
+                    <svg className="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </a>
                 </div>
                 
                 <div className="forum-posts">
-                  <div className="forum-post-card">
-                    <div className="post-header">
-                      <div className="user-info">
-                        <img src="https://via.placeholder.com/50x50/667eea/ffffff?text=MJ" alt="María José" className="user-avatar" />
-                        <div className="user-details">
-                          <h4 className="post-title">¿Alguien más tuvo problemas con el módulo de Transformers?</h4>
-                          <p className="post-meta">María José · hace 2 horas · <span className="course-tag">Deep Learning con PyTorch</span></p>
-                        </div>
-                      </div>
-                      <div className="post-engagement">
-                        <div className="engagement-item">
-                          <span className="icon">👍</span>
-                          <span>12</span>
-                        </div>
-                        <div className="engagement-item">
-                          <span className="icon">💬</span>
-                          <span>8</span>
-                        </div>
-                      </div>
+                  {loading ? (
+                    <div className="loading-container">
+                      <LoadingSpinner />
+                      <p>Cargando discusiones...</p>
                     </div>
-                  </div>
-
-                  <div className="forum-post-card">
-                    <div className="post-header">
-                      <div className="user-info">
-                        <img src="https://via.placeholder.com/50x50/764ba2/ffffff?text=AR" alt="Alex Rodriguez" className="user-avatar" />
-                        <div className="user-details">
-                          <h4 className="post-title">Recursos adicionales para ChatGPT Prompt Engineering</h4>
-                          <p className="post-meta">Alex Rodriguez · hace 5 horas · <span className="course-tag">ChatGPT para Desarrolladores</span></p>
-                        </div>
-                      </div>
-                      <div className="post-engagement">
-                        <div className="engagement-item">
-                          <span className="icon">👍</span>
-                          <span>28</span>
-                        </div>
-                        <div className="engagement-item">
-                          <span className="icon">💬</span>
-                          <span>15</span>
-                        </div>
-                      </div>
+                  ) : error ? (
+                    <div className="error-container">
+                      <p>Error al cargar las discusiones: {error}</p>
+                      <button onClick={() => window.location.reload()} className="btn btn-primary">
+                        Reintentar
+                      </button>
                     </div>
-                  </div>
-
-                  <div className="forum-post-card">
-                    <div className="post-header">
-                      <div className="user-info">
-                        <img src="https://via.placeholder.com/50x50/f093fb/ffffff?text=CS" alt="Carlos Silva" className="user-avatar" />
-                        <div className="user-details">
-                          <h4 className="post-title">Proyecto final: ¿Qué dataset recomiendan?</h4>
-                          <p className="post-meta">Carlos Silva · hace 1 día · <span className="course-tag">Machine Learning Fundamentals</span></p>
-                        </div>
-                      </div>
-                      <div className="post-engagement">
-                        <div className="engagement-item">
-                          <span className="icon">👍</span>
-                          <span>19</span>
-                        </div>
-                        <div className="engagement-item">
-                          <span className="icon">💬</span>
-                          <span>22</span>
-                        </div>
-                      </div>
+                  ) : posts.length === 0 ? (
+                    <div className="empty-state">
+                      <p>No hay discusiones aún. ¡Sé el primero en crear una!</p>
                     </div>
-                  </div>
-
-                  <div className="forum-post-card">
-                    <div className="post-header">
-                      <div className="user-info">
-                        <img src="https://via.placeholder.com/50x50/84fab0/ffffff?text=LP" alt="Laura Pérez" className="user-avatar" />
-                        <div className="user-details">
-                          <h4 className="post-title">Compartiendo mi experiencia con LangChain</h4>
-                          <p className="post-meta">Laura Pérez · hace 1 día · <span className="course-tag">LangChain Development</span></p>
+                  ) : (
+                    posts.slice(0, 5).map((post) => (
+                      <div key={post.id} className="forum-post-card">
+                        <div className="post-header">
+                          <div className="user-info">
+                            <img 
+                              src={post.user.profileImage || `https://via.placeholder.com/50x50/667eea/ffffff?text=${post.user.firstName.charAt(0)}${post.user.lastName.charAt(0)}`} 
+                              alt={`${post.user.firstName} ${post.user.lastName}`} 
+                              className="user-avatar" 
+                            />
+                            <div className="user-details">
+                              <h4 className="post-title">{post.title}</h4>
+                              <p className="post-meta">
+                                {post.user.firstName} {post.user.lastName} · {formatTimeAgo(post.createdAt)} · 
+                                <span className="course-tag"> {post.category}</span>
+                              </p>
+                            </div>
+                          </div>
+                          <div className="post-engagement">
+                            <button 
+                              className="engagement-item like-button"
+                              onClick={() => handleLike(post.id)}
+                              title="Me gusta"
+                            >
+                              <span className="icon">👍</span>
+                              <span>{post.likes.length}</span>
+                            </button>
+                            <button 
+                              className="engagement-item comment-button"
+                              onClick={() => handleComment(post.id)}
+                              title="Comentar"
+                            >
+                              <span className="icon">💬</span>
+                              <span>{post.comments.length}</span>
+                            </button>
+                          </div>
                         </div>
+                        <div className="post-content">
+                          <p>{post.content.length > 200 ? `${post.content.substring(0, 200)}...` : post.content}</p>
+                        </div>
+                        
+                        {/* Mostrar comentarios si existen */}
+                        {post.comments.length > 0 && (
+                          <div className="comments-section">
+                            <h5>Comentarios ({post.comments.length})</h5>
+                            <div className="comments-list">
+                              {post.comments.slice(0, 3).map((comment) => (
+                                <div key={comment.id} className="comment-item">
+                                  <div className="comment-header">
+                                    <img 
+                                      src={comment.user.profileImage || `https://via.placeholder.com/32x32/667eea/ffffff?text=${comment.user.firstName.charAt(0)}`} 
+                                      alt={`${comment.user.firstName} ${comment.user.lastName}`} 
+                                      className="comment-avatar" 
+                                    />
+                                    <span className="comment-author">
+                                      {comment.user.firstName} {comment.user.lastName}
+                                    </span>
+                                    <span className="comment-time">
+                                      {formatTimeAgo(comment.createdAt)}
+                                    </span>
+                                  </div>
+                                  <p className="comment-content">{comment.content}</p>
+                                </div>
+                              ))}
+                              {post.comments.length > 3 && (
+                                <p className="more-comments">
+                                  Ver {post.comments.length - 3} comentarios más...
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        )}
                       </div>
-                      <div className="post-engagement">
-                        <div className="engagement-item">
-                          <span className="icon">👍</span>
-                          <span>35</span>
-                        </div>
-                        <div className="engagement-item">
-                          <span className="icon">💬</span>
-                          <span>18</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                    ))
+                  )}
                 </div>
               </div>
             </div>
@@ -376,110 +679,112 @@ export default function CommunityPage() {
             <div className="faq-container">
               <div className="faq-item">
                 <div className="faq-question">
-                  <h3>¿Cómo puedo acceder a los foros de discusión?</h3>
+                  <h3>¿Cómo puedo acceder a los cursos gratuitos?</h3>
                   <span className="faq-toggle">+</span>
                 </div>
                 <div className="faq-answer">
-                  <p>Una vez que te registres en eGrow Academy, tendrás acceso automático a todos los foros de la comunidad. Simplemente inicia sesión y navega a la sección de Comunidad.</p>
+                  <p>Simplemente regístrate en eGrow Academy y tendrás acceso inmediato a todos nuestros cursos gratuitos. No necesitas tarjeta de crédito ni suscripción premium.</p>
                 </div>
               </div>
 
               <div className="faq-item">
                 <div className="faq-question">
-                  <h3>¿Los eventos son gratuitos para todos los miembros?</h3>
+                  <h3>¿Qué diferencia hay entre la cuenta gratuita y premium?</h3>
                   <span className="faq-toggle">+</span>
                 </div>
                 <div className="faq-answer">
-                  <p>Sí, todos los eventos listados son completamente gratuitos para miembros de eGrow Academy. Solo necesitas registrarte con anticipación debido a la capacidad limitada.</p>
+                  <p>La cuenta gratuita te da acceso a cursos básicos y la comunidad. La cuenta premium incluye todos los cursos avanzados, recursos exclusivos, certificados y soporte prioritario.</p>
                 </div>
               </div>
 
               <div className="faq-item">
                 <div className="faq-question">
-                  <h3>¿Puedo participar en mentorías aunque sea principiante?</h3>
+                  <h3>¿Cómo funciona el sistema de certificados?</h3>
                   <span className="faq-toggle">+</span>
                 </div>
                 <div className="faq-answer">
-                  <p>¡Por supuesto! Nuestro programa de mentorías está diseñado para todos los niveles. Tenemos mentores especializados en guiar a principiantes en sus primeros pasos en IA.</p>
+                  <p>Al completar un curso premium, recibirás automáticamente un certificado digital que puedes descargar y compartir en LinkedIn. Los certificados son verificables y reconocidos por la industria.</p>
                 </div>
               </div>
 
               <div className="faq-item">
                 <div className="faq-question">
-                  <h3>¿Cómo puedo convertirme en mentor de la comunidad?</h3>
+                  <h3>¿Puedo acceder a los recursos desde cualquier dispositivo?</h3>
                   <span className="faq-toggle">+</span>
                 </div>
                 <div className="faq-answer">
-                  <p>Si tienes experiencia profesional en IA y quieres contribuir, puedes aplicar para ser mentor completando nuestro formulario de aplicación. Evaluamos cada candidatura individualmente.</p>
+                  <p>Sí, nuestra plataforma es completamente responsive. Puedes acceder desde tu computadora, tablet o smartphone. Tu progreso se sincroniza automáticamente entre dispositivos.</p>
                 </div>
               </div>
 
               <div className="faq-item">
                 <div className="faq-question">
-                  <h3>¿Hay oportunidades laborales exclusivas para miembros?</h3>
+                  <h3>¿Cómo puedo participar en la comunidad?</h3>
                   <span className="faq-toggle">+</span>
                 </div>
                 <div className="faq-answer">
-                  <p>Sí, tenemos partnerships con empresas líderes en IA que publican ofertas de trabajo exclusivamente para nuestra comunidad. Estas aparecen en la sección de Oportunidades Laborales.</p>
+                  <p>Una vez registrado, puedes crear discusiones, responder preguntas, compartir recursos y conectar con otros miembros en nuestro foro. La participación activa te ayuda a crecer profesionalmente.</p>
                 </div>
               </div>
 
               <div className="faq-item">
                 <div className="faq-question">
-                  <h3>¿Puedo organizar mi propio evento para la comunidad?</h3>
+                  <h3>¿Los cursos incluyen ejercicios prácticos?</h3>
                   <span className="faq-toggle">+</span>
                 </div>
                 <div className="faq-answer">
-                  <p>¡Sí! Fomentamos que los miembros organicen sus propios eventos. Contáctanos con tu propuesta y te ayudaremos con la logística y promoción.</p>
+                  <p>Sí, todos nuestros cursos incluyen ejercicios prácticos, proyectos reales y evaluaciones para que puedas aplicar lo que aprendes. También tienes acceso a un entorno de práctica en la nube.</p>
                 </div>
               </div>
 
               <div className="faq-item">
                 <div className="faq-question">
-                  <h3>¿Puedo cancelar mi suscripción en cualquier momento?</h3>
+                  <h3>¿Puedo cancelar mi suscripción premium en cualquier momento?</h3>
                   <span className="faq-toggle">+</span>
                 </div>
                 <div className="faq-answer">
-                  <p>Sí, puedes cancelar tu suscripción en cualquier momento desde tu panel de control. Tendrás acceso hasta el final del período facturado.</p>
+                  <p>Sí, puedes cancelar tu suscripción premium en cualquier momento desde tu perfil. Mantendrás acceso hasta el final del período facturado y conservarás todos los certificados obtenidos.</p>
                 </div>
               </div>
 
               <div className="faq-item">
                 <div className="faq-question">
-                  <h3>¿Qué métodos de pago aceptan para las suscripciones?</h3>
+                  <h3>¿Qué métodos de pago aceptan?</h3>
                   <span className="faq-toggle">+</span>
                 </div>
                 <div className="faq-answer">
-                  <p>Aceptamos todas las tarjetas de crédito y débito principales, así como PayPal y transferencias bancarias.</p>
+                  <p>Aceptamos todas las tarjetas de crédito y débito principales, PayPal y transferencias bancarias. Todos los pagos son procesados de forma segura a través de Stripe.</p>
                 </div>
               </div>
 
               <div className="faq-item">
                 <div className="faq-question">
-                  <h3>¿Hay garantía de devolución para las suscripciones?</h3>
+                  <h3>¿Hay garantía de devolución?</h3>
                   <span className="faq-toggle">+</span>
                 </div>
                 <div className="faq-answer">
-                  <p>Ofrecemos una garantía de satisfacción de 30 días. Si no estás satisfecho, te reembolsamos el 100%.</p>
+                  <p>Ofrecemos una garantía de satisfacción de 30 días. Si no estás satisfecho con tu suscripción premium, te reembolsamos el 100% sin preguntas.</p>
                 </div>
               </div>
 
               <div className="faq-item">
                 <div className="faq-question">
-                  <h3>¿Los cursos se actualizan regularmente?</h3>
+                  <h3>¿Cómo puedo obtener soporte técnico?</h3>
                   <span className="faq-toggle">+</span>
                 </div>
                 <div className="faq-answer">
-                  <p>Sí, actualizamos nuestro contenido regularmente para mantenerlo al día con las últimas tecnologías y tendencias.</p>
+                  <p>Puedes contactarnos a través del formulario de contacto, por email o directamente en el foro de la comunidad. Los miembros premium tienen acceso a soporte prioritario.</p>
                 </div>
               </div>
 
-              {/* Ask Question CTA */}
+              {/* Forum CTA */}
               <div className="ask-question-cta">
                 <div className="cta-content">
-                  <h3>¿No encuentras la respuesta que buscas?</h3>
-                  <p>Haz tu pregunta a la comunidad y obtén respuestas de expertos</p>
-                  <button className="btn btn-primary">❓ Hacer una Pregunta</button>
+                  <h3>¿Tienes alguna duda específica?</h3>
+                  <p>¡Únete a nuestro foro y pregunta a la comunidad! Nuestros expertos y miembros de eGrow Academy estarán encantados de ayudarte.</p>
+                  <a href="/community/foro" className="btn btn-primary">
+                    💬 Ir al Foro
+                  </a>
                 </div>
               </div>
             </div>
@@ -497,61 +802,68 @@ export default function CommunityPage() {
               </p>
             </div>
 
-            <div className="events-grid">
-              {upcomingEvents.map((event) => (
-                <div key={event.id} className="event-card">
-                  <div className="event-image">
-                    <img src={event.image} alt={event.title} />
-                    <span className={`event-type ${event.type.toLowerCase()}`}>
-                      {event.type}
-                    </span>
-                  </div>
-                  <div className="event-content">
-                    <div className="event-meta">
-                      <span className="event-date">{event.date}</span>
-                      <span className="event-time">{event.time}</span>
-                    </div>
-                    <h3 className="event-title">{event.title}</h3>
-                    <p className="event-instructor">Con {event.instructor}</p>
-                    <div className="event-attendees">
-                      <span>👥 {event.attendees} asistentes</span>
-                    </div>
-                    <button className="btn btn-primary">Registrarse</button>
+            <div className="events-table-container">
+              {filteredEvents.length > 0 ? (
+                <div className="events-table">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Evento</th>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Tipo</th>
+                        <th>Asistentes</th>
+                        <th>Acción</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredEvents.map((event, index) => (
+                        <tr key={index}>
+                          <td>
+                            <div className="event-info">
+                              <h4>{event.title}</h4>
+                              <p>{event.description}</p>
+                              <small>Con {event.instructor}</small>
+                            </div>
+                          </td>
+                          <td>{formatEventDate(event.date)}</td>
+                          <td>{event.time}</td>
+                          <td>
+                            <span className={`event-type-badge ${event.type.toLowerCase()}`}>
+                              {event.type}
+                            </span>
+                          </td>
+                          <td>👥 {event.attendees}</td>
+                          <td>
+                            <button 
+                              className="btn btn-primary btn-small"
+                              onClick={() => handleEventRegistration(event.id)}
+                            >
+                              📅 Registrarse
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="no-events-message">
+                  <div className="no-events-icon">📅</div>
+                  <h3>No hay eventos próximos</h3>
+                  <p>Mantente atento a nuestros próximos lanzamientos y eventos especiales.</p>
+                  <div className="no-events-cta">
+                    <a href="/community/foro" className="btn btn-primary">
+                      Únete a la comunidad
+                    </a>
                   </div>
                 </div>
-              ))}
+              )}
             </div>
           </div>
         </section>
 
-        {/* Testimonials */}
-        <section className="section testimonials-section">
-          <div className="container">
-            <div className="section-header">
-              <h2 className="section-title">Lo que Dicen Nuestros Miembros</h2>
-              <p className="section-description">
-                Testimonios de profesionales que han crecido con nuestra comunidad
-              </p>
-            </div>
 
-            <div className="testimonials-grid">
-              {testimonials.map((testimonial) => (
-                <div key={testimonial.id} className="testimonial-card">
-                  <div className="testimonial-content">
-                    <p>&quot;{testimonial.content}&quot;</p>
-                  </div>
-                  <div className="testimonial-author">
-                    <img src={testimonial.avatar} alt={testimonial.name} className="author-avatar" />
-                    <div className="author-info">
-                      <h4>{testimonial.name}</h4>
-                      <p>{testimonial.role} en {testimonial.company}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
 
         {/* Join Community CTA */}
         <section className="section join-cta-section">
@@ -567,26 +879,134 @@ export default function CommunityPage() {
                 <p>Forma parte de una de las comunidades más activas y valiosas en inteligencia artificial</p>
                 <div className="cta-stats-inline">
                   <div className="inline-stat">
-                    <span className="stat-num">25K+</span>
-                    <span className="stat-text">Miembros</span>
+                    <span className="stat-num">{communityStats?.activeMembers || 0}</span>
+                    <span className="stat-text">Miembros Activos</span>
                   </div>
                   <div className="inline-stat">
-                    <span className="stat-num">150+</span>
+                    <span className="stat-num">{communityStats?.countries || 0}</span>
                     <span className="stat-text">Países</span>
                   </div>
                   <div className="inline-stat">
-                    <span className="stat-num">95%</span>
-                    <span className="stat-text">Satisfacción</span>
+                    <span className="stat-num">{communityStats?.ratingStats?.overall?.averageRating || 4.8}</span>
+                    <span className="stat-text">⭐ Satisfacción</span>
                   </div>
                 </div>
                 <div className="cta-buttons-centered">
-                  <a href="#join" className="btn btn-primary btn-large">Unirse Gratis</a>
+                  {user ? (
+                    <a href="/community/forum" className="btn btn-primary btn-large">Ver Foro</a>
+                  ) : (
+                    <a href="/register" className="btn btn-primary btn-large">Únete Ahora</a>
+                  )}
                 </div>
               </div>
             </div>
           </div>
         </section>
       </main>
+
+      {/* Modal para crear discusión */}
+      {showCreateDiscussionModal && (
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>💬 Crear Nueva Discusión</h3>
+              <button className="modal-close" onClick={closeModal}>×</button>
+            </div>
+            <div className="modal-body">
+              <form onSubmit={handleSubmitDiscussion}>
+                <div className="form-group">
+                  <label htmlFor="title">Título de la discusión *</label>
+                  <input
+                    type="text"
+                    id="title"
+                    value={discussionForm.title}
+                    onChange={(e) => setDiscussionForm({...discussionForm, title: e.target.value})}
+                    placeholder="Escribe un título descriptivo..."
+                    required
+                    className="form-input"
+                  />
+                </div>
+                
+                <div className="form-group">
+                  <label htmlFor="category">Categoría</label>
+                  <select
+                    id="category"
+                    value={discussionForm.category}
+                    onChange={(e) => setDiscussionForm({...discussionForm, category: e.target.value})}
+                    className="form-select"
+                  >
+                    <option value="general">General</option>
+                    <option value="courses">Cursos</option>
+                    <option value="projects">Proyectos</option>
+                    <option value="career">Carrera</option>
+                    <option value="tools">Herramientas</option>
+                    <option value="events">Eventos</option>
+                  </select>
+                </div>
+                
+                <div className="form-group">
+                  <label htmlFor="content">Contenido de la discusión *</label>
+                  <textarea
+                    id="content"
+                    value={discussionForm.content}
+                    onChange={(e) => setDiscussionForm({...discussionForm, content: e.target.value})}
+                    placeholder="Describe tu pregunta, comparte tu experiencia o inicia una discusión..."
+                    required
+                    rows={6}
+                    className="form-textarea"
+                  />
+                </div>
+                
+                <div className="modal-actions">
+                  <button type="button" onClick={closeModal} className="btn btn-secondary" disabled={isSubmitting}>
+                    Cancelar
+                  </button>
+                  <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
+                    {isSubmitting ? 'Creando...' : 'Crear Discusión'}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal para comentarios */}
+      {showCommentModal && (
+        <div className="modal-overlay" onClick={closeCommentModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>💬 Agregar Comentario</h3>
+              <button className="modal-close" onClick={closeCommentModal}>×</button>
+            </div>
+            <div className="modal-body">
+              <form onSubmit={handleSubmitComment}>
+                <div className="form-group">
+                  <label htmlFor="comment">Tu comentario *</label>
+                  <textarea
+                    id="comment"
+                    value={commentContent}
+                    onChange={(e) => setCommentContent(e.target.value)}
+                    placeholder="Escribe tu comentario aquí..."
+                    rows={4}
+                    className="form-textarea"
+                    required
+                  />
+                </div>
+                
+                <div className="modal-actions">
+                  <button type="button" onClick={closeCommentModal} className="btn btn-secondary" disabled={isSubmittingComment}>
+                    Cancelar
+                  </button>
+                  <button type="submit" className="btn btn-primary" disabled={isSubmittingComment}>
+                    {isSubmittingComment ? 'Enviando...' : 'Enviar Comentario'}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
 
       <Footer />
       
@@ -642,6 +1062,347 @@ export default function CommunityPage() {
           .hero-bottom-logo-image {
             max-width: 66px;
             max-height: 48px;
+          }
+        }
+
+        /* Estilos para el modal de crear discusión */
+        .modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.7);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 10000;
+          padding: 1rem;
+        }
+
+        .modal-content {
+          background: white;
+          border-radius: 16px;
+          max-width: 600px;
+          width: 100%;
+          max-height: 90vh;
+          overflow-y: auto;
+          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+        }
+
+        .modal-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 1.5rem 2rem;
+          border-bottom: 1px solid #e2e8f0;
+        }
+
+        .modal-header h3 {
+          margin: 0;
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: #2d3748;
+        }
+
+        .modal-close {
+          background: none;
+          border: none;
+          font-size: 2rem;
+          cursor: pointer;
+          color: #718096;
+          padding: 0;
+          width: 32px;
+          height: 32px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50%;
+          transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+          background: #f7fafc;
+          color: #2d3748;
+        }
+
+        .modal-body {
+          padding: 2rem;
+        }
+
+        .form-group {
+          margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+          display: block;
+          margin-bottom: 0.5rem;
+          font-weight: 600;
+          color: #2d3748;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+          width: 100%;
+          padding: 0.75rem;
+          border: 2px solid #e2e8f0;
+          border-radius: 8px;
+          font-size: 1rem;
+          transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+          outline: none;
+          border-color: #3b82f6;
+        }
+
+        .form-textarea {
+          resize: vertical;
+          min-height: 120px;
+        }
+
+        .modal-actions {
+          display: flex;
+          gap: 1rem;
+          justify-content: flex-end;
+          margin-top: 2rem;
+          padding-top: 1.5rem;
+          border-top: 1px solid #e2e8f0;
+        }
+
+        .btn-secondary {
+          background: #f7fafc;
+          color: #4a5568;
+          border: 2px solid #e2e8f0;
+          padding: 0.75rem 1.5rem;
+          border-radius: 8px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+          background: #edf2f7;
+          border-color: #cbd5e0;
+        }
+
+        @media (max-width: 768px) {
+          .modal-content {
+            margin: 1rem;
+            max-height: calc(100vh - 2rem);
+          }
+
+          .modal-header,
+          .modal-body {
+            padding: 1rem;
+          }
+
+          .modal-actions {
+            flex-direction: column;
+          }
+
+          .modal-actions .btn {
+            width: 100%;
+          }
+        }
+
+        /* Estilos para estados de carga y error */
+        .loading-container {
+          text-align: center;
+          padding: 2rem;
+          color: var(--gray-600);
+        }
+
+        .error-container {
+          text-align: center;
+          padding: 2rem;
+          color: #dc2626;
+        }
+
+        .empty-state {
+          text-align: center;
+          padding: 3rem 2rem;
+          color: var(--gray-500);
+          background: var(--gray-50);
+          border-radius: 12px;
+          margin: 1rem 0;
+        }
+
+        .post-content {
+          margin-top: 1rem;
+          padding-top: 1rem;
+          border-top: 1px solid var(--gray-200);
+          color: var(--gray-700);
+          line-height: 1.6;
+        }
+
+        .post-content p {
+          margin: 0;
+        }
+
+        /* Estilos para botones de engagement */
+        .engagement-item {
+          background: none;
+          border: none;
+          cursor: pointer;
+          padding: 0.5rem;
+          border-radius: 8px;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+          color: var(--gray-600);
+        }
+
+        .engagement-item:hover {
+          background: var(--gray-100);
+          color: var(--gray-800);
+          transform: translateY(-1px);
+        }
+
+        .like-button:hover {
+          color: #dc2626;
+        }
+
+        .comment-button:hover {
+          color: #2563eb;
+        }
+
+        .engagement-item:active {
+          transform: translateY(0);
+        }
+
+        .engagement-item .icon {
+          font-size: 1.1rem;
+        }
+
+        .engagement-item span:last-child {
+          font-weight: 500;
+        }
+
+        /* Estilos para la sección de comentarios */
+        .comments-section {
+          margin-top: 1rem;
+          padding-top: 1rem;
+          border-top: 1px solid var(--gray-200);
+        }
+
+        .comments-section h5 {
+          font-size: 0.875rem;
+          font-weight: 600;
+          color: var(--gray-700);
+          margin-bottom: 0.75rem;
+        }
+
+        .comments-list {
+          display: flex;
+          flex-direction: column;
+          gap: 0.75rem;
+        }
+
+        .comment-item {
+          background: var(--gray-50);
+          border-radius: 8px;
+          padding: 0.75rem;
+        }
+
+        .comment-header {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          margin-bottom: 0.5rem;
+        }
+
+        .comment-avatar {
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+
+        .comment-author {
+          font-size: 0.875rem;
+          font-weight: 600;
+          color: var(--gray-800);
+        }
+
+        .comment-time {
+          font-size: 0.75rem;
+          color: var(--gray-500);
+        }
+
+        .comment-content {
+          font-size: 0.875rem;
+          color: var(--gray-700);
+          line-height: 1.4;
+          margin: 0;
+        }
+
+        .more-comments {
+          font-size: 0.875rem;
+          color: var(--gray-500);
+          text-align: center;
+          margin: 0;
+          cursor: pointer;
+        }
+
+        .more-comments:hover {
+          color: var(--gray-700);
+          text-decoration: underline;
+        }
+
+        .view-all {
+          color: var(--primary-color);
+          font-weight: 600;
+          cursor: pointer;
+          transition: color 0.3s ease;
+          text-decoration: none;
+        }
+
+        .view-all:hover {
+          color: var(--primary-dark);
+          text-decoration: underline;
+        }
+
+        /* Estilos para loading de estadísticas */
+        .stat-loading {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .loading-dots {
+          display: flex;
+          gap: 0.25rem;
+        }
+
+        .loading-dots span {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background: var(--primary-color);
+          animation: loadingDots 1.4s infinite ease-in-out;
+        }
+
+        .loading-dots span:nth-child(1) {
+          animation-delay: -0.32s;
+        }
+
+        .loading-dots span:nth-child(2) {
+          animation-delay: -0.16s;
+        }
+
+        @keyframes loadingDots {
+          0%, 80%, 100% {
+            transform: scale(0);
+            opacity: 0.5;
+          }
+          40% {
+            transform: scale(1);
+            opacity: 1;
           }
         }
       `}</style>

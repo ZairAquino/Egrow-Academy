@@ -62,7 +62,7 @@ export default function RegisterPage() {
                   display: 'inline-block'
                 }}>
                   <Image 
-                    src="/images/egacademylogoblanco.png" 
+                    src="/images/eGrowAcademylogo.png" 
                     alt="eGrow Academy" 
                     width={250}
                     height={75}
