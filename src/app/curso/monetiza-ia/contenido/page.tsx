@@ -32,276 +32,362 @@ export default function ContenidoMonetizaIAPage() {
     lessons: [
       {
         id: 1,
-        title: 'Introducción a la Monetización con IA',
-        duration: '15 min',
+        title: 'M0 - AI Money‑Toolkit',
+        duration: '12 min',
         type: 'video',
-        description: 'Descubre las oportunidades de monetización que ofrece la inteligencia artificial',
+        description: 'Intro | Herramientas - Checklist de apps y presets listos para facturar',
         content: `
-          <h2>Introducción a la Monetización con IA</h2>
-          <p>La inteligencia artificial ha revolucionado la forma en que podemos generar ingresos en el mundo digital. En esta lección, exploraremos las oportunidades únicas que ofrece la IA para crear fuentes de ingresos innovadoras.</p>
+          <h2>M0 - AI Money‑Toolkit</h2>
+          <h3>Intro | Herramientas</h3>
+          <p>Checklist de apps y presets listos para facturar</p>
           
-          <h3>¿Por qué monetizar con IA?</h3>
-          <p>La IA ofrece ventajas únicas para la monetización:</p>
+          <p>Bienvenido al toolkit definitivo para monetizar con IA. En este módulo descubrirás las herramientas esenciales que necesitas para empezar a generar ingresos inmediatamente.</p>
+          
+          <h3>Herramientas Esenciales para Facturar con IA:</h3>
           <ul>
-            <li><strong>Automatización:</strong> Procesos que funcionan 24/7 sin intervención humana</li>
-            <li><strong>Escalabilidad:</strong> Capacidad de atender a miles de usuarios simultáneamente</li>
-            <li><strong>Personalización:</strong> Experiencias únicas para cada usuario</li>
-            <li><strong>Eficiencia:</strong> Reducción de costos operativos</li>
+            <li><strong>ChatGPT/Claude:</strong> Para generación de contenido y automatización</li>
+            <li><strong>Canva + IA:</strong> Diseños profesionales en minutos</li>
+            <li><strong>Notion AI:</strong> Organización y productividad</li>
+            <li><strong>Stripe:</strong> Procesamiento de pagos</li>
+            <li><strong>Gumroad:</strong> Venta de productos digitales</li>
+            <li><strong>ConvertKit:</strong> Email marketing automatizado</li>
           </ul>
           
-          <h3>Oportunidades de mercado:</h3>
-          <ul>
-            <li><strong>Productos digitales:</strong> Ebooks, cursos, plantillas generadas con IA</li>
-            <li><strong>Servicios automatizados:</strong> Chatbots, análisis de datos, generación de contenido</li>
-            <li><strong>Herramientas SaaS:</strong> Plataformas que utilizan IA para resolver problemas específicos</li>
-            <li><strong>Consultoría:</strong> Implementación de soluciones de IA para empresas</li>
-          </ul>
-        `,
-        completed: false
+          <h3>Presets Listos para Usar:</h3>
+          <p>Descarga plantillas y configuraciones pre-optimizadas que puedes implementar hoy mismo para empezar a generar ingresos.</p>
+        `
       },
       {
         id: 2,
-        title: 'Estrategias de Monetización con ChatGPT',
-        duration: '25 min',
+        title: 'M1 - Venta sin Fricción',
+        duration: '18 min',
         type: 'video',
-        description: 'Aprende a utilizar ChatGPT para crear productos digitales y servicios',
+        description: 'Intro Ventas - Script de oferta listo para DM / llamada',
         content: `
-          <h2>Estrategias de Monetización con ChatGPT</h2>
-          <p>ChatGPT se ha convertido en una de las herramientas más poderosas para la monetización con IA. Aprenderemos cómo aprovechar su potencial para crear múltiples fuentes de ingresos.</p>
+          <h2>M1 - Venta sin Fricción</h2>
+          <h3>Intro Ventas</h3>
+          <p>Script de oferta listo para DM / llamada</p>
           
-          <h3>Casos de uso rentables:</h3>
+          <p>Aprende a vender sin fricción usando scripts probados y optimizados con IA para convertir prospectos en clientes pagando.</p>
+          
+          <h3>Estructura del Script de Venta:</h3>
+          <ol>
+            <li><strong>Apertura:</strong> Conecta con el problema específico</li>
+            <li><strong>Agitación:</strong> Intensifica la urgencia del problema</li>
+            <li><strong>Solución:</strong> Presenta tu oferta como la única alternativa</li>
+            <li><strong>Prueba social:</strong> Testimonios y casos de éxito</li>
+            <li><strong>Cierre:</strong> Call to action claro y directo</li>
+          </ol>
+          
+          <h3>Scripts Optimizados:</h3>
           <ul>
-            <li><strong>Generación de contenido:</strong> Artículos, posts de redes sociales, descripciones de productos</li>
-            <li><strong>Creación de productos:</strong> Ebooks, guías, plantillas, scripts</li>
-            <li><strong>Servicios de consultoría:</strong> Análisis de mercado, estrategias de marketing</li>
-            <li><strong>Automatización de procesos:</strong> Respuestas automáticas, clasificación de datos</li>
+            <li><strong>DM de Instagram/LinkedIn:</strong> 3 mensajes que convierten</li>
+            <li><strong>Email de ventas:</strong> Secuencia de 5 emails</li>
+            <li><strong>Llamada de ventas:</strong> Guión de 15 minutos</li>
           </ul>
           
-          <h3>Estrategias de implementación:</h3>
-          <ol>
-            <li><strong>Identificar nichos rentables:</strong> Mercados con alta demanda y baja competencia</li>
-            <li><strong>Desarrollar productos únicos:</strong> Combinar IA con experiencia humana</li>
-            <li><strong>Crear sistemas de distribución:</strong> Plataformas, marketplaces, redes sociales</li>
-            <li><strong>Optimizar para conversión:</strong> Landing pages, testimonios, garantías</li>
-          </ol>
-        `,
-        completed: false
+          <h3>Personalización con IA:</h3>
+          <p>Usa prompts específicos para adaptar cada script a tu nicho y audiencia, maximizando las conversiones.</p>
+        `
       },
       {
         id: 3,
-        title: 'Creación de Productos Digitales con IA',
-        duration: '30 min',
+        title: 'M1.1 - Ayuda que Cierra',
+        duration: '22 min',
         type: 'video',
-        description: 'Descubre cómo crear ebooks, cursos online y otros productos digitales',
+        description: 'Vender & Ayudar - Mensaje Problema → Ayuda → Oferta (copiar‑pegar)',
         content: `
-          <h2>Creación de Productos Digitales con IA</h2>
-          <p>Los productos digitales representan una de las formas más escalables de monetizar con IA. Aprenderemos el proceso completo desde la ideación hasta la venta.</p>
+          <h2>M1.1 - Ayuda que Cierra</h2>
+          <h3>Vender & Ayudar</h3>
+          <p>Mensaje Problema → Ayuda → Oferta (copiar‑pegar)</p>
           
-          <h3>Tipos de productos digitales:</h3>
-          <ul>
-            <li><strong>Ebooks y guías:</strong> Contenido educativo y de referencia</li>
-            <li><strong>Cursos online:</strong> Programas de formación estructurados</li>
-            <li><strong>Plantillas y herramientas:</strong> Recursos reutilizables</li>
-            <li><strong>Software y aplicaciones:</strong> Herramientas que resuelven problemas específicos</li>
-          </ul>
+          <p>Domina el arte de vender ayudando. Convierte cada interacción en una oportunidad de venta natural y sin presión.</p>
           
-          <h3>Proceso de creación:</h3>
+          <h3>Flujo Problema → Ayuda → Oferta:</h3>
           <ol>
-            <li><strong>Investigación de mercado:</strong> Identificar necesidades no satisfechas</li>
-            <li><strong>Desarrollo del producto:</strong> Usar IA para acelerar la creación</li>
-            <li><strong>Control de calidad:</strong> Revisión humana y mejora continua</li>
-            <li><strong>Lanzamiento y marketing:</strong> Estrategias de promoción efectivas</li>
+            <li><strong>Identificar el problema:</strong> Escucha activa y empatía</li>
+            <li><strong>Ofrecer ayuda genuina:</strong> Valor inmediato y gratuito</li>
+            <li><strong>Transición natural:</strong> De ayuda gratuita a solución premium</li>
           </ol>
           
-          <h3>Herramientas recomendadas:</h3>
+          <h3>Plantillas Copy-Paste:</h3>
+          <pre><code># Mensaje Tipo 1: Identificación de Problema
+"Veo que estás luchando con [problema específico]. 
+Esto es súper común en [industria/nicho]. 
+¿Te gustaría que te comparta una estrategia 
+que ha funcionado para clientes similares?"
+
+# Mensaje Tipo 2: Ayuda Inmediata  
+"Te envío un recurso gratuito que puede ayudarte 
+con [problema]. Sin compromisos. Si te sirve, 
+genial. Si tienes preguntas, aquí estoy."
+
+# Mensaje Tipo 3: Transición a Oferta
+"Me alegra que el recurso te haya servido. 
+Si quieres resultados más rápidos y específicos 
+para tu situación, tengo algo que puede interesarte..."</code></pre>
+          
+          <h3>Casos de Uso Específicos:</h3>
           <ul>
-            <li>ChatGPT para generación de contenido</li>
-            <li>Midjourney para imágenes</li>
-            <li>Canva para diseño</li>
-            <li>Gumroad para ventas</li>
+            <li><strong>Redes sociales:</strong> Comentarios que generan DMs</li>
+            <li><strong>Email marketing:</strong> Secuencias de valor</li>
+            <li><strong>Networking:</strong> Conversaciones que convierten</li>
           </ul>
-        `,
-        completed: false
+        `
       },
       {
         id: 4,
-        title: 'Automatización de Procesos de Venta',
-        duration: '20 min',
-        type: 'video',
-        description: 'Implementa sistemas automatizados de venta y marketing',
+        title: 'M2 - Soporte que Retiene',
+        duration: '25 min',
+        type: 'lab',
+        description: 'Servicio al Cliente - Plantilla post‑venta "fan for life"',
         content: `
-          <h2>Automatización de Procesos de Venta</h2>
-          <p>La automatización es clave para escalar cualquier negocio de monetización con IA. Aprenderemos a crear sistemas que vendan mientras dormimos.</p>
+          <h2>M2 - Soporte que Retiene</h2>
+          <h3>Servicio al Cliente</h3>
+          <p>Plantilla post‑venta "fan for life"</p>
           
-          <h3>Funnel de ventas automatizado:</h3>
+          <p>Transforma clientes de una sola compra en fanáticos de por vida que compran repetidamente y te refieren constantemente.</p>
+          
+          <h3>Sistema de Retención "Fan for Life":</h3>
           <ol>
-            <li><strong>Captura de leads:</strong> Formularios, landing pages, contenido gratuito</li>
-            <li><strong>Nurturing:</strong> Email marketing automatizado, contenido educativo</li>
-            <li><strong>Conversión:</strong> Ofertas irresistibles, testimonios, garantías</li>
-            <li><strong>Retención:</strong> Soporte post-venta, productos adicionales</li>
+            <li><strong>Onboarding VIP:</strong> Primera impresión que sorprende</li>
+            <li><strong>Check-ins proactivos:</strong> Seguimiento antes de que pregunten</li>
+            <li><strong>Valor continuo:</strong> Recursos exclusivos post-compra</li>
+            <li><strong>Comunidad:</strong> Conexión con otros clientes</li>
+            <li><strong>Upgrades naturales:</strong> Evolución de servicios</li>
           </ol>
           
-          <h3>Herramientas de automatización:</h3>
-          <ul>
-            <li><strong>Email marketing:</strong> Mailchimp, ConvertKit, ActiveCampaign</li>
-            <li><strong>CRM:</strong> HubSpot, Salesforce, Pipedrive</li>
-            <li><strong>Chatbots:</strong> ManyChat, Chatfuel, Intercom</li>
-            <li><strong>Analytics:</strong> Google Analytics, Facebook Pixel, Hotjar</li>
-          </ul>
+          <h3>Plantillas de Comunicación:</h3>
+          <pre><code># Email de Bienvenida (Día 0)
+Asunto: "🎉 ¡Bienvenido a la familia! Tu acceso está listo"
+
+Hola [Nombre],
+¡Qué emoción tenerte aquí! 
+No es solo una compra, es el inicio de una transformación.
+
+# Check-in Día 7
+Asunto: "¿Cómo van tus primeros resultados?"
+
+Hola [Nombre],
+Una semana después de tu compra, quería saber:
+- ¿Has implementado los primeros pasos?
+- ¿Hay algo en lo que pueda ayudarte?
+
+# Valor Continuo (Mensual)
+Asunto: "🎁 Recurso exclusivo para ti"
+
+[Nombre], como cliente VIP tienes acceso a este 
+recurso que acabo de crear...</code></pre>
           
-          <h3>Estrategias de optimización:</h3>
+          <h3>Métricas de Retención:</h3>
           <ul>
-            <li>A/B testing de landing pages</li>
-            <li>Segmentación de audiencia</li>
-            <li>Personalización de mensajes</li>
-            <li>Optimización de conversión</li>
+            <li><strong>Tasa de uso del producto:</strong> 80%+ en primeros 30 días</li>
+            <li><strong>Tasa de renovación:</strong> 90%+ clientes recurrentes</li>
+            <li><strong>Net Promoter Score:</strong> 9+ de 10 recomendarían</li>
+            <li><strong>Lifetime Value:</strong> 5x+ valor de primera compra</li>
           </ul>
-        `,
-        completed: false
+        `
       },
       {
         id: 5,
-        title: 'Marketing Digital Optimizado con IA',
-        duration: '25 min',
+        title: 'M2.1 - Diferénciate & Cobra Más',
+        duration: '20 min',
         type: 'video',
-        description: 'Optimiza tus campañas de marketing digital utilizando herramientas de IA',
+        description: 'Diferénciate - One‑liner de posicionamiento ganador',
         content: `
-          <h2>Marketing Digital Optimizado con IA</h2>
-          <p>El marketing digital ha sido transformado por la IA. Aprenderemos a usar estas herramientas para maximizar el ROI de nuestras campañas.</p>
+          <h2>M2.1 - Diferénciate & Cobra Más</h2>
+          <h3>Diferénciate</h3>
+          <p>One‑liner de posicionamiento ganador</p>
           
-          <h3>Áreas de aplicación:</h3>
+          <p>Crea un posicionamiento único que te permita cobrar precios premium y eliminar la competencia directa.</p>
+          
+          <h3>Fórmula del One-Liner Ganador:</h3>
+          <p><strong>[Resultado específico] para [audiencia específica] en [tiempo específico] sin [objeción principal]</strong></p>
+          
+          <h3>Ejemplos de One-Liners Poderosos:</h3>
           <ul>
-            <li><strong>Análisis de audiencia:</strong> Segmentación avanzada, comportamiento predictivo</li>
-            <li><strong>Optimización de contenido:</strong> Títulos, descripciones, imágenes</li>
-            <li><strong>Publicidad programática:</strong> Bidding automático, targeting inteligente</li>
-            <li><strong>SEO:</strong> Investigación de palabras clave, optimización on-page</li>
+            <li><strong>Consultor IA:</strong> "Aumento de ingresos del 40% para consultores en 90 días sin conocimientos técnicos"</li>
+            <li><strong>Content Creator:</strong> "1M de vistas garantizadas para emprendedores en 6 meses sin mostrar la cara"</li>
+            <li><strong>Coach:</strong> "Primeros $10K online para profesionales en 120 días sin audiencia previa"</li>
           </ul>
           
-          <h3>Herramientas de marketing con IA:</h3>
-          <ul>
-            <li><strong>Google Ads:</strong> Smart bidding, responsive ads</li>
-            <li><strong>Facebook Ads:</strong> Lookalike audiences, dynamic ads</li>
-            <li><strong>Email marketing:</strong> Personalización, timing optimizado</li>
-            <li><strong>SEO:</strong> Surfer, Clearscope, MarketMuse</li>
-          </ul>
-          
-          <h3>Estrategias de implementación:</h3>
+          <h3>Proceso de Diferenciación:</h3>
           <ol>
-            <li>Recopilar y analizar datos de audiencia</li>
-            <li>Crear contenido personalizado</li>
-            <li>Optimizar campañas en tiempo real</li>
-            <li>Medir y ajustar resultados</li>
+            <li><strong>Análisis de competencia:</strong> ¿Qué prometen todos?</li>
+            <li><strong>Identificar gaps:</strong> ¿Qué nadie está prometiendo?</li>
+            <li><strong>Validar con mercado:</strong> ¿Es esto lo que realmente quieren?</li>
+            <li><strong>Crear proof points:</strong> ¿Cómo demuestro que es posible?</li>
           </ol>
-        `,
-        completed: false
+          
+          <h3>Estrategias de Precio Premium:</h3>
+          <ul>
+            <li><strong>Bundling inteligente:</strong> Combina servicios de alto valor</li>
+            <li><strong>Garantías audaces:</strong> Reduce el riesgo percibido</li>
+            <li><strong>Exclusividad:</strong> Limita disponibilidad o acceso</li>
+            <li><strong>Resultados documentados:</strong> Case studies detallados</li>
+          </ul>
+        `
       },
       {
         id: 6,
-        title: 'Creación de Fuentes de Ingresos Pasivos',
-        duration: '30 min',
+        title: 'M3 - IA Amplify Engine',
+        duration: '28 min',
         type: 'video',
-        description: 'Aprende a crear múltiples fuentes de ingresos pasivos utilizando estrategias de IA',
+        description: 'Marketing con IA - Flujo Prompt → Copy → Publica',
         content: `
-          <h2>Creación de Fuentes de Ingresos Pasivos</h2>
-          <p>Los ingresos pasivos son el santo grial de la monetización. Con IA, podemos crear múltiples fuentes que generen dinero de forma automática.</p>
+          <h2>M3 - IA Amplify Engine</h2>
+          <h3>Marketing con IA</h3>
+          <p>Flujo Prompt → Copy → Publica</p>
           
-          <h3>Tipos de ingresos pasivos con IA:</h3>
-          <ul>
-            <li><strong>Productos digitales:</strong> Ebooks, cursos, software</li>
-            <li><strong>Plataformas SaaS:</strong> Herramientas con suscripción mensual</li>
-            <li><strong>Contenido monetizado:</strong> Blogs, YouTube, podcasts</li>
-            <li><strong>Marketplaces:</strong> Plataformas que conectan compradores y vendedores</li>
-          </ul>
+          <p>Automatiza tu marketing con IA para generar contenido de calidad de manera consistente y escalable.</p>
           
-          <h3>Estrategias de implementación:</h3>
+          <h3>El Motor de Amplificación IA:</h3>
           <ol>
-            <li><strong>Diversificación:</strong> Múltiples fuentes de ingresos</li>
-            <li><strong>Automatización:</strong> Sistemas que funcionan sin intervención</li>
-            <li><strong>Escalabilidad:</strong> Capacidad de crecer sin límites</li>
-            <li><strong>Sostenibilidad:</strong> Modelos de negocio a largo plazo</li>
+            <li><strong>Prompt Engineering:</strong> Comandos que generan oro</li>
+            <li><strong>Copy Generation:</strong> Contenido que convierte</li>
+            <li><strong>Multi-Platform Publishing:</strong> Distribución masiva</li>
           </ol>
           
-          <h3>Casos de estudio exitosos:</h3>
+          <h3>Prompts de Alto Rendimiento:</h3>
+          <pre><code># Prompt para Posts Virales
+"Crea un post para [plataforma] sobre [tema] que:
+- Use el framework PAS (Problema-Agitación-Solución)
+- Incluya hook emocional en primeras 7 palabras
+- Termine con pregunta que genere engagement
+- Tono: [casual/profesional/inspiracional]
+- Audiencia: [descripción específica]"
+
+# Prompt para Email Marketing
+"Escribe un email de [tipo] para [audiencia] que:
+- Subject line con 40% open rate
+- Historia personal conectada al CTA
+- Maximum 150 palabras
+- CTA específico y urgente"</code></pre>
+          
+          <h3>Flujo de Automatización:</h3>
           <ul>
-            <li>Blogs monetizados con publicidad y afiliados</li>
-            <li>Plataformas de cursos online</li>
-            <li>Herramientas SaaS con suscripciones</li>
-            <li>Marketplaces de productos digitales</li>
+            <li><strong>Investigación automatizada:</strong> Tendencias y temas relevantes</li>
+            <li><strong>Generación en lote:</strong> 30 posts en 30 minutos</li>
+            <li><strong>Adaptación multi-formato:</strong> Post → Email → Video script</li>
+            <li><strong>Programación inteligente:</strong> Horarios óptimos por plataforma</li>
           </ul>
-        `,
-        completed: false
+          
+          <h3>Métricas y Optimización:</h3>
+          <p>Trackea engagement, clicks y conversiones para iterar prompts y mejorar resultados continuamente.</p>
+        `
       },
       {
         id: 7,
-        title: 'Análisis y Optimización de Resultados',
-        duration: '20 min',
-        type: 'video',
-        description: 'Utiliza herramientas de analytics y IA para analizar y optimizar tus resultados',
+        title: 'M3.1 - Mirror & Monetize',
+        duration: '35 min',
+        type: 'lab',
+        description: 'Aplicarlo a uno mismo - Caso demo propio (antes / después)',
         content: `
-          <h2>Análisis y Optimización de Resultados</h2>
-          <p>El análisis de datos es fundamental para optimizar cualquier estrategia de monetización. Aprenderemos a usar herramientas de analytics para tomar decisiones basadas en datos.</p>
+          <h2>M3.1 - Mirror & Monetize</h2>
+          <h3>Aplicarlo a uno mismo</h3>
+          <p>Caso demo propio (antes / después)</p>
           
-          <h3>Métricas clave a monitorear:</h3>
-          <ul>
-            <li><strong>Conversión:</strong> Tasa de conversión, valor promedio de orden</li>
-            <li><strong>Retención:</strong> Tasa de abandono, lifetime value</li>
-            <li><strong>Adquisición:</strong> Costo por adquisición, canales de tráfico</li>
-            <li><strong>Engagement:</strong> Tiempo en página, páginas por sesión</li>
-          </ul>
+          <p>Implementa todo lo aprendido en tu propio negocio y documenta la transformación para crear un caso de estudio poderoso.</p>
           
-          <h3>Herramientas de analytics:</h3>
-          <ul>
-            <li><strong>Google Analytics:</strong> Análisis web completo</li>
-            <li><strong>Facebook Pixel:</strong> Tracking de conversiones</li>
-            <li><strong>Hotjar:</strong> Análisis de comportamiento</li>
-            <li><strong>Mixpanel:</strong> Analytics de productos</li>
-          </ul>
-          
-          <h3>Proceso de optimización:</h3>
+          <h3>Proyecto de Transformación Personal:</h3>
           <ol>
-            <li>Recopilar datos de múltiples fuentes</li>
-            <li>Identificar patrones y oportunidades</li>
-            <li>Implementar mejoras basadas en datos</li>
-            <li>Medir el impacto de los cambios</li>
+            <li><strong>Auditoría inicial:</strong> Situación actual documentada</li>
+            <li><strong>Implementación sistemática:</strong> Cada módulo aplicado</li>
+            <li><strong>Medición de resultados:</strong> KPIs antes/después</li>
+            <li><strong>Documentación del proceso:</strong> Video diario de progreso</li>
           </ol>
-        `,
-        completed: false
+          
+          <h3>Framework de Implementación:</h3>
+          <pre><code># Semana 1: Setup y Baseline
+- Instalar herramientas del M0
+- Documentar métricas actuales (ingresos, audiencia, conversiones)
+- Crear sistemas de medición
+
+# Semana 2-3: Optimización de Ventas (M1 + M1.1)
+- Implementar scripts de venta
+- Testing A/B de mensajes
+- Optimizar proceso de conversión
+
+# Semana 4-5: Retención y Diferenciación (M2 + M2.1)
+- Lanzar sistema de retención
+- Refinar posicionamiento
+- Ajustar precios
+
+# Semana 6-8: Amplificación con IA (M3)
+- Automatizar marketing
+- Escalar contenido
+- Optimizar distribución</code></pre>
+          
+          <h3>Documentación del Case Study:</h3>
+          <ul>
+            <li><strong>Video diario:</strong> 2-3 minutos de progreso</li>
+            <li><strong>Screenshots de métricas:</strong> Evidencia cuantificable</li>
+            <li><strong>Reflexiones escritas:</strong> Qué funcionó, qué no</li>
+            <li><strong>Lecciones aprendidas:</strong> Insights únicos</li>
+          </ul>
+          
+          <h3>Monetización del Case Study:</h3>
+          <p>Tu transformación documentada se convierte en tu mejor material de marketing y prueba social para futuras ventas.</p>
+        `
       },
       {
         id: 8,
-        title: 'Escalabilidad y Tendencias Futuras',
-        duration: '15 min',
-        type: 'video',
-        description: 'Descubre cómo escalar tu negocio digital y las tendencias futuras en monetización con IA',
+        title: 'M4 - Escala, Repite, Monetiza',
+        duration: '45 min',
+        type: 'project',
+        description: 'Final - Plan de iteración + métrica clave',
         content: `
-          <h2>Escalabilidad y Tendencias Futuras</h2>
-          <p>La escalabilidad es esencial para el crecimiento sostenible. Exploraremos estrategias para escalar tu negocio de monetización con IA y las tendencias que marcarán el futuro.</p>
+          <h2>M4 - Escala, Repite, Monetiza</h2>
+          <h3>Final</h3>
+          <p>Plan de iteración + métrica clave</p>
           
-          <h3>Estrategias de escalabilidad:</h3>
-          <ul>
-            <li><strong>Automatización total:</strong> Sistemas que funcionan sin intervención</li>
-            <li><strong>Expansión de productos:</strong> Nuevos mercados y verticales</li>
-            <li><strong>Partnerships estratégicos:</strong> Colaboraciones que aceleran el crecimiento</li>
-            <li><strong>Internacionalización:</strong> Expansión a mercados globales</li>
-          </ul>
+          <p>Crea un sistema escalable que te permita multiplicar resultados y generar ingresos recurrentes de forma sistemática.</p>
           
-          <h3>Tendencias futuras:</h3>
-          <ul>
-            <li><strong>IA generativa avanzada:</strong> Contenido más sofisticado y personalizado</li>
-            <li><strong>Realidad virtual y aumentada:</strong> Nuevas formas de monetización</li>
-            <li><strong>Blockchain y NFTs:</strong> Nuevos modelos de propiedad digital</li>
-            <li><strong>Automatización extrema:</strong> Negocios completamente autónomos</li>
-          </ul>
-          
-          <h3>Preparación para el futuro:</h3>
+          <h3>Plan de Escalamiento Sistemático:</h3>
           <ol>
-            <li>Mantente actualizado con las últimas tecnologías</li>
-            <li>Construye una base sólida de datos y sistemas</li>
-            <li>Desarrolla habilidades de adaptación</li>
-            <li>Invierte en tu educación continua</li>
+            <li><strong>Identificar cuellos de botella:</strong> ¿Qué limita el crecimiento?</li>
+            <li><strong>Automatizar procesos repetitivos:</strong> IA + herramientas</li>
+            <li><strong>Crear sistemas de delegación:</strong> Team building</li>
+            <li><strong>Desarrollar fuentes de ingreso pasivo:</strong> Productos escalables</li>
           </ol>
-        `,
-        completed: false
+          
+          <h3>Métrica Clave de Escalamiento:</h3>
+          <p><strong>Revenue Per Hour (RPH):</strong> Ingresos generados por hora trabajada</p>
+          
+          <pre><code># Cálculo de RPH
+RPH = Ingresos Mensuales ÷ Horas Trabajadas
+
+Objetivo de Escalamiento:
+Mes 1: $50/hora
+Mes 3: $100/hora  
+Mes 6: $200/hora
+Mes 12: $500/hora
+
+Estrategias para aumentar RPH:
+1. Aumentar precios (mejor posicionamiento)
+2. Reducir tiempo por cliente (automatización)
+3. Crear productos escalables (1 → muchos)
+4. Implementar upsells automáticos</code></pre>
+          
+          <h3>Sistema de Iteración Continua:</h3>
+          <ul>
+            <li><strong>Review semanal:</strong> ¿Qué funcionó? ¿Qué mejorar?</li>
+            <li><strong>Testing mensual:</strong> Nuevas estrategias y herramientas</li>
+            <li><strong>Pivots trimestrales:</strong> Ajustes de dirección si es necesario</li>
+            <li><strong>Auditoría anual:</strong> Evaluación completa del sistema</li>
+          </ul>
+          
+          <h3>Plan de Monetización a 12 Meses:</h3>
+          <ul>
+            <li><strong>Mes 1-3:</strong> Optimizar sistema actual (M0-M3)</li>
+            <li><strong>Mes 4-6:</strong> Escalar y automatizar</li>
+            <li><strong>Mes 7-9:</strong> Diversificar fuentes de ingreso</li>
+            <li><strong>Mes 10-12:</strong> Crear activos de ingreso pasivo</li>
+          </ul>
+          
+          <h3>Recursos de Soporte Continuo:</h3>
+          <p>Acceso a actualizaciones, nuevas herramientas y comunidad para mantener el momentum de crecimiento.</p>
+        `
       }
     ]
   };
@@ -309,28 +395,20 @@ export default function ContenidoMonetizaIAPage() {
   useEffect(() => {
     if (user) {
       checkEnrollment();
+    } else {
+      router.push('/login?redirect=/curso/monetiza-ia/contenido');
     }
   }, [user]);
 
   const checkEnrollment = async () => {
     try {
-      const response = await fetch('/api/courses/enrollment-status', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ courseId: 'monetiza-ia' }),
-        credentials: 'include',
-      });
-
+      const response = await fetch(`/api/courses/enrollment-status?courseId=${courseData.id}`);
       if (response.ok) {
-        setIsEnrolled(true);
-      } else {
-        router.push('/curso/monetiza-ia');
+        const data = await response.json();
+        setIsEnrolled(data.isEnrolled);
       }
     } catch (error) {
-      console.error('Error checking enrollment:', error);
-      router.push('/curso/monetiza-ia');
+      console.error('Error verificando inscripción:', error);
     }
   };
 
@@ -339,68 +417,130 @@ export default function ContenidoMonetizaIAPage() {
   };
 
   const handleManualLessonChange = async (newLessonIndex: number) => {
-    if (newLessonIndex >= 0 && newLessonIndex < courseData.lessons.length) {
-      await setCurrentLesson(newLessonIndex);
-    }
+    const currentLesson = courseData.lessons[progress.currentLesson];
+    await saveProgress(
+      progress.currentLesson,
+      progress.completedLessons,
+      currentLesson?.id,
+      currentLesson?.title,
+      'access',
+      1
+    );
+    setCurrentLesson(newLessonIndex);
   };
 
   const handleReturnToCourse = async () => {
+    setIsSaving(true);
     try {
-      await saveProgress();
+      const currentLesson = courseData.lessons[progress.currentLesson];
+      await saveProgress(
+        progress.currentLesson,
+        progress.completedLessons,
+        currentLesson?.id,
+        currentLesson?.title,
+        'access',
+        1
+      );
       router.push('/curso/monetiza-ia');
     } catch (error) {
-      console.error('Error saving progress:', error);
-      router.push('/curso/monetiza-ia');
+      console.error('Error guardando progreso:', error);
+      setIsSaving(false);
     }
   };
 
   const handlePreviousLesson = async () => {
     if (progress.currentLesson > 0) {
-      await handleManualLessonChange(progress.currentLesson - 1);
+      const currentLesson = courseData.lessons[progress.currentLesson];
+      await saveProgress(
+        progress.currentLesson,
+        progress.completedLessons,
+        currentLesson?.id,
+        currentLesson?.title,
+        'access',
+        1
+      );
+      setCurrentLesson(progress.currentLesson - 1);
     }
   };
 
   const handleMarkLessonComplete = async (lessonId: number) => {
-    try {
-      setIsSaving(true);
-      await markLessonComplete(lessonId);
-    } catch (error) {
-      console.error('Error marking lesson complete:', error);
-    } finally {
-      setIsSaving(false);
+    // Si el curso ya está completado, no permitir marcar lecciones como completadas
+    if (isCourseCompleted()) {
+      alert('Este curso ya está completado. Estás en modo de revisión.');
+      return;
+    }
+
+    const currentLessonIndex = courseData.lessons.findIndex(lesson => lesson.id === lessonId);
+    const currentLesson = courseData.lessons[currentLessonIndex];
+    
+    const newCompletedLessons = progress.completedLessons.includes(lessonId) 
+      ? progress.completedLessons 
+      : [...progress.completedLessons, lessonId];
+    
+    markLessonComplete(lessonId);
+    
+    await saveProgress(
+      currentLessonIndex,
+      newCompletedLessons,
+      currentLesson.id,
+      currentLesson.title,
+      'complete',
+      5
+    );
+    
+    if (currentLessonIndex < courseData.lessons.length - 1) {
+      setTimeout(() => {
+        setCurrentLesson(currentLessonIndex + 1);
+      }, 100);
     }
   };
 
   const handleCompleteCourse = async () => {
+    if (!isEnrolled) return;
+    
+    // Si el curso ya está completado, mostrar mensaje
+    if (isCourseCompleted()) {
+      alert('Este curso ya está completado. Puedes revisar el contenido cuando quieras.');
+      return;
+    }
+    
+    // Verificar si todas las lecciones están completadas
+    const allLessonsCompleted = courseData.lessons.every(lesson => 
+      progress.completedLessons.includes(lesson.id)
+    );
+    
+    if (!allLessonsCompleted) {
+      alert('Debes completar todas las lecciones antes de poder terminar el curso.');
+      return;
+    }
+    
+    setIsSaving(true);
     try {
-      setIsSaving(true);
-      
-      // Marcar todas las lecciones como completadas si no lo están
-      for (const lesson of courseData.lessons) {
-        if (!progress.completedLessons.includes(lesson.id)) {
-          await markLessonComplete(lesson.id);
-        }
-      }
-      
-      // Enviar solicitud para completar el curso
-      const response = await fetch('/api/courses/complete', {
+      const response = await fetch('/api/courses/complete-course', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ courseId: 'monetiza-ia' }),
         credentials: 'include',
+        body: JSON.stringify({
+          courseSlug: 'monetiza-ia'
+        })
       });
 
       if (response.ok) {
-        alert('¡Felicidades! Has completado el curso exitosamente.');
+        const result = await response.json();
+        console.log('✅ Curso marcado como completado:', result);
+        
+        // Redirigir a la página de inicio del curso
         router.push('/curso/monetiza-ia');
       } else {
-        throw new Error('Error completing course');
+        const error = await response.json();
+        console.error('❌ Error al completar curso:', error);
+        alert('Error al completar el curso. Por favor, intenta de nuevo.');
       }
     } catch (error) {
-      console.error('Error completing course:', error);
-      alert('Error al completar el curso. Por favor, inténtalo de nuevo.');
+      console.error('❌ Error al completar curso:', error);
+      alert('Error de conexión. Por favor, intenta de nuevo.');
     } finally {
       setIsSaving(false);
     }
@@ -411,42 +551,48 @@ export default function ContenidoMonetizaIAPage() {
   };
 
   const isLessonAccessible = (lessonIndex: number) => {
-    return lessonIndex === 0 || isLessonCompleted(courseData.lessons[lessonIndex - 1].id);
+    // Si está inscrito, puede acceder a todas las lecciones
+    if (isEnrolled) return true;
+    
+    // Si no está inscrito, solo puede acceder a la primera lección
+    return lessonIndex === 0;
   };
 
   const isCourseCompleted = () => {
-    return progress.completedLessons.length === courseData.lessons.length;
+    return progress.status === 'COMPLETED' || progress.progressPercentage === 100;
   };
 
   const getLessonStatus = (lessonIndex: number, lessonId: number) => {
     if (isLessonCompleted(lessonId)) {
-      return <span className="status-completed">✓ Completada</span>;
+      // Si el curso está completado, mostrar estado de revisión
+      if (isCourseCompleted()) {
+        return '📖';
+      }
+      return '✅';
     } else if (lessonIndex === progress.currentLesson) {
-      return <span className="status-current">▶ En progreso</span>;
+      return '▶️';
     } else if (isLessonAccessible(lessonIndex)) {
-      return <span className="status-available">○ Disponible</span>;
+      return '📖';
     } else {
-      return <span className="status-locked">🔒 Bloqueada</span>;
+      return '🔒';
     }
   };
 
   const areAllLessonsCompleted = () => {
-    return progress.completedLessons.length === courseData.lessons.length;
+    return courseData.lessons.every(lesson => 
+      progress.completedLessons.includes(lesson.id)
+    );
   };
 
-  if (isLoading) {
-    return (
-      <div className="loading-container">
-        <p>Cargando progreso del curso...</p>
-      </div>
-    );
+  if (!user || isLoading) {
+    return <div className="loading-container">Cargando...</div>;
   }
 
   if (!isEnrolled) {
     return (
       <div className="enrollment-required">
-        <h2>Inscripción Requerida</h2>
-        <p>Debes estar inscrito en este curso para acceder al contenido.</p>
+        <h2>Inscripción requerida</h2>
+        <p>Debes inscribirte al curso para acceder al contenido.</p>
         <button onClick={() => router.push('/curso/monetiza-ia')}>
           Volver al curso
         </button>
@@ -454,113 +600,122 @@ export default function ContenidoMonetizaIAPage() {
     );
   }
 
-  const currentLesson = courseData.lessons[progress.currentLesson];
-
   return (
     <>
       <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
       <UserProfile className="user-profile-top-right" />
       
       <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''}`}>
-        {/* Course Header */}
         <section className="course-header">
           <div className="container">
             <div className="course-header-content">
               <div className="course-breadcrumb">
                 <div className="breadcrumb-container">
-                  <a href="/">Inicio</a>
-                  <span>/</span>
-                  <a href="/curso/monetiza-ia">{courseData.title}</a>
-                  <span>/</span>
-                  <span>Contenido</span>
+                  <a href="/" className="breadcrumb-item">
+                    <span className="breadcrumb-icon">🏠</span>
+                    <span className="breadcrumb-text">Inicio</span>
+                  </a>
+                  <span className="breadcrumb-separator">/</span>
+                  <a href="/cursos-gratuitos" className="breadcrumb-item">
+                    <span className="breadcrumb-icon">📚</span>
+                    <span className="breadcrumb-text">Cursos Gratuitos</span>
+                  </a>
+                  <span className="breadcrumb-separator">/</span>
+                  <a href="/curso/monetiza-ia" className="breadcrumb-item">
+                    <span className="breadcrumb-icon">💰</span>
+                    <span className="breadcrumb-text">Monetiza con IA</span>
+                  </a>
+                  <span className="breadcrumb-separator">/</span>
+                  <span className="breadcrumb-item active">
+                    <span className="breadcrumb-icon">📖</span>
+                    <span className="breadcrumb-text">Contenido</span>
+                  </span>
                 </div>
               </div>
               
-              <div className="course-info">
-                <h1>{courseData.title}</h1>
-                <p>{courseData.description}</p>
-                <div className="course-progress">
-                  <div className="progress-bar">
-                    <div 
-                      className="progress-fill" 
-                      style={{ width: `${progressPercentage}%` }}
-                    ></div>
+              <div className="header-main">
+                <div className="header-content">
+                  <h1 className="course-title">{courseData.title}</h1>
+                  
+                  <div className="header-actions">
+                    <button 
+                      className="btn btn-exit-course btn-save-exit"
+                      onClick={handleReturnToCourse}
+                      disabled={isSaving}
+                    >
+                      {isSaving ? '💾 Guardando...' : '🏠 Salir'}
+                    </button>
                   </div>
-                  <span className="progress-text">
-                    {progress.completedLessons.length} de {courseData.lessons.length} lecciones completadas ({Math.round(progressPercentage)}%)
-                  </span>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Course Content */}
         <section className="course-content">
           <div className="container">
             <div className="content-layout">
-              {/* Main Content */}
               <div className="main-content-area">
-                {/* Current Lesson */}
-                <div className="lesson-content">
+                <div className="current-lesson">
                   <div className="lesson-header">
-                    <div className="lesson-navigation">
-                      <button 
-                        className="btn btn-outline"
-                        onClick={handlePreviousLesson}
-                        disabled={progress.currentLesson === 0}
-                      >
-                        ← Anterior
-                      </button>
-                      <span className="lesson-counter">
-                        Lección {progress.currentLesson + 1} de {courseData.lessons.length}
-                      </span>
-                      <button 
-                        className="btn btn-outline"
-                        onClick={() => handleManualLessonChange(progress.currentLesson + 1)}
-                        disabled={progress.currentLesson === courseData.lessons.length - 1}
-                      >
-                        Siguiente →
-                      </button>
-                    </div>
-                    
-                    <h2>{currentLesson.title}</h2>
+                    <h2>Lección {progress.currentLesson + 1}: {courseData.lessons[progress.currentLesson].title}</h2>
                     <div className="lesson-meta">
-                      <span className="lesson-duration">{currentLesson.duration}</span>
-                      <span className="lesson-type">{currentLesson.type}</span>
+                      <span className="lesson-type">{courseData.lessons[progress.currentLesson].type}</span>
+                      <span className="lesson-duration">{courseData.lessons[progress.currentLesson].duration}</span>
                     </div>
                   </div>
                   
-                  <div 
-                    className="lesson-body"
-                    dangerouslySetInnerHTML={{ __html: currentLesson.content }}
-                  ></div>
+                  <div className="lesson-content">
+                    <div 
+                      dangerouslySetInnerHTML={{ 
+                        __html: courseData.lessons[progress.currentLesson].content 
+                      }} 
+                    />
+                  </div>
                   
                   <div className="lesson-actions">
-                    <button 
-                      className={`btn btn-primary ${isLessonCompleted(currentLesson.id) ? 'completed' : ''}`}
-                      onClick={() => handleMarkLessonComplete(currentLesson.id)}
-                      disabled={isSaving}
-                    >
-                      {isSaving ? 'Guardando...' : 
-                        isLessonCompleted(currentLesson.id) ? '✓ Lección Completada' : 'Marcar como Completada'
-                      }
-                    </button>
-                    
-                    <button 
-                      className="btn btn-outline"
-                      onClick={handleReturnToCourse}
-                    >
-                      Volver al Curso
-                    </button>
+                    <div className="lesson-buttons">
+                      <button 
+                        className="btn btn-primary"
+                        onClick={handlePreviousLesson}
+                        disabled={progress.currentLesson === 0}
+                      >
+                        ← Lección Anterior
+                      </button>
+                      <button 
+                        className="btn btn-primary"
+                        onClick={() => handleMarkLessonComplete(courseData.lessons[progress.currentLesson].id)}
+                      >
+                        ✅ Marcar como completada
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* Sidebar */}
               <div className="content-sidebar">
-                <div className="lessons-sidebar">
-                  <h3>Lecciones del Curso</h3>
+                <div className="lessons-navigation">
+                  <div className="navigation-header">
+                    <h3>Lecciones del Curso</h3>
+                    <div className="progress-indicator">
+                      <span className="progress-text">
+                        {progress.completedLessons.length} de {courseData.lessons.length} completadas
+                      </span>
+                      <div className="progress-bar">
+                        <div 
+                          className="progress-fill" 
+                          style={{ width: `${(progress.completedLessons.length / courseData.lessons.length) * 100}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                  {isEnrolled && (
+                    <div className="course-guidance">
+                      <p className="guidance-text">
+                        💡 <strong>Recomendación:</strong> Sigue el orden de las lecciones para una mejor experiencia de aprendizaje.
+                      </p>
+                    </div>
+                  )}
                   <div className="lessons-list">
                     {courseData.lessons.map((lesson, index) => (
                       <div 
@@ -587,6 +742,7 @@ export default function ContenidoMonetizaIAPage() {
                     ))}
                   </div>
                   
+                  {/* Botón Terminar Curso */}
                   <div className="complete-course-section">
                     {isCourseCompleted() ? (
                       <div className="course-completed-message">
@@ -630,15 +786,6 @@ export default function ContenidoMonetizaIAPage() {
       <Footer />
 
       <style jsx>{`
-        .loading-container {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          min-height: 60vh;
-          font-size: 1.2rem;
-          color: #6b7280;
-        }
-
         .enrollment-required {
           display: flex;
           flex-direction: column;
@@ -653,12 +800,6 @@ export default function ContenidoMonetizaIAPage() {
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
           color: white;
           padding: 2rem 0;
-        }
-
-        .container {
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 0 1rem;
         }
 
         .course-header-content {
@@ -679,145 +820,207 @@ export default function ContenidoMonetizaIAPage() {
           flex-wrap: wrap;
         }
 
-        .breadcrumb-container a {
+        .breadcrumb-item {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
           color: rgba(255, 255, 255, 0.8);
           text-decoration: none;
+          padding: 0.5rem 0.75rem;
+          border-radius: 8px;
+          transition: all 0.3s ease;
+          background: rgba(255, 255, 255, 0.1);
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        .breadcrumb-container a:hover {
+        .breadcrumb-item:hover {
           color: white;
+          background: rgba(255, 255, 255, 0.2);
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
-        .course-info h1 {
+        .breadcrumb-item.active {
+          color: white;
+          background: rgba(255, 255, 255, 0.25);
+          border-color: rgba(255, 255, 255, 0.4);
+          font-weight: 600;
+        }
+
+        .breadcrumb-icon {
+          font-size: 1rem;
+        }
+
+        .breadcrumb-text {
+          font-weight: 500;
+        }
+
+        .breadcrumb-separator {
+          color: rgba(255, 255, 255, 0.6);
+          font-weight: 600;
+          margin: 0 0.25rem;
+        }
+
+        .header-main {
+          display: flex;
+          justify-content: flex-start;
+          align-items: flex-start;
+          gap: 2rem;
+        }
+
+        .header-content {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 1.5rem;
+          text-align: left;
+          width: 100%;
+        }
+
+        .course-title {
           font-size: 2.5rem;
           font-weight: 700;
-          margin: 0 0 1rem 0;
+          margin: 0;
+          text-align: left;
         }
 
-        .course-info p {
-          font-size: 1.1rem;
-          margin: 0 0 2rem 0;
-          opacity: 0.9;
+        .header-actions {
+          display: flex;
+          gap: 1rem;
+          align-items: center;
+          justify-content: center;
         }
 
-        .course-progress {
-          margin-top: 2rem;
-        }
-
-        .progress-bar {
-          width: 100%;
-          height: 8px;
-          background: rgba(255, 255, 255, 0.2);
-          border-radius: 4px;
-          overflow: hidden;
-          margin-bottom: 0.5rem;
-        }
-
-        .progress-fill {
-          height: 100%;
-          background: #22c55e;
-          transition: width 0.3s ease;
-        }
-
-        .progress-text {
+        .btn-exit-course {
+          background: linear-gradient(135deg, #ef4444, #dc2626);
+          color: white;
+          border: 2px solid #dc2626;
+          padding: 0.75rem 1.5rem;
+          border-radius: 8px;
+          font-weight: 600;
           font-size: 0.9rem;
-          opacity: 0.8;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          text-decoration: none;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+          position: relative;
+          overflow: hidden;
+        }
+
+        .btn-exit-course:hover {
+          background: linear-gradient(135deg, #dc2626, #b91c1c);
+          border-color: #b91c1c;
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-exit-course:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+          transform: none !important;
+          box-shadow: none !important;
         }
 
         .course-content {
           padding: 3rem 0;
-          background: #f9fafb;
         }
 
         .content-layout {
           display: grid;
-          grid-template-columns: 2fr 1fr;
-          gap: 3rem;
+          grid-template-columns: 1fr 300px;
+          gap: 2rem;
           max-width: 1200px;
           margin: 0 auto;
           padding: 0 1rem;
         }
 
-        .lesson-content {
+        .current-lesson {
           background: white;
-          padding: 2rem;
           border-radius: 12px;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          padding: 2rem;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .lesson-header {
           margin-bottom: 2rem;
+          padding-bottom: 1rem;
+          border-bottom: 2px solid #f3f4f6;
         }
 
-        .lesson-navigation {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 1rem;
-        }
-
-        .lesson-counter {
-          font-weight: 600;
-          color: #6b7280;
-        }
-
-        .lesson-content h2 {
-          font-size: 2rem;
-          font-weight: 700;
-          margin: 0 0 1rem 0;
+        .lesson-header h2 {
+          margin: 0 0 0.5rem 0;
           color: #1f2937;
         }
 
         .lesson-meta {
           display: flex;
           gap: 1rem;
-          margin-bottom: 1rem;
-        }
-
-        .lesson-duration, .lesson-type {
-          background: #f3f4f6;
-          padding: 0.25rem 0.75rem;
-          border-radius: 20px;
-          font-size: 0.875rem;
+          font-size: 0.9rem;
           color: #6b7280;
         }
 
-        .lesson-body {
+        .lesson-type {
+          background: #e5e7eb;
+          padding: 0.25rem 0.5rem;
+          border-radius: 4px;
+          text-transform: uppercase;
+          font-size: 0.75rem;
+          font-weight: 600;
+        }
+
+        .lesson-content {
           line-height: 1.7;
-          color: #4b5563;
-          margin-bottom: 2rem;
+          color: #374151;
         }
 
-        .lesson-body h2 {
-          font-size: 1.5rem;
-          font-weight: 600;
-          margin: 2rem 0 1rem 0;
+        .lesson-content h2 {
           color: #1f2937;
+          margin: 1.5rem 0 1rem 0;
         }
 
-        .lesson-body h3 {
-          font-size: 1.25rem;
-          font-weight: 600;
-          margin: 1.5rem 0 0.75rem 0;
+        .lesson-content h3 {
           color: #1f2937;
+          margin: 1.25rem 0 0.75rem 0;
         }
 
-        .lesson-body p {
-          margin: 0 0 1rem 0;
-        }
-
-        .lesson-body ul, .lesson-body ol {
-          margin: 0 0 1rem 0;
+        .lesson-content ul, .lesson-content ol {
+          margin: 1rem 0;
           padding-left: 1.5rem;
         }
 
-        .lesson-body li {
-          margin: 0.25rem 0;
+        .lesson-content li {
+          margin: 0.5rem 0;
+        }
+
+        .lesson-content pre {
+          background: #f3f4f6;
+          padding: 1rem;
+          border-radius: 8px;
+          overflow-x: auto;
+          margin: 1rem 0;
+        }
+
+        .lesson-content code {
+          background: #f3f4f6;
+          padding: 0.25rem 0.5rem;
+          border-radius: 4px;
+          font-family: 'Courier New', monospace;
         }
 
         .lesson-actions {
+          margin-top: 2rem;
+          padding-top: 1rem;
+          border-top: 2px solid #f3f4f6;
+        }
+
+        .lesson-buttons {
           display: flex;
           gap: 1rem;
+          justify-content: space-between;
           align-items: center;
         }
 
@@ -825,9 +1028,9 @@ export default function ContenidoMonetizaIAPage() {
           padding: 0.75rem 1.5rem;
           border-radius: 8px;
           font-weight: 600;
-          font-size: 1rem;
+          font-size: 0.9rem;
           cursor: pointer;
-          transition: all 0.3s ease;
+          transition: all 0.2s ease;
           border: none;
           text-decoration: none;
           display: inline-flex;
@@ -836,89 +1039,107 @@ export default function ContenidoMonetizaIAPage() {
         }
 
         .btn-primary {
-          background: linear-gradient(135deg, #22c55e, #16a34a);
+          background: linear-gradient(135deg, #3b82f6, #1d4ed8);
           color: white;
         }
 
         .btn-primary:hover {
-          background: linear-gradient(135deg, #16a34a, #15803d);
-          transform: translateY(-2px);
-          box-shadow: 0 8px 25px rgba(34, 197, 94, 0.3);
+          background: linear-gradient(135deg, #2563eb, #1e40af);
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
         }
 
-        .btn-primary.completed {
-          background: #6b7280;
+        .btn:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+          transform: none !important;
+          box-shadow: none !important;
         }
 
-        .btn-outline {
-          background: transparent;
-          color: #22c55e;
-          border: 2px solid #22c55e;
+        .lessons-navigation {
+          background: white;
+          border-radius: 12px;
+          padding: 1.5rem;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          position: sticky;
+          top: 2rem;
         }
 
-        .btn-outline:hover {
-          background: #22c55e;
-          color: white;
+        .navigation-header {
+          margin-bottom: 1.5rem;
         }
 
-        .btn-complete-course {
-          background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-          color: white;
-          width: 100%;
-          justify-content: center;
+        .lessons-navigation h3 {
+          margin: 0 0 0.75rem 0;
+          color: #1f2937;
+        }
+
+        .progress-indicator {
           margin-bottom: 1rem;
         }
 
-        .btn-complete-course:hover {
-          background: linear-gradient(135deg, #1d4ed8, #1e40af);
-          box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+        .progress-text {
+          display: block;
+          font-size: 0.8rem;
+          color: #6b7280;
+          margin-bottom: 0.5rem;
         }
 
-        .btn-complete-course.disabled {
-          background: #6b7280;
-          cursor: not-allowed;
+        .progress-bar {
+          width: 100%;
+          height: 6px;
+          background: #e5e7eb;
+          border-radius: 3px;
+          overflow: hidden;
         }
 
-        .lessons-sidebar {
-          background: white;
-          padding: 2rem;
-          border-radius: 12px;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        .progress-fill {
+          height: 100%;
+          background: linear-gradient(90deg, #22c55e, #16a34a);
+          border-radius: 3px;
+          transition: width 0.3s ease;
         }
 
-        .lessons-sidebar h3 {
-          margin: 0 0 1.5rem 0;
-          color: #1f2937;
-          font-size: 1.25rem;
-          font-weight: 700;
+        .course-guidance {
+          background: #eff6ff;
+          border: 1px solid #dbeafe;
+          border-radius: 8px;
+          padding: 0.75rem;
+          margin-bottom: 1rem;
+        }
+
+        .guidance-text {
+          margin: 0;
+          font-size: 0.8rem;
+          color: #1e40af;
+          line-height: 1.4;
         }
 
         .lessons-list {
           display: flex;
           flex-direction: column;
-          gap: 1rem;
-          margin-bottom: 2rem;
+          gap: 0.5rem;
         }
 
         .lesson-item {
           display: flex;
           align-items: center;
-          gap: 1rem;
-          padding: 1rem;
-          border: 1px solid #e5e7eb;
+          gap: 0.75rem;
+          padding: 0.75rem;
           border-radius: 8px;
-          transition: all 0.3s ease;
           cursor: pointer;
+          transition: all 0.2s ease;
+          border: 1px solid transparent;
         }
 
         .lesson-item:hover {
-          border-color: #22c55e;
-          box-shadow: 0 2px 8px rgba(34, 197, 94, 0.1);
+          background: #f9fafb;
+          border-color: #e5e7eb;
         }
 
         .lesson-item.active {
-          border-color: #22c55e;
-          background: #f0fdf4;
+          background: #eff6ff;
+          border-color: #3b82f6;
         }
 
         .lesson-item.completed {
@@ -927,81 +1148,112 @@ export default function ContenidoMonetizaIAPage() {
         }
 
         .lesson-item.locked {
-          opacity: 0.5;
+          opacity: 0.6;
           cursor: not-allowed;
         }
 
+        .lesson-item.locked:hover {
+          background: #f9fafb;
+          border-color: #e5e7eb;
+        }
+
         .lesson-number {
-          width: 32px;
-          height: 32px;
-          background: #22c55e;
-          color: white;
+          width: 24px;
+          height: 24px;
           border-radius: 50%;
+          background: #e5e7eb;
           display: flex;
           align-items: center;
           justify-content: center;
+          font-size: 0.75rem;
           font-weight: 600;
-          font-size: 0.875rem;
-          flex-shrink: 0;
+          color: #6b7280;
+        }
+
+        .lesson-item.active .lesson-number {
+          background: #3b82f6;
+          color: white;
         }
 
         .lesson-item.completed .lesson-number {
           background: #22c55e;
-        }
-
-        .lesson-item.locked .lesson-number {
-          background: #6b7280;
+          color: white;
         }
 
         .lesson-content h4 {
-          margin: 0 0 0.5rem 0;
-          font-size: 1rem;
-          font-weight: 600;
+          margin: 0 0 0.25rem 0;
+          font-size: 0.9rem;
           color: #1f2937;
         }
 
-        .lesson-meta {
+        .lesson-content .lesson-meta {
           display: flex;
           gap: 0.5rem;
-        }
-
-        .lesson-type, .lesson-duration {
           font-size: 0.75rem;
           color: #6b7280;
-          background: #f3f4f6;
-          padding: 0.125rem 0.5rem;
-          border-radius: 4px;
         }
 
         .lesson-status {
-          font-size: 0.875rem;
-          font-weight: 600;
-          flex-shrink: 0;
-        }
-
-        .status-completed {
-          color: #22c55e;
-        }
-
-        .status-current {
-          color: #3b82f6;
-        }
-
-        .status-available {
-          color: #6b7280;
-        }
-
-        .status-locked {
-          color: #9ca3af;
+          margin-left: auto;
+          font-size: 1.2rem;
         }
 
         .complete-course-section {
-          border-top: 1px solid #e5e7eb;
+          margin-top: 2rem;
           padding-top: 1.5rem;
+          border-top: 2px solid #e5e7eb;
+          text-align: center;
+        }
+
+        .btn-complete-course {
+          background: linear-gradient(135deg, #10b981, #059669);
+          color: white;
+          border: none;
+          padding: 1rem 2rem;
+          border-radius: 12px;
+          font-size: 1rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          width: 100%;
+          box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-complete-course:hover:not(:disabled) {
+          background: linear-gradient(135deg, #059669, #047857);
+          transform: translateY(-2px);
+          box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-complete-course:disabled,
+        .btn-complete-course.disabled {
+          opacity: 0.4;
+          cursor: not-allowed;
+          transform: none;
+          box-shadow: none;
+          background: linear-gradient(135deg, #9ca3af, #6b7280);
+        }
+
+        .btn-complete-course:disabled:hover,
+        .btn-complete-course.disabled:hover {
+          background: linear-gradient(135deg, #9ca3af, #6b7280);
+          transform: none;
+          box-shadow: none;
+        }
+
+        .complete-course-info {
+          margin-top: 0.75rem;
+          font-size: 0.8rem;
+          color: #6b7280;
+          line-height: 1.4;
         }
 
         .course-completed-message {
           text-align: center;
+          padding: 2rem;
+          background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+          border-radius: 12px;
+          border: 2px solid #22c55e;
         }
 
         .completion-badge {
@@ -1017,56 +1269,67 @@ export default function ContenidoMonetizaIAPage() {
         }
 
         .completion-text {
-          font-size: 1.25rem;
+          font-size: 1.5rem;
           font-weight: 700;
-          color: #22c55e;
+          color: #16a34a;
         }
 
         .completion-info {
-          margin: 0 0 1rem 0;
-          color: #6b7280;
+          font-size: 1rem;
+          color: #374151;
+          margin-bottom: 1rem;
           line-height: 1.5;
         }
 
         .completion-stats {
           display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
-          font-size: 0.875rem;
+          justify-content: center;
+          gap: 2rem;
+          font-size: 0.9rem;
           color: #6b7280;
-        }
-
-        .complete-course-info {
-          font-size: 0.875rem;
-          color: #6b7280;
-          text-align: center;
-          line-height: 1.5;
+          font-weight: 500;
         }
 
         @media (max-width: 768px) {
           .content-layout {
             grid-template-columns: 1fr;
-            gap: 2rem;
           }
-
-          .lesson-navigation {
-            flex-direction: column;
-            gap: 1rem;
-          }
-
-          .lesson-actions {
-            flex-direction: column;
-          }
-
-          .course-info h1 {
+          
+          .course-title {
             font-size: 2rem;
           }
 
-          .lesson-content h2 {
-            font-size: 1.5rem;
+          .lesson-buttons {
+            flex-direction: column;
+            gap: 0.75rem;
+          }
+          
+          .lesson-buttons .btn {
+            width: 100%;
+            justify-content: center;
+          }
+
+          .header-main {
+            flex-direction: column;
+            gap: 1rem;
+            text-align: center;
+          }
+
+          .header-content {
+            align-items: center;
+          }
+
+          .header-actions {
+            flex-direction: column;
+            width: 100%;
+          }
+
+          .btn-exit-course {
+            width: 100%;
+            justify-content: center;
           }
         }
       `}</style>
     </>
   );
-} 
+}

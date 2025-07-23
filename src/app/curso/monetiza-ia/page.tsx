@@ -9,6 +9,30 @@ import Footer from '@/components/layout/Footer';
 import UserProfile from '@/components/auth/UserProfile';
 import { useAuth } from '@/contexts/AuthContext';
 
+// Función para calcular el tiempo restante hasta el viernes a las 12:00
+const getTimeUntilFriday = () => {
+  const now = new Date();
+  const friday = new Date();
+  
+  // Configurar para el próximo viernes a las 12:00
+  const daysUntilFriday = (5 - now.getDay() + 7) % 7;
+  friday.setDate(now.getDate() + daysUntilFriday);
+  friday.setHours(12, 0, 0, 0);
+  
+  const timeLeft = friday.getTime() - now.getTime();
+  
+  if (timeLeft <= 0) {
+    return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+  }
+  
+  const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+  
+  return { days, hours, minutes, seconds };
+};
+
 // Lazy load components
 const CompaniesMarquee = dynamic(() => import('@/components/ui/CompaniesMarquee'), {
   loading: () => <LoadingSpinner />,
@@ -21,12 +45,22 @@ export default function MonetizaIAPage() {
   const [completedLessons, setCompletedLessons] = useState<number[]>([]);
   const [progressPercentage, setProgressPercentage] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [timeLeft, setTimeLeft] = useState(getTimeUntilFriday());
   const { user } = useAuth();
   const router = useRouter();
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
+
+  // Actualizar el contador cada segundo
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft(getTimeUntilFriday());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   const handleEnrollClick = async () => {
     if (!user) {
@@ -68,10 +102,11 @@ export default function MonetizaIAPage() {
     price: 'Gratis',
     language: 'Español',
     image: '/images/v-5.png',
+    lessonsCount: 8,
     instructor: {
-      name: 'Dr. Juan Pérez',
+      name: 'Zair Adolfo Aquino Rodriguez',
       title: 'Especialista en Monetización Digital - eGrow Academy',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
+      image: '/images/Zair.jpeg',
       bio: 'Experto en estrategias de monetización digital con más de 10 años de experiencia en el sector de la inteligencia artificial y el marketing digital.'
     },
     prerequisites: [
@@ -100,66 +135,66 @@ export default function MonetizaIAPage() {
     lessons: [
       {
         id: 1,
-        title: 'Introducción a la Monetización con IA',
-        description: 'Descubre las oportunidades de monetización que ofrece la inteligencia artificial en el panorama digital actual.',
-        duration: '15 min',
+        title: 'M0 - AI Money‑Toolkit',
+        description: 'Intro | Herramientas - Checklist de apps y presets listos para facturar',
+        duration: 12,
         type: 'Video',
         videoUrl: 'https://www.youtube.com/watch?v=example1'
       },
       {
         id: 2,
-        title: 'Estrategias de Monetización con ChatGPT',
-        description: 'Aprende a utilizar ChatGPT para crear productos digitales y servicios que generen ingresos.',
-        duration: '25 min',
+        title: 'M1 - Venta sin Fricción',
+        description: 'Intro Ventas - Script de oferta listo para DM / llamada',
+        duration: 18,
         type: 'Video',
         videoUrl: 'https://www.youtube.com/watch?v=example2'
       },
       {
         id: 3,
-        title: 'Creación de Productos Digitales con IA',
-        description: 'Descubre cómo crear ebooks, cursos online y otros productos digitales utilizando herramientas de IA.',
-        duration: '30 min',
+        title: 'M1.1 - Ayuda que Cierra',
+        description: 'Vender & Ayudar - Mensaje Problema → Ayuda → Oferta (copiar‑pegar)',
+        duration: 22,
         type: 'Video',
         videoUrl: 'https://www.youtube.com/watch?v=example3'
       },
       {
         id: 4,
-        title: 'Automatización de Procesos de Venta',
-        description: 'Implementa sistemas automatizados de venta y marketing utilizando inteligencia artificial.',
-        duration: '20 min',
-        type: 'Video',
+        title: 'M2 - Soporte que Retiene',
+        description: 'Servicio al Cliente - Plantilla post‑venta "fan for life"',
+        duration: 25,
+        type: 'Lab',
         videoUrl: 'https://www.youtube.com/watch?v=example4'
       },
       {
         id: 5,
-        title: 'Marketing Digital Optimizado con IA',
-        description: 'Optimiza tus campañas de marketing digital utilizando herramientas de inteligencia artificial.',
-        duration: '25 min',
+        title: 'M2.1 - Diferénciate & Cobra Más',
+        description: 'Diferénciate - One‑liner de posicionamiento ganador',
+        duration: 20,
         type: 'Video',
         videoUrl: 'https://www.youtube.com/watch?v=example5'
       },
       {
         id: 6,
-        title: 'Creación de Fuentes de Ingresos Pasivos',
-        description: 'Aprende a crear múltiples fuentes de ingresos pasivos utilizando estrategias de IA.',
-        duration: '30 min',
+        title: 'M3 - IA Amplify Engine',
+        description: 'Marketing con IA - Flujo Prompt → Copy → Publica',
+        duration: 28,
         type: 'Video',
         videoUrl: 'https://www.youtube.com/watch?v=example6'
       },
       {
         id: 7,
-        title: 'Análisis y Optimización de Resultados',
-        description: 'Utiliza herramientas de analytics y IA para analizar y optimizar tus resultados de monetización.',
-        duration: '20 min',
-        type: 'Video',
+        title: 'M3.1 - Mirror & Monetize',
+        description: 'Aplicarlo a uno mismo - Caso demo propio (antes / después)',
+        duration: 35,
+        type: 'Lab',
         videoUrl: 'https://www.youtube.com/watch?v=example7'
       },
       {
         id: 8,
-        title: 'Escalabilidad y Tendencias Futuras',
-        description: 'Descubre cómo escalar tu negocio digital y las tendencias futuras en monetización con IA.',
-        duration: '15 min',
-        type: 'Video',
+        title: 'M4 - Escala, Repite, Monetiza',
+        description: 'Final - Plan de iteración + métrica clave',
+        duration: 45,
+        type: 'Project',
         videoUrl: 'https://www.youtube.com/watch?v=example8'
       }
     ]
@@ -167,8 +202,7 @@ export default function MonetizaIAPage() {
 
   // Calcular duración total
   const totalDuration = courseData.lessons.reduce((total, lesson) => {
-    const minutes = parseInt(lesson.duration.split(' ')[0]);
-    return total + minutes;
+    return total + lesson.duration;
   }, 0);
 
   // Efectos para manejar el progreso del usuario
@@ -277,7 +311,7 @@ export default function MonetizaIAPage() {
                 </div>
                 
                 <h1 className="course-title-large">{courseData.title}</h1>
-                <p className="course-description">{courseData.description}</p>
+                <p className="course-description" style={{ color: '#000000' }}>{courseData.description}</p>
                 
                 <div className="course-actions">
                   {completedLessons.length > 0 ? (
@@ -301,13 +335,46 @@ export default function MonetizaIAPage() {
                       </button>
                     </div>
                   ) : (
-                    <button 
-                      className="btn btn-primary btn-large btn-start-course"
-                      onClick={handleEnrollClick}
-                      disabled={isLoading}
-                    >
-                      {isLoading ? '⏳ Inscribiéndote...' : '🎯 Comenzar Curso Gratis'}
-                    </button>
+                    <div className="course-actions">
+                      <button 
+                        className="btn btn-primary btn-large btn-start-course"
+                        onClick={handleEnrollClick}
+                        disabled={isLoading}
+                      >
+                        {isLoading ? '⏳ Inscribiéndote...' : '🎯 Comenzar Curso Gratis'}
+                      </button>
+                      
+                      <div className="unlock-counter">
+                        <div className="counter-header">
+                          <span className="counter-icon">🔒</span>
+                          <span className="counter-title">Desbloqueo del curso</span>
+                        </div>
+                        <div className="counter-time">
+                          <div className="time-unit">
+                            <span className="time-value">{timeLeft.days}</span>
+                            <span className="time-label">Días</span>
+                          </div>
+                          <div className="time-separator">:</div>
+                          <div className="time-unit">
+                            <span className="time-value">{timeLeft.hours.toString().padStart(2, '0')}</span>
+                            <span className="time-label">Horas</span>
+                          </div>
+                          <div className="time-separator">:</div>
+                          <div className="time-unit">
+                            <span className="time-value">{timeLeft.minutes.toString().padStart(2, '0')}</span>
+                            <span className="time-label">Min</span>
+                          </div>
+                          <div className="time-separator">:</div>
+                          <div className="time-unit">
+                            <span className="time-value">{timeLeft.seconds.toString().padStart(2, '0')}</span>
+                            <span className="time-label">Seg</span>
+                          </div>
+                        </div>
+                        <div className="counter-info">
+                          <span className="info-text">Viernes a las 12:00</span>
+                        </div>
+                      </div>
+                    </div>
                   )}
                 </div>
                 
@@ -685,6 +752,83 @@ export default function MonetizaIAPage() {
         .play-button:hover {
           background: rgba(255, 255, 255, 0.5);
           transform: translateX(-50%) scale(1.1);
+        }
+
+        .course-actions {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+          align-items: flex-start;
+        }
+
+        .unlock-counter {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          border-radius: 12px;
+          padding: 1rem;
+          color: white;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .counter-header {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          margin-bottom: 0.75rem;
+        }
+
+        .counter-icon {
+          font-size: 1.2rem;
+        }
+
+        .counter-title {
+          font-size: 0.9rem;
+          font-weight: 600;
+          opacity: 0.9;
+        }
+
+        .counter-time {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          margin-bottom: 0.5rem;
+        }
+
+        .time-unit {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          min-width: 40px;
+        }
+
+        .time-value {
+          font-size: 1.5rem;
+          font-weight: 700;
+          line-height: 1;
+        }
+
+        .time-label {
+          font-size: 0.7rem;
+          opacity: 0.8;
+          margin-top: 0.25rem;
+        }
+
+        .time-separator {
+          font-size: 1.2rem;
+          font-weight: 600;
+          opacity: 0.7;
+          margin-top: -0.5rem;
+        }
+
+        .counter-info {
+          text-align: center;
+        }
+
+        .info-text {
+          font-size: 0.8rem;
+          opacity: 0.8;
+          font-weight: 500;
         }
 
         .progress-card {
