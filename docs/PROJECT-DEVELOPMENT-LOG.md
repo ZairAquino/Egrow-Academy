@@ -2,15 +2,55 @@
 
 ## 🎯 **Estado Actual del Proyecto**
 - **Framework:** Next.js 15.4.1 con TypeScript
-- **Base de datos:** PostgreSQL con Prisma ORM
-- **Autenticación:** JWT personalizado
+- **Base de datos:** PostgreSQL con Prisma ORM (Neon)
+- **Autenticación:** JWT personalizado con verificación de email
 - **Pagos:** Stripe (configuración en progreso)
 - **Upload de Archivos:** UploadThing (configurado)
+- **Emails:** Resend con dominio verificado egrowacademy.com
 - **Deploy:** Vercel
 
 ---
 
 ## 📅 **Historial de Cambios**
+
+### **2025-07-23 - Corrección del Sistema de Verificación de Email**
+
+#### ✅ **Problemas Resueltos**
+1. **Error en Reenvío de Código**
+   - **Problema:** Usaba `verificationExpires` en lugar de `verificationCodeExpires`
+   - **Error:** `Unknown argument 'verificationExpires'` causaba error 500
+   - **Solución:** Corregido en `/api/auth/resend-verification/route.ts`
+
+2. **Error en Verificación de Email**
+   - **Problema:** Usaba `verificationExpires` en lugar de `verificationCodeExpires`
+   - **Error:** Código aparecía como expirado cuando no lo estaba
+   - **Solución:** Corregido en `/api/auth/verify-email/route.ts`
+
+#### 🔧 **Correcciones Aplicadas**
+- **Endpoint de Reenvío:** Campo `verificationCodeExpires` corregido
+- **Endpoint de Verificación:** Validación de expiración corregida
+- **Limpieza de Código:** Campos nulos corregidos al verificar
+- **Documentación:** Guía completa de correcciones creada
+
+#### 🧪 **Pruebas Realizadas**
+- ✅ **Reenvío de código:** Funciona correctamente
+- ✅ **Verificación de email:** Funciona correctamente
+- ✅ **Base de datos:** Conectada a Neon
+- ✅ **Emails:** Enviándose desde dominio verificado
+- ✅ **Autenticación:** Login automático después de verificación
+
+#### 📊 **Estado Final**
+- **Sistema de verificación:** 100% funcional
+- **Flujo completo:** Registro → Email → Verificación → Login automático
+- **Reenvío de código:** Sin errores de servidor
+- **Verificación:** Sin falsos expirados
+
+#### 📝 **Archivos Modificados**
+- `src/app/api/auth/resend-verification/route.ts` - Campo corregido
+- `src/app/api/auth/verify-email/route.ts` - Validación corregida
+- `docs/VERIFICATION-FIX-SUMMARY.md` - Documentación de correcciones
+
+---
 
 ### **2025-01-27 - Sistema Completo de Videos para Lecciones**
 
