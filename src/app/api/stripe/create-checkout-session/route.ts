@@ -5,9 +5,11 @@ import { SUBSCRIPTION_PLANS } from '@/lib/stripe';
 import { prisma } from '@/lib/prisma';
 
 export async function POST(request: NextRequest) {
+  console.log('🔧 [CHECKOUT] Iniciando creación de sesión de checkout...');
   try {
     // Verificar autenticación
     const token = request.cookies.get('auth-token')?.value;
+    console.log('🔧 [CHECKOUT] Token encontrado:', token ? 'Sí' : 'No');
     if (!token) {
       return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
     }
@@ -20,9 +22,11 @@ export async function POST(request: NextRequest) {
     }
 
     const { planId } = await request.json();
+    console.log('🔧 [CHECKOUT] Plan solicitado:', planId);
 
     // Validar el plan
     const plan = SUBSCRIPTION_PLANS[planId as keyof typeof SUBSCRIPTION_PLANS];
+    console.log('🔧 [CHECKOUT] Plan encontrado:', plan ? plan.name : 'No encontrado');
     if (!plan) {
       return NextResponse.json({ error: 'Plan inválido' }, { status: 400 });
     }
@@ -88,8 +92,8 @@ export async function POST(request: NextRequest) {
         },
       ],
       mode: 'subscription',
-      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/subscription`,
+      success_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://egrowacademy.com'}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://egrowacademy.com'}/subscription`,
       customer: stripeCustomerId, // Usar el customer en lugar de customer_email
       metadata: {
         userId: decoded.userId,

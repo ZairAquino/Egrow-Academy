@@ -9,6 +9,8 @@
     "lint": "next lint",
     "postinstall": "prisma generate",
     "init-stripe": "tsx scripts/init-stripe-products.ts",
+    "test-stripe": "tsx scripts/test-stripe-config.ts",
+    "check-prod-env": "tsx scripts/check-production-env.ts",
     "restore-email-verification": "tsx scripts/restore-email-verification.ts",
     "fix-build": "tsx scripts/fix-build-issues.ts",
     "prepare-deploy": "tsx scripts/prepare-for-deploy.ts"

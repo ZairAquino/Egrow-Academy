@@ -95,7 +95,23 @@ export default function SubscriptionPage() {
       
     } catch (error) {
       console.error('Error al procesar suscripción:', error);
-      alert('Error al procesar el pago. Por favor, intenta de nuevo.');
+      
+      // Mostrar error más específico
+      let errorMessage = 'Error al procesar el pago. Por favor, intenta de nuevo.';
+      
+      if (error instanceof Error) {
+        if (error.message.includes('No autorizado')) {
+          errorMessage = 'Sesión expirada. Por favor, inicia sesión nuevamente.';
+        } else if (error.message.includes('Plan inválido')) {
+          errorMessage = 'Plan de suscripción no válido.';
+        } else if (error.message.includes('Usuario no encontrado')) {
+          errorMessage = 'Error de autenticación. Por favor, inicia sesión nuevamente.';
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
+      alert(errorMessage);
       setIsProcessing(false);
     }
   };

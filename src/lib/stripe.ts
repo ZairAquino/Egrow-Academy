@@ -13,16 +13,16 @@ export const getStripe = () => {
   return null;
 };
 
-// Tipos de productos de Stripe
+// Tipos de productos de Stripe - IDs reales de producción
 export const STRIPE_PRODUCTS = {
-  MONTHLY_SUBSCRIPTION: 'prod_monthly_subscription',
-  YEARLY_SUBSCRIPTION: 'prod_yearly_subscription',
+  MONTHLY_SUBSCRIPTION: 'prod_Sk0mUpiLg7M6rL',
+  YEARLY_SUBSCRIPTION: 'prod_Sk0m0IHB7S7bfe',
 };
 
-// Precios de Stripe
+// Precios de Stripe - IDs reales de producción
 export const STRIPE_PRICES = {
-  MONTHLY: 'price_monthly_subscription',
-  YEARLY: 'price_yearly_subscription',
+  MONTHLY: 'price_1RoWlLFJoQPSn3lA6O4XrHMB',
+  YEARLY: 'price_1RoWlMFJoQPSn3lAgdygLOCh',
 };
 
 // Configuración de planes
