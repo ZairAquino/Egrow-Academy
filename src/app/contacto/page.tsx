@@ -23,6 +23,7 @@ export default function ContactoPage() {
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState('');
   const { user } = useAuth();
 
   const toggleSidebar = () => {
@@ -40,33 +41,45 @@ export default function ContactoPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmitMessage('');
     
-    // Simular envío del formulario
-    setTimeout(() => {
-      alert('¡Mensaje enviado correctamente! Nos pondremos en contacto contigo pronto.');
-      setFormData({ name: '', email: '', subject: '', message: '' });
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setSubmitMessage('¡Mensaje enviado correctamente! Nos pondremos en contacto contigo pronto.');
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      } else {
+        setSubmitMessage(`Error: ${data.error}`);
+      }
+    } catch (error) {
+      console.error('Error al enviar el formulario:', error);
+      setSubmitMessage('Error al enviar el mensaje. Por favor, inténtalo de nuevo.');
+    } finally {
       setIsSubmitting(false);
-    }, 1500);
+    }
   };
 
   const contactInfo = [
     {
       icon: '📧',
       title: 'Email',
-      content: 'contacto@egrow-academy.com',
+      content: 'egrowsuite@gmail.com',
       description: 'Respuesta en 24 horas'
-    },
-    {
-      icon: '💬',
-      title: 'Chat en Vivo',
-      content: 'Disponible 24/7',
-      description: 'Respuesta inmediata'
     },
     {
       icon: '🌍',
       title: 'Comunidad',
       content: 'Únete al foro',
-      description: 'Conecta con otros estudiantes'
+      description: 'Conecta con otros miembros de la comunidad'
     }
   ];
 
@@ -225,6 +238,12 @@ export default function ContactoPage() {
                   >
                     {isSubmitting ? 'Enviando...' : 'Enviar Mensaje'}
                   </button>
+
+                  {submitMessage && (
+                    <div className={`submit-message ${submitMessage.includes('Error') ? 'error' : 'success'}`}>
+                      {submitMessage}
+                    </div>
+                  )}
                 </form>
               </div>
 
@@ -313,6 +332,26 @@ export default function ContactoPage() {
             max-width: 66px;
             max-height: 48px;
           }
+        }
+
+        .submit-message {
+          margin-top: 16px;
+          padding: 12px 16px;
+          border-radius: 8px;
+          font-weight: 600;
+          text-align: center;
+        }
+
+        .submit-message.success {
+          background-color: #dcfce7;
+          color: #166534;
+          border: 1px solid #bbf7d0;
+        }
+
+        .submit-message.error {
+          background-color: #fef2f2;
+          color: #dc2626;
+          border: 1px solid #fecaca;
         }
       `}</style>
     </>

@@ -45,10 +45,10 @@ export default function ResourcesPage() {
 
   const featuredResources = [
     {
-      title: 'Roadmap de Machine Learning',
-      description: 'Guía paso a paso para aprender machine learning desde cero',
-      category: 'Guía',
-      url: 'https://roadmap.sh/ai-data-scientist'
+      title: 'Guía de Prompts para ChatGPT',
+      description: 'Una guía completa y práctica para crear prompts efectivos en ChatGPT con técnicas avanzadas y ejemplos reales',
+      category: 'Manual',
+      url: '/resources/guia-prompts-chatgpt'
     },
     {
       title: 'Glosario de IA',
@@ -120,7 +120,22 @@ export default function ResourcesPage() {
                   <div className="featured-badge">{resource.category}</div>
                   <h3>{resource.title}</h3>
                   <p>{resource.description}</p>
-                  <a href={resource.url} target="_blank" rel="noopener noreferrer" className="btn btn-outline">Acceder</a>
+                  {user ? (
+                    <a href={resource.url} target="_blank" rel="noopener noreferrer" className="btn btn-outline">Acceder</a>
+                  ) : (
+                    <div className="auth-required-section">
+                      <div className="auth-overlay">
+                        <div className="auth-content">
+                          <div className="lock-icon">🔒</div>
+                          <p className="auth-message">Regístrate para acceder a este recurso</p>
+                          <div className="auth-buttons">
+                            <a href="/register" className="btn btn-primary">Registrarse</a>
+                            <a href="/login" className="btn btn-outline">Iniciar Sesión</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -188,29 +203,7 @@ export default function ResourcesPage() {
           </div>
         </section>
 
-        {/* Resource Stats */}
-        <section className="section stats-section">
-          <div className="container">
-            <div className="stats-grid">
-              <div className="stat-card">
-                <div className="stat-number">500+</div>
-                <div className="stat-label">Recursos Disponibles</div>
-              </div>
-              <div className="stat-card">
-                <div className="stat-number">50+</div>
-                <div className="stat-label">Autores Expertos</div>
-              </div>
-              <div className="stat-card">
-                <div className="stat-number">10K+</div>
-                <div className="stat-label">Descargas Mensuales</div>
-              </div>
-              <div className="stat-card">
-                <div className="stat-number">4.8/5</div>
-                <div className="stat-label">Valoración Promedio</div>
-              </div>
-            </div>
-          </div>
-        </section>
+
 
       </main>
 
@@ -270,6 +263,68 @@ export default function ResourcesPage() {
             max-height: 48px;
           }
         }
+
+        .auth-required-section {
+          margin-top: 16px;
+        }
+
+        .auth-overlay {
+          background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+          border: 2px dashed rgba(102, 126, 234, 0.3);
+          border-radius: 12px;
+          padding: 24px;
+          text-align: center;
+          transition: all 0.3s ease;
+        }
+
+        .auth-overlay:hover {
+          border-color: rgba(102, 126, 234, 0.5);
+          background: linear-gradient(135deg, rgba(102, 126, 234, 0.08), rgba(118, 75, 162, 0.08));
+        }
+
+        .auth-content {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 16px;
+        }
+
+        .lock-icon {
+          font-size: 32px;
+          opacity: 0.7;
+        }
+
+        .auth-message {
+          color: #6b7280;
+          font-weight: 500;
+          margin: 0;
+          font-size: 14px;
+        }
+
+        .auth-buttons {
+          display: flex;
+          gap: 12px;
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+
+        .auth-buttons .btn {
+          padding: 8px 16px;
+          font-size: 14px;
+          min-width: 100px;
+        }
+
+        @media (max-width: 480px) {
+          .auth-buttons {
+            flex-direction: column;
+            width: 100%;
+          }
+          
+          .auth-buttons .btn {
+            width: 100%;
+          }
+        }
+
       `}</style>
     </>
   );

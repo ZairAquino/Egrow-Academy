@@ -10,6 +10,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useCommunityPosts, CommunityPost } from '@/hooks/useCommunityPosts';
 import { useCommunityStats } from '@/hooks/useCommunityStats';
+import { useEvents } from '@/hooks/useEvents';
 
 // Lazy load components
 const CompaniesMarquee = dynamic(() => import('@/components/ui/CompaniesMarquee'), {
@@ -33,6 +34,7 @@ export default function CommunityPage() {
   const router = useRouter();
   const { posts, loading, error, createPost, toggleLike, createComment } = useCommunityPosts();
   const { stats: communityStats, loading: statsLoading } = useCommunityStats();
+  const { events: dbEvents, userRegistrations, loading: eventsLoading, registerToEvent, isUserRegistered } = useEvents();
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -212,68 +214,8 @@ export default function CommunityPage() {
 
   const [filteredEvents, setFilteredEvents] = useState<any[]>([]);
 
-  const allEvents = useMemo(() => [
-    {
-      id: 1,
-      title: '🎉 Lanzamiento: Monetizar con IA',
-      date: '2025-07-25',
-      time: '12:00 - 13:30',
-      type: 'Lanzamiento',
-      attendees: 127,
-      instructor: 'Equipo eGrow Academy',
-      image: '/images/monetiza-ia.png',
-      description: 'Descubre cómo crear múltiples fuentes de ingresos usando inteligencia artificial. Aprende estrategias prácticas para monetizar tus habilidades en IA.',
-      category: 'Lanzamiento de Curso'
-    },
-    {
-      id: 2,
-      title: '🚀 Workshop: ChatGPT Avanzado',
-      date: '2025-08-12',
-      time: '15:00 - 17:00',
-      type: 'Workshop',
-      attendees: 89,
-      instructor: 'Dr. Ana Martínez',
-      image: '/images/robot.png',
-      description: 'Aprende técnicas avanzadas de prompt engineering y optimización de ChatGPT para proyectos profesionales.',
-      category: 'Workshop Práctico'
-    },
-    {
-      id: 3,
-      title: '💡 Webinar: IA en Marketing Digital',
-      date: '2025-08-20',
-      time: '20:00 - 21:30',
-      type: 'Webinar',
-      attendees: 156,
-      instructor: 'Carlos López',
-      image: '/images/v-5.png',
-      description: 'Descubre cómo implementar estrategias de IA en tu marketing digital para maximizar resultados.',
-      category: 'Webinar Gratuito'
-    },
-    {
-      id: 4,
-      title: '🎯 Masterclass: Prompt Engineering',
-      date: '2025-08-28',
-      time: '18:00 - 19:30',
-      type: 'Masterclass',
-      attendees: 203,
-      instructor: 'María García',
-      image: '/images/p1.png',
-      description: 'Domina el arte del prompt engineering para obtener resultados excepcionales de cualquier IA.',
-      category: 'Masterclass Premium'
-    },
-    {
-      id: 5,
-      title: '🤖 Meetup: IA y Automatización',
-      date: '2025-09-05',
-      time: '19:00 - 21:00',
-      type: 'Meetup',
-      attendees: 67,
-      instructor: 'Equipo eGrow Academy',
-      image: '/images/Zair.jpeg',
-      description: 'Conecta con otros profesionales y comparte experiencias sobre implementación de IA en empresas.',
-      category: 'Networking'
-    }
-  ], []); // Dependencias vacías para que no se recree
+  // Usar eventos de la base de datos en lugar del array hardcodeado
+  const allEvents = useMemo(() => dbEvents, [dbEvents]);
 
   // Función para filtrar eventos válidos (eventos futuros y recientes)
   const filterValidEvents = (events: any[]) => {
@@ -308,8 +250,8 @@ export default function CommunityPage() {
   };
 
   // Función para formatear la fecha de manera amigable
-  const formatEventDate = (dateString: string) => {
-    const date = new Date(dateString);
+  const formatEventDate = (dateInput: string | Date) => {
+    const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
     const today = new Date();
     const tomorrow = new Date(today);
     tomorrow.setDate(today.getDate() + 1);
@@ -351,19 +293,23 @@ export default function CommunityPage() {
     return () => clearInterval(interval);
   }, []); // Sin dependencias para evitar recrear el intervalo
 
-  const handleEventRegistration = async (eventId: number) => {
+  const handleEventRegistration = async (eventId: string) => {
     if (!user) {
       router.push('/login?redirect=/community');
       return;
     }
 
     try {
-      // Aquí se implementaría la lógica para registrar al usuario al evento
-      // y enviar recordatorios por email
-      alert('¡Te has registrado exitosamente! Te enviaremos recordatorios por email.');
+      const result = await registerToEvent(eventId);
+      
+      if (result.success) {
+        alert('¡Te has registrado exitosamente! Te enviaremos recordatorios por email.');
+      } else {
+        alert(result.message);
+      }
     } catch (error) {
       console.error('Error al registrar al evento:', error);
-      alert('Error al registrarse al evento. Por favor, intenta de nuevo.');
+      alert(error instanceof Error ? error.message : 'Error al registrarse al evento. Por favor, intenta de nuevo.');
     }
   };
 
@@ -560,12 +506,24 @@ export default function CommunityPage() {
               <div className="forum-content">
                 <div className="forum-section-title">
                   <h3>💬 Discusiones Recientes</h3>
-                  <a href="/community/foro" className="btn btn-primary forum-cta">
-                    <span className="btn-text">Ver todas</span>
-                    <svg className="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </a>
+                  {user ? (
+                    <a href="/community/foro" className="btn btn-primary forum-cta">
+                      <span className="btn-text">Ver todas</span>
+                      <svg className="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </a>
+                  ) : (
+                    <div className="auth-required-btn">
+                      <button 
+                        onClick={() => router.push('/login?redirect=/community/foro')}
+                        className="btn btn-primary forum-cta auth-btn"
+                      >
+                        <span className="lock-icon">🔒</span>
+                        <span className="btn-text">Ver todas</span>
+                      </button>
+                    </div>
+                  )}
                 </div>
                 
                 <div className="forum-posts">
@@ -662,6 +620,89 @@ export default function CommunityPage() {
                   )}
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Upcoming Events */}
+        <section id="events" className="section events-section">
+          <div className="container">
+            <div className="section-header">
+              <h2 className="section-title">Próximos Eventos</h2>
+              <p className="section-description">
+                Participa en nuestros eventos y workshops exclusivos
+              </p>
+            </div>
+
+            <div className="events-table-container">
+              {dbEvents.length > 0 ? (
+                <div className="events-table">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Evento</th>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Tipo</th>
+                        <th>Asistentes</th>
+                        <th>Acción</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {dbEvents.map((event) => {
+                        const isRegistered = isUserRegistered(event.id);
+                        return (
+                          <tr key={event.id}>
+                            <td>
+                              <div className="event-info">
+                                <h4>{event.title}</h4>
+                                <p>{event.description}</p>
+                                <small>Con {event.instructor}</small>
+                              </div>
+                            </td>
+                            <td>{formatEventDate(event.date)}</td>
+                            <td>{event.time}</td>
+                            <td>
+                              <span className={`event-type-badge ${event.type.toLowerCase()}`}>
+                                {event.type}
+                              </span>
+                            </td>
+                            <td>👥 {event.attendees}</td>
+                            <td>
+                              {isRegistered ? (
+                                <button 
+                                  className="btn btn-success btn-small"
+                                  disabled
+                                >
+                                  ✅ Registrado
+                                </button>
+                              ) : (
+                                <button 
+                                  className="btn btn-primary btn-small"
+                                  onClick={() => handleEventRegistration(event.id)}
+                                >
+                                  📅 Registrarse
+                                </button>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="no-events-message">
+                  <div className="no-events-icon">📅</div>
+                  <h3>No hay eventos próximos</h3>
+                  <p>Mantente atento a nuestros próximos lanzamientos y eventos especiales.</p>
+                  <div className="no-events-cta">
+                    <a href="/community/foro" className="btn btn-primary">
+                      Únete a la comunidad
+                    </a>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </section>
@@ -791,117 +832,6 @@ export default function CommunityPage() {
           </div>
         </section>
 
-
-        {/* Upcoming Events */}
-        <section id="events" className="section events-section">
-          <div className="container">
-            <div className="section-header">
-              <h2 className="section-title">Próximos Eventos</h2>
-              <p className="section-description">
-                Participa en nuestros eventos y workshops exclusivos
-              </p>
-            </div>
-
-            <div className="events-table-container">
-              {filteredEvents.length > 0 ? (
-                <div className="events-table">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>Evento</th>
-                        <th>Fecha</th>
-                        <th>Hora</th>
-                        <th>Tipo</th>
-                        <th>Asistentes</th>
-                        <th>Acción</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filteredEvents.map((event, index) => (
-                        <tr key={index}>
-                          <td>
-                            <div className="event-info">
-                              <h4>{event.title}</h4>
-                              <p>{event.description}</p>
-                              <small>Con {event.instructor}</small>
-                            </div>
-                          </td>
-                          <td>{formatEventDate(event.date)}</td>
-                          <td>{event.time}</td>
-                          <td>
-                            <span className={`event-type-badge ${event.type.toLowerCase()}`}>
-                              {event.type}
-                            </span>
-                          </td>
-                          <td>👥 {event.attendees}</td>
-                          <td>
-                            <button 
-                              className="btn btn-primary btn-small"
-                              onClick={() => handleEventRegistration(event.id)}
-                            >
-                              📅 Registrarse
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              ) : (
-                <div className="no-events-message">
-                  <div className="no-events-icon">📅</div>
-                  <h3>No hay eventos próximos</h3>
-                  <p>Mantente atento a nuestros próximos lanzamientos y eventos especiales.</p>
-                  <div className="no-events-cta">
-                    <a href="/community/foro" className="btn btn-primary">
-                      Únete a la comunidad
-                    </a>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </section>
-
-
-
-        {/* Join Community CTA */}
-        <section className="section join-cta-section">
-          <div className="container">
-            <div className="join-cta-card">
-              <div className="cta-decoration">
-                <div className="decoration-circle circle-1"></div>
-                <div className="decoration-circle circle-2"></div>
-                <div className="decoration-circle circle-3"></div>
-              </div>
-              <div className="join-cta-content">
-                <h2>¿Listo para Unirte?</h2>
-                <p>Forma parte de una de las comunidades más activas y valiosas en inteligencia artificial</p>
-                <div className="cta-stats-inline">
-                  <div className="inline-stat">
-                    <span className="stat-num">{communityStats?.activeMembers || 0}</span>
-                    <span className="stat-text">Miembros Activos</span>
-                  </div>
-                  <div className="inline-stat">
-                    <span className="stat-num">{communityStats?.countries || 0}</span>
-                    <span className="stat-text">Países</span>
-                  </div>
-                  <div className="inline-stat">
-                    <span className="stat-num">{communityStats?.ratingStats?.overall?.averageRating || 4.8}</span>
-                    <span className="stat-text">⭐ Satisfacción</span>
-                  </div>
-                </div>
-                <div className="cta-buttons-centered">
-                  {user ? (
-                    <a href="/community/forum" className="btn btn-primary btn-large">Ver Foro</a>
-                  ) : (
-                    <a href="/register" className="btn btn-primary btn-large">Únete Ahora</a>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
       </main>
 
       {/* Modal para crear discusión */}
@@ -1403,6 +1333,46 @@ export default function CommunityPage() {
           40% {
             transform: scale(1);
             opacity: 1;
+          }
+        }
+
+        /* Estilos para botón de autenticación requerida */
+        .auth-required-btn {
+          display: flex;
+          align-items: center;
+        }
+
+        .auth-btn {
+          background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1)) !important;
+          border: 2px dashed rgba(102, 126, 234, 0.4) !important;
+          color: #667eea !important;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .auth-btn:hover {
+          background: linear-gradient(135deg, rgba(102, 126, 234, 0.15), rgba(118, 75, 162, 0.15)) !important;
+          border-color: rgba(102, 126, 234, 0.6) !important;
+          transform: translateY(-1px);
+        }
+
+        .auth-btn .lock-icon {
+          font-size: 14px;
+          margin-right: 8px;
+          opacity: 0.8;
+        }
+
+        .auth-btn .btn-text {
+          font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+          .auth-btn .lock-icon {
+            margin-right: 4px;
+          }
+          
+          .auth-btn .btn-text {
+            font-size: 14px;
           }
         }
       `}</style>
