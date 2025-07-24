@@ -742,7 +742,7 @@ if prompt := st.chat_input(&quot;Escribe tu mensaje...&quot;):
   return (
     <>
       <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
-      <UserProfile className="user-profile-top-right" />
+      <UserProfile className="user-profile-fixed" />
       
       <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''}`}>
         {/* Course Header */}

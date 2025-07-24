@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Sidebar from '@/components/layout/Sidebar';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Footer from '@/components/layout/Footer';
+import UserProfile from '@/components/auth/UserProfile';
 import ResourceCard from '@/components/resources/ResourceCard';
 import { useResources } from '@/hooks/useResources';
 import { useAuth } from '@/contexts/AuthContext';
@@ -67,6 +68,7 @@ export default function ResourcesPage() {
   return (
     <>
       <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
+      <UserProfile className="user-profile-fixed" />
       
       <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''}`}>
         {/* Hero Section */}

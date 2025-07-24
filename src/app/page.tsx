@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import Sidebar from '@/components/layout/Sidebar';
-import FixedUserProfile from '@/components/auth/FixedUserProfile';
+import UserProfile from '@/components/auth/UserProfile';
 import Hero from '@/components/layout/Hero';
 import CompaniesMarquee from '@/components/ui/CompaniesMarquee';
 import FeaturedCourses from '@/components/courses/FeaturedCourses';
@@ -46,7 +46,7 @@ function HomeContent() {
   return (
     <>
       {/* UserProfile fijo en esquina superior derecha */}
-      <FixedUserProfile />
+      <UserProfile className="user-profile-fixed" />
       
       <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
       

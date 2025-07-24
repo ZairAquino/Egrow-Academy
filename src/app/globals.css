@@ -5376,13 +5376,34 @@ input:checked + .toggle-slider:before {
 .user-profile-fixed .profile-membership,
 .user-profile-top-right .profile-name,
 .user-profile-top-right .profile-membership {
-  display: none;
+  display: none !important;
 }
 
 /* Hide dropdown arrow completely */
 .user-profile-fixed .dropdown-arrow,
 .user-profile-top-right .dropdown-arrow {
-  display: none;
+  display: none !important;
+}
+
+/* Hide profile info container completely */
+.user-profile-fixed .profile-info {
+  display: none !important;
+}
+
+/* Ensure only avatar is visible */
+.user-profile-fixed .profile-trigger {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Hide any additional text or elements */
+.user-profile-fixed .profile-trigger > *:not(.profile-avatar) {
+  display: none !important;
 }
 
 /* Responsive adjustments for fixed user profile */

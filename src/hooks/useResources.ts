@@ -77,7 +77,15 @@ export function useResources(category?: string) {
       }
 
       const response = await fetch(`/api/resources?${params}`);
-      const data: ResourcesResponse = await response.json();
+      const text = await response.text();
+      let data: ResourcesResponse;
+      try {
+        data = JSON.parse(text);
+      } catch (e) {
+        setError('Respuesta inválida del servidor');
+        setLoading(false);
+        return;
+      }
 
       if (data.success) {
         if (offset === 0) {

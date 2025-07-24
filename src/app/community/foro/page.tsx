@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Sidebar from '@/components/layout/Sidebar';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Footer from '@/components/layout/Footer';
+import UserProfile from '@/components/auth/UserProfile';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCommunityPosts, CommunityPost } from '@/hooks/useCommunityPosts';
 
@@ -178,6 +179,7 @@ export default function ForoPage() {
   return (
     <>
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <UserProfile className="user-profile-fixed" />
       
       <div className="main-content">
         {/* Hero Section */}
