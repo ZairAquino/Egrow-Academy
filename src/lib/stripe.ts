@@ -159,7 +159,7 @@ export const createSubscription = async (data: {
       customer: data.customerId,
       items: [{ price: data.priceId }],
       metadata: data.metadata,
-      trial_period_days: data.trialPeriodDays,
+      trial_period_days: data.trialPeriodDays || 7, // 7 días de prueba por defecto
       payment_behavior: 'default_incomplete',
       payment_settings: { save_default_payment_method: 'on_subscription' },
       expand: ['latest_invoice.payment_intent'],

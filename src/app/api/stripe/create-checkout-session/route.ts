@@ -21,8 +21,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Token inválido' }, { status: 401 });
     }
 
-    const { planId } = await request.json();
+    const { planId, couponCode } = await request.json();
     console.log('🔧 [CHECKOUT] Plan solicitado:', planId);
+    console.log('🔧 [CHECKOUT] Cupón recibido:', couponCode || 'Ninguno');
 
     // Validar el plan
     const plan = SUBSCRIPTION_PLANS[planId as keyof typeof SUBSCRIPTION_PLANS];
@@ -74,7 +75,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Crear sesión de checkout
-    const session = await stripe.checkout.sessions.create({
+    const sessionConfig: any = {
       line_items: [
         {
           price_data: {
@@ -98,6 +99,7 @@ export async function POST(request: NextRequest) {
       metadata: {
         userId: decoded.userId,
         planId: plan.id,
+        couponCode: couponCode || null,
         planName: plan.name,
       },
       subscription_data: {
@@ -107,7 +109,19 @@ export async function POST(request: NextRequest) {
           planName: plan.name,
         },
       },
-    });
+    };
+
+    // Agregar cupón si está presente
+    if (couponCode) {
+      console.log('🔧 [CHECKOUT] Aplicando cupón:', couponCode);
+      sessionConfig.discounts = [
+        {
+          coupon: couponCode,
+        },
+      ];
+    }
+
+    const session = await stripe.checkout.sessions.create(sessionConfig);
 
     console.log('✅ [CHECKOUT] Sesión creada:', session.id);
     return NextResponse.json({ sessionId: session.id, url: session.url });

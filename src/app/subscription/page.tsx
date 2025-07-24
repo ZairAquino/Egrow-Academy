@@ -56,12 +56,52 @@ export default function SubscriptionPage() {
   const router = useRouter();
   const [selectedPlan, setSelectedPlan] = useState<string>('yearly');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [couponCode, setCouponCode] = useState<string>('');
+  const [couponApplied, setCouponApplied] = useState<boolean>(false);
+  const [couponError, setCouponError] = useState<string>('');
 
   useEffect(() => {
     if (status !== 'loading' && !user) {
       router.push('/login?redirect=/subscription');
     }
   }, [user, status, router]);
+
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim()) {
+      setCouponError('Por favor ingresa un código de cupón');
+      return;
+    }
+
+    setIsProcessing(true);
+    setCouponError('');
+
+    try {
+      const response = await fetch('/api/stripe/validate-coupon', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ couponCode: couponCode.trim() }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Error al validar cupón');
+      }
+
+      setCouponApplied(true);
+      setCouponError('');
+      alert(`✅ Cupón aplicado: ${data.coupon.name}`);
+      
+    } catch (error) {
+      console.error('Error al aplicar cupón:', error);
+      setCouponError(error instanceof Error ? error.message : 'Error al aplicar cupón');
+      setCouponApplied(false);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
 
   const handleSubscribe = async (planId: string) => {
     if (!user) {
@@ -77,7 +117,10 @@ export default function SubscriptionPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ planId }),
+        body: JSON.stringify({ 
+          planId,
+          couponCode: couponApplied ? couponCode : undefined 
+        }),
       });
 
       const data = await response.json();
@@ -167,6 +210,40 @@ export default function SubscriptionPage() {
               </Link>
             </p>
             
+            {/* Cupón Section */}
+            <div className="coupon-section mb-6">
+              <div className="coupon-container">
+                <h3 className="text-lg font-semibold text-gray-800 mb-3">
+                  ¿Tienes un código de descuento?
+                </h3>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={couponCode}
+                    onChange={(e) => setCouponCode(e.target.value)}
+                    placeholder="Ingresa tu código de cupón"
+                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    disabled={couponApplied}
+                  />
+                  <button
+                    onClick={handleApplyCoupon}
+                    disabled={isProcessing || couponApplied}
+                    className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {couponApplied ? '✅ Aplicado' : 'Aplicar'}
+                  </button>
+                </div>
+                {couponError && (
+                  <p className="text-red-500 text-sm mt-2">{couponError}</p>
+                )}
+                {couponApplied && (
+                  <p className="text-green-600 text-sm mt-2">
+                    ✅ Cupón aplicado: {couponCode}
+                  </p>
+                )}
+              </div>
+            </div>
+
             {/* Plan Toggle */}
             <div className="plan-toggle">
               <div className="plan-toggle-container">

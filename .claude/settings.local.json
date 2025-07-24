@@ -33,7 +33,11 @@
       "Bash(- Reorg)",
       "Bash(npx kill-port:*)",
       "Bash(git filter-branch:*)",
-      "Bash(git stash:*)"
+      "Bash(git stash:*)",
+      "Bash(npm run check:env:*)",
+      "Bash(pkill:*)",
+      "Bash(vercel:*)",
+      "Bash(git branch:*)"
     ],
     "deny": []
   }
