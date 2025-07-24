@@ -228,6 +228,8 @@ export default function CommunityPage() {
       const eventDate = new Date(event.date);
       // Mostrar eventos futuros y eventos que ocurrieron en los últimos 3 días
       return eventDate >= threeDaysAgo;
+
+      
     });
   };
 

@@ -14,6 +14,12 @@ export default function Footer() {
                 width={200}
                 height={60}
                 className="footer-logo-image"
+                style={{
+                  width: 'auto',
+                  height: 'auto',
+                  maxWidth: '150px',
+                  maxHeight: '45px',
+                }}
               />
             </Link>
             <p>Haciendo la IA accesible para todos</p>

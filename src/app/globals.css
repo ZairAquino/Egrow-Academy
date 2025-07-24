@@ -39,11 +39,107 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
 }
 
 /* Touch-friendly improvements */
 button, a, input, select, textarea {
     touch-action: manipulation;
+}
+
+/* Logo responsive styles */
+.login-logo {
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .login-logo {
+        max-width: 150px !important;
+        max-height: 45px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-logo {
+        max-width: 120px !important;
+        max-height: 36px !important;
+    }
+}
+
+/* Cross-browser compatibility improvements */
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+/* Safari-specific optimizations */
+@supports (-webkit-appearance: none) {
+    body {
+        -webkit-text-size-adjust: 100%;
+        -webkit-tap-highlight-color: transparent;
+        -webkit-font-smoothing: antialiased;
+    }
+    
+    /* Fix for Safari's viewport units bug */
+    .container {
+        min-height: -webkit-fill-available;
+    }
+    
+    /* Smooth scrolling for Safari */
+    html {
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+    }
+    
+    /* Safari iOS specific fixes */
+    .hero {
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+    }
+    
+    /* Fix for Safari button styling */
+    button, input[type="button"], input[type="submit"] {
+        -webkit-appearance: none;
+        border-radius: 0;
+    }
+    
+    /* Fix for Safari flexbox issues */
+    .flex-container {
+        -webkit-flex-wrap: wrap;
+        flex-wrap: wrap;
+    }
+    
+    /* Safari form input styling */
+    input, textarea, select {
+        -webkit-appearance: none;
+        -webkit-border-radius: 0;
+        border-radius: 0;
+    }
+    
+    /* Safari modal backdrop fix */
+    .modal-overlay {
+        -webkit-backdrop-filter: blur(20px);
+        backdrop-filter: blur(20px);
+    }
+}
+
+/* Firefox-specific optimizations */
+@-moz-document url-prefix() {
+    /* Firefox scrollbar styling */
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: var(--gray-400) transparent;
+    }
+}
+
+/* Edge/IE compatibility */
+@supports (-ms-ime-align: auto) {
+    .flex {
+        display: -ms-flexbox;
+        display: flex;
+    }
 }
 
 /* User Profile Styles */
@@ -2486,6 +2582,18 @@ button, a, input, select, textarea {
     background: var(--gray-900);
     color: white;
     padding: 3rem 0 1rem;
+}
+
+@media (max-width: 768px) {
+    .footer {
+        padding: 2rem 0 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer {
+        padding: 1.5rem 0 0.75rem;
+    }
 }
 
 .footer-grid {

@@ -66,7 +66,14 @@ export default function RegisterPage() {
                     alt="eGrow Academy" 
                     width={250}
                     height={75}
-                    style={{ marginBottom: '1rem' }}
+                    style={{ 
+                      marginBottom: '1rem',
+                      width: 'auto',
+                      height: 'auto',
+                      maxWidth: '200px',
+                      maxHeight: '60px'
+                    }}
+                    className="login-logo"
                   />
                 </Link>
                 <h1 style={{
