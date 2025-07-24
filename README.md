@@ -5,45 +5,70 @@ Plataforma educativa de Inteligencia Artificial desarrollada con Next.js 15, Typ
 ## 🚀 Características
 
 - **Autenticación Completa**: Sistema de login/registro con verificación de email
-- **Validación Estricta**: Verificación de correos electrónicos reales
+- **Sistema de Comunidad**: Foro interactivo con posts, comentarios y estadísticas en tiempo real
+- **Sistema de Eventos**: Gestión de eventos educativos con registro y recordatorios automáticos
+- **Sistema de Contacto**: Formulario con confirmación automática por email
+- **Control de Acceso**: Recursos y funcionalidades protegidas por autenticación
+- **Gestión de Recursos**: Biblioteca de recursos educativos con acceso controlado
+- **Validación Estricta**: Verificación de correos electrónicos reales con DNS MX
 - **Páginas Legales**: Términos, privacidad y sistema de facturación
-- **Diseño Responsivo**: Mobile-first con Tailwind CSS
+- **Diseño Responsivo**: Mobile-first con Tailwind CSS y UserProfile optimizado
 - **Base de Datos**: PostgreSQL con Prisma ORM
 - **Performance**: Optimizado con Next.js 15 y Turbopack
-- **Email Service**: Integración con Resend para verificación
+- **Email Service**: Múltiples plantillas con Resend para verificación y contacto
 
 ## 📁 Estructura del Proyecto
 
 ```
 src/
 ├── app/                    # Páginas de Next.js App Router
-│   ├── api/auth/          # APIs de autenticación
-│   │   ├── login/         # Login de usuarios
-│   │   ├── register/      # Registro de usuarios
-│   │   ├── verify-email/  # Verificación de email
-│   │   └── resend-verification/ # Reenvío de códigos
-│   ├── community/         # Página de comunidad
-│   ├── contacto/          # Página de contacto
-│   ├── courses/           # Página de cursos
-│   ├── cursos-cortos/     # Página de cursos cortos
-│   ├── facturacion/       # Sistema de facturación
+│   ├── api/               # APIs del backend
+│   │   ├── auth/          # Autenticación (login, register, verify-email)
+│   │   ├── community/     # Sistema de comunidad (posts, stats, comments)
+│   │   ├── contact/       # Sistema de contacto con email automático
+│   │   ├── events/        # Gestión de eventos y registros
+│   │   ├── resources/     # Recursos educativos con control de acceso
+│   │   ├── courses/       # Sistema de cursos y progreso
+│   │   ├── user/          # Estadísticas y datos del usuario
+│   │   ├── stripe/        # Integración de pagos
+│   │   └── webhooks/      # Webhooks de servicios externos
+│   ├── community/         # Páginas de comunidad y foro
+│   │   └── foro/          # Foro interactivo
+│   ├── contacto/          # Página de contacto con formulario
+│   ├── courses/           # Catálogo de cursos
+│   ├── curso/             # Páginas individuales de cursos
+│   ├── my-courses/        # Dashboard de cursos del usuario
+│   ├── resources/         # Biblioteca de recursos educativos
 │   ├── login/             # Página de login
-│   ├── politica-privacidad/ # Política de privacidad
 │   ├── register/          # Página de registro
-│   ├── recursos/          # Página de recursos
-│   ├── terminos-condiciones/ # Términos y condiciones
-│   └── verify-email/      # Página de verificación
+│   ├── verify-email/      # Verificación de email
+│   ├── profile/           # Perfil del usuario
+│   ├── subscription/      # Gestión de suscripciones
+│   ├── politica-privacidad/ # Política de privacidad
+│   └── terminos-condiciones/ # Términos y condiciones
 ├── components/
-│   ├── auth/              # Componentes de autenticación
-│   ├── courses/           # Componentes de cursos
-│   ├── layout/            # Componentes de layout
-│   └── ui/                # Componentes de UI
+│   ├── auth/              # Componentes de autenticación y UserProfile
+│   ├── courses/           # Componentes de cursos y videos
+│   ├── resources/         # Componentes de recursos
+│   ├── payments/          # Componentes de pagos y suscripciones
+│   ├── layout/            # Header, Footer, Sidebar
+│   └── ui/                # Componentes de interfaz
 ├── contexts/              # Contextos de React
+│   └── AuthContext.tsx    # Contexto de autenticación
+├── hooks/                 # Custom hooks
+│   ├── useCommunityPosts.ts # Hook para posts del foro
+│   ├── useCommunityStats.ts # Hook para estadísticas
+│   ├── useEvents.ts       # Hook para eventos
+│   ├── useResources.ts    # Hook para recursos
+│   └── useUserStats.ts    # Hook para estadísticas del usuario
 ├── lib/                   # Utilidades y configuraciones
-│   ├── email.ts           # Servicio de email con Resend
-│   ├── email-validation.ts # Validación de correos
-│   └── server-email-validation.ts # Validación DNS
+│   ├── email.ts           # Servicio de email con múltiples plantillas
+│   ├── email-validation.ts # Validación de correos con DNS MX
+│   ├── prisma.ts          # Cliente de base de datos
+│   └── stripe.ts          # Configuración de Stripe
 └── types/                 # Tipos de TypeScript
+    ├── auth.ts            # Tipos de autenticación
+    └── stripe.ts          # Tipos de Stripe
 ```
 
 ## 🛠️ Tecnologías
@@ -86,7 +111,8 @@ src/
    
    # Email Service
    RESEND_API_KEY="re_..."
-   RESEND_FROM_EMAIL="noreply@egrow-academy.com"
+   RESEND_FROM_EMAIL="egrowsuite@gmail.com"
+   CONTACT_NOTIFICATION_EMAIL="egrowsuite@gmail.com"
    
    # App
    NEXTAUTH_URL="http://localhost:3000"
@@ -183,20 +209,60 @@ Configurar como aplicación Node.js con build command: `npm run build`
 - `POST /api/auth/verify-email` - Verificar email con código
 - `POST /api/auth/resend-verification` - Reenviar código de verificación
 
+### Comunidad
+- `GET /api/community/stats` - Estadísticas de la comunidad
+- `GET /api/community/posts` - Obtener posts del foro
+- `POST /api/community/posts` - Crear nuevo post
+- `POST /api/community/posts/[id]/like` - Dar like a un post
+- `POST /api/community/posts/[id]/comments` - Comentar en un post
+
+### Contacto
+- `POST /api/contact` - Enviar formulario de contacto con confirmación automática
+
+### Eventos
+- `GET /api/events` - Listar eventos disponibles
+- `POST /api/events/register` - Registrarse a un evento
+- `GET /api/events/user-registrations` - Eventos registrados del usuario
+- `POST /api/events/send-reminders` - Enviar recordatorios de eventos
+
+### Recursos
+- `GET /api/resources` - Listar recursos con control de acceso
+- `GET /api/resources/[slug]` - Obtener recurso específico
+- `GET /api/resources/[slug]/access` - Acceder a recurso con autenticación
+
+### Cursos
+- `GET /api/courses/user-courses` - Cursos del usuario
+- `POST /api/courses/enroll` - Inscribirse a un curso
+- `GET /api/courses/[slug]/access` - Verificar acceso a curso
+- `POST /api/courses/progress` - Actualizar progreso del curso
+
+### Usuario
+- `GET /api/user/stats` - Estadísticas del usuario
+
+### Pagos (Stripe)
+- `POST /api/stripe/create-checkout-session` - Crear sesión de pago
+- `POST /api/stripe/webhook` - Webhook de Stripe
+
 ### Utilidades
-- `GET /api/test` - Test de conectividad
-- `GET /api/test-db` - Test de conexión a base de datos
+- `GET /api/test-email` - Test de servicio de email
+- `GET /api/test-env` - Test de variables de entorno
 
 ## 📊 Estado del Proyecto
 
-- ✅ **Autenticación**: 100% implementado
-- ✅ **Verificación de Email**: 100% implementado
-- ✅ **Páginas Legales**: 100% implementado
-- ✅ **Sistema de Facturación**: 100% implementado
-- ✅ **Validación de Correos**: 100% implementado
-- ✅ **Base de Datos**: 100% configurado
-- ✅ **Documentación**: 100% actualizada
+- ✅ **Autenticación**: 100% implementado con verificación de email
+- ✅ **Sistema de Comunidad**: 100% implementado (foro, posts, comentarios, estadísticas)
+- ✅ **Sistema de Eventos**: 100% implementado con registro y recordatorios
+- ✅ **Sistema de Contacto**: 100% implementado con confirmaciones automáticas
+- ✅ **Control de Acceso**: 100% implementado para recursos y funcionalidades
 - ✅ **Sistema de Cursos**: 100% implementado con progreso persistente
+- ✅ **Gestión de Recursos**: 100% implementado con autenticación
+- ✅ **Páginas Legales**: 100% implementado (términos, privacidad, facturación)
+- ✅ **UserProfile Optimizado**: 100% implementado con diseño minimalista
+- ✅ **Integración de Pagos**: 100% implementado con Stripe
+- ✅ **Validación de Correos**: 100% implementado con DNS MX
+- ✅ **Base de Datos**: 100% configurado con PostgreSQL y Prisma
+- ✅ **Email Service**: 100% implementado con múltiples plantillas
+- ✅ **Documentación**: 100% actualizada
 
 ## 🌐 URLs de Despliegue
 
@@ -214,9 +280,9 @@ Configurar como aplicación Node.js con build command: `npm run build`
 
 ### Mejoras Futuras
 1. **Sistema de notificaciones** push
-2. **Integración con pasarelas de pago** reales
-3. **Sistema de certificados** para cursos completados
-4. **API pública** para integraciones externas
+2. **API pública** para integraciones externas
+3. **Analytics avanzados** y métricas de uso
+4. **Sistema de gamificación** para usuarios
 
 ## 📝 Licencia
 
