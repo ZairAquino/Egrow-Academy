@@ -544,7 +544,8 @@ export default function CommunityPage() {
                       <p>No hay discusiones aún. ¡Sé el primero en crear una!</p>
                     </div>
                   ) : (
-                    posts.slice(0, 5).map((post) => (
+                    <>
+                      {posts.slice(0, 3).map((post) => (
                       <div key={post.id} className="forum-post-card">
                         <div className="post-header">
                           <div className="user-info">
@@ -616,7 +617,35 @@ export default function CommunityPage() {
                           </div>
                         )}
                       </div>
-                    ))
+                      ))}
+                      
+                      {/* Indicador de más conversaciones */}
+                      {posts.length > 3 && (
+                        <div className="more-discussions-indicator">
+                          <div className="indicator-content">
+                            <div className="indicator-icon">💬</div>
+                            <div className="indicator-text">
+                              <p className="indicator-title">¡Hay más conversaciones!</p>
+                              <p className="indicator-subtitle">
+                                Mostrando 3 de {posts.length} discusiones activas
+                              </p>
+                            </div>
+                            {user ? (
+                              <a href="/community/foro" className="btn btn-outline btn-small">
+                                Ver todas
+                              </a>
+                            ) : (
+                              <button 
+                                onClick={() => router.push('/login?redirect=/community/foro')}
+                                className="btn btn-outline btn-small auth-indicator-btn"
+                              >
+                                🔒 Ver todas
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
               </div>
@@ -823,9 +852,18 @@ export default function CommunityPage() {
                 <div className="cta-content">
                   <h3>¿Tienes alguna duda específica?</h3>
                   <p>¡Únete a nuestro foro y pregunta a la comunidad! Nuestros expertos y miembros de eGrow Academy estarán encantados de ayudarte.</p>
-                  <a href="/community/foro" className="btn btn-primary">
-                    💬 Ir al Foro
-                  </a>
+                  {user ? (
+                    <a href="/community/foro" className="btn btn-primary">
+                      💬 Ir al Foro
+                    </a>
+                  ) : (
+                    <button 
+                      onClick={() => router.push('/login?redirect=/community/foro')}
+                      className="btn btn-primary faq-auth-btn"
+                    >
+                      🔒 Ir al Foro
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -1373,6 +1411,113 @@ export default function CommunityPage() {
           
           .auth-btn .btn-text {
             font-size: 14px;
+          }
+        }
+
+        /* Estilos para el indicador de más conversaciones */
+        .more-discussions-indicator {
+          margin-top: 24px;
+          padding: 20px;
+          background: linear-gradient(135deg, rgba(102, 126, 234, 0.03), rgba(118, 75, 162, 0.03));
+          border: 1px solid rgba(102, 126, 234, 0.1);
+          border-radius: 12px;
+          transition: all 0.3s ease;
+        }
+
+        .more-discussions-indicator:hover {
+          background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+          border-color: rgba(102, 126, 234, 0.15);
+          transform: translateY(-1px);
+        }
+
+        .indicator-content {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+        }
+
+        .indicator-icon {
+          font-size: 28px;
+          opacity: 0.7;
+          flex-shrink: 0;
+        }
+
+        .indicator-text {
+          flex: 1;
+        }
+
+        .indicator-title {
+          font-size: 16px;
+          font-weight: 600;
+          color: #374151;
+          margin: 0 0 4px 0;
+        }
+
+        .indicator-subtitle {
+          font-size: 14px;
+          color: #6b7280;
+          margin: 0;
+        }
+
+        .auth-indicator-btn {
+          background: linear-gradient(135deg, rgba(102, 126, 234, 0.08), rgba(118, 75, 162, 0.08)) !important;
+          border-color: rgba(102, 126, 234, 0.3) !important;
+          color: #667eea !important;
+        }
+
+        .auth-indicator-btn:hover {
+          background: linear-gradient(135deg, rgba(102, 126, 234, 0.12), rgba(118, 75, 162, 0.12)) !important;
+          border-color: rgba(102, 126, 234, 0.4) !important;
+        }
+
+        @media (max-width: 768px) {
+          .indicator-content {
+            flex-direction: column;
+            text-align: center;
+            gap: 12px;
+          }
+
+          .indicator-icon {
+            font-size: 32px;
+          }
+
+          .indicator-title {
+            font-size: 15px;
+          }
+
+          .indicator-subtitle {
+            font-size: 13px;
+          }
+
+          .more-discussions-indicator {
+            padding: 16px;
+          }
+        }
+
+        /* Estilos para botón de FAQ con autenticación */
+        .faq-auth-btn {
+          background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1)) !important;
+          border: 2px solid rgba(102, 126, 234, 0.3) !important;
+          color: #667eea !important;
+          position: relative;
+          transition: all 0.3s ease;
+        }
+
+        .faq-auth-btn:hover {
+          background: linear-gradient(135deg, rgba(102, 126, 234, 0.15), rgba(118, 75, 162, 0.15)) !important;
+          border-color: rgba(102, 126, 234, 0.5) !important;
+          transform: translateY(-2px);
+          box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+        }
+
+        .faq-auth-btn:active {
+          transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+          .faq-auth-btn {
+            width: 100%;
+            justify-content: center;
           }
         }
       `}</style>

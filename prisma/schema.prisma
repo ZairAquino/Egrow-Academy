@@ -8,36 +8,35 @@ datasource db {
 }
 
 model User {
-  id                  String              @id @default(cuid())
-  email               String              @unique
-  passwordHash        String?
-  firstName           String
-  lastName            String
-  username            String?             @unique
-  profileImage        String?
-  bio                 String?
-  country             String?
-  membershipLevel     MembershipLevel     @default(FREE)
-  isActive            Boolean             @default(true)
-  emailVerified       Boolean             @default(false)
-  createdAt           DateTime            @default(now())
-  updatedAt           DateTime            @updatedAt
-  lastLogin           DateTime?
-  verificationCode    String?
+  id                      String              @id @default(cuid())
+  email                   String              @unique
+  passwordHash            String?
+  firstName               String
+  lastName                String
+  username                String?             @unique
+  profileImage            String?
+  bio                     String?
+  membershipLevel         MembershipLevel     @default(FREE)
+  isActive                Boolean             @default(true)
+  emailVerified           Boolean             @default(false)
+  createdAt               DateTime            @default(now())
+  updatedAt               DateTime            @updatedAt
+  lastLogin               DateTime?
+  verificationCode        String?
+  stripeCustomerId        String?             @unique
   verificationCodeExpires DateTime?
-  stripeCustomerId    String?             @unique
-  hasBeenPremium      Boolean             @default(false)
-  comments            Comment[]
-  posts               CommunityPost[]
-  courses             Course[]            @relation("CourseInstructor")
-  enrollments         Enrollment[]
-  likes               Like[]
-  payments            Payment[]
-  questions           Question[]
-  ratings             Rating[]
-  resourceAccessLogs  ResourceAccessLog[]
-  sessions            Session[]
-  subscriptions       Subscription[]
+  country                 String?
+  hasBeenPremium          Boolean             @default(false)
+  comments                Comment[]
+  posts                   CommunityPost[]
+  courses                 Course[]            @relation("CourseInstructor")
+  enrollments             Enrollment[]
+  eventRegistrations      EventRegistration[]
+  likes                   Like[]
+  payments                Payment[]
+  resourceAccessLogs      ResourceAccessLog[]
+  sessions                Session[]
+  subscriptions           Subscription[]
 
   @@index([membershipLevel])
   @@index([email, membershipLevel])
@@ -79,48 +78,28 @@ model Course {
   enrollments      Enrollment[]
   lessons          Lesson[]
   payments         Payment[]
-  ratings          Rating[]
 
   @@map("courses")
 }
 
 model Comment {
-  id         String         @id @default(cuid())
-  content    String
-  type       CommentType
-  rating     Int?           // Valoración de 1-5 estrellas
-  createdAt  DateTime       @default(now())
-  updatedAt  DateTime       @updatedAt
-  userId     String
-  courseId   String?
-  parentId   String?
-  questionId String?
-  postId     String?
-  course     Course?        @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  parent     Comment?       @relation("CommentReplies", fields: [parentId], references: [id])
-  replies    Comment[]      @relation("CommentReplies")
-  post       CommunityPost? @relation("PostComments", fields: [postId], references: [id], onDelete: Cascade)
-  question   Question?      @relation("QuestionComments", fields: [questionId], references: [id], onDelete: Cascade)
-  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  likes      Like[]
-
-  @@map("comments")
-}
-
-model Question {
   id        String         @id @default(cuid())
-  title     String
   content   String
-  category  String?
-  status    QuestionStatus @default(OPEN)
+  type      CommentType
   createdAt DateTime       @default(now())
   updatedAt DateTime       @updatedAt
   userId    String
-  answers   Comment[]      @relation("QuestionComments")
-  likes     Like[]
+  courseId  String?
+  parentId  String?
+  postId    String?
+  course    Course?        @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  parent    Comment?       @relation("CommentReplies", fields: [parentId], references: [id])
+  replies   Comment[]      @relation("CommentReplies")
+  post      CommunityPost? @relation("PostComments", fields: [postId], references: [id], onDelete: Cascade)
   user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  likes     Like[]
 
-  @@map("questions")
+  @@map("comments")
 }
 
 model CommunityPost {
@@ -134,7 +113,6 @@ model CommunityPost {
   comments  Comment[] @relation("PostComments")
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   likes     Like[]
-  ratings   Rating[]
 
   @@map("community_posts")
 }
@@ -197,18 +175,16 @@ model LessonProgress {
 }
 
 model Like {
-  id         String         @id @default(cuid())
-  createdAt  DateTime       @default(now())
-  userId     String
-  commentId  String?
-  questionId String?
-  postId     String?
-  comment    Comment?       @relation(fields: [commentId], references: [id], onDelete: Cascade)
-  post       CommunityPost? @relation(fields: [postId], references: [id], onDelete: Cascade)
-  question   Question?      @relation(fields: [questionId], references: [id], onDelete: Cascade)
-  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        String         @id @default(cuid())
+  createdAt DateTime       @default(now())
+  userId    String
+  commentId String?
+  postId    String?
+  comment   Comment?       @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  post      CommunityPost? @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, commentId, questionId, postId])
+  @@unique([userId, commentId, postId])
   @@map("likes")
 }
 
@@ -353,6 +329,39 @@ model ResourceAccessLog {
   @@map("resource_access_logs")
 }
 
+model Event {
+  id            String              @id @default(cuid())
+  title         String
+  description   String
+  date          DateTime
+  time          String
+  type          EventType
+  category      String
+  instructor    String
+  image         String?
+  maxAttendees  Int?
+  isActive      Boolean             @default(true)
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  registrations EventRegistration[]
+
+  @@map("events")
+}
+
+model EventRegistration {
+  id             String    @id @default(cuid())
+  userId         String
+  eventId        String
+  registeredAt   DateTime  @default(now())
+  reminderSent   Boolean   @default(false)
+  reminderSentAt DateTime?
+  event          Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, eventId])
+  @@map("event_registrations")
+}
+
 enum CourseProgressStatus {
   NOT_STARTED
   IN_PROGRESS
@@ -382,12 +391,6 @@ enum CommentType {
   FORUM
   QUESTION
   COURSE_COMMENT
-}
-
-enum QuestionStatus {
-  OPEN
-  CLOSED
-  RESOLVED
 }
 
 enum EnrollmentStatus {
@@ -451,30 +454,10 @@ enum ResourceStatus {
   ARCHIVED
 }
 
-model Rating {
-  id        String   @id @default(cuid())
-  rating    Int      // Valoración de 1-5 estrellas
-  comment   String?  // Comentario opcional
-  type      RatingType
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  
-  // Relaciones
-  userId    String
-  courseId  String?
-  postId    String?
-  
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  course    Course?  @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  post      CommunityPost? @relation(fields: [postId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, courseId, type]) // Un usuario solo puede valorar un curso una vez
-  @@unique([userId, postId, type])   // Un usuario solo puede valorar un post una vez
-  @@map("ratings")
-}
-
-enum RatingType {
-  COURSE_COMPLETION
-  COMMUNITY_POST
-  COURSE_COMMENT
+enum EventType {
+  LANZAMIENTO
+  WORKSHOP
+  WEBINAR
+  MASTERCLASS
+  MEETUP
 }

@@ -10,23 +10,6 @@ export interface CommunityStats {
     comments: number;
     replies: number;
   };
-  ratingStats?: {
-    overall: {
-      totalRatings: number;
-      averageRating: number;
-      satisfactionPercentage: number;
-    };
-    byType: {
-      courses: {
-        total: number;
-        average: number;
-      };
-      community: {
-        total: number;
-        average: number;
-      };
-    };
-  };
 }
 
 export function useCommunityStats() {

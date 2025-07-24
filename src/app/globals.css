@@ -54,12 +54,12 @@ button, a, input, select, textarea {
     left: auto !important;
     bottom: auto !important;
     z-index: 99999 !important;
-    background: rgba(0, 0, 0, 0.9) !important;
-    backdrop-filter: blur(15px) !important;
-    border-radius: 12px !important;
-    padding: 8px !important;
-    border: 2px solid rgba(255, 255, 255, 0.2) !important;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
     transform: none !important;
     margin: 0 !important;
     width: auto !important;
@@ -71,6 +71,10 @@ button, a, input, select, textarea {
     display: block !important;
     width: auto !important;
     height: auto !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
 }
 
 .loading-spinner {
@@ -128,25 +132,26 @@ button, a, input, select, textarea {
 .profile-trigger {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
+    gap: 0;
+    padding: 0;
     background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 8px;
+    border: none;
+    border-radius: 0;
     color: white;
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
 .profile-trigger:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: transparent;
+    transform: scale(1.05);
 }
 
 .profile-avatar {
-    width: 32px;
-    height: 32px;
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
-    background: var(--primary-blue);
+    background: #000000;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -154,14 +159,14 @@ button, a, input, select, textarea {
 }
 
 .profile-avatar.large {
-    width: 48px;
-    height: 48px;
+    width: 62px;
+    height: 62px;
 }
 
 .avatar-text {
     font-weight: 600;
     color: white;
-    font-size: 14px;
+    font-size: 18px;
 }
 
 .profile-avatar.large .avatar-text {
@@ -1727,6 +1732,21 @@ button, a, input, select, textarea {
 
 .btn-primary:hover {
   background: var(--primary-blue-hover);
+}
+
+.btn-success {
+  background: #10b981;
+  color: white;
+}
+
+.btn-success:hover {
+  background: #059669;
+}
+
+.btn-success:disabled {
+  background: #10b981;
+  opacity: 0.8;
+  cursor: not-allowed;
 }
 
 .btn-white {
@@ -5237,6 +5257,10 @@ input:checked + .toggle-slider:before {
   right: 20px;
   z-index: 1000;
   pointer-events: auto;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
 }
 
 .user-profile-fixed .user-profile-container {
@@ -5244,6 +5268,24 @@ input:checked + .toggle-slider:before {
   display: block;
   width: auto;
   height: auto;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Always hide user info, show only avatar and dropdown arrow */
+.user-profile-fixed .profile-name,
+.user-profile-fixed .profile-membership,
+.user-profile-top-right .profile-name,
+.user-profile-top-right .profile-membership {
+  display: none;
+}
+
+/* Hide dropdown arrow completely */
+.user-profile-fixed .dropdown-arrow,
+.user-profile-top-right .dropdown-arrow {
+  display: none;
 }
 
 /* Responsive adjustments for fixed user profile */
@@ -5254,15 +5296,7 @@ input:checked + .toggle-slider:before {
   }
   
   .user-profile-fixed .profile-trigger {
-    padding: 6px 8px;
-  }
-  
-  .user-profile-fixed .profile-name {
-    display: none;
-  }
-  
-  .user-profile-fixed .profile-membership {
-    display: none;
+    padding: 2px;
   }
   
   .user-profile-fixed .dropdown-arrow {

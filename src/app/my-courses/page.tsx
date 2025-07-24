@@ -19,8 +19,6 @@ interface Course {
   status: 'enrolled' | 'in_progress' | 'completed';
   lastAccessed?: Date;
   completedAt?: Date;
-  hasCertificate?: boolean;
-  certificateUrl?: string;
 }
 
 interface UserCourse {
@@ -96,11 +94,6 @@ export default function MyCoursesPage() {
         return courses.filter(course => 
           course.status === 'COMPLETED' || course.progressPercentage === 100
         );
-      case 'certificates':
-        return courses.filter(course => 
-          (course.status === 'COMPLETED' || course.progressPercentage === 100) &&
-          course.course.hasCertificate
-        );
       default:
         return courses;
     }
@@ -113,10 +106,6 @@ export default function MyCoursesPage() {
     total: courses.length,
     pending: courses.filter(c => c.status === 'ACTIVE' && c.progressPercentage < 100).length,
     completed: courses.filter(c => c.status === 'COMPLETED' || c.progressPercentage === 100).length,
-    certificates: courses.filter(c => 
-      (c.status === 'COMPLETED' || c.progressPercentage === 100) && 
-      c.course.hasCertificate
-    ).length
   };
 
   // Redirigir si no está autenticado
@@ -149,7 +138,7 @@ export default function MyCoursesPage() {
                 <span className="block">Dashboard de Aprendizaje</span>
               </h1>
               <p className="hero-description">
-                Gestiona tu progreso, continúa donde lo dejaste y obtén tus certificaciones.
+                Gestiona tu progreso y continúa donde lo dejaste en tu aprendizaje de IA.
               </p>
             </div>
           </div>
@@ -180,13 +169,6 @@ export default function MyCoursesPage() {
                   <div className="stat-label">Completados</div>
                 </div>
               </div>
-              <div className="stat-card">
-                <div className="stat-icon">🏆</div>
-                <div className="stat-content">
-                  <div className="stat-number">{stats.certificates}</div>
-                  <div className="stat-label">Certificados</div>
-                </div>
-              </div>
             </div>
           </div>
         </section>
@@ -215,13 +197,6 @@ export default function MyCoursesPage() {
               >
                 <span className="filter-icon">✅</span>
                 Completados ({stats.completed})
-              </button>
-              <button
-                className={`filter-btn ${activeTab === 'certificates' ? 'active' : ''}`}
-                onClick={() => setActiveTab('certificates')}
-              >
-                <span className="filter-icon">🏆</span>
-                Certificados ({stats.certificates})
               </button>
             </div>
           </div>
@@ -331,19 +306,6 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
         );
   };
 
-  const getCertificateButton = () => {
-    if (isCompleted && course.hasCertificate) {
-      return (
-        <Link 
-          href={course.certificateUrl || `/certificate/${course.slug}`}
-          className="course-action-btn certificate-btn"
-        >
-          🏆 Descargar Certificado
-        </Link>
-      );
-    }
-    return null;
-  };
 
   const getStatusBadge = () => {
     if (isCompleted) {
@@ -386,12 +348,6 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
                 <span className="completion-icon">✅</span>
                 <span className="completion-text">Curso Completado</span>
               </div>
-              {course.hasCertificate && (
-                <div className="certificate-info">
-                  <span className="certificate-icon">🏆</span>
-                  <span className="certificate-text">Certificación Disponible</span>
-                </div>
-              )}
             </div>
           )}
           
@@ -404,12 +360,6 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
             <span className="meta-icon">📊</span>
             {course.difficulty || 'Principiante'}
           </span>
-            {course.hasCertificate && (
-              <span className="meta-item">
-                <span className="meta-icon">🏆</span>
-                Certificación
-              </span>
-            )}
         </div>
 
         {isInProgress && (
@@ -429,7 +379,6 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
 
           <div className="course-actions">
           {getActionButton()}
-            {getCertificateButton()}
         </div>
       </div>
 
@@ -614,17 +563,6 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
           box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
         }
 
-        .certificate-btn {
-          background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-          color: white;
-          box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
-        }
-
-        .certificate-btn:hover {
-          background: linear-gradient(135deg, #7c3aed, #6d28d9);
-          transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
-        }
 
         .course-completion-info {
           margin-bottom: 1rem;
@@ -649,22 +587,6 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
           font-size: 0.875rem;
           font-weight: 600;
           color: #10b981;
-          }
-          
-        .certificate-info {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          }
-          
-        .certificate-icon {
-          font-size: 1rem;
-          }
-          
-        .certificate-text {
-          font-size: 0.875rem;
-          font-weight: 500;
-          color: #8b5cf6;
         }
       `}</style>
     </div>

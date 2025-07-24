@@ -85,68 +85,7 @@ export async function GET(request: NextRequest) {
       console.error('❌ [STATS] Error obteniendo miembros premium:', error);
     }
 
-    // Obtener estadísticas de valoraciones
-    let ratingStats = null;
-    try {
-      const allRatings = await prisma.rating.findMany({
-        where: {
-          type: {
-            in: ['COURSE_COMPLETION', 'COMMUNITY_POST', 'COURSE_COMMENT']
-          }
-        }
-      });
 
-      const totalRatings = allRatings.length;
-      const averageRating = totalRatings > 0 
-        ? allRatings.reduce((acc, r) => acc + r.rating, 0) / totalRatings 
-        : 0;
-
-      const ratingDistribution = {
-        1: allRatings.filter(r => r.rating === 1).length,
-        2: allRatings.filter(r => r.rating === 2).length,
-        3: allRatings.filter(r => r.rating === 3).length,
-        4: allRatings.filter(r => r.rating === 4).length,
-        5: allRatings.filter(r => r.rating === 5).length
-      };
-
-      const positiveRatings = ratingDistribution[4] + ratingDistribution[5];
-      const satisfactionPercentage = totalRatings > 0 
-        ? Math.round((positiveRatings / totalRatings) * 100) 
-        : 0;
-
-      const courseRatings = allRatings.filter(r => r.type === 'COURSE_COMPLETION');
-      const communityRatings = allRatings.filter(r => r.type === 'COMMUNITY_POST');
-
-      const courseAverage = courseRatings.length > 0 
-        ? courseRatings.reduce((acc, r) => acc + r.rating, 0) / courseRatings.length 
-        : 0;
-
-      const communityAverage = communityRatings.length > 0 
-        ? communityRatings.reduce((acc, r) => acc + r.rating, 0) / communityRatings.length 
-        : 0;
-
-      ratingStats = {
-        overall: {
-          totalRatings,
-          averageRating: Math.round(averageRating * 10) / 10,
-          satisfactionPercentage
-        },
-        byType: {
-          courses: {
-            total: courseRatings.length,
-            average: Math.round(courseAverage * 10) / 10
-          },
-          community: {
-            total: communityRatings.length,
-            average: Math.round(communityAverage * 10) / 10
-          }
-        }
-      };
-
-      console.log('✅ [STATS] Estadísticas de valoraciones:', ratingStats);
-    } catch (error) {
-      console.error('❌ [STATS] Error obteniendo estadísticas de valoraciones:', error);
-    }
 
     const totalInteractions = likesCount + commentsCount + repliesCount;
     console.log('✅ [STATS] Interacciones totales:', totalInteractions);
@@ -160,8 +99,7 @@ export async function GET(request: NextRequest) {
         likes: likesCount,
         comments: commentsCount,
         replies: repliesCount
-      },
-      ratingStats
+      }
     };
 
     console.log('✅ [STATS] Estadísticas completadas:', stats);

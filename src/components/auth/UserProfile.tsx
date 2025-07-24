@@ -156,15 +156,6 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
             </span>
           )}
         </div>
-        <div className="profile-info">
-          <span className="profile-name">{getUserFullName()}</span>
-          <span 
-            className="profile-membership"
-            style={{ color: getMembershipColor(user.membershipLevel || 'FREE') }}
-          >
-            {getMembershipLabel(user.membershipLevel || 'FREE')}
-          </span>
-        </div>
         <span className="dropdown-arrow">▼</span>
       </button>
 
@@ -207,10 +198,6 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
             <div className="stat-item">
               <span className="stat-label">Cursos Completados</span>
               <span className="stat-value">{stats?.completedCourses || 0}</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-label">Certificaciones</span>
-              <span className="stat-value">{stats?.certificates || 0}</span>
             </div>
             <div className="stat-item">
               <span className="stat-label">Estado de Email</span>

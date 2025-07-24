@@ -46,9 +46,11 @@ export function useCommunityPosts() {
   const { user } = useAuth();
 
   // Obtener todas las discusiones
-  const fetchPosts = async () => {
+  const fetchPosts = async (showLoading = true) => {
     try {
-      setLoading(true);
+      if (showLoading) {
+        setLoading(true);
+      }
       const response = await fetch('/api/community/posts');
       
       if (!response.ok) {
@@ -61,7 +63,9 @@ export function useCommunityPosts() {
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
     } finally {
-      setLoading(false);
+      if (showLoading) {
+        setLoading(false);
+      }
     }
   };
 
@@ -109,9 +113,16 @@ export function useCommunityPosts() {
     }
   };
 
-  // Cargar discusiones al montar el componente
+  // Cargar discusiones al montar el componente y configurar actualización automática
   useEffect(() => {
     fetchPosts();
+    
+    // Actualizar cada 30 segundos para mostrar nuevas conversaciones
+    const interval = setInterval(() => {
+      fetchPosts(false); // No mostrar loading en actualizaciones automáticas
+    }, 30000); // 30 segundos
+    
+    return () => clearInterval(interval);
   }, []);
 
   // Dar/quitar like a una discusión

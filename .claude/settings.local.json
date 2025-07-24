@@ -22,7 +22,11 @@
       "Bash(npm run tsx:*)",
       "Bash(npx tsx:*)",
       "Bash(git reset:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(powershell:*)",
+      "Bash(cmd /c:*)",
+      "Bash(npx prisma:*)",
+      "Bash(grep:*)"
     ],
     "deny": []
   }

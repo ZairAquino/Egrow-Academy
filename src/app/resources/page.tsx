@@ -123,18 +123,9 @@ export default function ResourcesPage() {
                   {user ? (
                     <a href={resource.url} target="_blank" rel="noopener noreferrer" className="btn btn-outline">Acceder</a>
                   ) : (
-                    <div className="auth-required-section">
-                      <div className="auth-overlay">
-                        <div className="auth-content">
-                          <div className="lock-icon">🔒</div>
-                          <p className="auth-message">Regístrate para acceder a este recurso</p>
-                          <div className="auth-buttons">
-                            <a href="/register" className="btn btn-primary">Registrarse</a>
-                            <a href="/login" className="btn btn-outline">Iniciar Sesión</a>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                    <a href="/login?redirect=/resources" className="btn btn-outline resource-auth-btn">
+                      🔒 Acceder
+                    </a>
                   )}
                 </div>
               ))}
@@ -264,64 +255,31 @@ export default function ResourcesPage() {
           }
         }
 
-        .auth-required-section {
-          margin-top: 16px;
-        }
-
-        .auth-overlay {
-          background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
-          border: 2px dashed rgba(102, 126, 234, 0.3);
-          border-radius: 12px;
-          padding: 24px;
-          text-align: center;
+        /* Estilos para botón de autenticación en recursos */
+        .resource-auth-btn {
+          background: linear-gradient(135deg, rgba(102, 126, 234, 0.08), rgba(118, 75, 162, 0.08)) !important;
+          border: 2px solid rgba(102, 126, 234, 0.3) !important;
+          color: #667eea !important;
           transition: all 0.3s ease;
+          position: relative;
         }
 
-        .auth-overlay:hover {
-          border-color: rgba(102, 126, 234, 0.5);
-          background: linear-gradient(135deg, rgba(102, 126, 234, 0.08), rgba(118, 75, 162, 0.08));
+        .resource-auth-btn:hover {
+          background: linear-gradient(135deg, rgba(102, 126, 234, 0.12), rgba(118, 75, 162, 0.12)) !important;
+          border-color: rgba(102, 126, 234, 0.5) !important;
+          transform: translateY(-2px);
+          box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+          color: #667eea !important;
         }
 
-        .auth-content {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 16px;
+        .resource-auth-btn:active {
+          transform: translateY(0);
         }
 
-        .lock-icon {
-          font-size: 32px;
-          opacity: 0.7;
-        }
-
-        .auth-message {
-          color: #6b7280;
-          font-weight: 500;
-          margin: 0;
-          font-size: 14px;
-        }
-
-        .auth-buttons {
-          display: flex;
-          gap: 12px;
-          flex-wrap: wrap;
-          justify-content: center;
-        }
-
-        .auth-buttons .btn {
-          padding: 8px 16px;
-          font-size: 14px;
-          min-width: 100px;
-        }
-
-        @media (max-width: 480px) {
-          .auth-buttons {
-            flex-direction: column;
+        @media (max-width: 768px) {
+          .resource-auth-btn {
             width: 100%;
-          }
-          
-          .auth-buttons .btn {
-            width: 100%;
+            justify-content: center;
           }
         }
 

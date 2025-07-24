@@ -157,7 +157,12 @@ export function useResource(slug: string) {
       });
 
       const data = await response.json();
-      return data;
+      
+      if (data.success && data.data) {
+        return { hasAccess: data.data.hasAccess };
+      }
+      
+      return { hasAccess: false, error: data.error };
     } catch (err) {
       console.error('Error checking access:', err);
       return { hasAccess: false, error: 'Error de conexión' };

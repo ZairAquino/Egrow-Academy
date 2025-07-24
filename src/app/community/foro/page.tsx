@@ -15,6 +15,13 @@ export default function ForoPage() {
   const [showCommentModal, setShowCommentModal] = useState<string | null>(null);
   const [commentContent, setCommentContent] = useState('');
   const [isSubmittingComment, setIsSubmittingComment] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [newPostData, setNewPostData] = useState({
+    title: '',
+    content: '',
+    category: 'general'
+  });
+  const [isSubmittingPost, setIsSubmittingPost] = useState(false);
   const { user } = useAuth();
   const router = useRouter();
   const { posts, loading, error, toggleLike, createComment } = useCommunityPosts();
@@ -111,6 +118,63 @@ export default function ForoPage() {
     setCommentContent('');
   };
 
+  const handleCreatePost = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!newPostData.title.trim() || !newPostData.content.trim()) {
+      alert('Por favor completa todos los campos requeridos');
+      return;
+    }
+
+    try {
+      setIsSubmittingPost(true);
+      
+      const response = await fetch('/api/community/posts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: newPostData.title.trim(),
+          content: newPostData.content.trim(),
+          category: newPostData.category
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Error al crear la discusión');
+      }
+
+      // Limpiar el formulario y cerrar el modal
+      setNewPostData({
+        title: '',
+        content: '',
+        category: 'general'
+      });
+      setShowCreateModal(false);
+      
+      // Recargar los posts para mostrar el nuevo
+      window.location.reload();
+      
+      alert('¡Discusión creada exitosamente!');
+    } catch (error) {
+      console.error('Error al crear discusión:', error);
+      alert(error instanceof Error ? error.message : 'Error al crear la discusión');
+    } finally {
+      setIsSubmittingPost(false);
+    }
+  };
+
+  const closeCreateModal = () => {
+    setShowCreateModal(false);
+    setNewPostData({
+      title: '',
+      content: '',
+      category: 'general'
+    });
+  };
+
   return (
     <>
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
@@ -181,13 +245,28 @@ export default function ForoPage() {
         <section className="discussions-section">
           <div className="container">
             <div className="section-header">
-              <h2>
-                {selectedCategory === 'todas' 
-                  ? 'Todas las Discusiones' 
-                  : `Discusiones de ${categories.find(c => c.id === selectedCategory)?.name}`
-                }
-                <span className="discussion-count">({filteredPosts.length})</span>
-              </h2>
+              <div className="section-header-content">
+                <h2>
+                  {selectedCategory === 'todas' 
+                    ? 'Todas las Discusiones' 
+                    : `Discusiones de ${categories.find(c => c.id === selectedCategory)?.name}`
+                  }
+                  <span className="discussion-count">({filteredPosts.length})</span>
+                </h2>
+                <button 
+                  className="btn-create-discussion"
+                  onClick={() => {
+                    if (!user) {
+                      router.push('/login?redirect=/community/foro');
+                      return;
+                    }
+                    setShowCreateModal(true);
+                  }}
+                >
+                  <span className="btn-icon">✏️</span>
+                  <span>Nueva Discusión</span>
+                </button>
+              </div>
             </div>
 
             <div className="discussions-grid">
@@ -321,6 +400,73 @@ export default function ForoPage() {
                   </button>
                   <button type="submit" className="btn btn-primary" disabled={isSubmittingComment}>
                     {isSubmittingComment ? 'Enviando...' : 'Enviar Comentario'}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal para crear nueva discusión */}
+      {showCreateModal && (
+        <div className="modal-overlay" onClick={closeCreateModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>✏️ Nueva Discusión</h3>
+              <button className="modal-close" onClick={closeCreateModal}>×</button>
+            </div>
+            <div className="modal-body">
+              <form onSubmit={handleCreatePost}>
+                <div className="form-group">
+                  <label htmlFor="title">Título de la discusión *</label>
+                  <input
+                    type="text"
+                    id="title"
+                    value={newPostData.title}
+                    onChange={(e) => setNewPostData({...newPostData, title: e.target.value})}
+                    placeholder="Escribe un título atractivo..."
+                    className="form-input"
+                    required
+                  />
+                </div>
+                
+                <div className="form-group">
+                  <label htmlFor="category">Categoría *</label>
+                  <select
+                    id="category"
+                    value={newPostData.category}
+                    onChange={(e) => setNewPostData({...newPostData, category: e.target.value})}
+                    className="form-select"
+                    required
+                  >
+                    {categories.filter(cat => cat.id !== 'todas').map((category) => (
+                      <option key={category.id} value={category.id}>
+                        {category.icon} {category.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div className="form-group">
+                  <label htmlFor="content">Contenido de la discusión *</label>
+                  <textarea
+                    id="content"
+                    value={newPostData.content}
+                    onChange={(e) => setNewPostData({...newPostData, content: e.target.value})}
+                    placeholder="Comparte tus pensamientos, preguntas o experiencias..."
+                    rows={6}
+                    className="form-textarea"
+                    required
+                  />
+                </div>
+                
+                <div className="modal-actions">
+                  <button type="button" onClick={closeCreateModal} className="btn btn-secondary" disabled={isSubmittingPost}>
+                    Cancelar
+                  </button>
+                  <button type="submit" className="btn btn-primary" disabled={isSubmittingPost}>
+                    {isSubmittingPost ? 'Creando...' : 'Crear Discusión'}
                   </button>
                 </div>
               </form>
@@ -588,7 +734,14 @@ export default function ForoPage() {
 
         .section-header {
           margin-bottom: 2rem;
-          text-align: center;
+        }
+
+        .section-header-content {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 1rem;
         }
 
         .section-header h2 {
@@ -596,6 +749,30 @@ export default function ForoPage() {
           font-weight: 700;
           color: #2d3748;
           margin: 0;
+        }
+
+        .btn-create-discussion {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          border: none;
+          padding: 0.875rem 1.5rem;
+          border-radius: 50px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-create-discussion:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-create-discussion .btn-icon {
+          font-size: 1.1rem;
         }
 
         .discussion-count {
@@ -855,6 +1032,23 @@ export default function ForoPage() {
           color: #2d3748;
         }
 
+        .form-input,
+        .form-select {
+          width: 100%;
+          padding: 0.75rem;
+          border: 2px solid #e2e8f0;
+          border-radius: 8px;
+          font-size: 1rem;
+          transition: border-color 0.3s ease;
+          background: white;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+          outline: none;
+          border-color: #667eea;
+        }
+
         .form-textarea {
           width: 100%;
           padding: 0.75rem;
@@ -930,16 +1124,26 @@ export default function ForoPage() {
             max-height: 57px;
           }
 
-                     .hero-buttons {
-             flex-direction: column;
-             align-items: center;
-           }
+          .hero-buttons {
+            flex-direction: column;
+            align-items: center;
+          }
 
-           .btn-back {
-             width: 100%;
-             max-width: 200px;
-             justify-content: center;
-           }
+          .btn-back {
+            width: 100%;
+            max-width: 200px;
+            justify-content: center;
+          }
+
+          .section-header-content {
+            flex-direction: column;
+            text-align: center;
+          }
+
+          .btn-create-discussion {
+            width: 100%;
+            justify-content: center;
+          }
         }
 
         @media (max-width: 480px) {

@@ -167,12 +167,14 @@ export default function ContactoPage() {
             <div className="contact-layout">
               {/* Left side - Form */}
               <div className="form-container">
-                <div className="form-header">
-                  <h2>Envíanos un Mensaje</h2>
-                  <p>Completa el formulario y te responderemos lo antes posible</p>
-                </div>
+                {user ? (
+                  <>
+                    <div className="form-header">
+                      <h2>Envíanos un Mensaje</h2>
+                      <p>Completa el formulario y te responderemos lo antes posible</p>
+                    </div>
 
-                <form onSubmit={handleSubmit} className="contact-form">
+                    <form onSubmit={handleSubmit} className="contact-form">
                   <div className="form-row">
                     <div className="form-group">
                       <label htmlFor="name">Nombre Completo *</label>
@@ -239,12 +241,53 @@ export default function ContactoPage() {
                     {isSubmitting ? 'Enviando...' : 'Enviar Mensaje'}
                   </button>
 
-                  {submitMessage && (
-                    <div className={`submit-message ${submitMessage.includes('Error') ? 'error' : 'success'}`}>
-                      {submitMessage}
+                      {submitMessage && (
+                        <div className={`submit-message ${submitMessage.includes('Error') ? 'error' : 'success'}`}>
+                          {submitMessage}
+                        </div>
+                      )}
+                    </form>
+                  </>
+                ) : (
+                  <div className="auth-required-contact">
+                    <div className="auth-contact-content">
+                      <div className="auth-icon">🔒</div>
+                      <div className="auth-header">
+                        <h2>¡Únete a nuestra comunidad!</h2>
+                        <p>Para ponerte en contacto con nosotros, únete a la comunidad de eGrow Academy</p>
+                      </div>
+                      
+                      <div className="auth-benefits">
+                        <div className="benefit-item">
+                          <span className="benefit-icon">💬</span>
+                          <span>Acceso al formulario de contacto directo</span>
+                        </div>
+                        <div className="benefit-item">
+                          <span className="benefit-icon">🎓</span>
+                          <span>Cursos gratuitos de IA</span>
+                        </div>
+                        <div className="benefit-item">
+                          <span className="benefit-icon">🚀</span>
+                          <span>Recursos exclusivos y comunidad</span>
+                        </div>
+                      </div>
+                      
+                      <div className="auth-contact-buttons">
+                        <a href="/register" className="btn btn-primary">
+                          Registrarse Gratis
+                        </a>
+                        <a href="/login" className="btn btn-primary">
+                          Iniciar Sesión
+                        </a>
+                      </div>
+                      
+                      <div className="alternative-contact">
+                        <p>¿Tienes una consulta urgente?</p>
+                        <p>Escríbenos directamente a: <strong>egrowsuite@gmail.com</strong></p>
+                      </div>
                     </div>
-                  )}
-                </form>
+                  </div>
+                )}
               </div>
 
               {/* Right side - FAQ */}
@@ -268,7 +311,7 @@ export default function ContactoPage() {
           <div className="container">
             <div className="cta-content">
               <h2>¿Prefieres unirte a nuestra comunidad?</h2>
-              <p>Conecta con otros estudiantes y obtén respuestas rápidas en nuestro foro</p>
+              <p>Conecta con otros miembros y obtén respuestas rápidas en nuestro foro</p>
               <div className="cta-button-center">
                 <a href="/community" className="btn btn-outline">Unirse a la Comunidad</a>
               </div>
@@ -352,6 +395,145 @@ export default function ContactoPage() {
           background-color: #fef2f2;
           color: #dc2626;
           border: 1px solid #fecaca;
+        }
+
+        /* Estilos para la sección de autenticación requerida */
+        .auth-required-contact {
+          min-height: 600px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: linear-gradient(135deg, rgba(102, 126, 234, 0.02), rgba(118, 75, 162, 0.02));
+          border-radius: 16px;
+          border: 2px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .auth-contact-content {
+          text-align: center;
+          max-width: 500px;
+          padding: 40px 30px;
+        }
+
+        .auth-icon {
+          font-size: 64px;
+          margin-bottom: 24px;
+          opacity: 0.8;
+        }
+
+        .auth-header h2 {
+          color: #374151;
+          font-size: 28px;
+          font-weight: 700;
+          margin-bottom: 12px;
+        }
+
+        .auth-header p {
+          color: #6b7280;
+          font-size: 16px;
+          line-height: 1.6;
+          margin-bottom: 32px;
+        }
+
+        .auth-benefits {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          margin-bottom: 32px;
+          text-align: left;
+        }
+
+        .benefit-item {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 12px 0;
+        }
+
+        .benefit-icon {
+          font-size: 20px;
+          width: 28px;
+          flex-shrink: 0;
+        }
+
+        .benefit-item span:last-child {
+          color: #374151;
+          font-weight: 500;
+        }
+
+        .auth-contact-buttons {
+          display: flex;
+          gap: 16px;
+          justify-content: center;
+          margin-bottom: 32px;
+        }
+
+        .alternative-contact {
+          background: rgba(102, 126, 234, 0.05);
+          border-radius: 12px;
+          padding: 20px;
+          border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .alternative-contact p {
+          margin: 0;
+          color: #6b7280;
+          font-size: 14px;
+        }
+
+        .alternative-contact p:first-child {
+          margin-bottom: 8px;
+          font-weight: 600;
+        }
+
+        .alternative-contact strong {
+          color: #374151;
+        }
+
+        @media (max-width: 768px) {
+          .auth-contact-content {
+            padding: 24px 20px;
+          }
+
+          .auth-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+          }
+
+          .auth-header h2 {
+            font-size: 24px;
+          }
+
+          .auth-header p {
+            font-size: 15px;
+          }
+
+          .auth-contact-buttons {
+            flex-direction: column;
+            gap: 12px;
+          }
+
+          .auth-contact-buttons .btn {
+            width: 100%;
+          }
+
+          .benefit-item {
+            padding: 8px 0;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .auth-required-contact {
+            min-height: 500px;
+          }
+
+          .auth-header h2 {
+            font-size: 22px;
+          }
+
+          .benefit-icon {
+            font-size: 18px;
+            width: 24px;
+          }
         }
       `}</style>
     </>
