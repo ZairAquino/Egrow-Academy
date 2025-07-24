@@ -31,7 +31,9 @@
       "Bash(ls:*)",
       "Bash(__NEW_LINE__ - Arreglar llave de cierre duplicada en línea 1509 de globals.css)",
       "Bash(- Reorg)",
-      "Bash(npx kill-port:*)"
+      "Bash(npx kill-port:*)",
+      "Bash(git filter-branch:*)",
+      "Bash(git stash:*)"
     ],
     "deny": []
   }
