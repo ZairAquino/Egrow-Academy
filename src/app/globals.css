@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+/* Orbitron font loaded in layout.tsx for better performance */
 
 @tailwind base;
 @tailwind components;
@@ -746,7 +746,7 @@ button, a, input, select, textarea {
     margin: 8px 0 !important;
     position: relative !important;
     overflow: hidden !important;
-    font-family: 'Orbitron', 'Arial Black', 'Helvetica Neue', Arial, sans-serif !important;
+    font-family: var(--font-orbitron), 'Arial Black', 'Helvetica Neue', Arial, sans-serif !important;
     text-transform: uppercase !important;
     letter-spacing: 2px !important;
     font-weight: 900 !important;
@@ -810,7 +810,7 @@ button, a, input, select, textarea {
     position: relative;
     z-index: 3;
     font-size: 11px !important;
-    font-family: 'Orbitron', 'Arial Black', 'Helvetica Neue', Arial, sans-serif !important;
+    font-family: var(--font-orbitron), 'Arial Black', 'Helvetica Neue', Arial, sans-serif !important;
 }
 
 .menu-link.ai-news-btn .menu-icon {
