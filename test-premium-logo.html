@@ -10,227 +10,145 @@
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
-            background: #f5f5f5;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
         }
         .container {
-            background: white;
+            background: rgba(255, 255, 255, 0.1);
             padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .test-button {
-            background: #3b82f6;
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            margin: 10px 0;
-            display: block;
-            width: 100%;
-        }
-        .test-button:hover {
-            background: #2563eb;
-        }
-        .result {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 4px solid #10b981;
-            background: #f0f9ff;
-        }
-        .debug-info {
-            background: #1f2937;
-            color: #e5e7eb;
-            padding: 15px;
-            border-radius: 8px;
-            font-family: monospace;
-            white-space: pre-wrap;
-            max-height: 300px;
-            overflow-y: auto;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
         }
         .logo-test {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-            margin: 20px 0;
+            text-align: center;
+            margin: 30px 0;
         }
         .logo-test img {
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 10px;
+            max-width: 200px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        .logo-info {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+        .timestamp {
+            font-size: 0.8em;
+            opacity: 0.8;
+        }
+        .refresh-btn {
+            background: #ffd700;
+            color: #333;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 10px;
+        }
+        .refresh-btn:hover {
+            background: #ffed4e;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🧪 Test Sistema de Logo Premium</h1>
-        <p>Esta página prueba si el sistema de logos funciona correctamente para usuarios premium.</p>
+        <h1>🎨 Test Logo Premium - eGrow Academy</h1>
         
-        <button class="test-button" onclick="testMockLogin()">
-            1️⃣ Hacer Mock Login como Usuario Premium
-        </button>
-        
-        <button class="test-button" onclick="checkCurrentUser()">
-            2️⃣ Verificar Usuario Actual
-        </button>
-        
-        <button class="test-button" onclick="checkSubscriptionStatus()">
-            3️⃣ Verificar Estado de Suscripción
-        </button>
-        
-        <button class="test-button" onclick="testLogos()">
-            4️⃣ Probar Ambos Logos
-        </button>
-        
+        <div class="logo-info">
+            <h3>📊 Información del Test</h3>
+            <p><strong>Logo Premium:</strong> logop.png (772.2 KB)</p>
+            <p><strong>Logo Gratuito:</strong> logog.png (36.9 KB)</p>
+            <p><strong>Timestamp:</strong> <span id="timestamp"></span></p>
+        </div>
+
         <div class="logo-test">
-            <div>
-                <h3>Logo Gratuito (logog.png):</h3>
-                <img src="/images/logog.png" alt="Logo Gratuito" width="95" height="95" onerror="this.style.border='2px solid red'; this.alt='❌ Error cargando logo gratuito'">
-            </div>
-            <div>
-                <h3>Logo Premium (logop.png):</h3>
-                <img src="/images/logop.png" alt="Logo Premium" width="95" height="95" onerror="this.style.border='2px solid red'; this.alt='❌ Error cargando logo premium'">
-            </div>
+            <h2>🪙 Logo Premium (logop.png)</h2>
+            <img id="premium-logo" src="/images/logop.png" alt="eGrow Academy Premium" 
+                 onload="onLogoLoad('premium')" onerror="onLogoError('premium')">
+            <div id="premium-status" class="logo-info"></div>
         </div>
-        
-        <div id="result" class="result" style="display: none;">
-            <h3>📊 Resultado:</h3>
-            <div id="resultContent"></div>
+
+        <div class="logo-test">
+            <h2>🆓 Logo Gratuito (logog.png)</h2>
+            <img id="free-logo" src="/images/logog.png" alt="eGrow Academy" 
+                 onload="onLogoLoad('free')" onerror="onLogoError('free')">
+            <div id="free-status" class="logo-info"></div>
         </div>
-        
-        <div id="debug" class="debug-info" style="display: none;"></div>
+
+        <div class="logo-test">
+            <h2>🔄 Logo Premium con Cache Busting</h2>
+            <img id="premium-cache-bust" alt="eGrow Academy Premium" 
+                 onload="onLogoLoad('premium-cache')" onerror="onLogoError('premium-cache')">
+            <div id="premium-cache-status" class="logo-info"></div>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="refresh-btn" onclick="refreshLogos()">🔄 Refrescar Logos</button>
+            <button class="refresh-btn" onclick="clearCache()">🗑️ Limpiar Cache</button>
+        </div>
+
+        <div class="logo-info">
+            <h3>🔍 Instrucciones</h3>
+            <p>1. Si eres usuario premium, deberías ver el logo dorado (logop.png)</p>
+            <p>2. Si no eres premium, deberías ver el logo gris (logog.png)</p>
+            <p>3. Usa los botones para refrescar y limpiar el cache</p>
+            <p>4. Verifica en la consola del navegador los logs de DynamicLogo</p>
+        </div>
     </div>
 
     <script>
-        let debugInfo = '';
-
-        function addDebug(message) {
-            debugInfo += new Date().toLocaleTimeString() + ' - ' + message + '\n';
-            document.getElementById('debug').style.display = 'block';
-            document.getElementById('debug').textContent = debugInfo;
+        function updateTimestamp() {
+            const now = new Date();
+            document.getElementById('timestamp').textContent = now.toLocaleString();
         }
 
-        async function testMockLogin() {
-            try {
-                addDebug('🚀 Iniciando mock login...');
-                const response = await fetch('/api/auth/mock-login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        email: 'test-premium@egrow.com'
-                    })
+        function onLogoLoad(type) {
+            const statusEl = document.getElementById(`${type}-status`);
+            statusEl.innerHTML = `<strong>✅ Cargado exitosamente</strong><br>
+                                <span class="timestamp">${new Date().toLocaleTimeString()}</span>`;
+        }
+
+        function onLogoError(type) {
+            const statusEl = document.getElementById(`${type}-status`);
+            statusEl.innerHTML = `<strong>❌ Error al cargar</strong><br>
+                                <span class="timestamp">${new Date().toLocaleTimeString()}</span>`;
+        }
+
+        function refreshLogos() {
+            const timestamp = Date.now();
+            
+            // Refrescar logo premium con cache busting
+            const premiumCacheEl = document.getElementById('premium-cache-bust');
+            premiumCacheEl.src = `/images/logop.png?v=${timestamp}`;
+            
+            // Refrescar otros logos
+            document.getElementById('premium-logo').src = `/images/logop.png?v=${timestamp}`;
+            document.getElementById('free-logo').src = `/images/logog.png?v=${timestamp}`;
+            
+            updateTimestamp();
+        }
+
+        function clearCache() {
+            if ('caches' in window) {
+                caches.keys().then(function(names) {
+                    for (let name of names) {
+                        caches.delete(name);
+                    }
+                    alert('Cache limpiado. Refresca la página.');
                 });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    addDebug('✅ Mock login exitoso');
-                    addDebug('👤 Usuario: ' + data.user.email);
-                    addDebug('🎖️ Membership: ' + data.user.membershipLevel);
-                    addDebug('🎨 Logo sugerido: ' + data.logoToUse);
-                    
-                    showResult('Mock login exitoso como usuario PREMIUM', 'success');
-                } else {
-                    addDebug('❌ Error en mock login: ' + response.status);
-                    showResult('Error en mock login', 'error');
-                }
-            } catch (error) {
-                addDebug('💥 Error: ' + error.message);
-                showResult('Error: ' + error.message, 'error');
-            }
-        }
-
-        async function checkCurrentUser() {
-            try {
-                addDebug('🔍 Verificando usuario actual...');
-                const response = await fetch('/api/auth/me', {
-                    credentials: 'include'
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    addDebug('✅ Usuario autenticado');
-                    addDebug('👤 Email: ' + data.user.email);
-                    addDebug('🎖️ Membership Level: ' + data.user.membershipLevel);
-                    addDebug('📅 Último login: ' + data.user.lastLogin);
-                    
-                    showResult(`Usuario: ${data.user.email} | Membership: ${data.user.membershipLevel}`, 'success');
-                } else {
-                    addDebug('❌ Usuario no autenticado');
-                    showResult('Usuario no autenticado', 'error');
-                }
-            } catch (error) {
-                addDebug('💥 Error: ' + error.message);
-                showResult('Error: ' + error.message, 'error');
-            }
-        }
-
-        async function checkSubscriptionStatus() {
-            try {
-                addDebug('🔍 Verificando estado de suscripción...');
-                const response = await fetch('/api/auth/subscription-status');
-
-                if (response.ok) {
-                    const data = await response.json();
-                    addDebug('✅ Estado de suscripción obtenido');
-                    addDebug('💎 Suscripción activa: ' + data.hasActiveSubscription);
-                    addDebug('🎖️ Membership Level: ' + data.membershipLevel);
-                    addDebug('📊 Premium Access: ' + (data.hasActiveSubscription || data.membershipLevel === 'PREMIUM'));
-                    
-                    showResult(`Suscripción activa: ${data.hasActiveSubscription} | Membership: ${data.membershipLevel}`, 'success');
-                } else {
-                    addDebug('❌ Error obteniendo estado de suscripción');
-                    showResult('Error obteniendo estado de suscripción', 'error');
-                }
-            } catch (error) {
-                addDebug('💥 Error: ' + error.message);
-                showResult('Error: ' + error.message, 'error');
-            }
-        }
-
-        function testLogos() {
-            addDebug('🎨 Probando carga de logos...');
-            
-            const logoFree = new Image();
-            const logoPremium = new Image();
-            
-            logoFree.onload = () => addDebug('✅ Logo gratuito cargado correctamente');
-            logoFree.onerror = () => addDebug('❌ Error cargando logo gratuito');
-            logoFree.src = '/images/logog.png';
-            
-            logoPremium.onload = () => addDebug('✅ Logo premium cargado correctamente');
-            logoPremium.onerror = () => addDebug('❌ Error cargando logo premium');
-            logoPremium.src = '/images/logop.png';
-            
-            showResult('Prueba de logos iniciada - revisa el debug log', 'info');
-        }
-
-        function showResult(message, type) {
-            const resultDiv = document.getElementById('result');
-            const contentDiv = document.getElementById('resultContent');
-            
-            resultDiv.style.display = 'block';
-            contentDiv.textContent = message;
-            
-            // Change color based on type
-            if (type === 'success') {
-                resultDiv.style.borderLeftColor = '#10b981';
-                resultDiv.style.backgroundColor = '#f0f9ff';
-            } else if (type === 'error') {
-                resultDiv.style.borderLeftColor = '#ef4444';
-                resultDiv.style.backgroundColor = '#fef2f2';
             } else {
-                resultDiv.style.borderLeftColor = '#f59e0b';
-                resultDiv.style.backgroundColor = '#fffbeb';
+                alert('Cache no disponible en este navegador.');
             }
         }
 
-        // Auto-start debug log
-        addDebug('🔧 Sistema de debug iniciado');
-        addDebug('📍 URL actual: ' + window.location.href);
+        // Inicializar
+        updateTimestamp();
+        refreshLogos();
     </script>
 </body>
 </html>
