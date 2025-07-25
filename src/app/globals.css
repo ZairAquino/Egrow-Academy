@@ -14,10 +14,6 @@
 /* Prevenir scroll horizontal global */
 *, *:before, *:after {
     box-sizing: border-box;
-}
-
-/* Aplicar max-width solo a elementos que lo necesiten, excluyendo dropdowns */
-*:not(.profile-dropdown):not(.dropdown):not(.dropdown-menu) {
     max-width: 100%;
 }
 
@@ -300,8 +296,8 @@ button, a, input, select, textarea {
     top: 100%;
     right: 0;
     margin-top: 8px;
-    width: 300px !important;
-    max-width: 300px !important;
+    width: 300px;
+    max-width: none !important; /* Excepción específica para el dropdown */
     background: white;
     border: 1px solid var(--gray-200);
     border-radius: 12px;
@@ -442,8 +438,8 @@ button, a, input, select, textarea {
     }
     
     .profile-dropdown {
-        width: 280px !important;
-        max-width: calc(100vw - 40px) !important;
+        width: 280px;
+        max-width: calc(100vw - 40px) !important; /* Excepción para móvil */
         margin: 8px 10px 0 0;
     }
     
