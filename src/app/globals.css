@@ -41,6 +41,7 @@ body {
     text-rendering: optimizeLegibility;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
+    font-size: 16px; /* Base font size for consistency */
 }
 
 /* Touch-friendly improvements */
@@ -76,12 +77,35 @@ button, a, input, select, textarea {
 
 /* Safari-specific optimizations */
 @supports (-webkit-appearance: none) {
-    body {
-        -webkit-text-size-adjust: 100%;
-        -webkit-tap-highlight-color: transparent;
-        -webkit-font-smoothing: antialiased;
+    /* Safari Desktop specific fixes */
+    @media (min-width: 769px) {
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            /* No text-size-adjust for desktop */
+        }
+        
+        /* Ensure proper font rendering on Safari desktop */
+        * {
+            -webkit-font-smoothing: antialiased;
+        }
     }
     
+    /* Safari Mobile specific fixes */
+    @media (max-width: 768px) {
+        body {
+            -webkit-text-size-adjust: 100%;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* Safari iOS specific fixes */
+        .hero {
+            -webkit-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0);
+        }
+    }
+    
+    /* Common Safari fixes for all devices */
     /* Fix for Safari's viewport units bug */
     .container {
         min-height: -webkit-fill-available;
@@ -91,12 +115,6 @@ button, a, input, select, textarea {
     html {
         -webkit-overflow-scrolling: touch;
         scroll-behavior: smooth;
-    }
-    
-    /* Safari iOS specific fixes */
-    .hero {
-        -webkit-transform: translate3d(0, 0, 0);
-        transform: translate3d(0, 0, 0);
     }
     
     /* Fix for Safari button styling */
@@ -5627,4 +5645,55 @@ input:checked + .toggle-slider:before {
 /* Main Content */
 .main-content {
   min-height: 100vh;
+}
+
+/* Safari Desktop Specific Fixes */
+@media screen and (min-width: 769px) {
+  @supports (-webkit-appearance: none) and (not (-moz-appearance: none)) {
+    /* Reset font sizes for Safari desktop */
+    html {
+      font-size: 16px !important;
+    }
+    
+    body {
+      font-size: 16px !important;
+      /* Remove any mobile-specific adjustments */
+      -webkit-text-size-adjust: none !important;
+    }
+    
+    /* Ensure proper sizing for common elements */
+    h1 { font-size: 2.5rem !important; }
+    h2 { font-size: 2rem !important; }
+    h3 { font-size: 1.75rem !important; }
+    h4 { font-size: 1.5rem !important; }
+    h5 { font-size: 1.25rem !important; }
+    h6 { font-size: 1rem !important; }
+    
+    p, div, span, a, li {
+      font-size: inherit !important;
+    }
+    
+    /* Fix button sizes */
+    button, .btn {
+      font-size: 1rem !important;
+      padding: 0.75rem 1.5rem !important;
+    }
+    
+    /* Fix navigation sizes */
+    nav, .navbar {
+      font-size: 1rem !important;
+    }
+    
+    /* Fix input sizes */
+    input, textarea, select {
+      font-size: 16px !important;
+    }
+    
+    /* Ensure containers use full width */
+    .container, .main-container {
+      width: 100% !important;
+      max-width: 1200px !important;
+      margin: 0 auto !important;
+    }
+  }
 }
