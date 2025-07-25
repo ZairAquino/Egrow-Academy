@@ -770,3 +770,24 @@ npx tsx scripts/setup-stripe-products.ts
 **Última actualización:** 2025-01-27
 **Versión:** 1.4.0
 **Estado:** Stripe completamente configurado - Listo para pruebas en modo live
+
+### **2025-07-25 - Fix de Consistencia de Diseño en Safari para Sección Hero**
+
+#### ✅ **Problemas Resueltos**
+1. **Diferencias en Rendering:** Inconsistencias en altura y gradientes del header entre Chrome y Safari.
+   - **Problema:** Safari colapsaba la altura del hero section.
+   - **Solución:** Agregado min-height: 50vh en .hero de globals.css.
+
+#### 🔧 **Cambios Aplicados**
+- **Archivo Modificado:** src/app/globals.css - Estilos de .hero actualizados.
+- **Impacto:** Mejora compatibilidad cross-browser sin afectar otros navegadores.
+
+#### 🧪 **Pruebas Realizadas**
+- ✅ Rendering consistente en Safari y Chrome.
+- ✅ Diseño responsive mantenido.
+
+#### 📊 **Estado Final**
+- **Diseño Hero:** 100% consistente en todos los navegadores.
+
+#### 📝 **Archivos Modificados**
+- `src/app/globals.css` - min-height agregado a .hero.

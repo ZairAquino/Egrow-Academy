@@ -1819,6 +1819,7 @@ button, a, input, select, textarea {
 .hero {
   padding: 4rem 0;
   color: white;
+  min-height: 50vh; /* Añadido para consistencia en Safari, evita colapso de altura */
 }
 
 .hero-content {
