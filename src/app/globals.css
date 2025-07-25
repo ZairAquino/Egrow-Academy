@@ -767,10 +767,13 @@ button, a, input, select, textarea {
     overflow: hidden;
     background-color: var(--gray-50);
     transition: max-height 0.3s ease;
+    position: relative;
+    width: 100%;
 }
 
 .dropdown-sidebar.active .submenu {
     max-height: 300px;
+    overflow: visible;
 }
 
 .dropdown-sidebar.active .dropdown-arrow {
