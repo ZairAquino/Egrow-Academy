@@ -668,6 +668,16 @@ export default function CommunityPage() {
             </div>
 
             <div className="events-table-container">
+              {/* Indicador de deslizamiento para móvil */}
+              <div className="scroll-indicator">
+                <span className="scroll-text">Desliza para ver más</span>
+                <div className="scroll-arrow">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+              
               {dbEvents.length > 0 ? (
                 <div className="events-table">
                   <table>

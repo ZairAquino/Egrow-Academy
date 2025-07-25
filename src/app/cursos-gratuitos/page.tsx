@@ -8,6 +8,7 @@ import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import CourseCard from '@/components/courses/CourseCard';
 import Footer from '@/components/layout/Footer';
 import UserProfile from '@/components/auth/UserProfile';
+import StatsContainer from '@/components/ui/StatsContainer';
 import { useAuth } from '@/contexts/AuthContext';
 
 // Lazy load components
@@ -145,48 +146,28 @@ export default function CursosGratuitosPage() {
                   <div className="feature-card">
                     <div className="feature-icon">🆓</div>
                     <h3>Completamente Gratis</h3>
-                    <p>Sin costos ocultos, sin suscripciones. Acceso inmediato a contenido de calidad</p>
+                    <p>Sin costos ocultos, sin suscripciones.<br />Acceso inmediato a contenido de calidad</p>
                   </div>
                   <div className="feature-card">
                     <div className="feature-icon">⚡</div>
                     <h3>Aprendizaje Rápido</h3>
-                    <p>Cursos de 1-4 horas para aprender conceptos clave rápidamente</p>
+                    <p>Cursos de 1-4 horas para aprender<br />conceptos clave rápidamente</p>
                   </div>
                   <div className="feature-card">
                     <div className="feature-icon">🎯</div>
                     <h3>Enfoque Práctico</h3>
-                    <p>Proyectos reales y ejercicios prácticos para aplicar lo aprendido</p>
+                    <p>Proyectos reales y ejercicios prácticos<br />para aplicar lo aprendido</p>
                   </div>
                   <div className="feature-card">
                     <div className="feature-icon">📚</div>
                     <h3>Sin Barreras</h3>
-                    <p>Comienza tu viaje en IA sin inversión inicial. Perfectos para principiantes</p>
+                    <p>Comienza tu viaje en IA sin inversión inicial.<br />Perfectos para principiantes</p>
                   </div>
                 </div>
               </div>
 
               {/* Right side - Stats */}
-              <div className="stats-container">
-                <h3 className="stats-title">Nuestros Números</h3>
-                <div className="stats-grid-vertical">
-                  <div className="stat-card">
-                    <div className="stat-number">23</div>
-                    <div className="stat-label">Cursos Disponibles</div>
-                  </div>
-                  <div className="stat-card">
-                    <div className="stat-number">1-4</div>
-                    <div className="stat-label">Horas por Curso</div>
-                  </div>
-                  <div className="stat-card">
-                    <div className="stat-number">35K+</div>
-                    <div className="stat-label">Estudiantes</div>
-                  </div>
-                  <div className="stat-card">
-                    <div className="stat-number">100%</div>
-                    <div className="stat-label">Gratuito</div>
-                  </div>
-                </div>
-              </div>
+              <StatsContainer showFreeCourses={true} />
             </div>
           </div>
         </section>
