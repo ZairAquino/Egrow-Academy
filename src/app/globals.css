@@ -780,7 +780,7 @@ button, a, input, select, textarea {
 .submenu-link {
     display: flex;
     align-items: center;
-    padding: 0.75rem 1.5rem;
+    padding: 0.75rem 1.5rem 0.75rem 3rem;
     color: var(--gray-600);
     text-decoration: none;
     font-size: 0.875rem;
