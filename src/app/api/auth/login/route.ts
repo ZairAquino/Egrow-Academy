@@ -148,12 +148,25 @@ export async function POST(request: NextRequest) {
     // Manejar errores específicos de base de datos
     if (error instanceof Error) {
       console.error('💥 [LOGIN] Mensaje de error:', error.message)
+      console.error('💥 [LOGIN] Stack trace:', error.stack)
       
       if (error.message.includes('connect')) {
         console.error('💥 [LOGIN] Error de conexión a BD')
         return NextResponse.json(
           { error: 'Error de conexión con la base de datos. Inténtalo más tarde' },
           { status: 503 }
+        )
+      }
+      
+      // Devolver error más específico en desarrollo
+      if (process.env.NODE_ENV === 'development') {
+        return NextResponse.json(
+          { 
+            error: 'Error interno del servidor',
+            details: error.message,
+            stack: error.stack
+          },
+          { status: 500 }
         )
       }
     }

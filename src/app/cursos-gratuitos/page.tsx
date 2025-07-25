@@ -115,6 +115,7 @@ export default function CursosGratuitosPage() {
                 </div>
               </div>
               
+              
               <div className="free-badge">
                 <span className="badge-icon">🆓</span>
                 <span className="badge-text">100% Gratuito</span>
