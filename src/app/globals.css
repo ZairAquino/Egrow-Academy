@@ -6411,3 +6411,24 @@ input:checked + .toggle-slider:before {
   }
 }
 
+.avatar-image {
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.profile-avatar .avatar-image {
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.profile-avatar.large .avatar-image {
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+

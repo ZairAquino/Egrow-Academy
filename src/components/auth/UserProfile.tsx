@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUserStats } from '@/hooks/useUserStats';
+import DynamicLogo from '@/components/ui/DynamicLogo';
 
 interface UserProfileProps {
   className?: string;
@@ -78,54 +79,29 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
     return 'U';
   };
 
-  // Mostrar estado de carga
-  if (status === 'loading') {
+  // Determinar si el usuario es premium
+  const isPremium = status === 'authenticated' && user && user.membershipLevel === 'PREMIUM';
+
+  // Si no hay usuario autenticado, mostrar botón de login
+  if (status === 'unauthenticated') {
     return (
       <div className={`user-profile-container ${className}`}>
-        <div className="loading-spinner">⏳</div>
-        <div style={{ fontSize: '10px', color: '#666' }}>Cargando sesión...</div>
+        <Link href="/login" className="login-btn">
+          Iniciar Sesión
+        </Link>
       </div>
     );
   }
 
-  // Mostrar estado no autenticado
-  if (!user) {
+  // Si está cargando, mostrar spinner
+  if (status === 'loading') {
     return (
-      <div className={`user-profile-container ${className}`} ref={dropdownRef}>
-        <button 
-          onClick={() => setIsOpen(!isOpen)}
-          className="profile-trigger"
-          aria-expanded={isOpen}
-          aria-haspopup="true"
-        >
+      <div className={`user-profile-container ${className}`}>
+        <div className="profile-trigger">
           <div className="profile-avatar">
-            <span className="avatar-text">👤</span>
+            <div className="loading-spinner"></div>
           </div>
-          <span className="dropdown-arrow">▼</span>
-        </button>
-
-        {isOpen && (
-          <div className="profile-dropdown">
-            <div className="profile-header" style={{ background: 'linear-gradient(135deg, #6b7280, #4b5563)' }}>
-              <div className="profile-avatar large">
-                <span className="avatar-text">👤</span>
-              </div>
-              <div className="profile-details">
-                <h3>Bienvenido</h3>
-                <p className="profile-email">Accede a tu cuenta</p>
-              </div>
-            </div>
-
-            <div className="profile-actions">
-              <Link href="/login" className="action-btn">
-                🔑 Iniciar Sesión
-              </Link>
-              <Link href="/register" className="action-btn">
-                📝 Registrarse
-              </Link>
-            </div>
-          </div>
-        )}
+        </div>
       </div>
     );
   }
@@ -150,6 +126,14 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
               className="avatar-image"
               style={{ borderRadius: '50%', objectFit: 'cover' }}
             />
+          ) : isPremium ? (
+            // Usar DynamicLogo para usuarios premium
+            <DynamicLogo 
+              width={32}
+              height={32}
+              className="avatar-image"
+              priority
+            />
           ) : (
             <span className="avatar-text">
               {getUserInitial()}
@@ -171,6 +155,14 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
                   height={48}
                   className="avatar-image"
                   style={{ borderRadius: '50%', objectFit: 'cover' }}
+                />
+              ) : isPremium ? (
+                // Usar DynamicLogo para usuarios premium en el dropdown también
+                <DynamicLogo 
+                  width={48}
+                  height={48}
+                  className="avatar-image"
+                  priority
                 />
               ) : (
                 <span className="avatar-text">
