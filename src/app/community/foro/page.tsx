@@ -9,7 +9,6 @@ import Footer from '@/components/layout/Footer';
 import UserProfile from '@/components/auth/UserProfile';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCommunityPosts, CommunityPost } from '@/hooks/useCommunityPosts';
-import DynamicLogo from '@/components/ui/DynamicLogo';
 
 export default function ForoPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -198,7 +197,16 @@ export default function ForoPage() {
               
               {/* Logo animado debajo del texto */}
               <div className="hero-bottom-logo">
-                <DynamicLogo />
+                <div className="logo-animation-wrapper">
+                  <Image 
+                    src={user && user.membershipLevel === 'PREMIUM' ? "/images/logop.png" : "/images/logog.png"}
+                    alt="eGrow Academy" 
+                    width={95}
+                    height={95}
+                    priority
+                    className="hero-bottom-logo-image"
+                  />
+                </div>
               </div>
               
                              <div className="hero-buttons">
