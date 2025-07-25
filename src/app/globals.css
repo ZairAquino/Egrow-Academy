@@ -2304,9 +2304,9 @@ button, a, input, select, textarea {
   }
   
   .hero {
-    padding: 3rem 0;
-    min-height: 40vh;
-    max-height: 50vh;
+    padding: 2.5rem 0;
+    min-height: 45vh;
+    max-height: 55vh;
   }
   
   .section {
@@ -5612,6 +5612,72 @@ input:checked + .toggle-slider:before {
   object-fit: contain;
   filter: brightness(0) invert(1);
   opacity: 0.9;
+}
+
+/* Safari Mobile Specific Fixes */
+@media (max-width: 768px) {
+  @supports (-webkit-touch-callout: none) {
+    /* Safari iOS specific fixes */
+    .hero {
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
+      min-height: 50vh !important;
+    }
+    
+    .hero-title {
+      font-size: 2.2rem !important;
+      line-height: 1.1 !important;
+    }
+    
+    .hero-description {
+      font-size: 1rem !important;
+      line-height: 1.5 !important;
+      margin-bottom: 1.5rem !important;
+    }
+    
+    .hero-bottom-logo {
+      margin-top: 1.5rem !important;
+    }
+    
+    /* Ensure proper text rendering */
+    body {
+      -webkit-text-size-adjust: 100%;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    /* Fix for viewport units */
+    .main-content {
+      min-height: -webkit-fill-available;
+    }
+    
+    /* Ensure all elements are visible */
+    * {
+      -webkit-transform: none !important;
+      transform: none !important;
+    }
+    
+    /* Fix z-index issues */
+    .section,
+    .banner,
+    .card,
+    .btn {
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Force repaint on Safari iOS */
+    .hero,
+    .section {
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
+    
+    /* Ensure proper scroll behavior */
+    html {
+      -webkit-overflow-scrolling: touch;
+      overflow-scrolling: touch;
+    }
+  }
 }
 
 /* Main Content */
