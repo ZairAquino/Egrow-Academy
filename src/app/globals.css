@@ -2483,15 +2483,25 @@ button, a, input, select, textarea {
 .marquee-content {
   display: flex;
   white-space: nowrap;
+  /* Preparar para hardware acceleration */
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .marquee-content.animate {
   animation: marquee 30s linear infinite;
   /* Safari iOS compatibility */
   -webkit-animation: marquee 30s linear infinite;
+  will-change: transform;
+  /* Forzar GPU en todos los navegadores */
   -webkit-transform: translate3d(0, 0, 0);
   transform: translate3d(0, 0, 0);
-  will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-perspective: 1000px;
+  perspective: 1000px;
 }
 
 .company-logo {
@@ -2574,8 +2584,9 @@ button, a, input, select, textarea {
     font-size: 1rem;
   }
   
-  .marquee-content {
-    animation-duration: 20s;
+  .marquee-content.animate {
+    animation-duration: 20s !important;
+    -webkit-animation-duration: 20s !important;
   }
 }
 
@@ -6263,42 +6274,70 @@ input:checked + .toggle-slider:before {
 }
 
 /* Safari Mobile Specific Fixes */
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
+  /* Detectar Safari/iOS de manera más amplia */
   @supports (-webkit-touch-callout: none) {
     /* Safari iOS specific fixes */
     .hero {
       -webkit-transform: translate3d(0, 0, 0);
       transform: translate3d(0, 0, 0);
-      min-height: 60vh !important;
-      padding: 3rem 0 !important;
+      min-height: 70vh !important;
+      padding: 2.5rem 0 3rem 0 !important;
+      display: flex !important;
+      align-items: center !important;
+    }
+    
+    .hero-content {
+      width: 100% !important;
+      max-width: 100% !important;
     }
     
     .hero-title {
-      font-size: 2.2rem !important;
+      font-size: 2rem !important;
       line-height: 1.1 !important;
-      margin-bottom: 1.25rem !important;
+      margin-bottom: 1rem !important;
     }
     
     .hero-description {
-      font-size: 1rem !important;
-      line-height: 1.5 !important;
-      margin-bottom: 2rem !important;
+      font-size: 0.95rem !important;
+      line-height: 1.4 !important;
+      margin-bottom: 1.5rem !important;
     }
     
     .hero-buttons {
-      margin-top: 1.5rem !important;
+      margin-top: 1rem !important;
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 0.75rem !important;
+      width: 100% !important;
+      max-width: 320px !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
     }
     
     .hero-buttons .btn {
-      min-height: 44px !important;
-      padding: 0.75rem 0.5rem !important;
-      font-size: 0.8rem !important;
+      min-height: 48px !important;
+      padding: 0.75rem 0.25rem !important;
+      font-size: 0.75rem !important;
       font-weight: 600 !important;
+      width: 100% !important;
+      text-align: center !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
     }
     
     .hero-bottom-logo {
       margin-top: 1.5rem !important;
     }
+    
+    /* Force marquee animation in Safari */
+    .marquee-content.animate {
+      -webkit-animation: marquee 25s linear infinite !important;
+      animation: marquee 25s linear infinite !important;
+    }
+  }
+}
     
     /* Ensure proper text rendering */
     body {
