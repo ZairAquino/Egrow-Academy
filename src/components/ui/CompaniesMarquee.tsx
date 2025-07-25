@@ -4,12 +4,28 @@ import { useEffect, useState } from 'react';
 
 export default function CompaniesMarquee() {
   const [isVisible, setIsVisible] = useState(false);
+  const [isSafari, setIsSafari] = useState(false);
 
   useEffect(() => {
+    // Detectar Safari
+    const isSafariBrowser = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    setIsSafari(isSafariBrowser);
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
+          
+          // Fix específico para Safari
+          if (isSafariBrowser) {
+            setTimeout(() => {
+              const marqueeContent = document.querySelector('.marquee-content');
+              if (marqueeContent) {
+                (marqueeContent as HTMLElement).style.webkitTransform = 'translate3d(0, 0, 0)';
+                (marqueeContent as HTMLElement).style.transform = 'translate3d(0, 0, 0)';
+              }
+            }, 100);
+          }
         }
       },
       { threshold: 0.1 }
