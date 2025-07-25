@@ -2,7 +2,7 @@
 
 import { useState, Suspense } from 'react';
 import dynamic from 'next/dynamic';
-import Image from 'next/image';
+import DynamicLogo from '@/components/ui/DynamicLogo';
 import Sidebar from '@/components/layout/Sidebar';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Footer from '@/components/layout/Footer';
@@ -121,14 +121,7 @@ export default function ContactoPage() {
               {/* Logo blanco debajo del texto */}
               <div className="hero-bottom-logo">
                 <div className="logo-animation-wrapper">
-                  <Image 
-                    src={user && user.membershipLevel === 'PREMIUM' ? "/images/logop.png" : "/images/logog.png"}
-                    alt="eGrow Academy" 
-                    width={95}
-                    height={95}
-                    priority
-                    className="hero-bottom-logo-image"
-                  />
+                  <DynamicLogo width={95} height={95} priority className="hero-bottom-logo-image" />
                 </div>
               </div>
             </div>

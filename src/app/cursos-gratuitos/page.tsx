@@ -2,13 +2,13 @@
 
 import { useState, Suspense } from 'react';
 import dynamic from 'next/dynamic';
-import Image from 'next/image';
 import Sidebar from '@/components/layout/Sidebar';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import CourseCard from '@/components/courses/CourseCard';
 import Footer from '@/components/layout/Footer';
 import UserProfile from '@/components/auth/UserProfile';
 import StatsContainer from '@/components/ui/StatsContainer';
+import DynamicLogo from '@/components/ui/DynamicLogo';
 import { useAuth } from '@/contexts/AuthContext';
 
 // Lazy load components
@@ -104,9 +104,7 @@ export default function CursosGratuitosPage() {
               {/* Logo blanco debajo del texto */}
               <div className="hero-bottom-logo">
                 <div className="logo-animation-wrapper">
-                  <Image 
-                    src={user && user.membershipLevel === 'PREMIUM' ? "/images/logop.png" : "/images/logog.png"}
-                    alt="eGrow Academy" 
+                  <DynamicLogo 
                     width={95}
                     height={95}
                     priority

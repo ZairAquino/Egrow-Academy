@@ -1,9 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { useAuth } from '@/contexts/AuthContext';
 import SubscriptionButton from '@/components/payments/SubscriptionButton';
+import DynamicLogo from '@/components/ui/DynamicLogo';
 
 export default function Hero() {
   const { user } = useAuth();
@@ -26,9 +26,7 @@ export default function Hero() {
           {/* Logo blanco debajo del texto */}
           <div className="hero-bottom-logo">
             <div className="logo-animation-wrapper">
-              <Image 
-                src={user && user.membershipLevel === 'PREMIUM' ? "/images/logop.png" : "/images/logog.png"}
-                alt="eGrow Academy" 
+              <DynamicLogo 
                 width={95}
                 height={95}
                 priority
