@@ -1837,16 +1837,18 @@ button, a, input, select, textarea {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.375rem;
   font-weight: 500;
+  font-size: 0.875rem;
   text-decoration: none;
-  transition: all 0.3s ease;
-  border: 2px solid transparent;
-  gap: 0.5rem;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  gap: 0.375rem;
   position: relative;
   overflow: hidden;
-  min-height: 44px;
+  min-height: 40px;
+  cursor: pointer;
 }
 
 .btn-text {
@@ -1912,9 +1914,96 @@ button, a, input, select, textarea {
   width: 100%;
 }
 
+.btn-small {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.75rem;
+  min-height: 32px;
+}
+
+.btn-large {
+  padding: 0.8rem 1.6rem;
+  font-size: 1rem;
+  min-height: 48px;
+}
+
+.btn-compact {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.8125rem;
+  min-height: 36px;
+}
+
 /* Section Styles */
 .section {
-  padding: 4rem 0;
+  padding: 3rem 0;
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 2rem 0;
+  }
+  
+  /* Optimizaciones móviles generales */
+  .container {
+    padding: 0 1rem;
+  }
+  
+  h1 {
+    font-size: 1.875rem;
+    line-height: 1.2;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+    line-height: 1.3;
+  }
+  
+  h3 {
+    font-size: 1.25rem;
+    line-height: 1.3;
+  }
+  
+  /* Cards más compactas en móvil */
+  .card,
+  .course-card,
+  .resource-card {
+    margin-bottom: 1rem;
+    padding: 1rem;
+  }
+  
+  /* Mejorar espaciado de formularios */
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  /* Optimizar navegación móvil */
+  .nav-link {
+    padding: 0.75rem 1rem;
+  }
+  
+  /* Optimizaciones para comunidad */
+  .community-feature,
+  .event-card,
+  .forum-card {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  
+  /* Botones más compactos en móvil */
+  .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.8125rem;
+    min-height: 36px;
+  }
+  
+  .btn-large {
+    padding: 0.65rem 1.3rem;
+    font-size: 0.875rem;
+  }
 }
 
 .bg-gray {
@@ -2304,13 +2393,13 @@ button, a, input, select, textarea {
   }
   
   .hero {
-    padding: 2.5rem 0;
+    padding: 2rem 0;
     min-height: 45vh;
     max-height: 55vh;
   }
   
   .section {
-    padding: 3rem 0;
+    padding: 2rem 0;
   }
   
   .courses-grid {
@@ -2550,25 +2639,25 @@ button, a, input, select, textarea {
 .footer {
     background: var(--gray-900);
     color: white;
-    padding: 3rem 0 1rem;
+    padding: 2rem 0 1rem;
 }
 
 @media (max-width: 768px) {
-    .footer {
-        padding: 2rem 0 1rem;
-    }
-}
-
-@media (max-width: 480px) {
     .footer {
         padding: 1.5rem 0 0.75rem;
     }
 }
 
+@media (max-width: 480px) {
+    .footer {
+        padding: 1rem 0 0.5rem;
+    }
+}
+
 .footer-grid {
     display: grid;
-    gap: 2rem;
-    margin-bottom: 2rem;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
 }
 
 @media (min-width: 768px) {
@@ -2584,7 +2673,12 @@ button, a, input, select, textarea {
 }
 
 .footer-brand {
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.footer-brand p {
+    font-size: 0.875rem;
+    margin: 0.5rem 0;
 }
 
 .footer-logo-link {
@@ -3016,9 +3110,9 @@ button, a, input, select, textarea {
 }
 
 .footer-column h4 {
-    font-size: 1.125rem;
+    font-size: 1rem;
     font-weight: 600;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
     color: white;
 }
 
@@ -3027,7 +3121,11 @@ button, a, input, select, textarea {
 }
 
 .footer-column ul li {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.375rem;
+}
+
+.footer-column ul li a {
+    font-size: 0.875rem;
 }
 
 .footer-column ul li a {
