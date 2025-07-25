@@ -1,0 +1,29 @@
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://egrow-academy.com/sitemap.xml
+Sitemap: https://egrow-academy.com/courses-sitemap.xml
+Sitemap: https://egrow-academy.com/resources-sitemap.xml
+
+# Disallow admin and private areas
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_next/
+Disallow: /login
+Disallow: /register
+Disallow: /profile
+Disallow: /payment/
+Disallow: /subscription/
+Disallow: /verify-email/
+Disallow: /certificate/
+Disallow: /facturacion/
+
+# Allow important pages
+Allow: /cursos
+Allow: /resources
+Allow: /community
+Allow: /contacto
+
+# Crawl delay (optional)
+Crawl-delay: 1
