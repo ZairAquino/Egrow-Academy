@@ -1,8 +1,5 @@
 const config = {
-  plugins: [
-    "@tailwindcss/postcss",
-    "autoprefixer" // Añadido para compatibilidad con Safari y otros navegadores
-  ],
+  plugins: ["@tailwindcss/postcss"],
 };
 
 export default config;
