@@ -37,7 +37,13 @@
       "Bash(npm run check:env:*)",
       "Bash(pkill:*)",
       "Bash(vercel:*)",
-      "Bash(git branch:*)"
+      "Bash(git branch:*)",
+      "Bash(node:*)",
+      "Bash(set PORT=3000)",
+      "Bash(start npx prisma studio)",
+      "Bash(npm start)",
+      "Bash(npm run lint)",
+      "Bash(npm run lint:*)"
     ],
     "deny": []
   }

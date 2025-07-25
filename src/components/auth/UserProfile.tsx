@@ -65,15 +65,54 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
     );
   }
 
-  // Si no está autenticado, mostrar avatar vacío que redirige al login
+  // Si no está autenticado, mostrar avatar con dropdown de opciones
   if (status === 'unauthenticated') {
     return (
-      <div className={`user-profile-container ${className}`}>
-        <Link href="/login" className="profile-trigger">
+      <div className={`user-profile-container ${className}`} ref={dropdownRef}>
+        <button 
+          onClick={() => setIsOpen(!isOpen)}
+          className="profile-trigger"
+          aria-expanded={isOpen}
+          aria-haspopup="true"
+        >
           <div className="profile-avatar">
             <span className="avatar-text">?</span>
           </div>
-        </Link>
+          <span className="dropdown-arrow">▼</span>
+        </button>
+
+        {isOpen && (
+          <div className="profile-dropdown">
+            <div className="profile-header">
+              <div className="profile-avatar large">
+                <span className="avatar-text">?</span>
+              </div>
+              <div className="profile-details">
+                <h3 className="profile-name">Usuario Invitado</h3>
+                <p className="profile-email">Inicia sesión para acceder a tu cuenta</p>
+              </div>
+            </div>
+            
+            <div className="profile-menu">
+              <Link href="/login" className="menu-item">
+                <span className="menu-icon">🔑</span>
+                Iniciar Sesión
+              </Link>
+              <Link href="/register" className="menu-item">
+                <span className="menu-icon">📝</span>
+                Registrarse
+              </Link>
+              <div className="profile-stats">
+                <span className="stat">
+                  <strong>0</strong> cursos completados
+                </span>
+                <span className="stat">
+                  <strong>0h</strong> de aprendizaje
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }

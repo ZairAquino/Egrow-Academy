@@ -290,6 +290,70 @@ button, a, input, select, textarea {
     transform: scale(1.05);
 }
 
+/* Estilos para el dropdown de usuario no autenticado */
+.profile-menu {
+    padding: 12px 0;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    color: var(--gray-700);
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.menu-item:hover {
+    background: var(--gray-50);
+}
+
+.menu-item.logout {
+    color: #dc2626;
+    border-top: 1px solid var(--gray-200);
+    margin-top: 8px;
+    padding-top: 12px;
+}
+
+.menu-item.logout:hover {
+    background: #fef2f2;
+}
+
+.menu-icon {
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
+}
+
+.profile-stats {
+    padding: 16px 20px;
+    border-top: 1px solid var(--gray-200);
+    margin-top: 8px;
+}
+
+.stat {
+    display: block;
+    font-size: 13px;
+    color: var(--gray-600);
+    margin-bottom: 4px;
+}
+
+.stat:last-child {
+    margin-bottom: 0;
+}
+
+.stat strong {
+    color: var(--gray-900);
+    font-weight: 600;
+}
+
 .profile-info {
     display: flex;
     flex-direction: column;
