@@ -58,6 +58,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         const contentType = response.headers.get('content-type')
         if (contentType && contentType.includes('application/json')) {
           const data = await response.json()
+          console.log('🔍 [AuthContext] User fetched from API:', data.user?.email, 'Membership:', data.user?.membershipLevel)
           return data.user
         } else {
           console.error('Respuesta no es JSON:', contentType)
@@ -117,12 +118,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     if (status === 'authenticated' && user) {
       const interval = setInterval(() => {
+        console.log('🔄 [AuthContext] Auto-refreshing user data...')
         refreshUser()
       }, 30000) // 30 segundos
 
       return () => clearInterval(interval)
     }
-  }, []) // Sin dependencias para evitar bucle infinito
+  }, [status, user]) // Añadir dependencias necesarias
 
   const value: AuthContextType = {
     user,

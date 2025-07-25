@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Logo Premium - eGrow Academy</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #3b82f6;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 0;
+            display: block;
+            width: 100%;
+        }
+        .test-button:hover {
+            background: #2563eb;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #10b981;
+            background: #f0f9ff;
+        }
+        .debug-info {
+            background: #1f2937;
+            color: #e5e7eb;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .logo-test {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin: 20px 0;
+        }
+        .logo-test img {
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test Sistema de Logo Premium</h1>
+        <p>Esta página prueba si el sistema de logos funciona correctamente para usuarios premium.</p>
+        
+        <button class="test-button" onclick="testMockLogin()">
+            1️⃣ Hacer Mock Login como Usuario Premium
+        </button>
+        
+        <button class="test-button" onclick="checkCurrentUser()">
+            2️⃣ Verificar Usuario Actual
+        </button>
+        
+        <button class="test-button" onclick="checkSubscriptionStatus()">
+            3️⃣ Verificar Estado de Suscripción
+        </button>
+        
+        <button class="test-button" onclick="testLogos()">
+            4️⃣ Probar Ambos Logos
+        </button>
+        
+        <div class="logo-test">
+            <div>
+                <h3>Logo Gratuito (logog.png):</h3>
+                <img src="/images/logog.png" alt="Logo Gratuito" width="95" height="95" onerror="this.style.border='2px solid red'; this.alt='❌ Error cargando logo gratuito'">
+            </div>
+            <div>
+                <h3>Logo Premium (logop.png):</h3>
+                <img src="/images/logop.png" alt="Logo Premium" width="95" height="95" onerror="this.style.border='2px solid red'; this.alt='❌ Error cargando logo premium'">
+            </div>
+        </div>
+        
+        <div id="result" class="result" style="display: none;">
+            <h3>📊 Resultado:</h3>
+            <div id="resultContent"></div>
+        </div>
+        
+        <div id="debug" class="debug-info" style="display: none;"></div>
+    </div>
+
+    <script>
+        let debugInfo = '';
+
+        function addDebug(message) {
+            debugInfo += new Date().toLocaleTimeString() + ' - ' + message + '\n';
+            document.getElementById('debug').style.display = 'block';
+            document.getElementById('debug').textContent = debugInfo;
+        }
+
+        async function testMockLogin() {
+            try {
+                addDebug('🚀 Iniciando mock login...');
+                const response = await fetch('/api/auth/mock-login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: 'test-premium@egrow.com'
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    addDebug('✅ Mock login exitoso');
+                    addDebug('👤 Usuario: ' + data.user.email);
+                    addDebug('🎖️ Membership: ' + data.user.membershipLevel);
+                    addDebug('🎨 Logo sugerido: ' + data.logoToUse);
+                    
+                    showResult('Mock login exitoso como usuario PREMIUM', 'success');
+                } else {
+                    addDebug('❌ Error en mock login: ' + response.status);
+                    showResult('Error en mock login', 'error');
+                }
+            } catch (error) {
+                addDebug('💥 Error: ' + error.message);
+                showResult('Error: ' + error.message, 'error');
+            }
+        }
+
+        async function checkCurrentUser() {
+            try {
+                addDebug('🔍 Verificando usuario actual...');
+                const response = await fetch('/api/auth/me', {
+                    credentials: 'include'
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    addDebug('✅ Usuario autenticado');
+                    addDebug('👤 Email: ' + data.user.email);
+                    addDebug('🎖️ Membership Level: ' + data.user.membershipLevel);
+                    addDebug('📅 Último login: ' + data.user.lastLogin);
+                    
+                    showResult(`Usuario: ${data.user.email} | Membership: ${data.user.membershipLevel}`, 'success');
+                } else {
+                    addDebug('❌ Usuario no autenticado');
+                    showResult('Usuario no autenticado', 'error');
+                }
+            } catch (error) {
+                addDebug('💥 Error: ' + error.message);
+                showResult('Error: ' + error.message, 'error');
+            }
+        }
+
+        async function checkSubscriptionStatus() {
+            try {
+                addDebug('🔍 Verificando estado de suscripción...');
+                const response = await fetch('/api/auth/subscription-status');
+
+                if (response.ok) {
+                    const data = await response.json();
+                    addDebug('✅ Estado de suscripción obtenido');
+                    addDebug('💎 Suscripción activa: ' + data.hasActiveSubscription);
+                    addDebug('🎖️ Membership Level: ' + data.membershipLevel);
+                    addDebug('📊 Premium Access: ' + (data.hasActiveSubscription || data.membershipLevel === 'PREMIUM'));
+                    
+                    showResult(`Suscripción activa: ${data.hasActiveSubscription} | Membership: ${data.membershipLevel}`, 'success');
+                } else {
+                    addDebug('❌ Error obteniendo estado de suscripción');
+                    showResult('Error obteniendo estado de suscripción', 'error');
+                }
+            } catch (error) {
+                addDebug('💥 Error: ' + error.message);
+                showResult('Error: ' + error.message, 'error');
+            }
+        }
+
+        function testLogos() {
+            addDebug('🎨 Probando carga de logos...');
+            
+            const logoFree = new Image();
+            const logoPremium = new Image();
+            
+            logoFree.onload = () => addDebug('✅ Logo gratuito cargado correctamente');
+            logoFree.onerror = () => addDebug('❌ Error cargando logo gratuito');
+            logoFree.src = '/images/logog.png';
+            
+            logoPremium.onload = () => addDebug('✅ Logo premium cargado correctamente');
+            logoPremium.onerror = () => addDebug('❌ Error cargando logo premium');
+            logoPremium.src = '/images/logop.png';
+            
+            showResult('Prueba de logos iniciada - revisa el debug log', 'info');
+        }
+
+        function showResult(message, type) {
+            const resultDiv = document.getElementById('result');
+            const contentDiv = document.getElementById('resultContent');
+            
+            resultDiv.style.display = 'block';
+            contentDiv.textContent = message;
+            
+            // Change color based on type
+            if (type === 'success') {
+                resultDiv.style.borderLeftColor = '#10b981';
+                resultDiv.style.backgroundColor = '#f0f9ff';
+            } else if (type === 'error') {
+                resultDiv.style.borderLeftColor = '#ef4444';
+                resultDiv.style.backgroundColor = '#fef2f2';
+            } else {
+                resultDiv.style.borderLeftColor = '#f59e0b';
+                resultDiv.style.backgroundColor = '#fffbeb';
+            }
+        }
+
+        // Auto-start debug log
+        addDebug('🔧 Sistema de debug iniciado');
+        addDebug('📍 URL actual: ' + window.location.href);
+    </script>
+</body>
+</html>

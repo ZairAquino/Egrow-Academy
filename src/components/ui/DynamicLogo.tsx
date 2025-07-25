@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useAuth } from '@/contexts/AuthContext';
-import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
+import { useEffect, useState } from 'react';
 
 interface DynamicLogoProps {
   width?: number;
@@ -20,19 +20,46 @@ export default function DynamicLogo({
   fallbackToFree = true
 }: DynamicLogoProps) {
   const { user, status } = useAuth();
-  const { hasPremiumAccess, membershipLevel } = useSubscriptionStatus();
+  const [subscriptionData, setSubscriptionData] = useState<{
+    hasActiveSubscription: boolean;
+    membershipLevel: string;
+  } | null>(null);
 
-  // Determinar qué logo usar basado en múltiples fuentes
-  const isPremium = status === 'authenticated' && (
-    user?.membershipLevel === 'PREMIUM' ||
-    membershipLevel === 'PREMIUM' ||
-    hasPremiumAccess
+  // Verificar estado de suscripción cuando cambie el usuario o status
+  useEffect(() => {
+    if (status === 'authenticated' && user) {
+      const checkSubscription = async () => {
+        try {
+          console.log('🔍 [DynamicLogo] Checking subscription for user:', user.email);
+          const response = await fetch('/api/auth/subscription-status');
+          if (response.ok) {
+            const data = await response.json();
+            console.log('🔍 [DynamicLogo] Subscription data received:', data);
+            setSubscriptionData({
+              hasActiveSubscription: data.hasActiveSubscription,
+              membershipLevel: data.membershipLevel || 'FREE'
+            });
+          }
+        } catch (error) {
+          console.error('Error checking subscription:', error);
+        }
+      };
+      
+      checkSubscription();
+    }
+  }, [status, user?.id, user?.membershipLevel]); // Re-check cuando cambie membership
+
+  // Determinar si es premium basado en múltiples fuentes
+  const isPremium = status === 'authenticated' && user && (
+    user.membershipLevel === 'PREMIUM' ||
+    subscriptionData?.membershipLevel === 'PREMIUM' ||
+    subscriptionData?.hasActiveSubscription === true
   );
 
   const logoSrc = isPremium ? "/images/logop.png" : "/images/logog.png";
   const logoAlt = isPremium ? "eGrow Academy Premium" : "eGrow Academy";
 
-  console.log(`🎨 [DynamicLogo] Status: ${status}, User membership: ${user?.membershipLevel}, Hook membership: ${membershipLevel}, Premium access: ${hasPremiumAccess}, Using logo: ${logoSrc}`);
+  console.log(`🎨 [DynamicLogo] Status: ${status}, User: ${user?.email}, User membership: ${user?.membershipLevel}, API membership: ${subscriptionData?.membershipLevel}, Active subscription: ${subscriptionData?.hasActiveSubscription}, Using logo: ${logoSrc}`);
 
   return (
     <Image 
