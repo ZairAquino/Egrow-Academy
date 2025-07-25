@@ -1,0 +1,354 @@
+
+> egrow-academy-nextjs@0.1.0 dev
+> next dev --turbopack
+
+ ⚠ Warning: Found multiple lockfiles. Selecting /home/david/eGrow-academy/package-lock.json.
+   Consider removing the lockfiles at:
+   * /home/david/eGrow-academy/egrow-academy-nextjs/package-lock.json
+
+   ▲ Next.js 15.4.1 (Turbopack)
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.100.20:3000
+
+ ✓ Starting...
+ ✓ Ready in 997ms
+Slow filesystem detected. The benchmark took 1308ms. If /home/david/eGrow-academy/egrow-academy-nextjs/.next is a network drive, consider moving it to a local folder. If you have an antivirus enabled, consider excluding your project directory.
+ ○ Compiling / ...
+ ✓ Compiled / in 9.4s
+ GET / 200 in 10127ms
+ GET / 200 in 398ms
+ ○ Compiling /favicon.ico ...
+ ✓ Compiled /favicon.ico in 3s
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 3831ms
+ GET / 200 in 177ms
+ ✓ Compiled /_not-found/page in 337ms
+ GET /offline.html 404 in 784ms
+ GET / 200 in 85ms
+ ⚠ Cross origin request detected from 192.168.100.20 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 230ms
+ ✓ Compiled /cursos-cortos in 498ms
+ GET /cursos-cortos 200 in 544ms
+ ✓ Compiled /the-batch in 348ms
+ GET /the-batch 200 in 389ms
+ ✓ Compiled /courses in 357ms
+ GET /courses 200 in 401ms
+ GET / 200 in 87ms
+ GET / 200 in 78ms
+ GET /courses 200 in 33ms
+ GET /the-batch 200 in 71ms
+ GET / 200 in 70ms
+ GET /cursos-cortos 200 in 76ms
+ GET /cursos-cortos 200 in 71ms
+ GET /cursos-cortos 200 in 76ms
+ GET /cursos-cortos 200 in 75ms
+ GET /courses 200 in 77ms
+ GET / 200 in 70ms
+ GET /cursos-cortos 200 in 74ms
+ GET /courses 200 in 188ms
+ GET /courses 200 in 76ms
+ GET /cursos-cortos 200 in 82ms
+ ✓ Compiled in 210ms
+ ✓ Compiled in 98ms
+ ✓ Compiled in 183ms
+ GET / 200 in 308ms
+ GET /courses 200 in 76ms
+ ✓ Compiled /community in 459ms
+ GET /community 200 in 588ms
+ GET /the-batch 200 in 76ms
+ ✓ Compiled /resources in 489ms
+ GET /resources 200 in 592ms
+ GET /cursos-cortos 200 in 87ms
+ GET /courses 200 in 239ms
+ ✓ Compiled /company in 434ms
+ GET /company 200 in 545ms
+ GET /the-batch 200 in 103ms
+ GET / 200 in 51ms
+ ✓ Compiled in 171ms
+ GET /cursos-cortos 200 in 42ms
+ ✓ Compiled in 142ms
+ ✓ Compiled in 124ms
+ GET /the-batch 200 in 154ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 287ms
+ GET /cursos-cortos 200 in 326ms
+ GET /courses 200 in 598ms
+ GET /cursos-cortos 200 in 112ms
+ ✓ Compiled in 175ms
+ GET /cursos-cortos 200 in 323ms
+ GET /cursos-cortos 200 in 55ms
+ ✓ Compiled in 188ms
+ ✓ Compiled in 159ms
+ ✓ Compiled in 179ms
+ ✓ Compiled in 198ms
+ GET /cursos-cortos 200 in 653ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 329ms
+ GET /cursos-cortos 200 in 75ms
+ GET /cursos-cortos 200 in 84ms
+ GET /courses 200 in 277ms
+ GET /courses 200 in 402ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 302ms
+ GET /cursos-cortos 200 in 99ms
+ ✓ Compiled in 162ms
+ GET /cursos-cortos 200 in 512ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 269ms
+ GET /cursos-cortos 200 in 233ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 260ms
+ ✓ Compiled in 314ms
+ GET /cursos-cortos 200 in 101ms
+ GET /cursos-cortos 200 in 93ms
+ GET /cursos-cortos 200 in 191ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 264ms
+ GET /community 200 in 330ms
+ ✓ Compiled in 283ms
+ GET /community 200 in 439ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 305ms
+ GET /community 200 in 167ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 265ms
+ GET / 200 in 578ms
+ GET / 200 in 139ms
+ GET / 200 in 58ms
+ ✓ Compiled in 230ms
+ ✓ Compiled in 297ms
+ ✓ Compiled in 0ms
+ GET / 200 in 236ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 295ms
+ ✓ Compiled in 239ms
+ ✓ Compiled in 338ms
+ ✓ Compiled in 227ms
+ GET / 200 in 208ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 258ms
+ ✓ Compiled in 280ms
+ GET / 200 in 350ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 257ms
+ GET / 200 in 228ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 241ms
+ GET / 200 in 193ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 239ms
+ ✓ Compiled in 360ms
+ GET / 200 in 249ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 318ms
+ ✓ Compiled in 48ms
+ ✓ Compiled in 261ms
+ GET / 200 in 222ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 368ms
+ ✓ Compiled in 259ms
+ GET / 200 in 191ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 236ms
+ ✓ Compiled in 349ms
+ GET / 200 in 186ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 304ms
+ ✓ Compiled in 264ms
+ GET / 200 in 176ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 244ms
+ GET / 200 in 336ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 265ms
+ ✓ Compiled in 315ms
+ ✓ Compiled in 341ms
+ ✓ Compiled in 103ms
+ ✓ Compiled in 168ms
+ GET / 200 in 130ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 275ms
+ GET /community 200 in 63ms
+ GET /community 200 in 38ms
+ GET /community 200 in 43ms
+ GET /community 200 in 42ms
+ ✓ Compiled in 78ms
+ GET /community 200 in 238ms
+ GET /cursos-cortos 200 in 54ms
+ ✓ Compiled in 111ms
+ GET /courses 200 in 205ms
+ GET /community 200 in 192ms
+ GET /community 200 in 37ms
+ ✓ Compiled in 192ms
+ ✓ Compiled in 184ms
+ ✓ Compiled in 165ms
+ ✓ Compiled in 72ms
+ ✓ Compiled in 74ms
+ ✓ Compiled in 180ms
+ ✓ Compiled in 263ms
+ GET /community 200 in 439ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 259ms
+ ✓ Compiled in 171ms
+ ✓ Compiled in 200ms
+ ✓ Compiled in 212ms
+ ✓ Compiled in 144ms
+ ✓ Compiled in 147ms
+ ✓ Compiled in 598ms
+ ⨯ ./src/app/globals.css
+Error evaluating Node.js code
+CssSyntaxError: /home/david/eGrow-academy/egrow-academy-nextjs/src/app/globals.css:1027:1: Unexpected }
+    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]
+    [at Parser.unexpectedClose (turbopack:///[project]/node_modules/postcss/lib/parser.js:587:22)]
+    [at Parser.end (turbopack:///[project]/node_modules/postcss/lib/parser.js:330:12)]
+    [at Parser.parse (turbopack:///[project]/node_modules/postcss/lib/parser.js:456:16)]
+    [at parse (turbopack:///[project]/node_modules/postcss/lib/parse.js:11:12)]
+    [at LazyResult (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:165:16)]
+    [at Processor.process (turbopack:///[project]/node_modules/postcss/lib/processor.js:53:14)]
+    [at transform (turbopack:///[turbopack-node]/transforms/postcss.ts:70:51)]
+    [at run (turbopack:///[turbopack-node]/ipc/evaluate.ts:92:29)]
+    [at run (turbopack:///[turbopack-node]/ipc/evaluate.ts:115:11)]
+
+Import trace:
+  ./src/app/globals.css [Client Component Browser]
+  ./src/app/layout.tsx [Server Component]
+
+
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 2.1s
+ GET /community 500 in 4613ms
+ GET /favicon.ico 500 in 57ms
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ✓ Compiled in 646ms
+ ✓ Compiled /community in 257ms
+ GET /community 200 in 1003ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 235ms
+ ✓ Compiled in 132ms
+ ✓ Compiled in 75ms
+ ✓ Compiled in 153ms
+ ✓ Compiled in 121ms
+ ✓ Compiled in 187ms
+ ✓ Compiled in 174ms
+ ✓ Compiled in 192ms
+ ✓ Compiled /cursos-cortos in 38ms
+ GET /cursos-cortos 200 in 124ms
+ GET /cursos-cortos 200 in 92ms
+ GET /cursos-cortos 200 in 113ms
+ GET /cursos-cortos 200 in 88ms
+ GET /cursos-cortos 200 in 72ms
+ GET /cursos-cortos 200 in 97ms
+ GET /cursos-cortos 200 in 137ms
+ GET /community 200 in 295ms
+ ✓ Compiled /resources in 17ms
+ GET /resources 200 in 225ms
+ ✓ Compiled in 170ms
+ ✓ Compiled in 76ms
+ ✓ Compiled in 81ms
+ ✓ Compiled in 138ms
+ ✓ Compiled in 76ms
+ GET /resources 200 in 490ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 264ms
+ ✓ Compiled in 243ms
+ ✓ Compiled in 182ms
+ ✓ Compiled in 76ms
+ ✓ Compiled in 121ms
+ ✓ Compiled in 235ms
+ ✓ Compiled in 54ms
+ ✓ Compiled in 138ms
+ GET /resources 200 in 133ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 295ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 230ms
+ ✓ Compiled / in 21ms
+ GET / 200 in 154ms
+ GET /community 200 in 70ms
+ GET /resources 200 in 49ms
+ ✓ Compiled in 93ms
+ ✓ Compiled in 87ms
+ ✓ Compiled in 169ms
+ ✓ Compiled in 81ms
+ GET /resources 200 in 454ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 296ms
+ ✓ Compiled /_not-found/page in 436ms
+ GET / 200 in 566ms
+ GET /offline.html 404 in 725ms
+ GET /resources 200 in 124ms
+ GET /resources 200 in 111ms
+ GET /resources 200 in 139ms
+ GET /resources 200 in 141ms
+ GET /resources 200 in 145ms
+ GET / 200 in 85ms
+ GET /offline.html 404 in 81ms
+ ✓ Compiled in 152ms
+ ✓ Compiled in 103ms
+ ✓ Compiled in 159ms
+ ✓ Compiled in 156ms
+ ✓ Compiled in 112ms
+ ✓ Compiled in 120ms
+ ✓ Compiled in 175ms
+ ✓ Compiled /company in 18ms
+ GET /company 200 in 247ms
+ ✓ Compiled in 101ms
+ GET /resources 200 in 231ms
+ GET /resources 200 in 303ms
+ GET /resources 200 in 177ms
+ ✓ Compiled in 171ms
+ ✓ Compiled in 192ms
+ GET / 200 in 53ms
+ GET /resources 200 in 55ms
+ ✓ Compiled in 183ms
+ ✓ Compiled in 154ms
+ GET /resources 200 in 553ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 263ms
+ ✓ Compiled in 95ms
+ ✓ Compiled in 141ms
+ ✓ Compiled in 133ms
+ GET /cursos-cortos 200 in 222ms
+ GET /resources 200 in 72ms
+ GET /company 200 in 69ms
+ ✓ Compiled in 137ms
+ ✓ Compiled in 119ms
+ ✓ Compiled in 78ms
+ GET /company 200 in 209ms
+ GET /company 200 in 49ms
+ ✓ Compiled in 231ms
+ GET /company 404 in 351ms
+ GET /company 404 in 62ms
+ GET /company 404 in 238ms
+ GET /resources 200 in 188ms
+ ✓ Compiled in 156ms
+ ✓ Compiled in 170ms
+ GET / 200 in 268ms
+ GET /cursos-cortos 200 in 237ms
+ GET /cursos-cortos 200 in 51ms
+ GET /cursos-cortos 200 in 50ms
+ ✓ Compiled /courses in 23ms
+ GET /courses 200 in 216ms
+ GET /courses 200 in 56ms
+ ✓ Compiled in 128ms
+ ✓ Compiled in 139ms
+ ✓ Compiled in 111ms
+ ✓ Compiled in 123ms
+ GET /cursos-cortos 200 in 241ms
+ ✓ Compiled in 202ms
+ ✓ Compiled in 153ms
+ ✓ Compiled in 114ms
+ ✓ Compiled in 118ms
+ GET /cursos-cortos 200 in 482ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 497ms
+ GET /courses 200 in 402ms
+ GET / 200 in 237ms
+ ✓ Compiled in 136ms
+ ✓ Compiled in 135ms
+ GET /cursos-cortos 200 in 227ms
+ ✓ Compiled in 172ms
+ ✓ Compiled in 251ms
+ ✓ Compiled in 137ms
+ ✓ Compiled in 99ms
+ ✓ Compiled in 217ms
+ ✓ Compiled in 221ms
+ GET /company 404 in 223ms
+ GET /apple-touch-icon-precomposed.png 404 in 109ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 295ms
+ GET /apple-touch-icon.png 404 in 83ms
+ ✓ Compiled in 162ms
+ ✓ Compiled in 210ms
+ ✓ Compiled in 153ms
+ GET /cursos-cortos 200 in 602ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 252ms
+ GET /favicon.ico 200 in 288ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 275ms
+ GET /courses 200 in 524ms
+ ✓ Compiled in 108ms
+ GET /community 200 in 219ms
+ GET /community 200 in 52ms
+ ✓ Compiled in 114ms
+ GET /community 200 in 332ms
+ GET /community 200 in 108ms
+ GET /community 200 in 462ms
+ GET /community 200 in 116ms
+ ✓ Compiled in 196ms
+ ✓ Compiled in 398ms
+ ○ Compiling /contacto ...
+ ✓ Compiled /contacto in 695ms
+ GET /contacto 200 in 810ms
+ GET / 200 in 559ms
+ GET / 200 in 123ms

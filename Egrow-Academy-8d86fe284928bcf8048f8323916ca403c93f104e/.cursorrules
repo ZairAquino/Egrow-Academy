@@ -1,0 +1,47 @@
+# eGrow Academy - Reglas de Cursor
+
+## 🎯 **Configuración del Proyecto**
+- **Framework:** Next.js 15.4.1 con TypeScript
+- **Base de datos:** PostgreSQL con Prisma ORM
+- **Estilo:** Tailwind CSS con diseño minimalista
+- **Idioma:** Español para documentación y comentarios
+
+## 📁 **Estructura de Archivos**
+- `/src/app/` - Páginas de Next.js App Router
+- `/src/components/` - Componentes reutilizables
+- `/src/lib/` - Utilidades y configuraciones
+- `/prisma/` - Schema de base de datos
+- `/docs/` - Documentación del proyecto
+
+## 🚀 **Optimizaciones de Rendimiento**
+- **Lazy loading** para componentes pesados
+- **Image optimization** con Next.js Image
+- **Code splitting** automático por rutas
+- **Tree shaking** para reducir bundle size
+
+## 🎨 **Convenciones de Código**
+- **Componentes:** PascalCase (ej: `CourseCard.tsx`)
+- **Funciones:** camelCase (ej: `getUserData`)
+- **Constantes:** UPPER_SNAKE_CASE (ej: `API_ENDPOINTS`)
+- **Tipos:** PascalCase con sufijo (ej: `UserData`)
+
+## 🔧 **Configuración de Herramientas**
+- **ESLint:** Configurado en `/config/eslint.config.mjs`
+- **TypeScript:** Configurado en `tsconfig.json`
+- **Tailwind:** Configurado en `tailwind.config.ts`
+
+## 📝 **Documentación**
+- Mantener actualizado `/docs/PROJECT-DEVELOPMENT-LOG.md`
+- Documentar APIs en `/docs/api/`
+- Usar JSDoc para funciones complejas
+
+## 🗄️ **Base de Datos**
+- **ORM:** Prisma con PostgreSQL
+- **Migraciones:** Usar `npx prisma migrate dev`
+- **Seed:** Crear datos de prueba con `npx prisma db seed`
+
+## 🎯 **Enfoque de Desarrollo**
+- **Mobile-first** responsive design
+- **Accessibility** (a11y) por defecto
+- **SEO** optimizado con meta tags
+- **Performance** con Core Web Vitals 

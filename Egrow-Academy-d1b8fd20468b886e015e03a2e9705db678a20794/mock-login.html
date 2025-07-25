@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mock Login - eGrow Academy</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            max-width: 600px; 
+            margin: 0 auto;
+            background: #f5f5f5;
+        }
+        .container { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 10px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .form-group { 
+            margin: 15px 0; 
+        }
+        .form-group label { 
+            display: block; 
+            margin-bottom: 5px; 
+            font-weight: bold;
+        }
+        .form-group input { 
+            width: 100%; 
+            padding: 10px; 
+            border: 1px solid #ddd; 
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button { 
+            background: #3b82f6; 
+            color: white; 
+            padding: 12px 20px; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-size: 16px;
+            width: 100%;
+        }
+        button:hover { 
+            background: #2563eb; 
+        }
+        .result { 
+            margin: 20px 0; 
+            padding: 15px; 
+            border-radius: 5px; 
+        }
+        .success { 
+            background: #d1fae5; 
+            color: #065f46; 
+            border: 1px solid #10b981;
+        }
+        .error { 
+            background: #fee2e2; 
+            color: #991b1b; 
+            border: 1px solid #ef4444;
+        }
+        .test-links { 
+            margin: 20px 0; 
+            padding: 15px; 
+            background: #f0f9ff; 
+            border-radius: 5px;
+        }
+        .test-links a { 
+            display: block; 
+            margin: 5px 0; 
+            color: #1d4ed8;
+            text-decoration: none;
+        }
+        .test-links a:hover { 
+            text-decoration: underline; 
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Mock Login - Prueba de Sistema de Logos</h1>
+        <p>Este es un login de prueba para verificar que el sistema de logos premium funciona correctamente.</p>
+        
+        <form onsubmit="mockLogin(event)">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" value="luisdavid.ls47@gmail.com" required>
+            </div>
+            <button type="submit">🚀 Hacer Mock Login (Usuario Premium)</button>
+        </form>
+        
+        <div id="result"></div>
+        
+        <div class="test-links">
+            <h3>🔗 Enlaces de Prueba (después del login):</h3>
+            <a href="/debug-logo.html" target="_blank">📊 Debug Info - Verificar Usuario</a>
+            <a href="/cursos-gratuitos" target="_blank">🎓 Página Cursos Gratuitos</a>
+            <a href="/courses" target="_blank">📚 Página Todos los Cursos</a>
+            <a href="/community" target="_blank">👥 Página Comunidad</a>
+            <a href="/contacto" target="_blank">📞 Página Contacto</a>
+            <a href="/api/debug/simple" target="_blank">🔧 API Debug Directo</a>
+        </div>
+        
+        <div style="background: #fef3c7; padding: 15px; border-radius: 5px; margin: 20px 0;">
+            <h4>📝 Instrucciones:</h4>
+            <ol>
+                <li>Haz clic en "Hacer Mock Login" arriba</li>
+                <li>Si es exitoso, verás "logoToUse: logop.png"</li>
+                <li>Abre cualquier enlace de prueba en una nueva pestaña</li>
+                <li>Deberías ver el logo premium y el debug info</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        async function mockLogin(event) {
+            event.preventDefault()
+            
+            const email = document.getElementById('email').value
+            const resultDiv = document.getElementById('result')
+            
+            try {
+                const response = await fetch('/api/auth/mock-login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email })
+                })
+                
+                const data = await response.json()
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <h3>✅ Mock Login Exitoso!</h3>
+                            <p><strong>Usuario:</strong> ${data.user.firstName} ${data.user.lastName}</p>
+                            <p><strong>Email:</strong> ${data.user.email}</p>
+                            <p><strong>Membership:</strong> ${data.user.membershipLevel}</p>
+                            <p><strong>Logo a usar:</strong> ${data.logoToUse}</p>
+                            <p><strong>Mensaje:</strong> ${data.message}</p>
+                        </div>
+                    `
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            <h3>❌ Error en Mock Login</h3>
+                            <p>${data.error}</p>
+                        </div>
+                    `
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h3>❌ Error de Conexión</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `
+            }
+        }
+    </script>
+</body>
+</html>
