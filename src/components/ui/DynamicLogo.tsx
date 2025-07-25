@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useAuth } from '@/contexts/AuthContext';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 
 interface DynamicLogoProps {
   width?: number;
@@ -20,98 +20,108 @@ export default function DynamicLogo({
   fallbackToFree = true
 }: DynamicLogoProps) {
   const { user, status } = useAuth();
-  const [subscriptionData, setSubscriptionData] = useState<{
-    hasActiveSubscription: boolean;
-    membershipLevel: string;
-  } | null>(null);
-  const [logoKey, setLogoKey] = useState(0);
-  const [forceReload, setForceReload] = useState(0);
-  const imgRef = useRef<HTMLImageElement>(null);
+  const [isPremium, setIsPremium] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Verificar estado de suscripción cuando cambie el usuario o status
+  // Verificar estado premium cuando cambie el usuario
   useEffect(() => {
-    if (status === 'authenticated' && user) {
-      const checkSubscription = async () => {
-        try {
-          console.log('🔍 [DynamicLogo] Checking subscription for user:', user.email);
-          const response = await fetch('/api/auth/subscription-status');
+    const checkPremiumStatus = async () => {
+      setIsLoading(true);
+      
+      try {
+        if (status === 'authenticated' && user) {
+          console.log('🔍 [DynamicLogo] Checking premium status for:', user.email);
+          
+          // Primera verificación: membershipLevel del usuario
+          const userIsPremium = user.membershipLevel === 'PREMIUM';
+          console.log('🔍 [DynamicLogo] User membershipLevel:', user.membershipLevel);
+          console.log('🔍 [DynamicLogo] User is premium by membership:', userIsPremium);
+          
+          if (userIsPremium) {
+            setIsPremium(true);
+            setIsLoading(false);
+            return;
+          }
+          
+          // Segunda verificación: API de suscripción
+          const response = await fetch('/api/auth/subscription-status', {
+            cache: 'no-store',
+            headers: {
+              'Cache-Control': 'no-cache, no-store, must-revalidate',
+              'Pragma': 'no-cache',
+              'Expires': '0'
+            }
+          });
+          
           if (response.ok) {
             const data = await response.json();
-            console.log('🔍 [DynamicLogo] Subscription data received:', data);
-            setSubscriptionData({
-              hasActiveSubscription: data.hasActiveSubscription,
-              membershipLevel: data.membershipLevel || 'FREE'
-            });
+            console.log('🔍 [DynamicLogo] API response:', data);
+            
+            const apiIsPremium = data.hasActiveSubscription || data.membershipLevel === 'PREMIUM';
+            console.log('🔍 [DynamicLogo] API indicates premium:', apiIsPremium);
+            
+            setIsPremium(apiIsPremium);
+          } else {
+            console.error('❌ [DynamicLogo] API error:', response.status);
+            setIsPremium(false);
           }
-        } catch (error) {
-          console.error('Error checking subscription:', error);
+        } else {
+          console.log('🔍 [DynamicLogo] User not authenticated or no user');
+          setIsPremium(false);
         }
-      };
-      
-      checkSubscription();
-    }
+      } catch (error) {
+        console.error('❌ [DynamicLogo] Error checking premium status:', error);
+        setIsPremium(false);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkPremiumStatus();
   }, [status, user?.id, user?.membershipLevel]);
 
-  // Determinar si es premium basado en múltiples fuentes
-  const isPremium = status === 'authenticated' && user && (
-    user.membershipLevel === 'PREMIUM' ||
-    subscriptionData?.membershipLevel === 'PREMIUM' ||
-    subscriptionData?.hasActiveSubscription === true
-  );
-
-  // Forzar re-render y recarga cuando cambie el estado premium
-  useEffect(() => {
-    setLogoKey(prev => prev + 1);
-    setForceReload(prev => prev + 1);
-    
-    // Forzar recarga de la imagen si ya está cargada
-    if (imgRef.current) {
-      const currentSrc = imgRef.current.src;
-      imgRef.current.src = '';
-      setTimeout(() => {
-        if (imgRef.current) {
-          imgRef.current.src = currentSrc;
-        }
-      }, 10);
-    }
-  }, [isPremium]);
-
-  // Generar URL con múltiples parámetros de cache busting
+  // Generar URL del logo
   const timestamp = Date.now();
-  const randomId = Math.random().toString(36).substring(7);
   const logoSrc = isPremium 
-    ? `/images/logop.png?v=${timestamp}&key=${logoKey}&reload=${forceReload}&r=${randomId}` 
-    : `/images/logog.png?v=${timestamp}&key=${logoKey}&reload=${forceReload}&r=${randomId}`;
+    ? `/images/logop.png?v=${timestamp}&premium=true` 
+    : `/images/logog.png?v=${timestamp}&premium=false`;
   const logoAlt = isPremium ? "eGrow Academy Premium" : "eGrow Academy";
 
-  // Logs detallados para depuración
-  console.log(`🎨 [DynamicLogo] ===== DEBUG INFO =====`);
+  // Logs de depuración
+  console.log(`🎨 [DynamicLogo] ===== RENDER INFO =====`);
   console.log(`🎨 [DynamicLogo] Status: ${status}`);
   console.log(`🎨 [DynamicLogo] User: ${user?.email || 'No user'}`);
   console.log(`🎨 [DynamicLogo] User membershipLevel: ${user?.membershipLevel || 'No level'}`);
-  console.log(`🎨 [DynamicLogo] API membershipLevel: ${subscriptionData?.membershipLevel || 'No API data'}`);
-  console.log(`🎨 [DynamicLogo] API hasActiveSubscription: ${subscriptionData?.hasActiveSubscription || 'No API data'}`);
   console.log(`🎨 [DynamicLogo] Is Premium: ${isPremium}`);
-  console.log(`🎨 [DynamicLogo] Logo Key: ${logoKey}`);
-  console.log(`🎨 [DynamicLogo] Force Reload: ${forceReload}`);
+  console.log(`🎨 [DynamicLogo] Is Loading: ${isLoading}`);
   console.log(`🎨 [DynamicLogo] Using logo: ${logoSrc}`);
   console.log(`🎨 [DynamicLogo] ========================`);
 
+  // Mostrar estado de carga
+  if (isLoading) {
+    return (
+      <div className={`${className} flex items-center justify-center`} style={{ width, height }}>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
   return (
     <Image 
-      ref={imgRef}
-      key={`${logoKey}-${isPremium}-${forceReload}`}
+      key={`${isPremium}-${timestamp}`}
       src={logoSrc}
       alt={logoAlt}
       width={width}
       height={height}
       priority={priority}
       className={className}
+      unoptimized={true}
       onError={(e) => {
         console.error(`❌ [DynamicLogo] Error loading logo: ${logoSrc}`);
         if (fallbackToFree && logoSrc.includes('logop.png')) {
-          // Fallback to free logo if premium fails
-          (e.target as HTMLImageElement).src = `/images/logog.png?v=${timestamp}&key=${logoKey}&reload=${forceReload}&r=${randomId}`;
+          console.log(`🔄 [DynamicLogo] Falling back to free logo...`);
+          const fallbackSrc = `/images/logog.png?v=${timestamp}&fallback=true`;
+          (e.target as HTMLImageElement).src = fallbackSrc;
         }
       }}
       onLoad={() => {
