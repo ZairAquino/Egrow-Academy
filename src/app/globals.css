@@ -6338,7 +6338,10 @@ input:checked + .toggle-slider:before {
     }
   }
 }
-    
+
+/* Additional Safari iOS Fixes */
+@media screen and (max-width: 768px) {
+  @supports (-webkit-touch-callout: none) {
     /* Ensure proper text rendering */
     body {
       -webkit-text-size-adjust: 100%;
@@ -6348,21 +6351,6 @@ input:checked + .toggle-slider:before {
     /* Fix for viewport units */
     .main-content {
       min-height: -webkit-fill-available;
-    }
-    
-    /* Ensure all elements are visible */
-    * {
-      -webkit-transform: none !important;
-      transform: none !important;
-    }
-    
-    /* Fix z-index issues */
-    .section,
-    .banner,
-    .card,
-    .btn {
-      position: relative;
-      z-index: 1;
     }
     
     /* Force repaint on Safari iOS */
