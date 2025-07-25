@@ -247,8 +247,8 @@ button, a, input, select, textarea {
 }
 
 .profile-avatar.large {
-    width: 62px;
-    height: 62px;
+    width: 70px;
+    height: 70px;
 }
 
 .avatar-text {
@@ -258,7 +258,8 @@ button, a, input, select, textarea {
 }
 
 .profile-avatar.large .avatar-text {
-    font-size: 18px;
+    font-size: 24px;
+    font-weight: 700;
 }
 
 /* Avatar skeleton para loading */
@@ -405,7 +406,90 @@ button, a, input, select, textarea {
     color: white;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 16px;
+}
+
+.profile-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.profile-name {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0;
+    color: white;
+    line-height: 1.2;
+}
+
+.profile-email {
+    font-size: 14px;
+    opacity: 0.9;
+    margin: 0;
+    color: white;
+    margin-bottom: 8px;
+}
+
+.premium-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #FFD700;
+    color: #333;
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 13px;
+    font-weight: 700;
+    margin-top: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.premium-text {
+    color: #333;
+}
+
+.premium-star {
+    color: #FFD700;
+    font-size: 10px;
+}
+
+.profile-stats-section {
+    padding: 16px 20px;
+    background: white;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    padding: 4px 0;
+}
+
+.stat-item:last-child {
+    margin-bottom: 0;
+}
+
+.stat-label {
+    font-size: 13px;
+    color: var(--gray-600);
+    font-weight: 500;
+}
+
+.stat-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-900);
+}
+
+.stat-value.verified {
+    color: #16a34a;
+}
+
+.stat-value.pending {
+    color: #ea580c;
 }
 
 .profile-details h3 {
@@ -683,6 +767,8 @@ button, a, input, select, textarea {
     overflow: hidden;
     background-color: var(--gray-50);
     transition: max-height 0.3s ease;
+    border-left: 3px solid var(--primary-blue);
+    margin-left: 1rem;
 }
 
 .dropdown-sidebar.active .submenu {
@@ -694,21 +780,26 @@ button, a, input, select, textarea {
 }
 
 .submenu-link {
-    display: block;
-    padding: 0.75rem 1.5rem 0.75rem 3.5rem;
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem 0.75rem 2.5rem;
     color: var(--gray-600);
     text-decoration: none;
     font-size: 0.875rem;
     transition: all 0.2s ease;
     min-height: 44px; /* Touch-friendly minimum height */
-    display: flex;
-    align-items: center;
+    border-left: 3px solid transparent;
+    background-color: rgba(59, 130, 246, 0.05);
+    margin: 0.25rem 0;
+    border-radius: 0 8px 8px 0;
 }
 
 .submenu-link:hover {
     color: var(--gray-900);
-    background-color: var(--gray-100);
+    background-color: rgba(59, 130, 246, 0.1);
     transform: translateX(5px);
+    border-left-color: var(--primary-blue);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Menu Toggle Button */
@@ -2843,10 +2934,7 @@ button, a, input, select, textarea {
     padding: 0.875rem 1.25rem;
   }
 
-  .submenu-link {
-    min-height: 44px;
-    padding: 0.875rem 1.25rem 0.875rem 3.25rem;
-  }
+
 }
 
 /* Why Choose Section */

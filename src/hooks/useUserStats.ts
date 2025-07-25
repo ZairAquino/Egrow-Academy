@@ -20,25 +20,17 @@ export function useUserStats() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Debounce para evitar llamadas excesivas
-    const timeoutId = setTimeout(async () => {
-      const loadUserStats = async () => {
-        if (status !== 'authenticated' || !user) {
-          setIsLoading(false);
-          setStats({
-            totalEnrolled: 0,
-            completedCourses: 0,
-            certificates: 0,
-            totalHoursLearned: 0
-          });
-          return;
-        }
-
-        // Evitar llamadas si ya tenemos stats y el usuario no ha cambiado
-        if (stats && stats.totalEnrolled > 0 && user) {
-          setIsLoading(false);
-          return;
-        }
+    const loadUserStats = async () => {
+      if (status !== 'authenticated' || !user) {
+        setIsLoading(false);
+        setStats({
+          totalEnrolled: 0,
+          completedCourses: 0,
+          certificates: 0,
+          totalHoursLearned: 0
+        });
+        return;
+      }
 
       try {
         // Obtener el token del localStorage
@@ -61,7 +53,7 @@ export function useUserStats() {
           const data = await response.json();
           
           // Validar que data existe y tiene la estructura esperada
-          if (!data) {
+          if (!data || !data.courses) {
             setStats({
               totalEnrolled: 0,
               completedCourses: 0,
@@ -71,27 +63,51 @@ export function useUserStats() {
             return;
           }
           
-          // Calcular estadísticas basadas en los cursos del usuario
-          const totalEnrolled = data.total || 0;
           const courses = data.courses || [];
+          
+          // Calcular estadísticas reales basadas en los datos de la BD
+          const totalEnrolled = courses.length;
           const completedCourses = courses.filter((course: any) => 
             course?.progressPercentage === 100 || course?.status === 'COMPLETED'
-          ).length || 0;
+          ).length;
           
-          // Transformar las estadísticas al formato esperado
+          // Calcular horas totales basadas en los cursos inscritos
+          const totalHoursLearned = courses.reduce((total: number, course: any) => {
+            const courseHours = course.course?.durationHours || 0;
+            const progressPercentage = course.progressPercentage || 0;
+            // Solo contar las horas completadas
+            return total + (courseHours * progressPercentage / 100);
+          }, 0);
+          
+          // Un certificado por curso completado
+          const certificates = completedCourses;
+          
+          console.log('📊 [USER-STATS] Calculando estadísticas:', {
+            totalEnrolled,
+            completedCourses,
+            totalHoursLearned: Math.round(totalHoursLearned),
+            certificates
+          });
+          
           setStats({
-            totalEnrolled: totalEnrolled,
-            completedCourses: completedCourses,
-            certificates: completedCourses, // Un certificado por curso completado
-            totalHoursLearned: totalEnrolled * 2 // Estimación: 2 horas por curso
+            totalEnrolled,
+            completedCourses,
+            certificates,
+            totalHoursLearned: Math.round(totalHoursLearned)
           });
         } else {
+          console.error('❌ [USER-STATS] Error en respuesta:', response.status);
           setError('Error al cargar estadísticas');
+          setStats({
+            totalEnrolled: 0,
+            completedCourses: 0,
+            certificates: 0,
+            totalHoursLearned: 0
+          });
         }
       } catch (error) {
-        console.error('Error loading user stats:', error);
+        console.error('❌ [USER-STATS] Error loading user stats:', error);
         setError('Error de conexión');
-        // Establecer stats por defecto en caso de error
         setStats({
           totalEnrolled: 0,
           completedCourses: 0,
@@ -103,11 +119,9 @@ export function useUserStats() {
       }
     };
 
+    // Cargar stats inmediatamente cuando el usuario cambie
     loadUserStats();
-    }, 500); // 500ms de debounce
-
-    return () => clearTimeout(timeoutId);
-  }, [user, status]); // Removemos stats de las dependencias para evitar bucle
+  }, [user, status]); // Dependencias: user y status
 
   return {
     stats,

@@ -44,12 +44,47 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
 
   const getUserFullName = () => {
     if (!user) return '';
-    return `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email;
+    
+    console.log('👤 [USER-PROFILE] User data:', {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      hasFirstName: !!user.firstName,
+      hasLastName: !!user.lastName
+    });
+    
+    // Si tiene firstName y lastName, usarlos
+    if (user.firstName && user.lastName) {
+      const fullName = `${user.firstName} ${user.lastName}`;
+      console.log('👤 [USER-PROFILE] Using full name:', fullName);
+      return fullName;
+    }
+    
+    // Si solo tiene firstName
+    if (user.firstName) {
+      console.log('👤 [USER-PROFILE] Using firstName only:', user.firstName);
+      return user.firstName;
+    }
+    
+    // Si solo tiene lastName
+    if (user.lastName) {
+      console.log('👤 [USER-PROFILE] Using lastName only:', user.lastName);
+      return user.lastName;
+    }
+    
+    // Si no tiene nombre, usar email
+    console.log('👤 [USER-PROFILE] Using email as name:', user.email);
+    return user.email;
   };
 
   const getUserInitial = () => {
     if (!user) return '?';
     return (user.firstName || user.email || '?')[0].toUpperCase();
+  };
+
+  const getMembershipStatus = () => {
+    if (!user) return 'Gratuito';
+    return user.membershipLevel === 'PREMIUM' ? 'Premium' : 'Gratuito';
   };
 
   // Mostrar loading con avatar skeleton
@@ -117,7 +152,10 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
     );
   }
 
-  // Usuario autenticado - mostrar dropdown completo
+  // Usuario autenticado - mostrar dropdown con estructura exacta de la imagen
+  console.log('👤 [USER-PROFILE] Rendering authenticated user dropdown');
+  console.log('👤 [USER-PROFILE] User object:', user);
+  
   return (
     <div className={`user-profile-container ${className}`} ref={dropdownRef}>
       <button 
@@ -165,35 +203,46 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
               )}
             </div>
             <div className="profile-details">
-              <h3 className="profile-name">{getUserFullName()}</h3>
+              <h3 className="profile-name" style={{color: 'white', fontSize: '18px', fontWeight: '700'}}>
+                {getUserFullName()}
+              </h3>
               <p className="profile-email">{user.email}</p>
-              <div className="profile-stats">
-                <span className="stat">
-                  <strong>{stats?.completedCourses || 0}</strong> cursos completados
-                </span>
-                <span className="stat">
-                  <strong>{stats?.totalHours || 0}h</strong> de aprendizaje
-                </span>
+              <div className="premium-badge">
+                <span className="premium-text">{getMembershipStatus()}</span>
+                {getMembershipStatus() === 'Premium' && <span className="premium-star">⭐</span>}
               </div>
+            </div>
+          </div>
+          
+          <div className="profile-stats-section">
+            <div className="stat-item">
+              <span className="stat-label">CURSOS INSCRITOS</span>
+              <span className="stat-value">{stats?.totalEnrolled || 0}</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-label">CURSOS COMPLETADOS</span>
+              <span className="stat-value">{stats?.completedCourses || 0}</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-label">HORAS DE APRENDIZAJE</span>
+              <span className="stat-value">{stats?.totalHoursLearned || 0}h</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-label">ESTADO DE EMAIL</span>
+              <span className={`stat-value ${user.emailVerified ? 'verified' : 'pending'}`}>
+                {user.emailVerified ? '✅ Verificado' : '⏳ Pendiente'}
+              </span>
             </div>
           </div>
           
           <div className="profile-menu">
             <Link href="/profile" className="menu-item">
               <span className="menu-icon">👤</span>
-              Mi Perfil
+              Editar Perfil
             </Link>
             <Link href="/my-courses" className="menu-item">
               <span className="menu-icon">📚</span>
               Mis Cursos
-            </Link>
-            <Link href="/progress" className="menu-item">
-              <span className="menu-icon">📊</span>
-              Mi Progreso
-            </Link>
-            <Link href="/settings" className="menu-item">
-              <span className="menu-icon">⚙️</span>
-              Configuración
             </Link>
             <button onClick={handleLogout} className="menu-item logout">
               <span className="menu-icon">🚪</span>
