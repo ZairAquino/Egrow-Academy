@@ -6339,6 +6339,31 @@ input:checked + .toggle-slider:before {
   }
 }
 
+/* Dynamic Logo Styles */
+.logo-animation-wrapper {
+  position: relative;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.hero-bottom-logo-image {
+  transition: all 0.3s ease;
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
+}
+
+/* Debug styles for development */
+@media screen and (max-width: 480px) {
+  .logo-animation-wrapper {
+    transform: scale(0.9);
+  }
+  
+  .hero-bottom-logo-image {
+    max-width: 80px;
+    max-height: 80px;
+  }
+}
+
 /* Additional Safari iOS Fixes */
 @media screen and (max-width: 768px) {
   @supports (-webkit-touch-callout: none) {
@@ -6364,6 +6389,17 @@ input:checked + .toggle-slider:before {
     html {
       -webkit-overflow-scrolling: touch;
       overflow-scrolling: touch;
+    }
+    
+    /* Logo optimization for Safari */
+    .logo-animation-wrapper {
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
+    }
+    
+    .hero-bottom-logo-image {
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
     }
   }
 }

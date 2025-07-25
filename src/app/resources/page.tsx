@@ -10,6 +10,7 @@ import UserProfile from '@/components/auth/UserProfile';
 import ResourceCard from '@/components/resources/ResourceCard';
 import { useResources } from '@/hooks/useResources';
 import { useAuth } from '@/contexts/AuthContext';
+import DynamicLogo from '@/components/ui/DynamicLogo';
 
 // Lazy load components
 const CompaniesMarquee = dynamic(() => import('@/components/ui/CompaniesMarquee'), {
@@ -86,16 +87,7 @@ export default function ResourcesPage() {
               
               {/* Logo blanco debajo del texto */}
               <div className="hero-bottom-logo">
-                <div className="logo-animation-wrapper">
-                  <Image 
-                    src={user && user.membershipLevel === 'PREMIUM' ? "/images/logop.png" : "/images/logog.png"}
-                    alt="eGrow Academy" 
-                    width={95}
-                    height={95}
-                    priority
-                    className="hero-bottom-logo-image"
-                  />
-                </div>
+                <DynamicLogo />
               </div>
             </div>
           </div>

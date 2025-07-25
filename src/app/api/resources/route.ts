@@ -4,6 +4,9 @@ import { prisma } from '@/lib/prisma';
 export async function GET(request: NextRequest) {
   try {
     console.log('🔍 [RESOURCES-API] Obteniendo recursos...');
+    
+    // Forzar conexión a la base de datos
+    await prisma.$connect();
 
     const { searchParams } = new URL(request.url);
     const category = searchParams.get('category');
@@ -16,7 +19,11 @@ export async function GET(request: NextRequest) {
     };
 
     if (category && category !== 'todos') {
-      where.category = category;
+      // Validar que la categoría sea válida antes de aplicar el filtro
+      const validCategories = ['WEBINAR', 'MANUAL', 'TUTORIAL', 'PAPER', 'HERRAMIENTA', 'DATASET', 'PODCAST', 'LIBRO'];
+      if (validCategories.includes(category.toUpperCase())) {
+        where.category = category.toUpperCase();
+      }
     }
 
     // Obtener recursos

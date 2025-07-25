@@ -8,6 +8,7 @@ import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Footer from '@/components/layout/Footer';
 import UserProfile from '@/components/auth/UserProfile';
 import { useAuth } from '@/contexts/AuthContext';
+import DynamicLogo from '@/components/ui/DynamicLogo';
 import { useRouter } from 'next/navigation';
 import { useCommunityPosts, CommunityPost } from '@/hooks/useCommunityPosts';
 import { useCommunityStats } from '@/hooks/useCommunityStats';
@@ -374,16 +375,7 @@ export default function CommunityPage() {
               
               {/* Logo blanco debajo del texto */}
               <div className="hero-bottom-logo">
-                <div className="logo-animation-wrapper">
-                  <Image 
-                    src={user && user.membershipLevel === 'PREMIUM' ? "/images/logop.png" : "/images/logog.png"}
-                    alt="eGrow Academy" 
-                    width={95}
-                    height={95}
-                    priority
-                    className="hero-bottom-logo-image"
-                  />
-                </div>
+                <DynamicLogo />
               </div>
               
               <div className="hero-buttons">

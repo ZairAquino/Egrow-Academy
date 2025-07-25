@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useAuth } from '@/contexts/AuthContext';
 import { useResource } from '@/hooks/useResources';
+import DynamicLogo from '@/components/ui/DynamicLogo';
 import Sidebar from '@/components/layout/Sidebar';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Footer from '@/components/layout/Footer';
@@ -226,16 +227,7 @@ export default function ResourcePage() {
               
               {/* Logo debajo de la descripción - igual que en la página de inicio */}
               <div className="hero-bottom-logo">
-                <div className="logo-animation-wrapper">
-                  <Image 
-                    src={user && user.membershipLevel === 'PREMIUM' ? "/images/logop.png" : "/images/logog.png"}
-                    alt="eGrow Academy" 
-                    width={95}
-                    height={95}
-                    priority
-                    className="hero-bottom-logo-image"
-                  />
-                </div>
+                <DynamicLogo />
               </div>
               
               
