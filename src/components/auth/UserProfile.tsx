@@ -5,7 +5,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUserStats } from '@/hooks/useUserStats';
-import DynamicLogo from '@/components/ui/DynamicLogo';
 
 interface UserProfileProps {
   className?: string;
@@ -21,7 +20,7 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
   useEffect(() => {
     console.log('UserProfile - Status:', status);
     console.log('UserProfile - User:', user);
-  }, [user, status]);
+  }, [status, user]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -37,77 +36,49 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
   const handleLogout = async () => {
     try {
       await logout();
-      // Redirigir a la página principal después del logout
-      window.location.href = '/';
+      setIsOpen(false);
     } catch (error) {
-      console.error('Error logging out:', error);
+      console.error('Error during logout:', error);
     }
   };
 
-  const getMembershipColor = (level: string) => {
-    switch (level) {
-      case 'PREMIUM': return '#ffd700';
-      case 'BASIC': return '#c0c0c0';
-      default: return '#90EE90';
-    }
-  };
-
-  const getMembershipLabel = (level: string) => {
-    switch (level) {
-      case 'PREMIUM': return 'Premium ⭐';
-      case 'BASIC': return 'Básico';
-      default: return 'Gratuito';
-    }
-  };
-
-  // Función para obtener el nombre completo del usuario
   const getUserFullName = () => {
-    if (user?.firstName && user?.lastName) {
-      return `${user.firstName} ${user.lastName}`;
-    }
-    return user?.firstName || user?.username || 'Usuario';
+    if (!user) return '';
+    return `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email;
   };
 
-  // Función para obtener la inicial del nombre
   const getUserInitial = () => {
-    if (user?.firstName) {
-      return user.firstName.charAt(0).toUpperCase();
-    }
-    if (user?.username) {
-      return user.username.charAt(0).toUpperCase();
-    }
-    return 'U';
+    if (!user) return '?';
+    return (user.firstName || user.email || '?')[0].toUpperCase();
   };
 
-  // Determinar si el usuario es premium
-  const isPremium = status === 'authenticated' && user && user.membershipLevel === 'PREMIUM';
-
-  // Si no hay usuario autenticado, mostrar botón de login
-  if (status === 'unauthenticated') {
-    return (
-      <div className={`user-profile-container ${className}`}>
-        <Link href="/login" className="login-btn">
-          Iniciar Sesión
-        </Link>
-      </div>
-    );
-  }
-
-  // Si está cargando, mostrar spinner
+  // Mostrar loading con avatar skeleton
   if (status === 'loading') {
     return (
       <div className={`user-profile-container ${className}`}>
         <div className="profile-trigger">
           <div className="profile-avatar">
-            <div className="loading-spinner"></div>
+            <div className="avatar-skeleton"></div>
           </div>
         </div>
       </div>
     );
   }
 
-  // El usuario ya está disponible del contexto
+  // Si no está autenticado, mostrar avatar vacío que redirige al login
+  if (status === 'unauthenticated') {
+    return (
+      <div className={`user-profile-container ${className}`}>
+        <Link href="/login" className="profile-trigger">
+          <div className="profile-avatar">
+            <span className="avatar-text">?</span>
+          </div>
+        </Link>
+      </div>
+    );
+  }
 
+  // Usuario autenticado - mostrar dropdown completo
   return (
     <div className={`user-profile-container ${className}`} ref={dropdownRef}>
       <button 
@@ -125,14 +96,6 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
               height={32}
               className="avatar-image"
               style={{ borderRadius: '50%', objectFit: 'cover' }}
-            />
-          ) : isPremium ? (
-            // Usar DynamicLogo para usuarios premium
-            <DynamicLogo 
-              width={32}
-              height={32}
-              className="avatar-image"
-              priority
             />
           ) : (
             <span className="avatar-text">
@@ -156,14 +119,6 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
                   className="avatar-image"
                   style={{ borderRadius: '50%', objectFit: 'cover' }}
                 />
-              ) : isPremium ? (
-                // Usar DynamicLogo para usuarios premium en el dropdown también
-                <DynamicLogo 
-                  width={48}
-                  height={48}
-                  className="avatar-image"
-                  priority
-                />
               ) : (
                 <span className="avatar-text">
                   {getUserInitial()}
@@ -171,43 +126,39 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
               )}
             </div>
             <div className="profile-details">
-              <h3>{getUserFullName()}</h3>
-              <p className="profile-email">{user.email || 'No disponible'}</p>
-              <span 
-                className="membership-badge"
-                style={{ backgroundColor: getMembershipColor(user.membershipLevel || 'FREE') }}
-              >
-                {getMembershipLabel(user.membershipLevel || 'FREE')}
-              </span>
+              <h3 className="profile-name">{getUserFullName()}</h3>
+              <p className="profile-email">{user.email}</p>
+              <div className="profile-stats">
+                <span className="stat">
+                  <strong>{stats?.completedCourses || 0}</strong> cursos completados
+                </span>
+                <span className="stat">
+                  <strong>{stats?.totalHours || 0}h</strong> de aprendizaje
+                </span>
+              </div>
             </div>
           </div>
-
-          <div className="profile-stats">
-            <div className="stat-item">
-              <span className="stat-label">Cursos Inscritos</span>
-              <span className="stat-value">{stats?.totalEnrolled || 0}</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-label">Cursos Completados</span>
-              <span className="stat-value">{stats?.completedCourses || 0}</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-label">Estado de Email</span>
-              <span className="stat-value verified">
-                {user.emailVerified ? '✅ Verificado' : '❌ No verificado'}
-              </span>
-            </div>
-          </div>
-
-          <div className="profile-actions">
-            <Link href="/profile" className="action-btn">
-              📝 Editar Perfil
+          
+          <div className="profile-menu">
+            <Link href="/profile" className="menu-item">
+              <span className="menu-icon">👤</span>
+              Mi Perfil
             </Link>
-            <Link href="/my-courses" className="action-btn">
-              📚 Mis Cursos
+            <Link href="/my-courses" className="menu-item">
+              <span className="menu-icon">📚</span>
+              Mis Cursos
             </Link>
-            <button onClick={handleLogout} className="action-btn logout">
-              🚪 Cerrar Sesión
+            <Link href="/progress" className="menu-item">
+              <span className="menu-icon">📊</span>
+              Mi Progreso
+            </Link>
+            <Link href="/settings" className="menu-item">
+              <span className="menu-icon">⚙️</span>
+              Configuración
+            </Link>
+            <button onClick={handleLogout} className="menu-item logout">
+              <span className="menu-icon">🚪</span>
+              Cerrar Sesión
             </button>
           </div>
         </div>

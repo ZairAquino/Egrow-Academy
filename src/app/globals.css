@@ -261,6 +261,35 @@ button, a, input, select, textarea {
     font-size: 18px;
 }
 
+/* Avatar skeleton para loading */
+.avatar-skeleton {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading-pulse 1.5s infinite;
+    border-radius: 50%;
+}
+
+@keyframes loading-pulse {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Estilos para el avatar no autenticado */
+.user-profile-container .profile-trigger {
+    text-decoration: none;
+    color: inherit;
+}
+
+.user-profile-container .profile-trigger:hover {
+    transform: scale(1.05);
+}
+
 .profile-info {
     display: flex;
     flex-direction: column;
@@ -6411,24 +6440,5 @@ input:checked + .toggle-slider:before {
   }
 }
 
-.avatar-image {
-  border-radius: 50% !important;
-  object-fit: cover !important;
-  width: 100% !important;
-  height: 100% !important;
-}
 
-.profile-avatar .avatar-image {
-  border-radius: 50% !important;
-  object-fit: cover !important;
-  width: 100% !important;
-  height: 100% !important;
-}
-
-.profile-avatar.large .avatar-image {
-  border-radius: 50% !important;
-  object-fit: cover !important;
-  width: 100% !important;
-  height: 100% !important;
-}
 
