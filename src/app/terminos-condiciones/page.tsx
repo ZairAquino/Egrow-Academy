@@ -3,8 +3,7 @@ import Footer from '@/components/layout/Footer'
 
 export const metadata: Metadata = {
   title: 'Términos y Condiciones - eGrow Academy',
-  description: 'Términos y condiciones de uso de eGrow Academy, plataforma de aprendizaje de inteligencia artificial.',
-  keywords: 'términos, condiciones, eGrow Academy, IA, inteligencia artificial, cursos',
+  description: 'Términos y condiciones de uso de eGrow Academy.',
 }
 
 export default function TerminosCondicionesPage() {

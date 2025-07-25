@@ -1,5 +1,0 @@
-[33m72f96b4[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m Agregar funcionalidad completa de cupones para testing - Email con códigos enviado a aquinozair3@gmail.com
-[33mcabb2ed[m Agregar funcionalidad de cupones para testing en producción - Cupón de 1 centavo para aquinozair3@gmail.com
-[33m401f03b[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m feat: implementar configuración completa de Stripe Live y mejoras de seguridad
-[33m423fff5[m feat: actualizar configuración de desarrollo
-[33mb6357e5[m feat: mejoras en interfaz de autenticación y componentes

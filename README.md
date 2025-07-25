@@ -20,55 +20,89 @@ Plataforma educativa de Inteligencia Artificial desarrollada con Next.js 15, Typ
 ## 📁 Estructura del Proyecto
 
 ```
-src/
-├── app/                    # Páginas de Next.js App Router
-│   ├── api/               # APIs del backend
-│   │   ├── auth/          # Autenticación (login, register, verify-email)
-│   │   ├── community/     # Sistema de comunidad (posts, stats, comments)
-│   │   ├── contact/       # Sistema de contacto con email automático
-│   │   ├── events/        # Gestión de eventos y registros
-│   │   ├── resources/     # Recursos educativos con control de acceso
-│   │   ├── courses/       # Sistema de cursos y progreso
-│   │   ├── user/          # Estadísticas y datos del usuario
-│   │   ├── stripe/        # Integración de pagos
-│   │   └── webhooks/      # Webhooks de servicios externos
-│   ├── community/         # Páginas de comunidad y foro
-│   │   └── foro/          # Foro interactivo
-│   ├── contacto/          # Página de contacto con formulario
-│   ├── courses/           # Catálogo de cursos
-│   ├── curso/             # Páginas individuales de cursos
-│   ├── my-courses/        # Dashboard de cursos del usuario
-│   ├── resources/         # Biblioteca de recursos educativos
-│   ├── login/             # Página de login
-│   ├── register/          # Página de registro
-│   ├── verify-email/      # Verificación de email
-│   ├── profile/           # Perfil del usuario
-│   ├── subscription/      # Gestión de suscripciones
-│   ├── politica-privacidad/ # Política de privacidad
-│   └── terminos-condiciones/ # Términos y condiciones
-├── components/
-│   ├── auth/              # Componentes de autenticación y UserProfile
-│   ├── courses/           # Componentes de cursos y videos
-│   ├── resources/         # Componentes de recursos
-│   ├── payments/          # Componentes de pagos y suscripciones
-│   ├── layout/            # Header, Footer, Sidebar
-│   └── ui/                # Componentes de interfaz
-├── contexts/              # Contextos de React
-│   └── AuthContext.tsx    # Contexto de autenticación
-├── hooks/                 # Custom hooks
-│   ├── useCommunityPosts.ts # Hook para posts del foro
-│   ├── useCommunityStats.ts # Hook para estadísticas
-│   ├── useEvents.ts       # Hook para eventos
-│   ├── useResources.ts    # Hook para recursos
-│   └── useUserStats.ts    # Hook para estadísticas del usuario
-├── lib/                   # Utilidades y configuraciones
-│   ├── email.ts           # Servicio de email con múltiples plantillas
-│   ├── email-validation.ts # Validación de correos con DNS MX
-│   ├── prisma.ts          # Cliente de base de datos
-│   └── stripe.ts          # Configuración de Stripe
-└── types/                 # Tipos de TypeScript
-    ├── auth.ts            # Tipos de autenticación
-    └── stripe.ts          # Tipos de Stripe
+Egrow-Academy/
+├── .git/                    # Control de versiones
+├── .next/                   # Build de Next.js
+├── .vercel/                 # Configuración Vercel
+├── .claude/                 # Configuración Claude
+├── config/                  # Configuraciones del proyecto
+│   └── eslint.config.mjs    # Configuración ESLint
+├── docs/                    # Documentación del proyecto
+│   ├── api/                 # Documentación de APIs
+│   ├── features/            # Documentación de características
+│   ├── readme/              # Documentación técnica
+│   └── CLEANUP-LOG.md       # Registro de limpieza
+├── node_modules/            # Dependencias
+├── prisma/                  # Base de datos
+│   ├── migrations/          # Migraciones de BD
+│   └── schema.prisma        # Schema de Prisma
+├── public/                  # Archivos públicos
+│   ├── images/              # Imágenes del proyecto
+│   └── resources/           # Recursos educativos
+├── scripts/                 # Scripts de utilidad
+├── src/                     # Código fuente
+│   ├── app/                 # Páginas de Next.js App Router
+│   │   ├── api/             # APIs del backend
+│   │   │   ├── auth/        # Autenticación (login, register, verify-email)
+│   │   │   ├── community/   # Sistema de comunidad (posts, stats, comments)
+│   │   │   ├── contact/     # Sistema de contacto con email automático
+│   │   │   ├── events/      # Gestión de eventos y registros
+│   │   │   ├── resources/   # Recursos educativos con control de acceso
+│   │   │   ├── courses/     # Sistema de cursos y progreso
+│   │   │   ├── user/        # Estadísticas y datos del usuario
+│   │   │   ├── stripe/      # Integración de pagos
+│   │   │   └── webhooks/    # Webhooks de servicios externos
+│   │   ├── community/       # Páginas de comunidad y foro
+│   │   ├── contacto/        # Página de contacto con formulario
+│   │   ├── courses/         # Catálogo de cursos
+│   │   ├── curso/           # Páginas individuales de cursos
+│   │   ├── my-courses/      # Dashboard de cursos del usuario
+│   │   ├── resources/       # Biblioteca de recursos educativos
+│   │   ├── login/           # Página de login
+│   │   ├── register/        # Página de registro
+│   │   ├── verify-email/    # Verificación de email
+│   │   ├── profile/         # Perfil del usuario
+│   │   ├── subscription/    # Gestión de suscripciones
+│   │   ├── politica-privacidad/ # Política de privacidad
+│   │   └── terminos-condiciones/ # Términos y condiciones
+│   ├── components/
+│   │   ├── auth/            # Componentes de autenticación y UserProfile
+│   │   ├── courses/         # Componentes de cursos y videos
+│   │   ├── resources/       # Componentes de recursos
+│   │   ├── payments/        # Componentes de pagos y suscripciones
+│   │   ├── layout/          # Header, Footer, Sidebar
+│   │   └── ui/              # Componentes de interfaz
+│   ├── contexts/            # Contextos de React
+│   │   └── AuthContext.tsx  # Contexto de autenticación
+│   ├── hooks/               # Custom hooks
+│   │   ├── useCommunityPosts.ts # Hook para posts del foro
+│   │   ├── useCommunityStats.ts # Hook para estadísticas
+│   │   ├── useEvents.ts     # Hook para eventos
+│   │   ├── useResources.ts  # Hook para recursos
+│   │   └── useUserStats.ts  # Hook para estadísticas del usuario
+│   ├── lib/                 # Utilidades y configuraciones
+│   │   ├── email.ts         # Servicio de email con múltiples plantillas
+│   │   ├── email-validation.ts # Validación de correos con DNS MX
+│   │   ├── prisma.ts        # Cliente de base de datos
+│   │   └── stripe.ts        # Configuración de Stripe
+│   └── types/               # Tipos de TypeScript
+│       ├── auth.ts          # Tipos de autenticación
+│       └── stripe.ts        # Tipos de Stripe
+├── .cursorignore            # Configuración Cursor
+├── .cursorrules             # Reglas Cursor
+├── .env                     # Variables de entorno
+├── .env.example             # Ejemplo de variables
+├── .env.production          # Variables de producción
+├── .gitignore               # Archivos ignorados por Git
+├── next-env.d.ts            # Tipos de Next.js
+├── next.config.ts           # Configuración Next.js
+├── package.json             # Dependencias del proyecto
+├── postcss.config.mjs       # Configuración PostCSS
+├── README.md                # Documentación principal
+├── README-STRIPE.md         # Documentación Stripe
+├── tailwind.config.ts       # Configuración Tailwind
+├── tsconfig.json            # Configuración TypeScript
+└── vercel.json              # Configuración Vercel
 ```
 
 ## 🛠️ Tecnologías
@@ -79,6 +113,24 @@ src/
 - **Autenticación**: JWT con cookies HTTP-only
 - **Email Service**: Resend para verificación de emails
 - **Validación**: DNS MX para verificación de dominios
+
+## 🧹 Limpieza Reciente del Proyecto
+
+El proyecto ha sido completamente limpiado y organizado para optimizar el rendimiento y mantenibilidad:
+
+### ✅ Limpieza Realizada (25 de Julio, 2025)
+- **Archivos eliminados:** 11 archivos de debug y configuración duplicada
+- **Carpetas eliminadas:** 2 carpetas duplicadas completas del proyecto
+- **Espacio liberado:** ~300MB+ de archivos innecesarios
+- **Documentación actualizada:** Estructura del proyecto reorganizada
+
+### 📋 Detalles de la Limpieza
+- Eliminados archivos de debug (`debug-logo.html`, `mock-login.html`)
+- Removidos archivos de configuración duplicados (`.env.backup`, `.env.local`, etc.)
+- Eliminadas carpetas duplicadas del proyecto
+- Preservada toda la funcionalidad y diseño del proyecto
+
+Para más detalles, consulta: [`docs/CLEANUP-LOG.md`](docs/CLEANUP-LOG.md)
 
 ## 🚀 Instalación y Despliegue
 
@@ -187,7 +239,7 @@ Configurar como aplicación Node.js con build command: `npm run build`
 - **Diseño Responsivo**: Mobile-first con Tailwind CSS
 - **Navegación Intuitiva**: Sidebar dinámico con dropdowns
 - **Performance Optimizada**: Turbopack, code splitting, tree shaking
-- **SEO Optimizado**: Meta tags, Open Graph, structured data
+- **Estructura Optimizada**: Meta tags y configuración básica
 
 ## 🔧 Scripts Disponibles
 

@@ -3,8 +3,7 @@ import Footer from '@/components/layout/Footer'
 
 export const metadata: Metadata = {
   title: 'Política de Privacidad - eGrow Academy',
-  description: 'Política de privacidad de eGrow Academy, cómo protegemos y utilizamos su información personal.',
-  keywords: 'privacidad, datos personales, eGrow Academy, protección de datos, RGPD',
+  description: 'Política de privacidad de eGrow Academy.',
 }
 
 export default function PoliticaPrivacidadPage() {

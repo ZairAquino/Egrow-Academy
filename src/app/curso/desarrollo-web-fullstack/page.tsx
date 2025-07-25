@@ -95,7 +95,7 @@ export default function DesarrolloWebFullStackPage() {
       'APIs RESTful y autenticación JWT',
       'Despliegue en la nube con Vercel y Heroku',
       'Integración de servicios de terceros',
-      'Optimización de rendimiento y SEO',
+      'Optimización de rendimiento',
       'Prácticas de seguridad web'
     ],
     tools: [

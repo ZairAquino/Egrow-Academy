@@ -3,8 +3,7 @@ import Footer from '@/components/layout/Footer'
 
 export const metadata: Metadata = {
   title: 'Facturación - eGrow Academy',
-  description: 'Información sobre facturación, métodos de pago y políticas de suscripción de eGrow Academy.',
-  keywords: 'facturación, pagos, suscripciones, eGrow Academy, métodos de pago',
+  description: 'Información sobre facturación de eGrow Academy.',
 }
 
 export default function FacturacionPage() {

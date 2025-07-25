@@ -144,7 +144,7 @@ import ResourceUpload from '@/components/resources/ResourceUpload';
 1. **Migrar todos los recursos a UploadThing**
 2. **Implementar sistema de versionado**
 3. **Crear CDN personalizado**
-4. **Optimizar para SEO**
+4. **Optimizar rendimiento**
 
 ## 🔍 **Verificación de Éxito**
 

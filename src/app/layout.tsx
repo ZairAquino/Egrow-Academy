@@ -13,11 +13,10 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "eGrow-academy - Aprende IA de los mejores expertos del mundo",
-    template: "%s | eGrow-academy"
+    default: "eGrow Academy - Plataforma Educativa",
+    template: "%s | eGrow Academy"
   },
-  description: "Domina el aprendizaje automático e inteligencia artificial con cursos diseñados por expertos de clase mundial. Comienza tu viaje en IA hoy mismo.",
-  keywords: ["IA", "Inteligencia Artificial", "Machine Learning", "Cursos", "Educación", "Tecnología"],
+  description: "Plataforma educativa de inteligencia artificial y tecnología.",
   authors: [{ name: "eGrow Academy" }],
   creator: "eGrow Academy",
   publisher: "eGrow Academy",
@@ -29,40 +28,6 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://egrow-academy.com'),
   alternates: {
     canonical: '/',
-  },
-
-  openGraph: {
-    title: "eGrow-academy - Aprende IA de los mejores expertos del mundo",
-    description: "Domina el aprendizaje automático e inteligencia artificial con cursos diseñados por expertos de clase mundial.",
-    url: 'https://egrow-academy.com',
-    siteName: 'eGrow Academy',
-    images: [
-      {
-        url: '/images/og-image.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'eGrow Academy - Cursos de IA',
-      },
-    ],
-    locale: 'es_ES',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: "eGrow-academy - Aprende IA de los mejores expertos del mundo",
-    description: "Domina el aprendizaje automático e inteligencia artificial con cursos diseñados por expertos de clase mundial.",
-    images: ['/images/twitter-image.jpg'],
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
   },
 };
 
