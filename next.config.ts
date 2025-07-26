@@ -134,6 +134,12 @@ const nextConfig: NextConfig = {
         destination: '/',
         permanent: true,
       },
+      // Redirección de /courses a /cursos para compatibilidad
+      {
+        source: '/courses',
+        destination: '/cursos',
+        permanent: true,
+      },
       {
         source: '/cursos-de-ia',
         destination: '/cursos',
