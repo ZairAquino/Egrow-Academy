@@ -20,6 +20,8 @@
 html, body {
     overflow-x: hidden;
     width: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 :root {
@@ -44,6 +46,8 @@ html {
     font-size: 16px;
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 body {
@@ -700,6 +704,8 @@ button, a, input, select, textarea {
 
 .main-content {
     transition: margin-left 0.3s ease;
+    margin: 0;
+    padding: 0;
 }
 
 .main-content.sidebar-open {
@@ -1849,7 +1855,7 @@ button, a, input, select, textarea {
 
 /* Hero Section */
 .hero {
-  padding: 4rem 0;
+  padding: 0 0 4rem 0;
   color: white;
 }
 
@@ -1999,12 +2005,12 @@ button, a, input, select, textarea {
 
 /* Section Styles */
 .section {
-  padding: 3rem 0;
+  padding: 0 0 3rem 0;
 }
 
 @media (max-width: 768px) {
   .section {
-    padding: 2rem 0;
+    padding: 0 0 2rem 0;
   }
   
   /* Optimizaciones móviles generales */
@@ -6002,7 +6008,7 @@ input:checked + .toggle-slider:before {
 /* User Profile Fixed Position */
 .user-profile-fixed {
   position: fixed;
-  top: 20px;
+  top: 0;
   right: 20px;
   z-index: 1000;
   pointer-events: auto;
@@ -6061,7 +6067,7 @@ input:checked + .toggle-slider:before {
 /* Responsive adjustments for fixed user profile */
 @media (max-width: 768px) {
   .user-profile-fixed {
-    top: 10px;
+    top: 0;
     right: 10px;
   }
   
@@ -6154,7 +6160,7 @@ input:checked + .toggle-slider:before {
   }
   
   .user-profile-fixed {
-    top: 5px;
+    top: 0;
     right: 5px;
   }
   
