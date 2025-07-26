@@ -83,7 +83,7 @@ export default function RootLayout({
         <link rel="preload" href="/images/og-image.jpg" as="image" />
         
         {/* Preload critical CSS */}
-        <link rel="preload" href="/globals.optimized.css" as="style" />
+        <link rel="preload" href="/critical.css" as="style" />
         
         {/* DNS Prefetch for external domains */}
         <link rel="dns-prefetch" href="//www.google-analytics.com" />
