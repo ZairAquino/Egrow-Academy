@@ -80,7 +80,7 @@ export default function RootLayout({
         
         {/* Preload critical resources */}
         <link rel="preload" href="/images/optimized/logop.webp" as="image" type="image/webp" />
-        <link rel="preload" href="/images/og-image.jpg" as="image" />
+        <link rel="preload" href="/images/eGrowAcademylogo.png" as="image" />
         
         {/* Preload critical CSS */}
         <link rel="preload" href="/styles/critical.css" as="style" />

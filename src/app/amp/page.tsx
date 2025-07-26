@@ -68,7 +68,7 @@ export default function AMPPage() {
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <AMPImage
-                  src="/images/optimized/logo.webp"
+                  src="/images/optimized/logop.webp"
                   alt="eGrow Academy"
                   width={120}
                   height={40}

@@ -58,7 +58,7 @@ export default function DynamicSEO({
         'og:description': description || '',
         'og:type': type,
         'og:url': `${window.location.origin}${pathname}`,
-        'og:image': image || `${window.location.origin}/images/og-image.jpg`,
+        'og:image': image || `${window.location.origin}/images/eGrowAcademylogo.png`,
         'og:site_name': 'eGrow Academy',
         'og:locale': 'es_MX',
       };

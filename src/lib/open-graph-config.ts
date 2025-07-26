@@ -31,7 +31,7 @@ export const baseOpenGraphConfig = {
   siteName: 'eGrow Academy',
   locale: 'es_MX',
   type: 'website' as const,
-  defaultImage: '/images/og-image.jpg',
+  defaultImage: '/images/eGrowAcademylogo.png',
   defaultDescription: 'Aprende Inteligencia Artificial con los mejores cursos online en español. Formación profesional en IA, Machine Learning, Deep Learning y más. Líder en México y Latinoamérica.',
 };
 

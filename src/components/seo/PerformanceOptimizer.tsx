@@ -118,7 +118,7 @@ export default function PerformanceOptimizer({
       const criticalPaths = [
         '/styles/critical.css',
         '/fonts/inter-var.woff2',
-        '/images/optimized/logo.webp',
+        '/images/optimized/logop.webp',
       ];
 
       criticalPaths.forEach(path => {

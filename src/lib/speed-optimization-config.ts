@@ -49,7 +49,7 @@ export const criticalResources: ResourceConfig[] = [
   // Imágenes críticas
   {
     type: 'image',
-    path: '/images/optimized/logo.webp',
+    path: '/images/optimized/logop.webp',
     priority: 'high',
     preload: true,
   },

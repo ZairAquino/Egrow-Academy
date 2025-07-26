@@ -70,7 +70,7 @@ export const baseSEOConfig = {
     description: 'Aprende Inteligencia Artificial con los mejores cursos online en español. Formación profesional en IA, Machine Learning, Deep Learning y más.',
     images: [
       {
-        url: '/images/og-image.jpg',
+        url: '/images/eGrowAcademylogo.png',
         width: 1200,
         height: 630,
         alt: 'eGrow Academy - Cursos de Inteligencia Artificial',
