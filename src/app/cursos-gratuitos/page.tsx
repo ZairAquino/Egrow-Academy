@@ -38,7 +38,7 @@ export default function CursosGratuitosPage() {
       tag: 'eGrow Academy',
       instructor: 'Dr. Juan Pérez',
       source: 'eGrow Academy',
-      link: '/curso/monetiza-ia'
+      link: '/curso/monetiza-ia/contenido'
     },
     // Otros Cursos
     {
@@ -52,7 +52,7 @@ export default function CursosGratuitosPage() {
       tag: 'eGrow Academy',
       instructor: 'Dr. Maria Rodriguez',
       source: 'eGrow Academy',
-      link: '/curso/introduccion-llms'
+      link: '/curso/introduccion-llms/contenido'
     },
     {
       id: 'fundamentos-ml',
@@ -65,7 +65,7 @@ export default function CursosGratuitosPage() {
       tag: 'eGrow Academy',
       instructor: 'Dr. Carlos Mendoza',
       source: 'eGrow Academy',
-      link: '/curso/fundamentos-ml'
+      link: '/curso/fundamentos-ml/contenido'
     },
     {
       id: 'computer-vision',
@@ -78,7 +78,7 @@ export default function CursosGratuitosPage() {
       tag: 'eGrow Academy',
       instructor: 'Dra. Ana Torres',
       source: 'eGrow Academy',
-      link: '/curso/computer-vision'
+      link: '/curso/computer-vision/contenido'
     },
     {
       id: 'prompt-engineering',
