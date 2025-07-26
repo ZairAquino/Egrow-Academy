@@ -94,7 +94,7 @@ export default function CourseCard({
 
   if (link) {
     return (
-      <a href={link} target="_blank" rel="noopener noreferrer" className="course-card-new">
+      <a href={link} className="course-card-new">
         {CardContent}
       </a>
     );

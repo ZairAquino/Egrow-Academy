@@ -66,7 +66,7 @@ export default function CoursesPage() {
       price: 'Gratis',
       image: '/images/optimized/v-5.webp',
       tag: 'eGrow Academy',
-      link: '/curso/monetiza-ia/contenido',
+      link: '/curso/monetiza-ia',
       isFree: true,
       requiresAuth: false
     },
@@ -80,7 +80,7 @@ export default function CoursesPage() {
       price: 'Gratis',
       image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=250&fit=crop&crop=center',
       tag: 'eGrow Academy',
-      link: '/curso/introduccion-llms/contenido',
+      link: '/curso/introduccion-llms',
       isFree: true,
       requiresAuth: false
     },
@@ -94,7 +94,7 @@ export default function CoursesPage() {
       price: 'Gratis',
       image: 'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=400&h=250&fit=crop&crop=center',
       tag: 'eGrow Academy',
-      link: '/curso/fundamentos-ml/contenido',
+      link: '/curso/fundamentos-ml',
       isFree: true,
       requiresAuth: false
     },
@@ -108,7 +108,7 @@ export default function CoursesPage() {
       price: 'Gratis',
       image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=250&fit=crop&crop=center',
       tag: 'eGrow Academy',
-      link: '/curso/computer-vision/contenido',
+      link: '/curso/computer-vision',
       isFree: true,
       requiresAuth: false
     },
@@ -122,7 +122,7 @@ export default function CoursesPage() {
       price: '$99.99',
       image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=250&fit=crop&crop=center',
       tag: 'Especializado',
-      link: '/curso/desarrollo-web-fullstack/contenido',
+      link: '/curso/desarrollo-web-fullstack',
       isFree: false,
       requiresAuth: true
     }
