@@ -63,12 +63,19 @@ export default function MonetizaIAPage() {
   }, []);
 
   const handleEnrollClick = async () => {
+    console.log('🔍 [DEBUG] handleEnrollClick iniciado');
+    console.log('🔍 [DEBUG] Estado del usuario:', { user: !!user, userId: user?.id });
+    
     if (!user) {
+      console.log('🔍 [DEBUG] Usuario no autenticado, redirigiendo a login');
       router.push('/login?redirect=/curso/monetiza-ia/contenido');
       return;
     }
 
+    console.log('🔍 [DEBUG] Usuario autenticado, procediendo con inscripción');
+    
     try {
+      console.log('🔍 [DEBUG] Enviando request de inscripción a /api/courses/enroll');
       const response = await fetch('/api/courses/enroll', {
         method: 'POST',
         headers: {
@@ -78,10 +85,20 @@ export default function MonetizaIAPage() {
         credentials: 'include',
       });
 
+      console.log('🔍 [DEBUG] Respuesta del servidor:', { 
+        status: response.status, 
+        ok: response.ok,
+        statusText: response.statusText 
+      });
+
       if (response.ok) {
+        console.log('🔍 [DEBUG] Inscripción exitosa, redirigiendo a contenido');
+        console.log('🔍 [DEBUG] Router disponible:', !!router);
         router.push('/curso/monetiza-ia/contenido');
+        console.log('🔍 [DEBUG] router.push ejecutado');
       } else {
         const errorData = await response.json();
+        console.log('🔍 [DEBUG] Error en respuesta:', errorData);
         throw new Error(errorData.message || 'Error al inscribirse en el curso');
       }
     } catch (error) {
@@ -207,9 +224,14 @@ export default function MonetizaIAPage() {
 
   // Efectos para manejar el progreso del usuario
   useEffect(() => {
+    console.log('🔍 [DEBUG] useEffect [user] ejecutado');
+    console.log('🔍 [DEBUG] Estado del usuario:', { user: !!user, userId: user?.id });
+    
     if (user) {
+      console.log('🔍 [DEBUG] Usuario detectado, cargando progreso');
       loadUserProgress();
     } else {
+      console.log('🔍 [DEBUG] No hay usuario, estableciendo isLoading = false');
       setIsLoading(false);
     }
   }, [user]);
@@ -245,28 +267,46 @@ export default function MonetizaIAPage() {
   }, [user]);
 
   const loadUserProgress = async () => {
-    if (!user) return;
+    console.log('🔍 [DEBUG] loadUserProgress iniciado');
+    console.log('🔍 [DEBUG] Usuario:', { user: !!user, userId: user?.id });
+    
+    if (!user) {
+      console.log('🔍 [DEBUG] No hay usuario, saliendo de loadUserProgress');
+      return;
+    }
 
     try {
+      console.log('🔍 [DEBUG] Enviando request de progreso a /api/courses/progress');
       const response = await fetch(`/api/courses/progress?courseId=${courseData.id}`, {
         credentials: 'include',
       });
 
+      console.log('🔍 [DEBUG] Respuesta de progreso:', { 
+        status: response.status, 
+        ok: response.ok,
+        statusText: response.statusText 
+      });
+
       if (response.ok) {
         const data = await response.json();
+        console.log('🔍 [DEBUG] Datos de progreso recibidos:', data);
         setCurrentLesson(data.currentLesson || 0);
         setCompletedLessons(data.completedLessons || []);
         setProgressPercentage(data.progressPercentage || 0);
       } else if (response.status === 404) {
+        console.log('🔍 [DEBUG] Usuario no inscrito (404), estableciendo valores por defecto');
         // Usuario no inscrito, mantener valores por defecto
         setCurrentLesson(0);
         setCompletedLessons([]);
         setProgressPercentage(0);
+      } else {
+        console.log('🔍 [DEBUG] Error en respuesta de progreso:', response.status);
       }
     } catch (error) {
-      console.error('Error al cargar el progreso:', error);
+      console.error('❌ Error al cargar el progreso:', error);
     } finally {
       setIsLoading(false);
+      console.log('🔍 [DEBUG] loadUserProgress completado, isLoading = false');
     }
   };
 
@@ -327,8 +367,18 @@ export default function MonetizaIAPage() {
                       <button 
                         className="btn btn-primary btn-large btn-continue-course"
                         onClick={async () => {
+                          console.log('🔍 [DEBUG] Botón "Continuar con el curso" clickeado');
+                          console.log('🔍 [DEBUG] Estado actual:', { 
+                            currentLesson, 
+                            completedLessons: completedLessons.length,
+                            progressPercentage 
+                          });
+                          
                           await loadUserProgress();
+                          console.log('🔍 [DEBUG] Progreso recargado, redirigiendo a contenido');
+                          console.log('🔍 [DEBUG] Router disponible:', !!router);
                           router.push('/curso/monetiza-ia/contenido');
+                          console.log('🔍 [DEBUG] router.push ejecutado');
                         }}
                       >
                         🚀 Continuar con el curso
@@ -413,8 +463,18 @@ export default function MonetizaIAPage() {
                       <button 
                         className="btn btn-outline btn-small btn-continue-progress"
                         onClick={async () => {
+                          console.log('🔍 [DEBUG] Botón "Continuar donde lo dejaste" clickeado');
+                          console.log('🔍 [DEBUG] Estado actual:', { 
+                            currentLesson, 
+                            completedLessons: completedLessons.length,
+                            progressPercentage 
+                          });
+                          
                           await loadUserProgress();
+                          console.log('🔍 [DEBUG] Progreso recargado, redirigiendo a contenido');
+                          console.log('🔍 [DEBUG] Router disponible:', !!router);
                           router.push('/curso/monetiza-ia/contenido');
+                          console.log('🔍 [DEBUG] router.push ejecutado');
                         }}
                       >
                         🔄 Continuar donde lo dejaste
