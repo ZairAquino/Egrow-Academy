@@ -40,6 +40,8 @@ const CompaniesMarquee = dynamic(() => import('@/components/ui/CompaniesMarquee'
 });
 
 export default function MonetizaIAPage() {
+  console.log('🔍 [DEBUG] Componente MonetizaIAPage cargado');
+  
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [currentLesson, setCurrentLesson] = useState(0);
   const [completedLessons, setCompletedLessons] = useState<number[]>([]);
@@ -48,6 +50,15 @@ export default function MonetizaIAPage() {
   const [timeLeft, setTimeLeft] = useState(getTimeUntilFriday());
   const { user } = useAuth();
   const router = useRouter();
+  
+  console.log('🔍 [DEBUG] Estados iniciales:', { 
+    sidebarOpen, 
+    currentLesson, 
+    completedLessons: completedLessons.length,
+    progressPercentage,
+    isLoading,
+    user: !!user 
+  });
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -324,7 +335,10 @@ export default function MonetizaIAPage() {
     return `${hours}h ${minutes}min`;
   };
 
+  console.log('🔍 [DEBUG] Renderizando componente, isLoading:', isLoading);
+  
   if (isLoading) {
+    console.log('🔍 [DEBUG] Mostrando loading spinner');
     return (
       <div className="loading-container">
         <LoadingSpinner />
@@ -333,6 +347,8 @@ export default function MonetizaIAPage() {
     );
   }
 
+  console.log('🔍 [DEBUG] Renderizando JSX principal');
+  
   return (
     <>
       <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
