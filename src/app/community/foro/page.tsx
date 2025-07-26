@@ -178,7 +178,7 @@ export default function ForoPage() {
 
   return (
     <>
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
       <UserProfile className="user-profile-fixed" />
       
       <div className="main-content">

@@ -37,7 +37,9 @@
       "Bash(npm run check:env:*)",
       "Bash(pkill:*)",
       "Bash(vercel:*)",
-      "Bash(git branch:*)"
+      "Bash(git branch:*)",
+      "Bash(npx tsc:*)",
+      "Bash(node:*)"
     ],
     "deny": []
   }
