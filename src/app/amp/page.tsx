@@ -148,11 +148,11 @@ export default function AMPPage() {
                 Recibe las últimas noticias sobre IA y nuevos cursos
               </p>
               
-              <amp-form
+              <form
                 method="POST"
                 action="/api/newsletter"
                 target="_top"
-                class="amp-newsletter-form"
+                className="amp-newsletter-form"
               >
                 <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
                   <input
@@ -181,7 +181,7 @@ export default function AMPPage() {
                     Suscribirse
                   </button>
                 </div>
-              </amp-form>
+              </form>
             </div>
           </div>
         </section>
@@ -193,7 +193,7 @@ export default function AMPPage() {
               Preguntas Frecuentes
             </h2>
             
-            <amp-accordion style={{ maxWidth: '800px', margin: '0 auto' }}>
+            <div style={{ maxWidth: '800px', margin: '0 auto' }}>
               <section>
                 <h3 style={{ padding: '1rem', margin: 0, backgroundColor: '#f3f4f6' }}>
                   ¿Qué nivel de experiencia necesito?
@@ -223,7 +223,7 @@ export default function AMPPage() {
                   desde nuestra aplicación móvil.
                 </div>
               </section>
-            </amp-accordion>
+            </div>
           </div>
         </section>
 
@@ -232,11 +232,28 @@ export default function AMPPage() {
           <div className="amp-container">
             <div style={{ textAlign: 'center' }}>
               <h3 style={{ marginBottom: '1rem' }}>Comparte eGrow Academy</h3>
-              <amp-social-share
-                type="system"
-                width="60"
-                height="44"
-              />
+              <button
+                style={{
+                  width: '60px',
+                  height: '44px',
+                  backgroundColor: '#2563eb',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer'
+                }}
+                onClick={() => {
+                  if (navigator.share) {
+                    navigator.share({
+                      title: 'eGrow Academy',
+                      text: 'Aprende Inteligencia Artificial',
+                      url: window.location.href,
+                    });
+                  }
+                }}
+              >
+                Compartir
+              </button>
             </div>
           </div>
         </section>
