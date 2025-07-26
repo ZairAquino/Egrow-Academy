@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
-import { usePerformanceTracking } from './PerformanceOptimizer';
+import { usePerformanceMetrics } from './PerformanceOptimizer';
 
 interface DynamicSEOProps {
   title?: string;
@@ -24,7 +24,7 @@ export default function DynamicSEO({
   resourceData,
 }: DynamicSEOProps) {
   const pathname = usePathname();
-  const { trackPageView } = usePerformanceTracking();
+  const { metrics } = usePerformanceMetrics();
 
   useEffect(() => {
     // Actualizar título de la página
@@ -184,8 +184,14 @@ export default function DynamicSEO({
     updateMetaTags();
     updateStructuredData();
 
-    // Track page view
-    trackPageView(title, `${window.location.origin}${pathname}`);
+    // Track page view with Google Analytics
+    if (window.gtag) {
+      window.gtag('event', 'page_view', {
+        page_title: title || document.title,
+        page_location: `${window.location.origin}${pathname}`,
+        page_path: pathname
+      });
+    }
 
     // Track specific events based on page type
     if (type === 'course' && courseData) {
@@ -208,7 +214,7 @@ export default function DynamicSEO({
       }
     }
 
-  }, [title, description, keywords, image, type, courseData, resourceData, pathname, trackPageView]);
+  }, [title, description, keywords, image, type, courseData, resourceData, pathname]);
 
   return null; // Este componente no renderiza nada
 }

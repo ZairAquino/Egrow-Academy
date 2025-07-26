@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma';
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { lessonId: string } }
+  { params }: { params: Promise<{ lessonId: string }> }
 ) {
   try {
     // Verificar autenticación
@@ -35,7 +35,7 @@ export async function PUT(
       );
     }
 
-    const { lessonId } = params;
+    const { lessonId } = await params;
     const { videoUrl } = await request.json();
 
     if (!videoUrl) {
@@ -111,7 +111,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { lessonId: string } }
+  { params }: { params: Promise<{ lessonId: string }> }
 ) {
   try {
     // Verificar autenticación
@@ -139,7 +139,7 @@ export async function DELETE(
       );
     }
 
-    const { lessonId } = params;
+    const { lessonId } = await params;
 
     // Buscar la lección
     const lesson = await prisma.lesson.findUnique({
