@@ -438,7 +438,7 @@ export const ampUtils = {
       vars: {
         gtag_id: process.env.NEXT_PUBLIC_GA_ID,
         page_title: pageData?.title || 'eGrow Academy',
-        page_location: pageData?.url || window.location.href,
+        page_location: pageData?.url || (typeof window !== 'undefined' ? window.location.href : 'https://egrow-academy.com'),
         page_type: pageType,
       },
       triggers: {

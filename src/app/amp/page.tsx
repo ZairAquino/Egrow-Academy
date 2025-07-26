@@ -232,28 +232,25 @@ export default function AMPPage() {
           <div className="amp-container">
             <div style={{ textAlign: 'center' }}>
               <h3 style={{ marginBottom: '1rem' }}>Comparte eGrow Academy</h3>
-              <button
+              <a
+                href={`https://twitter.com/intent/tweet?text=Aprende%20Inteligencia%20Artificial%20en%20eGrow%20Academy&url=${encodeURIComponent('https://egrow-academy.com')}`}
+                target="_blank"
+                rel="noopener noreferrer"
                 style={{
+                  display: 'inline-block',
                   width: '60px',
                   height: '44px',
                   backgroundColor: '#2563eb',
                   color: 'white',
                   border: 'none',
                   borderRadius: '4px',
-                  cursor: 'pointer'
-                }}
-                onClick={() => {
-                  if (navigator.share) {
-                    navigator.share({
-                      title: 'eGrow Academy',
-                      text: 'Aprende Inteligencia Artificial',
-                      url: window.location.href,
-                    });
-                  }
+                  textDecoration: 'none',
+                  textAlign: 'center',
+                  lineHeight: '44px'
                 }}
               >
                 Compartir
-              </button>
+              </a>
             </div>
           </div>
         </section>
