@@ -64,7 +64,7 @@ export default function MonetizaIAPage() {
 
   const handleEnrollClick = async () => {
     if (!user) {
-      router.push('/login?redirect=/curso/monetiza-ia');
+      router.push('/login?redirect=/curso/monetiza-ia/contenido');
       return;
     }
 
