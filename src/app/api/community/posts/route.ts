@@ -107,8 +107,8 @@ export async function POST(request: NextRequest) {
             profileImage: true,
           },
         },
-        comments: [],
-        likes: [],
+        comments: true,
+        likes: true,
       },
     });
 
