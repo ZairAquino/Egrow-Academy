@@ -5,10 +5,10 @@
   "scripts": {
     "dev": "next dev",
     "dev:turbo": "next dev --turbopack",
-    "build": "prisma generate && next build",
+    "build": "npx prisma generate && npx next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "prisma generate",
+    "postinstall": "npx prisma generate",
     "init-stripe": "tsx scripts/init-stripe-products.ts",
     "test-stripe": "tsx scripts/test-stripe-config.ts",
     "check-prod-env": "tsx scripts/check-production-env.ts",
