@@ -39,7 +39,9 @@
       "Bash(vercel:*)",
       "Bash(git branch:*)",
       "Bash(npx tsc:*)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(npm ls:*)"
     ],
     "deny": []
   }
