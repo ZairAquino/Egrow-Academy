@@ -2,15 +2,16 @@
 const nextConfig = {
   // Configuración experimental avanzada
   experimental: {
-    appDir: true,
     optimizeCss: true,
     optimizePackageImports: ['@heroicons/react', 'lucide-react', '@/components', '@/lib'],
-    turbo: {
-      rules: {
-        '*.svg': {
-          loaders: ['@svgr/webpack'],
-          as: '*.js',
-        },
+  },
+
+  // Configuración de Turbopack (estable en Next.js 15)
+  turbopack: {
+    rules: {
+      '*.svg': {
+        loaders: ['@svgr/webpack'],
+        as: '*.js',
       },
     },
   },
@@ -100,46 +101,43 @@ const nextConfig = {
   webpack: (config, { dev, isServer }) => {
     // Optimizaciones solo para producción
     if (!dev && !isServer) {
-      // Bundle splitting optimizado
+      // Bundle splitting optimizado - sin conflicto con el chunk "main"
       config.optimization.splitChunks = {
         chunks: 'all',
         cacheGroups: {
-          default: false,
-          vendors: false,
-          // Chunk principal
-          main: {
-            name: 'main',
-            chunks: 'all',
-            minChunks: 1,
-            priority: 20,
+          default: {
+            minChunks: 2,
+            priority: -20,
             reuseExistingChunk: true,
+          },
+          vendors: {
+            test: /[\\/]node_modules[\\/]/,
+            priority: -10,
+            reuseExistingChunk: true,
+            name(module, chunks, cacheGroupKey) {
+              const moduleFileName = module
+                .identifier()
+                .split('/')
+                .reduceRight((item) => item);
+              const allChunksNames = chunks.map((chunk) => chunk.name).join('~');
+              return `${cacheGroupKey}-${allChunksNames}-${moduleFileName}`;
+            },
           },
           // Chunk de componentes
           components: {
-            name: 'components',
-            chunks: 'all',
+            test: /[\\/]components[\\/]/,
             minChunks: 2,
             priority: 15,
             reuseExistingChunk: true,
-            test: /[\\/]components[\\/]/,
+            enforce: true,
           },
           // Chunk de utilidades
           utils: {
-            name: 'utils',
-            chunks: 'all',
+            test: /[\\/]lib[\\/]/,
             minChunks: 2,
             priority: 10,
             reuseExistingChunk: true,
-            test: /[\\/]lib[\\/]/,
-          },
-          // Chunk de vendor (librerías)
-          vendor: {
-            name: 'vendor',
-            chunks: 'all',
-            minChunks: 2,
-            priority: 5,
-            reuseExistingChunk: true,
-            test: /[\\/]node_modules[\\/]/,
+            enforce: true,
           },
         },
       };
@@ -172,9 +170,6 @@ const nextConfig = {
 
   // Configuración de output
   output: 'standalone',
-
-  // Configuración de swc minify
-  swcMinify: true,
 };
 
 module.exports = nextConfig; 

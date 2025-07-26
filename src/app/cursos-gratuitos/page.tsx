@@ -79,6 +79,19 @@ export default function CursosGratuitosPage() {
       instructor: 'Dra. Ana Torres',
       source: 'eGrow Academy',
       link: '/curso/computer-vision'
+    },
+    {
+      id: 'prompt-engineering',
+      title: 'Prompt Engineering para IA',
+      description: 'Domina el arte de crear prompts efectivos para modelos de IA como ChatGPT, Claude y Gemini. Aprende técnicas avanzadas para obtener mejores resultados.',
+      duration: '2.5 horas',
+      level: 'Principiante',
+      price: 'Gratis',
+      image: 'https://images.unsplash.com/photo-1686191128892-3b490635d7f8?w=400&h=250&fit=crop&crop=center',
+      tag: 'eGrow Academy',
+      instructor: 'Ing. Luis González',
+      source: 'eGrow Academy',
+      link: '/curso/prompt-engineering'
     }
   ];
 
