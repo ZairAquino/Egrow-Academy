@@ -58,36 +58,7 @@ export const metadata: Metadata = {
 
 export default function AMPPage() {
   return (
-    <html amp>
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
-        <title>eGrow Academy - Página AMP</title>
-        <meta name="description" content="Plataforma de aprendizaje de Inteligencia Artificial optimizada para móviles" />
-        
-        {/* Canonical URL */}
-        <link rel="canonical" href="https://egrow-academy.com/amp" />
-        
-        {/* AMP Runtime */}
-        <script async src="https://cdn.ampproject.org/v0.js"></script>
-        
-        {/* AMP Components */}
-        <script async custom-element="amp-img" src="https://cdn.ampproject.org/v0/amp-img-0.1.js"></script>
-        <script async custom-element="amp-carousel" src="https://cdn.ampproject.org/v0/amp-carousel-0.1.js"></script>
-        <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
-        <script async custom-element="amp-social-share" src="https://cdn.ampproject.org/v0/amp-social-share-0.1.js"></script>
-        <script async custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js"></script>
-        <script async custom-element="amp-accordion" src="https://cdn.ampproject.org/v0/amp-accordion-0.1.js"></script>
-        
-        {/* Estilos críticos */}
-        <style amp-custom>{ampUtils.generateCriticalCSS()}</style>
-        
-        {/* Preload recursos críticos */}
-        <link rel="preload" href="/images/optimized/logo.webp" as="image" />
-        <link rel="preload" href="/fonts/inter-var.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
-      </head>
-      
-      <body>
+    <>
         {/* Analytics AMP */}
         <AMPHomeAnalytics />
         
@@ -301,7 +272,6 @@ export default function AMPPage() {
             </div>
           </div>
         </footer>
-      </body>
-    </html>
+    </>
   );
 } 
