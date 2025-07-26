@@ -1,0 +1,34 @@
+{
+  "codeSplitting": {
+    "routes": true,
+    "components": true,
+    "vendors": true
+  },
+  "lazyLoading": {
+    "components": [
+      "CourseCard",
+      "DynamicLogo",
+      "Analytics"
+    ],
+    "routes": [
+      "/curso",
+      "/courses",
+      "/admin"
+    ]
+  },
+  "treeShaking": {
+    "enabled": true,
+    "analyze": true,
+    "minify": true
+  },
+  "bundling": {
+    "analyze": true,
+    "splitChunks": true,
+    "optimization": true
+  },
+  "caching": {
+    "serviceWorker": true,
+    "staticAssets": true,
+    "apiResponses": true
+  }
+}

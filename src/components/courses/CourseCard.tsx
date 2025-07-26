@@ -1,6 +1,7 @@
 'use client';
 
 import { useCourseAccess } from '@/hooks/useCourseAccess';
+import { useAnalytics } from '@/hooks/useAnalytics';
 import SubscriptionModal from '@/components/payments/SubscriptionModal';
 
 interface CourseCardProps {
@@ -29,10 +30,30 @@ export default function CourseCard({
     getAccessBadgeColor
   } = useCourseAccess();
 
+  const { trackCourseView, trackCTAClick } = useAnalytics();
+
   const course = { id, title, category, isFree, requiresAuth };
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
+    
+    // Track course view
+    trackCourseView({
+      course_id: id,
+      course_name: title,
+      course_category: category,
+      course_level: level,
+      course_price: isFree ? 0 : undefined,
+    });
+
+    // Track CTA click
+    trackCTAClick({
+      cta_type: isFree ? 'enroll' : 'subscribe',
+      cta_text: 'Ver Curso',
+      cta_location: 'course_card',
+      user_type: 'free', // TODO: Get from auth context
+    });
+
     if (onCourseClick) {
       if (handleCourseAccess(course)) {
         onCourseClick(id);

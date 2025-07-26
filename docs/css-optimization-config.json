@@ -1,0 +1,25 @@
+{
+  "critical": {
+    "inline": true,
+    "minify": true,
+    "extract": true
+  },
+  "nonCritical": {
+    "defer": true,
+    "preload": false,
+    "minify": true
+  },
+  "fonts": {
+    "preload": [
+      "Inter",
+      "Poppins"
+    ],
+    "display": "swap",
+    "fallback": "system-ui"
+  },
+  "tailwind": {
+    "purge": true,
+    "minify": true,
+    "critical": true
+  }
+}

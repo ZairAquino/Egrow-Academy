@@ -64,7 +64,7 @@ export default function CoursesPage() {
       duration: '3 horas',
       level: 'Intermedio',
       price: 'Gratis',
-      image: '/images/v-5.png',
+      image: '/images/optimized/v-5.webp',
       tag: 'eGrow Academy',
       link: '/curso/monetiza-ia',
       isFree: true,

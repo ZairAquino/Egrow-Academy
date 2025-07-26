@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 const featuredCourses = [
   {
-    image: "/images/v-5.png",
+    image: "/images/optimized/v-5.webp",
     title: "Monetiza con la IA",
     description: "Descubre cómo generar ingresos utilizando inteligencia artificial. Aprende estrategias prácticas para monetizar herramientas de IA y crear fuentes de ingresos pasivos.",
     tag: "⭐ Curso Destacado",

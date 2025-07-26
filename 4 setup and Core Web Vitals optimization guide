@@ -1,0 +1,1542 @@
+[1mdiff --git a/docs/CORE-WEB-VITALS-OPTIMIZATION.md b/docs/CORE-WEB-VITALS-OPTIMIZATION.md[m
+[1mnew file mode 100644[m
+[1mindex 0000000..53232be[m
+[1m--- /dev/null[m
+[1m+++ b/docs/CORE-WEB-VITALS-OPTIMIZATION.md[m
+[36m@@ -0,0 +1,431 @@[m
+[32m+[m[32m# Optimización de Core Web Vitals para eGrow Academy[m
+[32m+[m
+[32m+[m[32m## 🎯 Objetivo[m
+[32m+[m[32mMejorar los Core Web Vitals para obtener mejores rankings en Google y proporcionar una mejor experiencia de usuario.[m
+[32m+[m
+[32m+[m[32m## 📊 Métricas Objetivo[m
+[32m+[m
+[32m+[m[32m### LCP (Largest Contentful Paint) - < 2.5s[m
+[32m+[m[32m- **Excelente**: 0-2.5s[m
+[32m+[m[32m- **Necesita mejora**: 2.5-4s[m
+[32m+[m[32m- **Pobre**: > 4s[m
+[32m+[m
+[32m+[m[32m### FID (First Input Delay) - < 100ms[m
+[32m+[m[32m- **Excelente**: 0-100ms[m
+[32m+[m[32m- **Necesita mejora**: 100-300ms[m
+[32m+[m[32m- **Pobre**: > 300ms[m
+[32m+[m
+[32m+[m[32m### CLS (Cumulative Layout Shift) - < 0.1[m
+[32m+[m[32m- **Excelente**: 0-0.1[m
+[32m+[m[32m- **Necesita mejora**: 0.1-0.25[m
+[32m+[m[32m- **Pobre**: > 0.25[m
+[32m+[m
+[32m+[m[32m## 🔧 Optimizaciones Implementadas[m
+[32m+[m
+[32m+[m[32m### 1. Optimización de Imágenes[m
+[32m+[m
+[32m+[m[32m#### Next.js Image Component[m
+[32m+[m[32m```tsx[m
+[32m+[m[32mimport Image from 'next/image';[m
+[32m+[m
+[32m+[m[32m// Uso optimizado[m
+[32m+[m[32m<Image[m
+[32m+[m[32m  src="/images/course-image.jpg"[m
+[32m+[m[32m  alt="Curso de IA"[m
+[32m+[m[32m  width={400}[m
+[32m+[m[32m  height={300}[m
+[32m+[m[32m  priority={true} // Para imágenes above the fold[m
+[32m+[m[32m  placeholder="blur"[m
+[32m+[m[32m  blurDataURL="data:image/jpeg;base64,..."[m
+[32m+[m[32m/>[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m#### Configuración en next.config.ts[m
+[32m+[m[32m```typescript[m
+[32m+[m[32mconst nextConfig = {[m
+[32m+[m[32m  images: {[m
+[32m+[m[32m    domains: ['egrow-academy.com'],[m
+[32m+[m[32m    formats: ['image/webp', 'image/avif'],[m
+[32m+[m[32m    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],[m
+[32m+[m[32m    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],[m
+[32m+[m[32m  },[m
+[32m+[m[32m};[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m### 2. Lazy Loading de Componentes[m
+[32m+[m
+[32m+[m[32m#### Componentes Pesados[m
+[32m+[m[32m```tsx[m
+[32m+[m[32mimport dynamic from 'next/dynamic';[m
+[32m+[m
+[32m+[m[32m// Lazy load de componentes pesados[m
+[32m+[m[32mconst VideoPlayer = dynamic(() => import('@/components/courses/VideoPlayer'), {[m
+[32m+[m[32m  loading: () => <div>Cargando video...</div>,[m
+[32m+[m[32m  ssr: false[m
+[32m+[m[32m});[m
+[32m+[m
+[32m+[m[32mconst CourseResourceUpload = dynamic(() => import('@/components/courses/CourseResourceUpload'), {[m
+[32m+[m[32m  loading: () => <div>Cargando...</div>[m
+[32m+[m[32m});[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m### 3. Optimización de Fuentes[m
+[32m+[m
+[32m+[m[32m#### Configuración en layout.tsx[m
+[32m+[m[32m```tsx[m
+[32m+[m[32mimport { Inter } from 'next/font/google';[m
+[32m+[m
+[32m+[m[32mconst inter = Inter({[m
+[32m+[m[32m  subsets: ['latin'],[m
+[32m+[m[32m  display: 'swap',[m
+[32m+[m[32m  preload: true,[m
+[32m+[m[32m  fallback: ['system-ui', 'arial'],[m
+[32m+[m[32m});[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m### 4. Preload de Recursos Críticos[m
+[32m+[m
+[32m+[m[32m#### En layout.tsx[m
+[32m+[m[32m```tsx[m
+[32m+[m[32mexport default function RootLayout({[m
+[32m+[m[32m  children,[m
+[32m+[m[32m}: {[m
+[32m+[m[32m  children: React.ReactNode;[m
+[32m+[m[32m}) {[m
+[32m+[m[32m  return ([m
+[32m+[m[32m    <html lang="es">[m
+[32m+[m[32m      <head>[m
+[32m+[m[32m        {/* Preload de recursos críticos */}[m
+[32m+[m[32m        <link[m
+[32m+[m[32m          rel="preload"[m
+[32m+[m[32m          href="/fonts/inter-var.woff2"[m
+[32m+[m[32m          as="font"[m
+[32m+[m[32m          type="font/woff2"[m
+[32m+[m[32m          crossOrigin="anonymous"[m
+[32m+[m[32m        />[m
+[32m+[m[32m        <link[m
+[32m+[m[32m          rel="preload"[m
+[32m+[m[32m          href="/images/hero-bg.webp"[m
+[32m+[m[32m          as="image"[m
+[32m+[m[32m        />[m
+[32m+[m[32m      </head>[m
+[32m+[m[32m      <body className={inter.className}>[m
+[32m+[m[32m        {children}[m
+[32m+[m[32m      </body>[m
+[32m+[m[32m    </html>[m
+[32m+[m[32m  );[m
+[32m+[m[32m}[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m### 5. Optimización de CSS[m
+[32m+[m
+[32m+[m[32m#### Tailwind CSS Purge[m
+[32m+[m[32m```typescript[m
+[32m+[m[32m// tailwind.config.ts[m
+[32m+[m[32mmodule.exports = {[m
+[32m+[m[32m  content: [[m
+[32m+[m[32m    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',[m
+[32m+[m[32m    './src/components/**/*.{js,ts,jsx,tsx,mdx}',[m
+[32m+[m[32m    './src/app/**/*.{js,ts,jsx,tsx,mdx}',[m
+[32m+[m[32m  ],[m
+[32m+[m[32m  theme: {[m
+[32m+[m[32m    extend: {},[m
+[32m+[m[32m  },[m
+[32m+[m[32m  plugins: [],[m
+[32m+[m[32m}[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m#### CSS Crítico Inline[m
+[32m+[m[32m```tsx[m
+[32m+[m[32m// Componente para CSS crítico[m
+[32m+[m[32mconst CriticalCSS = () => ([m
+[32m+[m[32m  <style[m
+[32m+[m[32m    dangerouslySetInnerHTML={{[m
+[32m+[m[32m      __html: `[m
+[32m+[m[32m        .hero-section {[m
+[32m+[m[32m          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);[m
+[32m+[m[32m          min-height: 100vh;[m
+[32m+[m[32m        }[m
+[32m+[m[32m        .course-card {[m
+[32m+[m[32m          transition: transform 0.2s ease-in-out;[m
+[32m+[m[32m        }[m
+[32m+[m[32m        .course-card:hover {[m
+[32m+[m[32m          transform: translateY(-4px);[m
+[32m+[m[32m        }[m
+[32m+[m[32m      `,[m
+[32m+[m[32m    }}[m
+[32m+[m[32m  />[m
+[32m+[m[32m);[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m### 6. Optimización de JavaScript[m
+[32m+[m
+[32m+[m[32m#### Code Splitting Automático[m
+[32m+[m[32m```tsx[m
+[32m+[m[32m// Next.js App Router ya hace code splitting automático[m
+[32m+[m[32m// Pero podemos optimizar más:[m
+[32m+[m
+[32m+[m[32m// Lazy load de páginas[m
+[32m+[m[32mconst CoursePage = dynamic(() => import('@/app/curso/[slug]/page'), {[m
+[32m+[m[32m  loading: () => <CourseSkeleton />[m
+[32m+[m[32m});[m
+[32m+[m
+[32m+[m[32m// Lazy load de componentes condicionales[m
+[32m+[m[32mconst PremiumFeatures = dynamic(() => import('@/components/PremiumFeatures'), {[m
+[32m+[m[32m  loading: () => <div>Cargando características premium...</div>,[m
+[32m+[m[32m  ssr: false[m
+[32m+[m[32m});[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m### 7. Optimización de API Routes[m
+[32m+[m
+[32m+[m[32m#### Caching de Respuestas[m
+[32m+[m[32m```typescript[m
+[32m+[m[32m// src/app/api/courses/route.ts[m
+[32m+[m[32mimport { NextResponse } from 'next/server';[m
+[32m+[m
+[32m+[m[32mexport async function GET() {[m
+[32m+[m[32m  const courses = await getCourses();[m
+[32m+[m[41m  [m
+[32m+[m[32m  return NextResponse.json(courses, {[m
+[32m+[m[32m    headers: {[m
+[32m+[m[32m      'Cache-Control': 'public, max-age=3600, s-maxage=86400',[m
+[32m+[m[32m      'CDN-Cache-Control': 'public, max-age=86400',[m
+[32m+[m[32m    },[m
+[32m+[m[32m  });[m
+[32m+[m[32m}[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m### 8. Service Worker para Caching[m
+[32m+[m
+[32m+[m[32m#### public/sw.js[m
+[32m+[m[32m```javascript[m
+[32m+[m[32mconst CACHE_NAME = 'egrow-academy-v1';[m
+[32m+[m[32mconst urlsToCache = [[m
+[32m+[m[32m  '/',[m
+[32m+[m[32m  '/courses',[m
+[32m+[m[32m  '/static/css/main.css',[m
+[32m+[m[32m  '/static/js/main.js',[m
+[32m+[m[32m];[m
+[32m+[m
+[32m+[m[32mself.addEventListener('install', (event) => {[m
+[32m+[m[32m  event.waitUntil([m
+[32m+[m[32m    caches.open(CACHE_NAME)[m
+[32m+[m[32m      .then((cache) => cache.addAll(urlsToCache))[m
+[32m+[m[32m  );[m
+[32m+[m[32m});[m
+[32m+[m
+[32m+[m[32mself.addEventListener('fetch', (event) => {[m
+[32m+[m[32m  event.respondWith([m
+[32m+[m[32m    caches.match(event.request)[m
+[32m+[m[32m      .then((response) => response || fetch(event.request))[m
+[32m+[m[32m  );[m
+[32m+[m[32m});[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m## 📊 Monitoreo de Core Web Vitals[m
+[32m+[m
+[32m+[m[32m### 1. Google PageSpeed Insights[m
+[32m+[m[32m```bash[m
+[32m+[m[32m# Verificar rendimiento[m
+[32m+[m[32mnpm run lighthouse[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m### 2. Google Search Console[m
+[32m+[m[32m- Ir a Core Web Vitals[m
+[32m+[m[32m- Monitorear métricas por URL[m
+[32m+[m[32m- Recibir alertas cuando hay problemas[m
+[32m+[m
+[32m+[m[32m### 3. Chrome DevTools[m
+[32m+[m[32m```javascript[m
+[32m+[m[32m// En la consola del navegador[m
+[32m+[m[32mnew PerformanceObserver((list) => {[m
+[32m+[m[32m  for (const entry of list.getEntries()) {[m
+[32m+[m[32m    if (entry.entryType === 'largest-contentful-paint') {[m
+[32m+[m[32m      console.log('LCP:', entry.startTime);[m
+[32m+[m[32m    }[m
+[32m+[m[32m    if (entry.entryType === 'first-input') {[m
+[32m+[m[32m      console.log('FID:', entry.processingStart - entry.startTime);[m
+[32m+[m[32m    }[m
+[32m+[m[32m    if (entry.entryType === 'layout-shift') {[m
+[32m+[m[32m      console.log('CLS:', entry.value);[m
+[32m+[m[32m    }[m
+[32m+[m[32m  }[m
+[32m+[m[32m}).observe({[m
+[32m+[m[32m  entryTypes: ['largest-contentful-paint', 'first-input', 'layout-shift'][m
+[32m+[m[32m});[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m### 4. Web Vitals Library[m
+[32m+[m[32m```bash[m
+[32m+[m[32mnpm install web-vitals[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m```typescript[m
+[32m+[m[32mimport { getCLS, getFID, getFCP, getLCP, getTTFB } from 'web-vitals';[m
+[32m+[m
+[32m+[m[32mfunction sendToAnalytics(metric: any) {[m
+[32m+[m[32m  // Enviar a Google Analytics[m
+[32m+[m[32m  gtag('event', 'core_web_vital', {[m
+[32m+[m[32m    event_category: 'Web Vitals',[m
+[32m+[m[32m    event_label: metric.name,[m
+[32m+[m[32m    value: Math.round(metric.value),[m
+[32m+[m[32m    non_interaction: true,[m
+[32m+[m[32m  });[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mgetCLS(sendToAnalytics);[m
+[32m+[m[32mgetFID(sendToAnalytics);[m
+[32m+[m[32mgetFCP(sendToAnalytics);[m
+[32m+[m[32mgetLCP(sendToAnalytics);[m
+[32m+[m[32mgetTTFB(sendToAnalytics);[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m## 🚀 Optimizaciones Específicas para eGrow Academy[m
+[32m+[m
+[32m+[m[32m### 1. Optimización de Página Principal[m
+[32m+[m[32m```tsx[m
+[32m+[m[32m// src/app/page.tsx[m
+[32m+[m[32mexport default function HomePage() {[m
+[32m+[m[32m  return ([m
+[32m+[m[32m    <>[m
+[32m+[m[32m      {/* CSS crítico inline */}[m
+[32m+[m[32m      <CriticalCSS />[m
+[32m+[m[41m      [m
+[32m+[m[32m      {/* Hero section optimizado */}[m
+[32m+[m[32m      <section className="hero-section">[m
+[32m+[m[32m        <Image[m
+[32m+[m[32m          src="/images/hero-bg.webp"[m
+[32m+[m[32m          alt="eGrow Academy"[m
+[32m+[m[32m          fill[m
+[32m+[m[32m          priority[m
+[32m+[m[32m          className="object-cover"[m
+[32m+[m[32m        />[m
+[32m+[m[32m        <div className="hero-content">[m
+[32m+[m[32m          <h1>Cursos de Inteligencia Artificial</h1>[m
+[32m+[m[32m          <p>Líder en México y Latinoamérica</p>[m
+[32m+[m[32m        </div>[m
+[32m+[m[32m      </section>[m
+[32m+[m[41m      [m
+[32m+[m[32m      {/* Cursos con lazy loading */}[m
+[32m+[m[32m      <section className="courses-section">[m
+[32m+[m[32m        <FeaturedCourses />[m
+[32m+[m[32m      </section>[m
+[32m+[m[32m    </>[m
+[32m+[m[32m  );[m
+[32m+[m[32m}[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m### 2. Optimización de Páginas de Cursos[m
+[32m+[m[32m```tsx[m
+[32m+[m[32m// src/app/curso/[slug]/page.tsx[m
+[32m+[m[32mexport default function CoursePage({ params }: { params: { slug: string } }) {[m
+[32m+[m[32m  return ([m
+[32m+[m[32m    <>[m
+[32m+[m[32m      {/* Metadata optimizada */}[m
+[32m+[m[32m      <DynamicSEO[m
+[32m+[m[32m        title={`${course.title} - eGrow Academy`}[m
+[32m+[m[32m        description={course.description}[m
+[32m+[m[32m        keywords={course.keywords}[m
+[32m+[m[32m        type="course"[m
+[32m+[m[32m        courseData={course}[m
+[32m+[m[32m      />[m
+[32m+[m[41m      [m
+[32m+[m[32m      {/* Contenido optimizado */}[m
+[32m+[m[32m      <div className="course-content">[m
+[32m+[m[32m        <CourseHeader course={course} />[m
+[32m+[m[32m        <CourseLessons lessons={course.lessons} />[m
+[32m+[m[32m        <CourseResources resources={course.resources} />[m
+[32m+[m[32m      </div>[m
+[32m+[m[32m    </>[m
+[32m+[m[32m  );[m
+[32m+[m[32m}[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m### 3. Optimización de Videos[m
+[32m+[m[32m```tsx[m
+[32m+[m[32m// src/components/courses/VideoPlayer.tsx[m
+[32m+[m[32mexport default function VideoPlayer({ src, title }: VideoPlayerProps) {[m
+[32m+[m[32m  return ([m
+[32m+[m[32m    <div className="video-container">[m
+[32m+[m[32m      <video[m
+[32m+[m[32m        controls[m
+[32m+[m[32m        preload="metadata"[m
+[32m+[m[32m        poster={`${src}?poster=true`}[m
+[32m+[m[32m        className="w-full"[m
+[32m+[m[32m      >[m
+[32m+[m[32m        <source src={`${src}?format=webm`} type="video/webm" />[m
+[32m+[m[32m        <source src={`${src}?format=mp4`} type="video/mp4" />[m
+[32m+[m[32m        Tu navegador no soporta videos.[m
+[32m+[m[32m      </video>[m
+[32m+[m[32m    </div>[m
+[32m+[m[32m  );[m
+[32m+[m[32m}[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m## 📈 Métricas de Rendimiento Esperadas[m
+[32m+[m
+[32m+[m[32m### Después de las Optimizaciones:[m
+[32m+[m[32m- **LCP**: < 1.5s[m
+[32m+[m[32m- **FID**: < 50ms[m
+[32m+[m[32m- **CLS**: < 0.05[m
+[32m+[m[32m- **FCP**: < 1s[m
+[32m+[m[32m- **TTFB**: < 200ms[m
+[32m+[m
+[32m+[m[32m### Herramientas de Medición:[m
+[32m+[m[32m1. **Google PageSpeed Insights**[m
+[32m+[m[32m2. **Chrome DevTools Performance**[m
+[32m+[m[32m3. **WebPageTest**[m
+[32m+[m[32m4. **GTmetrix**[m
+[32m+[m[32m5. **Lighthouse CI**[m
+[32m+[m
+[32m+[m[32m## 🔄 Proceso de Optimización Continua[m
+[32m+[m
+[32m+[m[32m### 1. Medición Semanal[m
+[32m+[m[32m```bash[m
+[32m+[m[32m# Ejecutar análisis de rendimiento[m
+[32m+[m[32mnpm run lighthouse[m
+[32m+[m[32mnpm run seo-analysis[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m### 2. Monitoreo Automático[m
+[32m+[m[32m- Configurar alertas en Google Search Console[m
+[32m+[m[32m- Monitorear Core Web Vitals en tiempo real[m
+[32m+[m[32m- Revisar métricas de usuarios reales[m
+[32m+[m
+[32m+[m[32m### 3. Optimización Iterativa[m
+[32m+[m[32m- Identificar cuellos de botella[m
+[32m+[m[32m- Implementar mejoras[m
+[32m+[m[32m- Medir impacto[m
+[32m+[m[32m- Iterar[m
+[32m+[m
+[32m+[m[32m## 📝 Checklist de Optimización[m
+[32m+[m
+[32m+[m[32m- [ ] Optimizar imágenes con Next.js Image[m
+[32m+[m[32m- [ ] Implementar lazy loading[m
+[32m+[m[32m- [ ] Optimizar fuentes web[m
+[32m+[m[32m- [ ] Preload recursos críticos[m
+[32m+[m[32m- [ ] Implementar service worker[m
+[32m+[m[32m- [ ] Optimizar CSS crítico[m
+[32m+[m[32m- [ ] Configurar caching de API[m
+[32m+[m[32m- [ ] Monitorear Core Web Vitals[m
+[32m+[m[32m- [ ] Optimizar JavaScript bundle[m
+[32m+[m[32m- [ ] Implementar compresión gzip/brotli[m
+[32m+[m
+[32m+[m[32m## 🎯 Resultados Esperados[m
+[32m+[m
+[32m+[m[32mCon estas optimizaciones, eGrow Academy debería:[m
+[32m+[m
+[32m+[m[32m1. **Mejorar rankings en Google** por Core Web Vitals[m
+[32m+[m[32m2. **Reducir tasa de rebote** por mejor experiencia[m
+[32m+[m[32m3. **Aumentar conversiones** por mejor UX[m
+[32m+[m[32m4. **Mejorar SEO técnico** general[m
+[32m+[m[32m5. **Proporcionar mejor experiencia móvil**[m
+[32m+[m
+[32m+[m[32m## 📊 Próximos Pasos[m
+[32m+[m
+[32m+[m[32m1. **Implementar optimizaciones** paso a paso[m
+[32m+[m[32m2. **Medir impacto** de cada optimización[m
+[32m+[m[32m3. **Configurar monitoreo** continuo[m
+[32m+[m[32m4. **Optimizar basado en datos** reales[m
+[32m+[m[32m5. **Mantener rendimiento** a largo plazo[m[41m [m
+\ No newline at end of file[m
+[1mdiff --git a/docs/GOOGLE-ANALYTICS-SETUP.md b/docs/GOOGLE-ANALYTICS-SETUP.md[m
+[1mnew file mode 100644[m
+[1mindex 0000000..1d757c2[m
+[1m--- /dev/null[m
+[1m+++ b/docs/GOOGLE-ANALYTICS-SETUP.md[m
+[36m@@ -0,0 +1,197 @@[m
+[32m+[m[32m# Configuración de Google Analytics 4 para eGrow Academy[m
+[32m+[m
+[32m+[m[32m## 🎯 Objetivo[m
+[32m+[m[32mConfigurar Google Analytics 4 para rastrear el comportamiento de usuarios, conversiones y métricas clave para optimizar el SEO y el rendimiento del sitio.[m
+[32m+[m
+[32m+[m[32m## 📋 Pasos de Configuración[m
+[32m+[m
+[32m+[m[32m### 1. Crear Cuenta de Google Analytics[m
+[32m+[m
+[32m+[m[32m1. **Ir a Google Analytics**: https://analytics.google.com/[m
+[32m+[m[32m2. **Crear cuenta**:[m
+[32m+[m[32m   - Nombre de la cuenta: `eGrow Academy`[m
+[32m+[m[32m   - Propósito: Análisis web[m
+[32m+[m[32m3. **Crear propiedad**:[m
+[32m+[m[32m   - Nombre de la propiedad: `eGrow Academy Website`[m
+[32m+[m[32m   - Zona horaria: `America/Mexico_City`[m
+[32m+[m[32m   - Moneda: `MXN (Peso Mexicano)`[m
+[32m+[m[32m4. **Configurar flujo de datos**:[m
+[32m+[m[32m   - Plataforma: `Web`[m
+[32m+[m[32m   - URL del sitio: `https://egrow-academy.com`[m
+[32m+[m[32m   - Nombre del flujo: `eGrow Academy Web`[m
+[32m+[m
+[32m+[m[32m### 2. Obtener ID de Medición[m
+[32m+[m
+[32m+[m[32m1. En la configuración de la propiedad, copiar el **ID de medición** (formato: `G-XXXXXXXXXX`)[m
+[32m+[m[32m2. Este ID se usará en las variables de entorno[m
+[32m+[m
+[32m+[m[32m### 3. Configurar Variables de Entorno[m
+[32m+[m
+[32m+[m[32mAgregar al archivo `.env.local`:[m
+[32m+[m
+[32m+[m[32m```env[m
+[32m+[m[32m# Google Analytics 4[m
+[32m+[m[32mNEXT_PUBLIC_GA_ID="G-XXXXXXXXXX"[m
+[32m+[m[32mGOOGLE_ANALYTICS_ID="G-XXXXXXXXXX"[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m### 4. Eventos Personalizados a Configurar[m
+[32m+[m
+[32m+[m[32m#### Eventos de Cursos[m
+[32m+[m[32m- `course_view` - Cuando un usuario ve un curso[m
+[32m+[m[32m- `course_enroll` - Cuando un usuario se inscribe[m
+[32m+[m[32m- `course_complete` - Cuando un usuario completa un curso[m
+[32m+[m[32m- `lesson_view` - Cuando un usuario ve una lección[m
+[32m+[m[32m- `video_play` - Cuando se reproduce un video[m
+[32m+[m
+[32m+[m[32m#### Eventos de Conversión[m
+[32m+[m[32m- `subscription_start` - Cuando inicia una suscripción[m
+[32m+[m[32m- `payment_complete` - Cuando se completa un pago[m
+[32m+[m[32m- `free_trial_start` - Cuando inicia una prueba gratuita[m
+[32m+[m[32m- `download_resource` - Cuando descarga un recurso[m
+[32m+[m
+[32m+[m[32m#### Eventos de Usuario[m
+[32m+[m[32m- `user_register` - Cuando se registra un usuario[m
+[32m+[m[32m- `user_login` - Cuando inicia sesión[m
+[32m+[m[32m- `search_course` - Cuando busca un curso[m
+[32m+[m[32m- `contact_form_submit` - Cuando envía formulario de contacto[m
+[32m+[m
+[32m+[m[32m### 5. Configurar Conversiones[m
+[32m+[m
+[32m+[m[32mEn Google Analytics 4:[m
+[32m+[m
+[32m+[m[32m1. **Ir a Configuración > Eventos**[m
+[32m+[m[32m2. **Marcar como conversión**:[m
+[32m+[m[32m   - `course_enroll`[m
+[32m+[m[32m   - `subscription_start`[m
+[32m+[m[32m   - `payment_complete`[m
+[32m+[m[32m   - `user_register`[m
+[32m+[m
+[32m+[m[32m### 6. Configurar Audiencias[m
+[32m+[m
+[32m+[m[32m#### Audiencia de Cursos Gratuitos[m
+[32m+[m[32m- Usuarios que han visto cursos gratuitos[m
+[32m+[m[32m- Usuarios que han descargado recursos gratuitos[m
+[32m+[m
+[32m+[m[32m#### Audiencia de Cursos Premium[m
+[32m+[m[32m- Usuarios con suscripción activa[m
+[32m+[m[32m- Usuarios que han completado cursos premium[m
+[32m+[m
+[32m+[m[32m#### Audiencia de Conversión[m
+[32m+[m[32m- Usuarios que han completado al menos una conversión[m
+[32m+[m[32m- Usuarios que han visto más de 3 cursos[m
+[32m+[m
+[32m+[m[32m### 7. Configurar Informes Personalizados[m
+[32m+[m
+[32m+[m[32m#### Informe de Rendimiento de Cursos[m
+[32m+[m[32m- Métricas: Usuarios, Sesiones, Tasa de rebote[m
+[32m+[m[32m- Dimensiones: Nombre del curso, Categoría[m
+[32m+[m[32m- Filtros: Evento = `course_view`[m
+[32m+[m
+[32m+[m[32m#### Informe de Conversiones[m
+[32m+[m[32m- Métricas: Conversiones, Valor de conversión[m
+[32m+[m[32m- Dimensiones: Fuente/Medio, Campaña[m
+[32m+[m[32m- Filtros: Evento de conversión[m
+[32m+[m
+[32m+[m[32m#### Informe de Usuarios por País[m
+[32m+[m[32m- Métricas: Usuarios activos, Sesiones[m
+[32m+[m[32m- Dimensiones: País, Ciudad[m
+[32m+[m[32m- Filtros: Región = México, Colombia, Argentina, etc.[m
+[32m+[m
+[32m+[m[32m### 8. Configurar Alertas[m
+[32m+[m
+[32m+[m[32m#### Alertas de Rendimiento[m
+[32m+[m[32m- Caída de tráfico > 20% en 24 horas[m
+[32m+[m[32m- Caída de conversiones > 15% en 24 horas[m
+[32m+[m[32m- Error 404 > 10 en 1 hora[m
+[32m+[m
+[32m+[m[32m#### Alertas de SEO[m
+[32m+[m[32m- Nuevas palabras clave en top 10[m
+[32m+[m[32m- Pérdida de posiciones importantes[m
+[32m+[m[32m- Aumento de tráfico orgánico > 50%[m
+[32m+[m
+[32m+[m[32m### 9. Integración con Google Search Console[m
+[32m+[m
+[32m+[m[32m1. **Conectar GA4 con GSC**:[m
+[32m+[m[32m   - En GA4: Configuración > Propiedades > Enlaces de Search Console[m
+[32m+[m[32m   - Agregar propiedad de Search Console[m
+[32m+[m[32m2. **Importar datos de búsqueda**:[m
+[32m+[m[32m   - Consultas de búsqueda[m
+[32m+[m[32m   - Páginas de aterrizaje[m
+[32m+[m[32m   - Posiciones en SERP[m
+[32m+[m
+[32m+[m[32m### 10. Configurar E-commerce (Opcional)[m
+[32m+[m
+[32m+[m[32mSi se implementa e-commerce:[m
+[32m+[m
+[32m+[m[32m```javascript[m
+[32m+[m[32m// Evento de compra[m
+[32m+[m[32mgtag('event', 'purchase', {[m
+[32m+[m[32m  transaction_id: 'T_12345',[m
+[32m+[m[32m  value: 999.00,[m
+[32m+[m[32m  currency: 'MXN',[m
+[32m+[m[32m  items: [{[m
+[32m+[m[32m    item_id: 'course_ai_basics',[m
+[32m+[m[32m    item_name: 'Curso Básico de IA',[m
+[32m+[m[32m    price: 999.00,[m
+[32m+[m[32m    quantity: 1[m
+[32m+[m[32m  }][m
+[32m+[m[32m});[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m## 🔧 Verificación de Configuración[m
+[32m+[m
+[32m+[m[32m### 1. Verificar Instalación[m
+[32m+[m[32m```bash[m
+[32m+[m[32m# Ejecutar análisis SEO[m
+[32m+[m[32mnpm run seo-analysis[m
+[32m+[m
+[32m+[m[32m# Verificar que GA4 esté cargando[m
+[32m+[m[32m# Abrir DevTools > Network > Filtrar por "google-analytics"[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m### 2. Verificar Eventos[m
+[32m+[m[32m1. Abrir Google Analytics 4[m
+[32m+[m[32m2. Ir a Informes > Tiempo real[m
+[32m+[m[32m3. Realizar acciones en el sitio[m
+[32m+[m[32m4. Verificar que los eventos aparezcan[m
+[32m+[m
+[32m+[m[32m### 3. Verificar Conversiones[m
+[32m+[m[32m1. Ir a Configuración > Eventos[m
+[32m+[m[32m2. Verificar que los eventos estén marcados como conversión[m
+[32m+[m[32m3. Ir a Informes > Adquisición > Conversiones[m
+[32m+[m
+[32m+[m[32m## 📊 Métricas Clave a Monitorear[m
+[32m+[m
+[32m+[m[32m### Métricas de Tráfico[m
+[32m+[m[32m- Usuarios activos diarios/mensuales[m
+[32m+[m[32m- Sesiones por usuario[m
+[32m+[m[32m- Tasa de rebote[m
+[32m+[m[32m- Duración de sesión[m
+[32m+[m
+[32m+[m[32m### Métricas de Conversión[m
+[32m+[m[32m- Tasa de conversión general[m
+[32m+[m[32m- Tasa de conversión por curso[m
+[32m+[m[32m- Valor promedio de conversión[m
+[32m+[m[32m- Tiempo hasta la conversión[m
+[32m+[m
+[32m+[m[32m### Métricas de SEO[m
+[32m+[m[32m- Tráfico orgánico[m
+[32m+[m[32m- Palabras clave principales[m
+[32m+[m[32m- Páginas más visitadas[m
+[32m+[m[32m- Tasa de rebote por página[m
+[32m+[m
+[32m+[m[32m## 🚀 Próximos Pasos[m
+[32m+[m
+[32m+[m[32m1. **Configurar Google Tag Manager** para gestión avanzada de tags[m
+[32m+[m[32m2. **Implementar eventos personalizados** en componentes específicos[m
+[32m+[m[32m3. **Configurar informes automatizados** por email[m
+[32m+[m[32m4. **Integrar con otras herramientas** (Hotjar, Facebook Pixel)[m
+[32m+[m[32m5. **Optimizar basado en datos** de GA4[m
+[32m+[m
+[32m+[m[32m## 📝 Notas Importantes[m
+[32m+[m
+[32m+[m[32m- **GDPR Compliance**: Asegurar que el tracking respete la privacidad[m
+[32m+[m[32m- **Consentimiento**: Implementar banner de cookies si es necesario[m
+[32m+[m[32m- **Backup**: Exportar configuraciones importantes[m
+[32m+[m[32m- **Documentación**: Mantener actualizada esta guía[m[41m [m
+\ No newline at end of file[m
+[1mdiff --git a/docs/SEO-IMPLEMENTATION-SUMMARY.md b/docs/SEO-IMPLEMENTATION-SUMMARY.md[m
+[1mnew file mode 100644[m
+[1mindex 0000000..a65d807[m
+[1m--- /dev/null[m
+[1m+++ b/docs/SEO-IMPLEMENTATION-SUMMARY.md[m
+[36m@@ -0,0 +1,254 @@[m
+[32m+[m[32m# Resumen de Implementación SEO - eGrow Academy[m
+[32m+[m
+[32m+[m[32m## 🎯 Estado Actual del SEO[m
+[32m+[m
+[32m+[m[32m### Score SEO: 72/100 (Bueno)[m
+[32m+[m[32m- **Implementado**: 72%[m
+[32m+[m[32m- **Pendiente**: 28%[m
+[32m+[m
+[32m+[m[32m## ✅ Lo que ya está implementado[m
+[32m+[m
+[32m+[m[32m### 1. **Infraestructura SEO Básica**[m
+[32m+[m[32m- ✅ Sitemap XML generado automáticamente[m
+[32m+[m[32m- ✅ Robots.txt optimizado con keywords[m
+[32m+[m[32m- ✅ Manifest.json para PWA[m
+[32m+[m[32m- ✅ Estructura de URLs SEO-friendly[m
+[32m+[m[32m- ✅ Meta tags dinámicos con DynamicSEO[m
+[32m+[m
+[32m+[m[32m### 2. **Google Search Console**[m
+[32m+[m[32m- ✅ Configuración inicial completada[m
+[32m+[m[32m- ✅ Verificación de dominio[m
+[32m+[m[32m- ✅ Sitemaps enviados:[m
+[32m+[m[32m  - `https://egrow-academy.com/sitemap.xml`[m
+[32m+[m[32m  - `https://egrow-academy.com/courses-sitemap.xml`[m
+[32m+[m[32m  - `https://egrow-academy.com/resources-sitemap.xml`[m
+[32m+[m
+[32m+[m[32m### 3. **Analytics y Tracking**[m
+[32m+[m[32m- ✅ Componente Analytics.tsx implementado[m
+[32m+[m[32m- ✅ PerformanceOptimizer.tsx para Core Web Vitals[m
+[32m+[m[32m- ✅ Hook useAnalytics.ts para eventos personalizados[m
+[32m+[m[32m- ✅ Tracking integrado en CourseCard[m
+[32m+[m[32m- ✅ Script de verificación GA4 creado[m
+[32m+[m
+[32m+[m[32m### 4. **Optimización de Contenido**[m
+[32m+[m[32m- ✅ Keywords principales identificadas[m
+[32m+[m[32m- ✅ Meta descriptions optimizadas[m
+[32m+[m[32m- ✅ Open Graph y Twitter Cards[m
+[32m+[m[32m- ✅ Structured Data (Schema.org)[m
+[32m+[m
+[32m+[m[32m### 5. **Herramientas y Scripts**[m
+[32m+[m[32m- ✅ Script de análisis SEO automático[m
+[32m+[m[32m- ✅ Script de generación de sitemaps[m
+[32m+[m[32m- ✅ Script de verificación GA4[m
+[32m+[m[32m- ✅ Documentación completa[m
+[32m+[m
+[32m+[m[32m## 📊 Palabras Clave Implementadas[m
+[32m+[m
+[32m+[m[32m### ✅ Encontradas en archivos SEO:[m
+[32m+[m[32m- "cursos de inteligencia artificial"[m
+[32m+[m[32m- "cursos de IA"[m
+[32m+[m[32m- "machine learning"[m
+[32m+[m[32m- "deep learning"[m
+[32m+[m[32m- "inteligencia artificial"[m
+[32m+[m[32m- "cursos de IA en español"[m
+[32m+[m
+[32m+[m[32m### ⚠️ Pendientes de implementar:[m
+[32m+[m[32m- "machine learning México"[m
+[32m+[m[32m- "deep learning México"[m
+[32m+[m[32m- "inteligencia artificial México"[m
+[32m+[m[32m- "formación en inteligencia artificial"[m
+[32m+[m[32m- "aprender IA"[m
+[32m+[m[32m- "inteligencia artificial Latinoamérica"[m
+[32m+[m[32m- "formación profesional IA"[m
+[32m+[m[32m- "certificación en inteligencia artificial"[m
+[32m+[m[32m- "aprendizaje automático"[m
+[32m+[m[32m- "redes neuronales"[m
+[32m+[m[32m- "procesamiento de lenguaje natural"[m
+[32m+[m[32m- "visión por computadora"[m
+[32m+[m[32m- "robótica e IA"[m
+[32m+[m
+[32m+[m[32m## 🔧 Configuraciones Pendientes[m
+[32m+[m
+[32m+[m[32m### 1. **Google Analytics 4** (PRIORIDAD ALTA)[m
+[32m+[m[32m```env[m
+[32m+[m[32m# Agregar a .env.local[m
+[32m+[m[32mNEXT_PUBLIC_GA_ID="G-XXXXXXXXXX"[m
+[32m+[m[32mGOOGLE_ANALYTICS_ID="G-XXXXXXXXXX"[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m**Pasos:**[m
+[32m+[m[32m1. Crear cuenta en https://analytics.google.com/[m
+[32m+[m[32m2. Crear propiedad "eGrow Academy Website"[m
+[32m+[m[32m3. Copiar ID de medición[m
+[32m+[m[32m4. Agregar variables de entorno[m
+[32m+[m[32m5. Verificar con `npm run test-ga4`[m
+[32m+[m
+[32m+[m[32m### 2. **Google Tag Manager** (PRIORIDAD MEDIA)[m
+[32m+[m[32m```env[m
+[32m+[m[32m# Agregar a .env.local[m
+[32m+[m[32mNEXT_PUBLIC_GTM_ID="GTM-XXXXXXX"[m
+[32m+[m[32mGOOGLE_TAG_MANAGER_ID="GTM-XXXXXXX"[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m**Pasos:**[m
+[32m+[m[32m1. Crear cuenta en https://tagmanager.google.com/[m
+[32m+[m[32m2. Crear contenedor "eGrow Academy Web"[m
+[32m+[m[32m3. Copiar ID de contenedor[m
+[32m+[m[32m4. Agregar variables de entorno[m
+[32m+[m
+[32m+[m[32m### 3. **Facebook Pixel** (PRIORIDAD MEDIA)[m
+[32m+[m[32m```env[m
+[32m+[m[32m# Agregar a .env.local[m
+[32m+[m[32mNEXT_PUBLIC_FACEBOOK_PIXEL_ID="XXXXXXXXXX"[m
+[32m+[m[32mFACEBOOK_PIXEL_ID="XXXXXXXXXX"[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m**Pasos:**[m
+[32m+[m[32m1. Crear pixel en https://business.facebook.com/[m
+[32m+[m[32m2. Copiar ID del pixel[m
+[32m+[m[32m3. Agregar variables de entorno[m
+[32m+[m
+[32m+[m[32m### 4. **Hotjar** (PRIORIDAD BAJA)[m
+[32m+[m[32m```env[m
+[32m+[m[32m# Agregar a .env.local[m
+[32m+[m[32mNEXT_PUBLIC_HOTJAR_ID="XXXXXXXXXX"[m
+[32m+[m[32mHOTJAR_ID="XXXXXXXXXX"[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m**Pasos:**[m
+[32m+[m[32m1. Crear cuenta en https://www.hotjar.com/[m
+[32m+[m[32m2. Copiar ID del sitio[m
+[32m+[m[32m3. Agregar variables de entorno[m
+[32m+[m
+[32m+[m[32m## 🚀 Próximos Pasos Prioritarios[m
+[32m+[m
+[32m+[m[32m### Fase 1: Configuración de Analytics (Esta semana)[m
+[32m+[m[32m1. **Configurar Google Analytics 4**[m
+[32m+[m[32m   - Crear cuenta y propiedad[m
+[32m+[m[32m   - Obtener ID de medición[m
+[32m+[m[32m   - Configurar eventos personalizados[m
+[32m+[m[32m   - Verificar instalación[m
+[32m+[m
+[32m+[m[32m2. **Implementar eventos de tracking**[m
+[32m+[m[32m   - Course views[m
+[32m+[m[32m   - Course enrollments[m
+[32m+[m[32m   - Subscription starts[m
+[32m+[m[32m   - User registrations[m
+[32m+[m[32m   - CTA clicks[m
+[32m+[m
+[32m+[m[32m### Fase 2: Optimización de Core Web Vitals (Próxima semana)[m
+[32m+[m[32m1. **Medir rendimiento actual**[m
+[32m+[m[32m   - Ejecutar `npm run lighthouse`[m
+[32m+[m[32m   - Identificar cuellos de botella[m
+[32m+[m[32m   - Establecer línea base[m
+[32m+[m
+[32m+[m[32m2. **Implementar optimizaciones**[m
+[32m+[m[32m   - Optimizar imágenes[m
+[32m+[m[32m   - Implementar lazy loading[m
+[32m+[m[32m   - Optimizar CSS crítico[m
+[32m+[m[32m   - Mejorar TTFB[m
+[32m+[m
+[32m+[m[32m### Fase 3: Contenido SEO (Siguiente semana)[m
+[32m+[m[32m1. **Mejorar keywords en archivos**[m
+[32m+[m[32m   - Actualizar robots.txt con más keywords[m
+[32m+[m[32m   - Optimizar manifest.json[m
+[32m+[m[32m   - Mejorar sitemaps[m
+[32m+[m
+[32m+[m[32m2. **Crear contenido optimizado**[m
+[32m+[m[32m   - Blog posts con keywords[m
+[32m+[m[32m   - Páginas de recursos[m
+[32m+[m[32m   - Meta descriptions mejoradas[m
+[32m+[m
+[32m+[m[32m### Fase 4: Monitoreo y Optimización (Continuo)[m
+[32m+[m[32m1. **Configurar alertas**[m
+[32m+[m[32m   - Google Search Console[m
+[32m+[m[32m   - Google Analytics[m
+[32m+[m[32m   - Core Web Vitals[m
+[32m+[m
+[32m+[m[32m2. **Análisis continuo**[m
+[32m+[m[32m   - Ejecutar `npm run seo-monitor` semanalmente[m
+[32m+[m[32m   - Revisar rankings de keywords[m
+[32m+[m[32m   - Optimizar basado en datos[m
+[32m+[m
+[32m+[m[32m## 📈 Métricas de Éxito[m
+[32m+[m
+[32m+[m[32m### Objetivos a 3 meses:[m
+[32m+[m[32m- **Score SEO**: 85/100[m
+[32m+[m[32m- **Posición en Google**: Top 3 para "cursos de IA"[m
+[32m+[m[32m- **Tráfico orgánico**: +200%[m
+[32m+[m[32m- **Core Web Vitals**: Todos en verde[m
+[32m+[m[32m- **Conversiones**: +50%[m
+[32m+[m
+[32m+[m[32m### Objetivos a 6 meses:[m
+[32m+[m[32m- **Score SEO**: 90/100[m
+[32m+[m[32m- **Posición en Google**: #1 para "cursos de inteligencia artificial"[m
+[32m+[m[32m- **Tráfico orgánico**: +500%[m
+[32m+[m[32m- **Autoridad de dominio**: 50+[m
+[32m+[m[32m- **Backlinks**: 100+ de calidad[m
+[32m+[m
+[32m+[m[32m## 🛠️ Comandos Útiles[m
+[32m+[m
+[32m+[m[32m```bash[m
+[32m+[m[32m# Análisis SEO completo[m
+[32m+[m[32mnpm run seo-analysis[m
+[32m+[m
+[32m+[m[32m# Verificar configuración GA4[m
+[32m+[m[32mnpm run test-ga4[m
+[32m+[m
+[32m+[m[32m# Generar sitemaps[m
+[32m+[m[32mnpm run generate-seo-files[m
+[32m+[m
+[32m+[m[32m# Análisis de rendimiento[m
+[32m+[m[32mnpm run lighthouse[m
+[32m+[m
+[32m+[m[32m# Monitoreo completo[m
+[32m+[m[32mnpm run seo-monitor[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m## 📋 Checklist de Implementación[m
+[32m+[m
+[32m+[m[32m### ✅ Completado:[m
+[32m+[m[32m- [x] Sitemap XML[m
+[32m+[m[32m- [x] Robots.txt[m
+[32m+[m[32m- [x] Manifest.json[m
+[32m+[m[32m- [x] Google Search Console[m
+[32m+[m[32m- [x] Componentes Analytics[m
+[32m+[m[32m- [x] Hook useAnalytics[m
+[32m+[m[32m- [x] Scripts de verificación[m
+[32m+[m[32m- [x] Documentación[m
+[32m+[m
+[32m+[m[32m### 🔄 En Progreso:[m
+[32m+[m[32m- [ ] Google Analytics 4[m
+[32m+[m[32m- [ ] Eventos de tracking[m
+[32m+[m[32m- [ ] Optimización de keywords[m
+[32m+[m
+[32m+[m[32m### ⏳ Pendiente:[m
+[32m+[m[32m- [ ] Google Tag Manager[m
+[32m+[m[32m- [ ] Facebook Pixel[m
+[32m+[m[32m- [ ] Hotjar[m
+[32m+[m[32m- [ ] Core Web Vitals[m
+[32m+[m[32m- [ ] Contenido optimizado[m
+[32m+[m[32m- [ ] Backlinks[m
+[32m+[m
+[32m+[m[32m## 🎯 Recomendaciones Inmediatas[m
+[32m+[m
+[32m+[m[32m1. **Configurar GA4 HOY** - Es la prioridad más alta[m
+[32m+[m[32m2. **Implementar eventos de tracking** - Para medir conversiones[m
+[32m+[m[32m3. **Optimizar keywords faltantes** - Para mejorar score SEO[m
+[32m+[m[32m4. **Medir Core Web Vitals** - Para identificar problemas[m
+[32m+[m[32m5. **Crear contenido optimizado** - Para mejorar rankings[m
+[32m+[m
+[32m+[m[32m## 📞 Próxima Sesión[m
+[32m+[m
+[32m+[m[32m**Agenda sugerida:**[m
+[32m+[m[32m1. Configurar Google Analytics 4[m
+[32m+[m[32m2. Implementar eventos de tracking[m
+[32m+[m[32m3. Optimizar keywords en archivos[m
+[32m+[m[32m4. Medir Core Web Vitals actuales[m
+[32m+[m[32m5. Planificar optimizaciones de rendimiento[m
+[32m+[m
+[32m+[m[32m---[m
+[32m+[m
+[32m+[m[32m**Estado del proyecto**: ✅ Infraestructura lista, 🔄 Configuración en progreso, ⏳ Optimización pendiente[m
+[32m+[m
+[32m+[m[32m**Próximo hito**: Configurar GA4 y alcanzar score SEO de 80/100[m[41m [m
+\ No newline at end of file[m
+[1mdiff --git a/docs/seo-analysis-report.json b/docs/seo-analysis-report.json[m
+[1mindex 7dbcfa2..771638a 100644[m
+[1m--- a/docs/seo-analysis-report.json[m
+[1m+++ b/docs/seo-analysis-report.json[m
+[36m@@ -1,5 +1,5 @@[m
+ {[m
+[31m-  "timestamp": "2025-07-25T23:51:39.727Z",[m
+[32m+[m[32m  "timestamp": "2025-07-26T15:06:28.777Z",[m
+   "siteUrl": "https://egrow-academy.com",[m
+   "seoFiles": {[m
+     "sitemap": true,[m
+[1mdiff --git a/package.json b/package.json[m
+[1mindex ec5d3af..32fe255 100644[m
+[1m--- a/package.json[m
+[1m+++ b/package.json[m
+[36m@@ -25,6 +25,7 @@[m
+     "seo-check": "npm run generate-sitemap && npm run lighthouse",[m
+     "seo-setup": "npm run generate-seo-files && npm run generate-sitemap",[m
+     "seo-analysis": "node scripts/seo-analysis.js",[m
+[32m+[m[32m    "test-ga4": "tsx scripts/test-ga4.ts",[m
+     "seo-full": "npm run generate-seo-files && npm run seo-analysis && npm run lighthouse",[m
+     "seo-monitor": "npm run seo-analysis && npm run lighthouse"[m
+   },[m
+[1mdiff --git a/scripts/test-ga4.ts b/scripts/test-ga4.ts[m
+[1mnew file mode 100644[m
+[1mindex 0000000..a801537[m
+[1m--- /dev/null[m
+[1m+++ b/scripts/test-ga4.ts[m
+[36m@@ -0,0 +1,271 @@[m
+[32m+[m[32m#!/usr/bin/env node[m
+[32m+[m
+[32m+[m[32m/**[m
+[32m+[m[32m * Script para verificar la configuración de Google Analytics 4[m
+[32m+[m[32m * Ejecutar: npm run test-ga4[m
+[32m+[m[32m */[m
+[32m+[m
+[32m+[m[32mimport fs from 'fs';[m
+[32m+[m[32mimport path from 'path';[m
+[32m+[m
+[32m+[m[32mconst SITE_URL = 'https://egrow-academy.com';[m
+[32m+[m
+[32m+[m[32minterface GA4Config {[m
+[32m+[m[32m  gaId?: string;[m
+[32m+[m[32m  gtmId?: string;[m
+[32m+[m[32m  facebookPixelId?: string;[m
+[32m+[m[32m  hotjarId?: string;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mfunction checkEnvironmentVariables(): GA4Config {[m
+[32m+[m[32m  console.log('🔍 Verificando variables de entorno...\n');[m
+[32m+[m
+[32m+[m[32m  const envPath = path.join(process.cwd(), '.env.local');[m
+[32m+[m[32m  let envContent = '';[m
+[32m+[m
+[32m+[m[32m  if (fs.existsSync(envPath)) {[m
+[32m+[m[32m    envContent = fs.readFileSync(envPath, 'utf8');[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  const config: GA4Config = {};[m
+[32m+[m
+[32m+[m[32m  // Buscar variables de GA4[m
+[32m+[m[32m  const gaMatch = envContent.match(/NEXT_PUBLIC_GA_ID="([^"]+)"/);[m
+[32m+[m[32m  if (gaMatch) {[m
+[32m+[m[32m    config.gaId = gaMatch[1];[m
+[32m+[m[32m    console.log('✅ NEXT_PUBLIC_GA_ID encontrado:', config.gaId);[m
+[32m+[m[32m  } else {[m
+[32m+[m[32m    console.log('❌ NEXT_PUBLIC_GA_ID no encontrado');[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  // Buscar variables de GTM[m
+[32m+[m[32m  const gtmMatch = envContent.match(/NEXT_PUBLIC_GTM_ID="([^"]+)"/);[m
+[32m+[m[32m  if (gtmMatch) {[m
+[32m+[m[32m    config.gtmId = gtmMatch[1];[m
+[32m+[m[32m    console.log('✅ NEXT_PUBLIC_GTM_ID encontrado:', config.gtmId);[m
+[32m+[m[32m  } else {[m
+[32m+[m[32m    console.log('❌ NEXT_PUBLIC_GTM_ID no encontrado');[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  // Buscar variables de Facebook Pixel[m
+[32m+[m[32m  const fbMatch = envContent.match(/NEXT_PUBLIC_FACEBOOK_PIXEL_ID="([^"]+)"/);[m
+[32m+[m[32m  if (fbMatch) {[m
+[32m+[m[32m    config.facebookPixelId = fbMatch[1];[m
+[32m+[m[32m    console.log('✅ NEXT_PUBLIC_FACEBOOK_PIXEL_ID encontrado:', config.facebookPixelId);[m
+[32m+[m[32m  } else {[m
+[32m+[m[32m    console.log('❌ NEXT_PUBLIC_FACEBOOK_PIXEL_ID no encontrado');[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  // Buscar variables de Hotjar[m
+[32m+[m[32m  const hjMatch = envContent.match(/NEXT_PUBLIC_HOTJAR_ID="([^"]+)"/);[m
+[32m+[m[32m  if (hjMatch) {[m
+[32m+[m[32m    config.hotjarId = hjMatch[1];[m
+[32m+[m[32m    console.log('✅ NEXT_PUBLIC_HOTJAR_ID encontrado:', config.hotjarId);[m
+[32m+[m[32m  } else {[m
+[32m+[m[32m    console.log('❌ NEXT_PUBLIC_HOTJAR_ID no encontrado');[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  return config;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mfunction checkAnalyticsComponent(): void {[m
+[32m+[m[32m  console.log('\n🔍 Verificando componente Analytics...\n');[m
+[32m+[m
+[32m+[m[32m  const analyticsPath = path.join(process.cwd(), 'src/components/seo/Analytics.tsx');[m
+[32m+[m[41m  [m
+[32m+[m[32m  if (fs.existsSync(analyticsPath)) {[m
+[32m+[m[32m    const content = fs.readFileSync(analyticsPath, 'utf8');[m
+[32m+[m[41m    [m
+[32m+[m[32m    // Verificar que use process.env[m
+[32m+[m[32m    if (content.includes('process.env.NEXT_PUBLIC_GA_ID')) {[m
+[32m+[m[32m      console.log('✅ Analytics.tsx usa variables de entorno correctamente');[m
+[32m+[m[32m    } else {[m
+[32m+[m[32m      console.log('❌ Analytics.tsx no usa variables de entorno');[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    // Verificar que incluya gtag[m
+[32m+[m[32m    if (content.includes('gtag')) {[m
+[32m+[m[32m      console.log('✅ Analytics.tsx incluye gtag');[m
+[32m+[m[32m    } else {[m
+[32m+[m[32m      console.log('❌ Analytics.tsx no incluye gtag');[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    // Verificar que incluya fbq[m
+[32m+[m[32m    if (content.includes('fbq')) {[m
+[32m+[m[32m      console.log('✅ Analytics.tsx incluye Facebook Pixel');[m
+[32m+[m[32m    } else {[m
+[32m+[m[32m      console.log('❌ Analytics.tsx no incluye Facebook Pixel');[m
+[32m+[m[32m    }[m
+[32m+[m[32m  } else {[m
+[32m+[m[32m    console.log('❌ Analytics.tsx no encontrado');[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mfunction checkLayoutIntegration(): void {[m
+[32m+[m[32m  console.log('\n🔍 Verificando integración en layout...\n');[m
+[32m+[m
+[32m+[m[32m  const layoutPath = path.join(process.cwd(), 'src/app/layout.tsx');[m
+[32m+[m[41m  [m
+[32m+[m[32m  if (fs.existsSync(layoutPath)) {[m
+[32m+[m[32m    const content = fs.readFileSync(layoutPath, 'utf8');[m
+[32m+[m[41m    [m
+[32m+[m[32m    if (content.includes('Analytics')) {[m
+[32m+[m[32m      console.log('✅ Analytics integrado en layout.tsx');[m
+[32m+[m[32m    } else {[m
+[32m+[m[32m      console.log('❌ Analytics no integrado en layout.tsx');[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    if (content.includes('PerformanceOptimizer')) {[m
+[32m+[m[32m      console.log('✅ PerformanceOptimizer integrado en layout.tsx');[m
+[32m+[m[32m    } else {[m
+[32m+[m[32m      console.log('❌ PerformanceOptimizer no integrado en layout.tsx');[m
+[32m+[m[32m    }[m
+[32m+[m[32m  } else {[m
+[32m+[m[32m    console.log('❌ layout.tsx no encontrado');[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mfunction checkAnalyticsHook(): void {[m
+[32m+[m[32m  console.log('\n🔍 Verificando hook de analytics...\n');[m
+[32m+[m
+[32m+[m[32m  const hookPath = path.join(process.cwd(), 'src/hooks/useAnalytics.ts');[m
+[32m+[m[41m  [m
+[32m+[m[32m  if (fs.existsSync(hookPath)) {[m
+[32m+[m[32m    const content = fs.readFileSync(hookPath, 'utf8');[m
+[32m+[m[41m    [m
+[32m+[m[32m    const events = [[m
+[32m+[m[32m      'trackCourseView',[m
+[32m+[m[32m      'trackCourseEnroll',[m
+[32m+[m[32m      'trackSubscriptionStart',[m
+[32m+[m[32m      'trackPaymentComplete',[m
+[32m+[m[32m      'trackUserRegister',[m
+[32m+[m[32m      'trackUserLogin',[m
+[32m+[m[32m      'trackCTAClick'[m
+[32m+[m[32m    ];[m
+[32m+[m
+[32m+[m[32m    events.forEach(event => {[m
+[32m+[m[32m      if (content.includes(event)) {[m
+[32m+[m[32m        console.log(`✅ ${event} implementado`);[m
+[32m+[m[32m      } else {[m
+[32m+[m[32m        console.log(`❌ ${event} no implementado`);[m
+[32m+[m[32m      }[m
+[32m+[m[32m    });[m
+[32m+[m[32m  } else {[m
+[32m+[m[32m    console.log('❌ useAnalytics.ts no encontrado');[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mfunction generateSetupInstructions(config: GA4Config): void {[m
+[32m+[m[32m  console.log('\n📋 Instrucciones de configuración:\n');[m
+[32m+[m
+[32m+[m[32m  if (!config.gaId) {[m
+[32m+[m[32m    console.log('1. 🔧 Configurar Google Analytics 4:');[m
+[32m+[m[32m    console.log('   - Ir a https://analytics.google.com/');[m
+[32m+[m[32m    console.log('   - Crear cuenta: "eGrow Academy"');[m
+[32m+[m[32m    console.log('   - Crear propiedad: "eGrow Academy Website"');[m
+[32m+[m[32m    console.log('   - Copiar ID de medición (G-XXXXXXXXXX)');[m
+[32m+[m[32m    console.log('   - Agregar a .env.local: NEXT_PUBLIC_GA_ID="G-XXXXXXXXXX"');[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  if (!config.gtmId) {[m
+[32m+[m[32m    console.log('\n2. 🔧 Configurar Google Tag Manager:');[m
+[32m+[m[32m    console.log('   - Ir a https://tagmanager.google.com/');[m
+[32m+[m[32m    console.log('   - Crear cuenta: "eGrow Academy"');[m
+[32m+[m[32m    console.log('   - Crear contenedor: "eGrow Academy Web"');[m
+[32m+[m[32m    console.log('   - Copiar ID de contenedor (GTM-XXXXXXX)');[m
+[32m+[m[32m    console.log('   - Agregar a .env.local: NEXT_PUBLIC_GTM_ID="GTM-XXXXXXX"');[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  if (!config.facebookPixelId) {[m
+[32m+[m[32m    console.log('\n3. 🔧 Configurar Facebook Pixel:');[m
+[32m+[m[32m    console.log('   - Ir a https://business.facebook.com/');[m
+[32m+[m[32m    console.log('   - Crear pixel para eGrow Academy');[m
+[32m+[m[32m    console.log('   - Copiar ID del pixel');[m
+[32m+[m[32m    console.log('   - Agregar a .env.local: NEXT_PUBLIC_FACEBOOK_PIXEL_ID="XXXXXXXXXX"');[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  if (!config.hotjarId) {[m
+[32m+[m[32m    console.log('\n4. 🔧 Configurar Hotjar:');[m
+[32m+[m[32m    console.log('   - Ir a https://www.hotjar.com/');[m
+[32m+[m[32m    console.log('   - Crear cuenta para eGrow Academy');[m
+[32m+[m[32m    console.log('   - Copiar ID del sitio');[m
+[32m+[m[32m    console.log('   - Agregar a .env.local: NEXT_PUBLIC_HOTJAR_ID="XXXXXXXXXX"');[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  console.log('\n5. 🔧 Verificar instalación:');[m
+[32m+[m[32m  console.log('   - Ejecutar: npm run dev');[m
+[32m+[m[32m  console.log('   - Abrir DevTools > Network');[m
+[32m+[m[32m  console.log('   - Filtrar por "google-analytics"');[m
+[32m+[m[32m  console.log('   - Verificar que se carguen los scripts');[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mfunction generateTestScript(): void {[m
+[32m+[m[32m  console.log('\n🧪 Script de prueba para verificar GA4:\n');[m
+[32m+[m
+[32m+[m[32m  const testScript = `[m
+[32m+[m[32m// Agregar este código en la consola del navegador para probar GA4[m
+[32m+[m
+[32m+[m[32m// Verificar que gtag esté disponible[m
+[32m+[m[32mif (typeof gtag !== 'undefined') {[m
+[32m+[m[32m  console.log('✅ gtag está disponible');[m
+[32m+[m[41m  [m
+[32m+[m[32m  // Probar evento personalizado[m
+[32m+[m[32m  gtag('event', 'test_event', {[m
+[32m+[m[32m    event_category: 'test',[m
+[32m+[m[32m    event_label: 'ga4_test',[m
+[32m+[m[32m    value: 1[m
+[32m+[m[32m  });[m
+[32m+[m[41m  [m
+[32m+[m[32m  console.log('✅ Evento de prueba enviado');[m
+[32m+[m[32m} else {[m
+[32m+[m[32m  console.log('❌ gtag no está disponible');[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m// Verificar que fbq esté disponible[m
+[32m+[m[32mif (typeof fbq !== 'undefined') {[m
+[32m+[m[32m  console.log('✅ Facebook Pixel está disponible');[m
+[32m+[m[41m  [m
+[32m+[m[32m  // Probar evento de Facebook[m
+[32m+[m[32m  fbq('track', 'PageView');[m
+[32m+[m[41m  [m
+[32m+[m[32m  console.log('✅ Evento de Facebook enviado');[m
+[32m+[m[32m} else {[m
+[32m+[m[32m  console.log('❌ Facebook Pixel no está disponible');[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m// Verificar dataLayer[m
+[32m+[m[32mif (typeof dataLayer !== 'undefined') {[m
+[32m+[m[32m  console.log('✅ dataLayer está disponible');[m
+[32m+[m[32m  console.log('dataLayer:', dataLayer);[m
+[32m+[m[32m} else {[m
+[32m+[m[32m  console.log('❌ dataLayer no está disponible');[m
+[32m+[m[32m}[m
+[32m+[m[32m`;[m
+[32m+[m
+[32m+[m[32m  console.log(testScript);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mfunction main(): void {[m
+[32m+[m[32m  console.log('🚀 Verificación de Google Analytics 4 para eGrow Academy\n');[m
+[32m+[m[32m  console.log(`🌐 Sitio: ${SITE_URL}\n`);[m
+[32m+[m
+[32m+[m[32m  const config = checkEnvironmentVariables();[m
+[32m+[m[32m  checkAnalyticsComponent();[m
+[32m+[m[32m  checkLayoutIntegration();[m
+[32m+[m[32m  checkAnalyticsHook();[m
+[32m+[m[41m  [m
+[32m+[m[32m  generateSetupInstructions(config);[m
+[32m+[m[32m  generateTestScript();[m
+[32m+[m
+[32m+[m[32m  console.log('\n✅ Verificación completada!');[m
+[32m+[m[32m  console.log('\n📊 Para verificar que todo funciona:');[m
+[32m+[m[32m  console.log('1. Configurar las variables de entorno faltantes');[m
+[32m+[m[32m  console.log('2. Ejecutar: npm run dev');[m
+[32m+[m[32m  console.log('3. Abrir el sitio en el navegador');[m
+[32m+[m[32m  console.log('4. Ejecutar el script de prueba en la consola');[m
+[32m+[m[32m  console.log('5. Verificar en Google Analytics > Tiempo real');[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mif (require.main === module) {[m
+[32m+[m[32m  main();[m
+[32m+[m[32m}[m[41m [m
+\ No newline at end of file[m
+[1mdiff --git a/src/components/courses/CourseCard.tsx b/src/components/courses/CourseCard.tsx[m
+[1mindex 42e2292..74439c5 100644[m
+[1m--- a/src/components/courses/CourseCard.tsx[m
+[1m+++ b/src/components/courses/CourseCard.tsx[m
+[36m@@ -1,6 +1,7 @@[m
+ 'use client';[m
+ [m
+ import { useCourseAccess } from '@/hooks/useCourseAccess';[m
+[32m+[m[32mimport { useAnalytics } from '@/hooks/useAnalytics';[m
+ import SubscriptionModal from '@/components/payments/SubscriptionModal';[m
+ [m
+ interface CourseCardProps {[m
+[36m@@ -29,10 +30,30 @@[m [mexport default function CourseCard({[m
+     getAccessBadgeColor[m
+   } = useCourseAccess();[m
+ [m
+[32m+[m[32m  const { trackCourseView, trackCTAClick } = useAnalytics();[m
+[32m+[m
+   const course = { id, title, category, isFree, requiresAuth };[m
+ [m
+   const handleClick = (e: React.MouseEvent) => {[m
+     e.preventDefault();[m
+[32m+[m[41m    [m
+[32m+[m[32m    // Track course view[m
+[32m+[m[32m    trackCourseView({[m
+[32m+[m[32m      course_id: id,[m
+[32m+[m[32m      course_name: title,[m
+[32m+[m[32m      course_category: category,[m
+[32m+[m[32m      course_level: level,[m
+[32m+[m[32m      course_price: isFree ? 0 : undefined,[m
+[32m+[m[32m    });[m
+[32m+[m
+[32m+[m[32m    // Track CTA click[m
+[32m+[m[32m    trackCTAClick({[m
+[32m+[m[32m      cta_type: isFree ? 'enroll' : 'subscribe',[m
+[32m+[m[32m      cta_text: 'Ver Curso',[m
+[32m+[m[32m      cta_location: 'course_card',[m
+[32m+[m[32m      user_type: 'free', // TODO: Get from auth context[m
+[32m+[m[32m    });[m
+[32m+[m
+     if (onCourseClick) {[m
+       if (handleCourseAccess(course)) {[m
+         onCourseClick(id);[m
+[1mdiff --git a/src/hooks/useAnalytics.ts b/src/hooks/useAnalytics.ts[m
+[1mnew file mode 100644[m
+[1mindex 0000000..916dbf5[m
+[1m--- /dev/null[m
+[1m+++ b/src/hooks/useAnalytics.ts[m
+[36m@@ -0,0 +1,288 @@[m
+[32m+[m[32m'use client';[m
+[32m+[m
+[32m+[m[32mimport { useCallback } from 'react';[m
+[32m+[m
+[32m+[m[32minterface CourseEventData {[m
+[32m+[m[32m  course_id: string;[m
+[32m+[m[32m  course_name: string;[m
+[32m+[m[32m  course_category?: string;[m
+[32m+[m[32m  course_level?: string;[m
+[32m+[m[32m  course_price?: number;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32minterface UserEventData {[m
+[32m+[m[32m  user_id?: string;[m
+[32m+[m[32m  user_type?: 'free' | 'premium' | 'admin';[m
+[32m+[m[32m  user_country?: string;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32minterface ConversionEventData {[m
+[32m+[m[32m  value?: number;[m
+[32m+[m[32m  currency?: string;[m
+[32m+[m[32m  transaction_id?: string;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mexport const useAnalytics = () => {[m
+[32m+[m[32m  const trackEvent = useCallback(([m
+[32m+[m[32m    eventName: string,[m[41m [m
+[32m+[m[32m    parameters: Record<string, any> = {}[m
+[32m+[m[32m  ) => {[m
+[32m+[m[32m    if (typeof window !== 'undefined' && window.gtag) {[m
+[32m+[m[32m      window.gtag('event', eventName, {[m
+[32m+[m[32m        event_category: 'egrow_academy',[m
+[32m+[m[32m        event_label: window.location.pathname,[m
+[32m+[m[32m        ...parameters,[m
+[32m+[m[32m      });[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    if (typeof window !== 'undefined' && window.fbq) {[m
+[32m+[m[32m      window.fbq('track', eventName, parameters);[m
+[32m+[m[32m    }[m
+[32m+[m[32m  }, []);[m
+[32m+[m
+[32m+[m[32m  // Eventos de Cursos[m
+[32m+[m[32m  const trackCourseView = useCallback((data: CourseEventData) => {[m
+[32m+[m[32m    trackEvent('course_view', {[m
+[32m+[m[32m      course_id: data.course_id,[m
+[32m+[m[32m      course_name: data.course_name,[m
+[32m+[m[32m      course_category: data.course_category,[m
+[32m+[m[32m      course_level: data.course_level,[m
+[32m+[m[32m      course_price: data.course_price,[m
+[32m+[m[32m    });[m
+[32m+[m[32m  }, [trackEvent]);[m
+[32m+[m
+[32m+[m[32m  const trackCourseEnroll = useCallback((data: CourseEventData & UserEventData) => {[m
+[32m+[m[32m    trackEvent('course_enroll', {[m
+[32m+[m[32m      course_id: data.course_id,[m
+[32m+[m[32m      course_name: data.course_name,[m
+[32m+[m[32m      course_category: data.course_category,[m
+[32m+[m[32m      course_level: data.course_level,[m
+[32m+[m[32m      course_price: data.course_price,[m
+[32m+[m[32m      user_type: data.user_type,[m
+[32m+[m[32m      user_country: data.user_country,[m
+[32m+[m[32m    });[m
+[32m+[m[32m  }, [trackEvent]);[m
+[32m+[m
+[32m+[m[32m  const trackCourseComplete = useCallback((data: CourseEventData & UserEventData) => {[m
+[32m+[m[32m    trackEvent('course_complete', {[m
+[32m+[m[32m      course_id: data.course_id,[m
+[32m+[m[32m      course_name: data.course_name,[m
+[32m+[m[32m      course_category: data.course_category,[m
+[32m+[m[32m      course_level: data.course_level,[m
+[32m+[m[32m      user_type: data.user_type,[m
+[32m+[m[32m    });[m
+[32m+[m[32m  }, [trackEvent]);[m
+[32m+[m
+[32m+[m[32m  const trackLessonView = useCallback((data: {[m
+[32m+[m[32m    course_id: string;[m
+[32m+[m[32m    lesson_id: string;[m
+[32m+[m[32m    lesson_name: string;[m
+[32m+[m[32m    lesson_number: number;[m
+[32m+[m[32m  } & UserEventData) => {[m
+[32m+[m[32m    trackEvent('lesson_view', {[m
+[32m+[m[32m      course_id: data.course_id,[m
+[32m+[m[32m      lesson_id: data.lesson_id,[m
+[32m+[m[32m      lesson_name: data.lesson_name,[m
+[32m+[m[32m      lesson_number: data.lesson_number,[m
+[32m+[m[32m      user_type: data.user_type,[m
+[32m+[m[32m    });[m
+[32m+[m[32m  }, [trackEvent]);[m
+[32m+[m
+[32m+[m[32m  const trackVideoPlay = useCallback((data: {[m
+[32m+[m[32m    course_id: string;[m
+[32m+[m[32m    lesson_id: string;[m
+[32m+[m[32m    video_duration: number;[m
+[32m+[m[32m    video_title: string;[m
+[32m+[m[32m  } & UserEventData) => {[m
+[32m+[m[32m    trackEvent('video_play', {[m
+[32m+[m[32m      course_id: data.course_id,[m
+[32m+[m[32m      lesson_id: data.lesson_id,[m
+[32m+[m[32m      video_duration: data.video_duration,[m
+[32m+[m[32m      video_title: data.video_title,[m
+[32m+[m[32m      user_type: data.user_type,[m
+[32m+[m[32m    });[m
+[32m+[m[32m  }, [trackEvent]);[m
+[32m+[m
+[32m+[m[32m  // Eventos de Conversión[m
+[32m+[m[32m  const trackSubscriptionStart = useCallback((data: ConversionEventData & UserEventData) => {[m
+[32m+[m[32m    trackEvent('subscription_start', {[m
+[32m+[m[32m      value: data.value,[m
+[32m+[m[32m      currency: data.currency || 'MXN',[m
+[32m+[m[32m      transaction_id: data.transaction_id,[m
+[32m+[m[32m      user_type: data.user_type,[m
+[32m+[m[32m      user_country: data.user_country,[m
+[32m+[m[32m    });[m
+[32m+[m[32m  }, [trackEvent]);[m
+[32m+[m
+[32m+[m[32m  const trackPaymentComplete = useCallback((data: ConversionEventData & UserEventData) => {[m
+[32m+[m[32m    trackEvent('payment_complete', {[m
+[32m+[m[32m      value: data.value,[m
+[32m+[m[32m      currency: data.currency || 'MXN',[m
+[32m+[m[32m      transaction_id: data.transaction_id,[m
+[32m+[m[32m      user_type: data.user_type,[m
+[32m+[m[32m      user_country: data.user_country,[m
+[32m+[m[32m    });[m
+[32m+[m[32m  }, [trackEvent]);[m
+[32m+[m
+[32m+[m[32m  const trackFreeTrialStart = useCallback((data: UserEventData) => {[m
+[32m+[m[32m    trackEvent('free_trial_start', {[m
+[32m+[m[32m      user_type: data.user_type,[m
+[32m+[m[32m      user_country: data.user_country,[m
+[32m+[m[32m    });[m
+[32m+[m[32m  }, [trackEvent]);[m
+[32m+[m
+[32m+[m[32m  const trackDownloadResource = useCallback((data: {[m
+[32m+[m[32m    resource_id: string;[m
+[32m+[m[32m    resource_name: string;[m
+[32m+[m[32m    resource_type: 'pdf' | 'video' | 'code' | 'other';[m
+[32m+[m[32m  } & UserEventData) => {[m
+[32m+[m[32m    trackEvent('download_resource', {[m
+[32m+[m[32m      resource_id: data.resource_id,[m
+[32m+[m[32m      resource_name: data.resource_name,[m
+[32m+[m[32m      resource_type: data.resource_type,[m
+[32m+[m[32m      user_type: data.user_type,[m
+[32m+[m[32m    });[m
+[32m+[m[32m  }, [trackEvent]);[m
+[32m+[m
+[32m+[m[32m  // Eventos de Usuario[m
+[32m+[m[32m  const trackUserRegister = useCallback((data: UserEventData) => {[m
+[32m+[m[32m    trackEvent('user_register', {[m
+[32m+[m[32m      user_type: data.user_type,[m
+[32m+[m[32m      user_country: data.user_country,[m
+[32m+[m[32m    });[m
+[32m+[m[32m  }, [trackEvent]);[m
+[32m+[m
+[32m+[m[32m  const trackUserLogin = useCallback((data: UserEventData) => {[m
+[32m+[m[32m    trackEvent('user_login', {[m
+[32m+[m[32m      user_type: data.user_type,[m
+[32m+[m[32m      user_country: data.user_country,[m
+[32m+[m[32m    });[m
+[32m+[m[32m  }, [trackEvent]);[m
+[32m+[m
+[32m+[m[32m  const trackSearchCourse = useCallback((data: {[m
+[32m+[m[32m    search_term: string;[m
+[32m+[m[32m    results_count: number;[m
+[32m+[m[32m  } & UserEventData) => {[m
+[32m+[m[32m    trackEvent('search_course', {[m
+[32m+[m[32m      search_term: data.search_term,[m
+[32m+[m[32m      results_count: data.results_count,[m
+[32m+[m[32m      user_type: data.user_type,[m
+[32m+[m[32m    });[m
+[32m+[m[32m  }, [trackEvent]);[m
+[32m+[m
+[32m+[m[32m  const trackContactFormSubmit = useCallback((data: {[m
+[32m+[m[32m    form_type: 'contact' | 'support' | 'feedback';[m
+[32m+[m[32m    subject?: string;[m
+[32m+[m[32m  } & UserEventData) => {[m
+[32m+[m[32m    trackEvent('contact_form_submit', {[m
+[32m+[m[32m      form_type: data.form_type,[m
+[32m+[m[32m      subject: data.subject,[m
+[32m+[m[32m      user_type: data.user_type,[m
+[32m+[m[32m    });[m
+[32m+[m[32m  }, [trackEvent]);[m
+[32m+[m
+[32m+[m[32m  // Eventos de Navegación[m
+[32m+[m[32m  const trackPageView = useCallback((data: {[m
+[32m+[m[32m    page_title?: string;[m
+[32m+[m[32m    page_url?: string;[m
+[32m+[m[32m    page_category?: string;[m
+[32m+[m[32m  } = {}) => {[m
+[32m+[m[32m    const title = data.page_title || document.title;[m
+[32m+[m[32m    const url = data.page_url || window.location.href;[m
+[32m+[m[41m    [m
+[32m+[m[32m    if (typeof window !== 'undefined' && window.gtag) {[m
+[32m+[m[32m      window.gtag('config', process.env.NEXT_PUBLIC_GA_ID, {[m
+[32m+[m[32m        page_title: title,[m
+[32m+[m[32m        page_location: url,[m
+[32m+[m[32m        custom_map: {[m
+[32m+[m[32m          'custom_parameter_1': 'page_category',[m
+[32m+[m[32m        },[m
+[32m+[m[32m        custom_parameter_1: data.page_category,[m
+[32m+[m[32m      });[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    if (typeof window !== 'undefined' && window.fbq) {[m
+[32m+[m[32m      window.fbq('track', 'PageView');[m
+[32m+[m[32m    }[m
+[32m+[m[32m  }, []);[m
+[32m+[m
+[32m+[m[32m  // Eventos de Engagement[m
+[32m+[m[32m  const trackScrollDepth = useCallback((depth: number) => {[m
+[32m+[m[32m    trackEvent('scroll_depth', {[m
+[32m+[m[32m      scroll_percentage: depth,[m
+[32m+[m[32m    });[m
+[32m+[m[32m  }, [trackEvent]);[m
+[32m+[m
+[32m+[m[32m  const trackTimeOnPage = useCallback((timeSpent: number) => {[m
+[32m+[m[32m    trackEvent('time_on_page', {[m
+[32m+[m[32m      time_spent_seconds: timeSpent,[m
+[32m+[m[32m    });[m
+[32m+[m[32m  }, [trackEvent]);[m
+[32m+[m
+[32m+[m[32m  const trackCTAClick = useCallback((data: {[m
+[32m+[m[32m    cta_type: 'enroll' | 'subscribe' | 'download' | 'contact' | 'trial';[m
+[32m+[m[32m    cta_text: string;[m
+[32m+[m[32m    cta_location: string;[m
+[32m+[m[32m  } & UserEventData) => {[m
+[32m+[m[32m    trackEvent('cta_click', {[m
+[32m+[m[32m      cta_type: data.cta_type,[m
+[32m+[m[32m      cta_text: data.cta_text,[m
+[32m+[m[32m      cta_location: data.cta_location,[m
+[32m+[m[32m      user_type: data.user_type,[m
+[32m+[m[32m    });[m
+[32m+[m[32m  }, [trackEvent]);[m
+[32m+[m
+[32m+[m[32m  // Eventos de Error[m
+[32m+[m[32m  const trackError = useCallback((data: {[m
+[32m+[m[32m    error_type: '404' | '500' | 'video_error' | 'payment_error' | 'other';[m
+[32m+[m[32m    error_message: string;[m
+[32m+[m[32m    error_url: string;[m
+[32m+[m[32m  }) => {[m
+[32m+[m[32m    trackEvent('error', {[m
+[32m+[m[32m      error_type: data.error_type,[m
+[32m+[m[32m      error_message: data.error_message,[m
+[32m+[m[32m      error_url: data.error_url,[m
+[32m+[m[32m    });[m
+[32m+[m[32m  }, [trackEvent]);[m
+[32m+[m
+[32m+[m[32m  return {[m
+[32m+[m[32m    // Métodos básicos[m
+[32m+[m[32m    trackEvent,[m
+[32m+[m[32m    trackPageView,[m
+[32m+[m[41m    [m
+[32m+[m[32m    // Eventos de cursos[m
+[32m+[m[32m    trackCourseView,[m
+[32m+[m[32m    trackCourseEnroll,[m
+[32m+[m[32m    trackCourseComplete,[m
+[32m+[m[32m    trackLessonView,[m
+[32m+[m[32m    trackVideoPlay,[m
+[32m+[m[41m    [m
+[32m+[m[32m    // Eventos de conversión[m
+[32m+[m[32m    trackSubscriptionStart,[m
+[32m+[m[32m    trackPaymentComplete,[m
+[32m+[m[32m    trackFreeTrialStart,[m
+[32m+[m[32m    trackDownloadResource,[m
+[32m+[m[41m    [m
+[32m+[m[32m    // Eventos de usuario[m
+[32m+[m[32m    trackUserRegister,[m
+[32m+[m[32m    trackUserLogin,[m
+[32m+[m[32m    trackSearchCourse,[m
+[32m+[m[32m    trackContactFormSubmit,[m
+[32m+[m[41m    [m
+[32m+[m[32m    // Eventos de engagement[m
+[32m+[m[32m    trackScrollDepth,[m
+[32m+[m[32m    trackTimeOnPage,[m
+[32m+[m[32m    trackCTAClick,[m
+[32m+[m[41m    [m
+[32m+[m[32m    // Eventos de error[m
+[32m+[m[32m    trackError,[m
+[32m+[m[32m  };[m
+[32m+[m[32m};[m
+[32m+[m
+[32m+[m[32m// Tipos para TypeScript[m
+[32m+[m[32mdeclare global {[m
+[32m+[m[32m  interface Window {[m
+[32m+[m[32m    gtag: (...args: any[]) => void;[m
+[32m+[m[32m    fbq: (...args: any[]) => void;[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m[41m [m
+\ No newline at end of file[m

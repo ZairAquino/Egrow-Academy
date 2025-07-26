@@ -101,7 +101,7 @@ export default function MonetizaIAPage() {
     category: 'Monetización',
     price: 'Gratis',
     language: 'Español',
-    image: '/images/v-5.png',
+    image: '/images/optimized/v-5.webp',
     lessonsCount: 8,
     instructor: {
       name: 'Zair Adolfo Aquino Rodriguez',
@@ -389,7 +389,7 @@ export default function MonetizaIAPage() {
               
               <div className="course-preview">
                 <div className="preview-video">
-                  <img src="/images/p1.png" alt={courseData.title} />
+                  <img src="/images/optimized/p1.webp" alt={courseData.title} />
                   <div className="play-button" onClick={() => window.open('https://www.youtube.com/watch?v=hBuXs6NYesw', '_blank')}>
                     <span>▶</span>
                   </div>

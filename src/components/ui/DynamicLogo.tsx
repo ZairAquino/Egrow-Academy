@@ -80,7 +80,7 @@ export default function DynamicLogo({
   const timestamp = Date.now();
   const randomId = Math.random().toString(36).substring(7);
   const logoSrc = isPremium 
-    ? `/images/logop.png?v=${timestamp}&key=${logoKey}&reload=${forceReload}&r=${randomId}` 
+    ? `/images/optimized/logop.webp?v=${timestamp}&key=${logoKey}&reload=${forceReload}&r=${randomId}` 
     : `/images/logog.png?v=${timestamp}&key=${logoKey}&reload=${forceReload}&r=${randomId}`;
   const logoAlt = isPremium ? "eGrow Academy Premium" : "eGrow Academy";
 
@@ -109,7 +109,7 @@ export default function DynamicLogo({
       className={className}
       onError={(e) => {
         console.error(`❌ [DynamicLogo] Error loading logo: ${logoSrc}`);
-        if (fallbackToFree && logoSrc.includes('logop.png')) {
+        if (fallbackToFree && logoSrc.includes('logop.webp')) {
           // Fallback to free logo if premium fails
           (e.target as HTMLImageElement).src = `/images/logog.png?v=${timestamp}&key=${logoKey}&reload=${forceReload}&r=${randomId}`;
         }

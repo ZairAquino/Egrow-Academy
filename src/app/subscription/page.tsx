@@ -56,52 +56,12 @@ export default function SubscriptionPage() {
   const router = useRouter();
   const [selectedPlan, setSelectedPlan] = useState<string>('yearly');
   const [isProcessing, setIsProcessing] = useState(false);
-  const [couponCode, setCouponCode] = useState<string>('');
-  const [couponApplied, setCouponApplied] = useState<boolean>(false);
-  const [couponError, setCouponError] = useState<string>('');
 
   useEffect(() => {
     if (status !== 'loading' && !user) {
       router.push('/login?redirect=/subscription');
     }
   }, [user, status, router]);
-
-  const handleApplyCoupon = async () => {
-    if (!couponCode.trim()) {
-      setCouponError('Por favor ingresa un código de cupón');
-      return;
-    }
-
-    setIsProcessing(true);
-    setCouponError('');
-
-    try {
-      const response = await fetch('/api/stripe/validate-coupon', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ couponCode: couponCode.trim() }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Error al validar cupón');
-      }
-
-      setCouponApplied(true);
-      setCouponError('');
-      alert(`✅ Cupón aplicado: ${data.coupon.name}`);
-      
-    } catch (error) {
-      console.error('Error al aplicar cupón:', error);
-      setCouponError(error instanceof Error ? error.message : 'Error al aplicar cupón');
-      setCouponApplied(false);
-    } finally {
-      setIsProcessing(false);
-    }
-  };
 
   const handleSubscribe = async (planId: string) => {
     if (!user) {
@@ -117,10 +77,7 @@ export default function SubscriptionPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
-          planId,
-          couponCode: couponApplied ? couponCode : undefined 
-        }),
+        body: JSON.stringify({ planId }),
       });
 
       const data = await response.json();
@@ -209,81 +166,6 @@ export default function SubscriptionPage() {
                 sección de FAQ
               </Link>
             </p>
-            
-            {/* Cupón Section */}
-            <div className="coupon-section">
-              <div className="coupon-container">
-                <div className="coupon-header">
-                  <div className="coupon-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-6 h-6">
-                      <path d="M2 16.1A5 5 0 0 1 5.9 20M6.3 20.7l13.4-13.4M7.8 21l9.9-9.9"/>
-                      <path d="m15 2 3 3L6 17l-3-3 12-12"/>
-                    </svg>
-                  </div>
-                  <div className="coupon-text">
-                    <h3 className="coupon-title">
-                      ¿Tienes un código de descuento?
-                    </h3>
-                    <p className="coupon-subtitle">
-                      Aplica tu cupón y ahorra en tu suscripción
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="coupon-input-group">
-                  <div className="coupon-input-container">
-                    <input
-                      type="text"
-                      value={couponCode}
-                      onChange={(e) => setCouponCode(e.target.value)}
-                      placeholder="Ej: DESCUENTO2024"
-                      className="coupon-input"
-                      disabled={couponApplied}
-                    />
-                    <button
-                      onClick={handleApplyCoupon}
-                      disabled={isProcessing || couponApplied}
-                      className="coupon-button"
-                    >
-                      {isProcessing ? (
-                        <div className="coupon-loading">
-                          <div className="loading-spinner"></div>
-                          <span>Validando...</span>
-                        </div>
-                      ) : couponApplied ? (
-                        <div className="coupon-applied">
-                          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
-                          </svg>
-                          <span>Aplicado</span>
-                        </div>
-                      ) : (
-                        <span>Aplicar</span>
-                      )}
-                    </button>
-                  </div>
-                  
-                  {couponError && (
-                    <div className="coupon-message error">
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd"/>
-                      </svg>
-                      <span>{couponError}</span>
-                    </div>
-                  )}
-                  
-                  {couponApplied && (
-                    <div className="coupon-message success">
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
-                      </svg>
-                      <span>¡Cupón "{couponCode}" aplicado correctamente!</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-
             {/* Plan Toggle */}
             <div className="plan-toggle">
               <div className="plan-toggle-container">

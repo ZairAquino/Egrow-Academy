@@ -25,8 +25,12 @@
     "seo-check": "npm run generate-sitemap && npm run lighthouse",
     "seo-setup": "npm run generate-seo-files && npm run generate-sitemap",
     "seo-analysis": "node scripts/seo-analysis.js",
+    "test-ga4": "tsx scripts/test-ga4.ts",
     "seo-full": "npm run generate-seo-files && npm run seo-analysis && npm run lighthouse",
-    "seo-monitor": "npm run seo-analysis && npm run lighthouse"
+    "seo-monitor": "npm run seo-analysis && npm run lighthouse",
+    "measure-cwv": "node scripts/measure-cwv.js",
+    "performance-analysis": "node scripts/performance-analysis.js",
+    "optimize-performance": "node scripts/optimize-performance.js"
   },
   "dependencies": {
     "@prisma/client": "^6.12.0",
