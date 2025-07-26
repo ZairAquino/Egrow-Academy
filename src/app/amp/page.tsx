@@ -78,7 +78,7 @@ export default function AMPPage() {
               </div>
               
               <nav>
-                <a href="/cursos" className="amp-button">Cursos</a>
+                <a href="/courses" className="amp-button">Cursos</a>
                 <a href="/blog" className="amp-button">Blog</a>
                 <a href="/contacto" className="amp-button">Contacto</a>
               </nav>
@@ -95,7 +95,7 @@ export default function AMPPage() {
             <p style={{ fontSize: '1.2rem', marginBottom: '2rem' }}>
               Domina las tecnologías del futuro con nuestros cursos expertos
             </p>
-            <a href="/cursos" className="amp-button amp-browse-courses">
+            <a href="/courses" className="amp-button amp-browse-courses">
               Explorar Cursos
             </a>
           </div>
@@ -267,7 +267,7 @@ export default function AMPPage() {
               <div>
                 <h4 style={{ marginBottom: '1rem' }}>Enlaces</h4>
                 <ul style={{ listStyle: 'none', padding: 0 }}>
-                  <li style={{ marginBottom: '0.5rem' }}><a href="/cursos" style={{ color: 'white' }}>Cursos</a></li>
+                  <li style={{ marginBottom: '0.5rem' }}><a href="/courses" style={{ color: 'white' }}>Cursos</a></li>
                   <li style={{ marginBottom: '0.5rem' }}><a href="/blog" style={{ color: 'white' }}>Blog</a></li>
                   <li style={{ marginBottom: '0.5rem' }}><a href="/sobre-nosotros" style={{ color: 'white' }}>Sobre Nosotros</a></li>
                   <li style={{ marginBottom: '0.5rem' }}><a href="/contacto" style={{ color: 'white' }}>Contacto</a></li>
