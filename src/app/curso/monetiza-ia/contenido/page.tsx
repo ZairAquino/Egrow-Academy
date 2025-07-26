@@ -414,10 +414,17 @@ Estrategias para aumentar RPH:
 
   const checkEnrollment = async () => {
     try {
+      console.log('🔍 [DEBUG] Verificando inscripción para curso:', courseData.id);
       const response = await fetch(`/api/courses/enrollment-status?courseId=${courseData.id}`);
+      console.log('🔍 [DEBUG] Respuesta del servidor:', { status: response.status, ok: response.ok });
+      
       if (response.ok) {
         const data = await response.json();
+        console.log('🔍 [DEBUG] Datos de inscripción:', data);
         setIsEnrolled(data.isEnrolled);
+      } else {
+        const errorData = await response.json();
+        console.error('🔍 [DEBUG] Error en respuesta:', errorData);
       }
     } catch (error) {
       console.error('Error verificando inscripción:', error);
@@ -682,7 +689,7 @@ Estrategias para aumentar RPH:
                     {courseData.lessons[progress.currentLesson].videoUrl && (
                       <div className="lesson-video">
                         <VideoPlayer
-                          videoUrl={courseData.lessons[progress.currentLesson].videoUrl}
+                          videoUrl={courseData.lessons[progress.currentLesson].videoUrl!}
                           title={courseData.lessons[progress.currentLesson].title}
                           onComplete={() => {
                             // Opcional: marcar como completada cuando termine el video

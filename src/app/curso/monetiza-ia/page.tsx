@@ -390,6 +390,36 @@ export default function MonetizaIAPage() {
                             progressPercentage 
                           });
                           
+                          // Verificar si el usuario está inscrito
+                          try {
+                            const enrollmentResponse = await fetch(`/api/courses/enrollment-status?courseId=monetiza-ia`);
+                            if (enrollmentResponse.ok) {
+                              const enrollmentData = await enrollmentResponse.json();
+                              console.log('🔍 [DEBUG] Estado de inscripción:', enrollmentData);
+                              
+                              if (!enrollmentData.isEnrolled) {
+                                console.log('🔍 [DEBUG] Usuario no inscrito, inscribiendo automáticamente...');
+                                // Inscribir al usuario automáticamente
+                                const enrollResponse = await fetch('/api/courses/enroll', {
+                                  method: 'POST',
+                                  headers: {
+                                    'Content-Type': 'application/json',
+                                  },
+                                  body: JSON.stringify({ courseId: 'monetiza-ia' }),
+                                  credentials: 'include',
+                                });
+                                
+                                if (enrollResponse.ok) {
+                                  console.log('🔍 [DEBUG] Usuario inscrito exitosamente');
+                                } else {
+                                  console.error('🔍 [DEBUG] Error al inscribir usuario');
+                                }
+                              }
+                            }
+                          } catch (error) {
+                            console.error('🔍 [DEBUG] Error verificando inscripción:', error);
+                          }
+                          
                           await loadUserProgress();
                           console.log('🔍 [DEBUG] Progreso recargado, redirigiendo a contenido');
                           console.log('🔍 [DEBUG] Router disponible:', !!router);
