@@ -30,7 +30,9 @@
     "seo-monitor": "npm run seo-analysis && npm run lighthouse",
     "measure-cwv": "node scripts/measure-cwv.js",
     "performance-analysis": "node scripts/performance-analysis.js",
-    "optimize-performance": "node scripts/optimize-performance.js"
+    "optimize-performance": "node scripts/optimize-performance.js",
+    "seed-courses": "tsx scripts/seed-courses.ts",
+    "verify-platform": "tsx scripts/verify-platform.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.12.0",
