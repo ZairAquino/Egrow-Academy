@@ -33,7 +33,7 @@ export function middleware(request: NextRequest) {
   if (pathname.startsWith('/curso/')) {
     const slug = pathname.replace('/curso/', '');
     if (!urlUtils.validateCourseSlug(slug)) {
-      return NextResponse.redirect(new URL('/cursos', request.url));
+      return NextResponse.redirect(new URL('/courses', request.url));
     }
   }
 

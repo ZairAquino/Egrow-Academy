@@ -27,8 +27,8 @@ export const urlStructureConfig = {
 
   // Cursos
   courses: {
-    pattern: '/cursos',
-    template: '/cursos',
+    pattern: '/courses',
+    template: '/courses',
     priority: 0.9,
     changefreq: 'weekly' as const,
   },
@@ -170,7 +170,7 @@ export const validateURL = (url: string): boolean => {
 // Configuración de redirecciones
 export const redirectConfig: Record<string, string> = {
   // Redirecciones de URLs antiguas a nuevas
-  '/courses': '/cursos',
+  '/cursos': '/courses',
   '/course': '/curso',
   '/category': '/categoria',
   '/categories': '/categorias',
@@ -192,8 +192,8 @@ export const redirectConfig: Record<string, string> = {
 export const canonicalURLs: CanonicalURL[] = [
   // URLs que deben redirigir a su versión canónica
   {
-    url: '/cursos/',
-    canonical: '/cursos',
+    url: '/courses/',
+    canonical: '/courses',
   },
   {
     url: '/blog/',
