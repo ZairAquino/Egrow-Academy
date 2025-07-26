@@ -30,7 +30,7 @@ export default function IntroduccionLLMsPage() {
 
   const handleEnrollClick = async () => {
     if (!user) {
-      router.push('/login?redirect=/curso/introduccion-llms');
+      router.push('/login?redirect=/curso/introduccion-llms/contenido');
       return;
     }
 

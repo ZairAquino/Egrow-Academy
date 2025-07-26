@@ -30,7 +30,7 @@ export default function ComputerVisionPage() {
 
   const handleEnrollClick = async () => {
     if (!user) {
-      router.push('/login?redirect=/curso/computer-vision');
+      router.push('/login?redirect=/curso/computer-vision/contenido');
       return;
     }
 

@@ -30,7 +30,7 @@ export default function FundamentosMLPage() {
 
   const handleEnrollClick = async () => {
     if (!user) {
-      router.push('/login?redirect=/curso/fundamentos-ml');
+      router.push('/login?redirect=/curso/fundamentos-ml/contenido');
       return;
     }
 

@@ -32,7 +32,7 @@ export default function DesarrolloWebFullStackPage() {
 
   const handleEnrollClick = async () => {
     if (!user) {
-      router.push('/login?redirect=/curso/desarrollo-web-fullstack');
+      router.push('/login?redirect=/curso/desarrollo-web-fullstack/contenido');
       return;
     }
 
