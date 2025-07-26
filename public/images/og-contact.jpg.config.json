@@ -1,0 +1,17 @@
+{
+  "name": "og-contact.jpg",
+  "title": "Contacto",
+  "subtitle": "eGrow Academy",
+  "description": "Soporte y Consultas",
+  "colors": {
+    "primary": "#059669",
+    "secondary": "#047857",
+    "text": "#ffffff"
+  },
+  "id": 3,
+  "dimensions": {
+    "width": 1200,
+    "height": 630
+  },
+  "generated": "2025-07-26T17:45:28.907Z"
+}

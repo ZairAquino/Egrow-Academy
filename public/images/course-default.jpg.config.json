@@ -1,0 +1,17 @@
+{
+  "name": "course-default.jpg",
+  "title": "Curso de IA",
+  "subtitle": "eGrow Academy",
+  "description": "Formación Profesional",
+  "colors": {
+    "primary": "#2563eb",
+    "secondary": "#1d4ed8",
+    "text": "#ffffff"
+  },
+  "id": 6,
+  "dimensions": {
+    "width": 1200,
+    "height": 630
+  },
+  "generated": "2025-07-26T17:45:28.910Z"
+}

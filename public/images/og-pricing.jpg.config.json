@@ -1,0 +1,17 @@
+{
+  "name": "og-pricing.jpg",
+  "title": "Precios y Planes",
+  "subtitle": "eGrow Academy",
+  "description": "Cursos de Inteligencia Artificial",
+  "colors": {
+    "primary": "#dc2626",
+    "secondary": "#b91c1c",
+    "text": "#ffffff"
+  },
+  "id": 5,
+  "dimensions": {
+    "width": 1200,
+    "height": 630
+  },
+  "generated": "2025-07-26T17:45:28.909Z"
+}

@@ -1,255 +1,237 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { speedUtils, speedTargets } from '@/lib/speed-optimization-config';
+
+interface PerformanceMetrics {
+  lcp: number | null;
+  fid: number | null;
+  cls: number | null;
+  fcp: number | null;
+  ttfb: number | null;
+  score: number;
+}
 
 interface PerformanceOptimizerProps {
-  enableCoreWebVitals?: boolean;
-  enablePerformanceTracking?: boolean;
-  enableUserBehaviorTracking?: boolean;
+  trackMetrics?: boolean;
+  showDebug?: boolean;
+  onMetricsUpdate?: (metrics: PerformanceMetrics) => void;
 }
 
 export default function PerformanceOptimizer({
-  enableCoreWebVitals = true,
-  enablePerformanceTracking = true,
-  enableUserBehaviorTracking = true,
+  trackMetrics = true,
+  showDebug = false,
+  onMetricsUpdate,
 }: PerformanceOptimizerProps) {
+  const [metrics, setMetrics] = useState<PerformanceMetrics>({
+    lcp: null,
+    fid: null,
+    cls: null,
+    fcp: null,
+    ttfb: null,
+    score: 0,
+  });
+
+  const observerRef = useRef<PerformanceObserver | null>(null);
+
   useEffect(() => {
-    if (!enableCoreWebVitals && !enablePerformanceTracking && !enableUserBehaviorTracking) {
-      return;
+    if (!trackMetrics || typeof window === 'undefined') return;
+
+    // Medir TTFB
+    const navigationEntry = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+    if (navigationEntry) {
+      const ttfb = navigationEntry.responseStart - navigationEntry.requestStart;
+      setMetrics(prev => ({ ...prev, ttfb }));
     }
 
-    // Core Web Vitals Tracking
-    if (enableCoreWebVitals && 'PerformanceObserver' in window) {
-      const observer = new PerformanceObserver((list) => {
-        for (const entry of list.getEntries()) {
-          if (entry.entryType === 'largest-contentful-paint') {
-            const lcp = entry.startTime;
-            console.log('LCP:', lcp);
-            
-            // Enviar a analytics si está disponible
-            if (window.gtag) {
-              window.gtag('event', 'core_web_vital', {
-                event_category: 'Web Vitals',
-                event_label: 'LCP',
-                value: Math.round(lcp),
-                non_interaction: true,
-              });
+    // Observador para Core Web Vitals
+    if ('PerformanceObserver' in window) {
+      try {
+        // LCP Observer
+        const lcpObserver = new PerformanceObserver((list) => {
+          const entries = list.getEntries();
+          const lastEntry = entries[entries.length - 1] as PerformanceEntry;
+          setMetrics(prev => ({ ...prev, lcp: lastEntry.startTime }));
+        });
+        lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
+
+        // FID Observer
+        const fidObserver = new PerformanceObserver((list) => {
+          const entries = list.getEntries();
+          entries.forEach((entry) => {
+            if (entry.entryType === 'first-input') {
+              const fidEntry = entry as PerformanceEventTiming;
+              setMetrics(prev => ({ ...prev, fid: fidEntry.processingStart - fidEntry.startTime }));
+            }
+          });
+        });
+        fidObserver.observe({ entryTypes: ['first-input'] });
+
+        // CLS Observer
+        const clsObserver = new PerformanceObserver((list) => {
+          let clsValue = 0;
+          for (const entry of list.getEntries()) {
+            if (!entry.hadRecentInput) {
+              clsValue += (entry as any).value;
             }
           }
-          
-          if (entry.entryType === 'first-input') {
-            const fid = entry.processingStart - entry.startTime;
-            console.log('FID:', fid);
-            
-            if (window.gtag) {
-              window.gtag('event', 'core_web_vital', {
-                event_category: 'Web Vitals',
-                event_label: 'FID',
-                value: Math.round(fid),
-                non_interaction: true,
-              });
-            }
-          }
-          
-          if (entry.entryType === 'layout-shift') {
-            const cls = entry.value;
-            console.log('CLS:', cls);
-            
-            if (window.gtag) {
-              window.gtag('event', 'core_web_vital', {
-                event_category: 'Web Vitals',
-                event_label: 'CLS',
-                value: Math.round(cls * 1000),
-                non_interaction: true,
-              });
-            }
-          }
-        }
-      });
+          setMetrics(prev => ({ ...prev, cls: clsValue }));
+        });
+        clsObserver.observe({ entryTypes: ['layout-shift'] });
 
-      observer.observe({ 
-        entryTypes: ['largest-contentful-paint', 'first-input', 'layout-shift'] 
-      });
+        // FCP Observer
+        const fcpObserver = new PerformanceObserver((list) => {
+          const entries = list.getEntries();
+          const firstEntry = entries[0] as PerformanceEntry;
+          setMetrics(prev => ({ ...prev, fcp: firstEntry.startTime }));
+        });
+        fcpObserver.observe({ entryTypes: ['paint'] });
 
-      return () => observer.disconnect();
-    }
+        observerRef.current = lcpObserver;
 
-    // Performance Tracking
-    if (enablePerformanceTracking && 'performance' in window) {
-      const trackPerformance = () => {
-        setTimeout(() => {
-          const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
-          if (navigation) {
-            const metrics = {
-              dns: navigation.domainLookupEnd - navigation.domainLookupStart,
-              tcp: navigation.connectEnd - navigation.connectStart,
-              ttfb: navigation.responseStart - navigation.requestStart,
-              domContentLoaded: navigation.domContentLoadedEventEnd - navigation.navigationStart,
-              loadComplete: navigation.loadEventEnd - navigation.navigationStart,
-            };
-
-            console.log('Performance Metrics:', metrics);
-            
-            if (window.gtag) {
-              Object.entries(metrics).forEach(([key, value]) => {
-                window.gtag('event', 'performance_metric', {
-                  event_category: 'Performance',
-                  event_label: key,
-                  value: Math.round(value),
-                  non_interaction: true,
-                });
-              });
-            }
-          }
-        }, 0);
-      };
-
-      if (document.readyState === 'complete') {
-        trackPerformance();
-      } else {
-        window.addEventListener('load', trackPerformance);
+        return () => {
+          lcpObserver.disconnect();
+          fidObserver.disconnect();
+          clsObserver.disconnect();
+          fcpObserver.disconnect();
+        };
+      } catch (error) {
+        console.warn('PerformanceObserver no soportado:', error);
       }
     }
+  }, [trackMetrics]);
 
-    // User Behavior Tracking
-    if (enableUserBehaviorTracking) {
-      const trackEvent = (eventName: string, parameters: any = {}) => {
-        if (window.gtag) {
-          window.gtag('event', eventName, {
-            event_category: 'egrow_academy',
-            event_label: window.location.pathname,
-            ...parameters,
-          });
-        }
-
-        if (window.fbq) {
-          window.fbq('track', eventName, parameters);
-        }
-      };
-
-      // Tracking de clicks en cursos
-      const handleCourseClick = (e: Event) => {
-        const target = e.target as HTMLElement;
-        const courseLink = target.closest('a[href*="/curso/"]');
-        if (courseLink) {
-          const courseSlug = courseLink.getAttribute('href')?.split('/').pop();
-          trackEvent('course_click', {
-            course_slug: courseSlug,
-            course_title: courseLink.textContent?.trim(),
-          });
-        }
-      };
-
-      // Tracking de clicks en CTA
-      const handleCTAClick = (e: Event) => {
-        const target = e.target as HTMLElement;
-        const ctaButton = target.closest('button[data-cta], a[data-cta]');
-        if (ctaButton) {
-          const ctaType = ctaButton.getAttribute('data-cta');
-          trackEvent('cta_click', {
-            cta_type: ctaType,
-            cta_text: ctaButton.textContent?.trim(),
-          });
-        }
-      };
-
-      // Tracking de scroll
-      let scrollDepth = 0;
-      const handleScroll = () => {
-        const scrollPercent = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
-        if (scrollPercent > scrollDepth && scrollPercent % 25 === 0) {
-          scrollDepth = scrollPercent;
-          trackEvent('scroll_depth', {
-            scroll_percentage: scrollPercent,
-          });
-        }
-      };
-
-      // Tracking de tiempo en página
-      let startTime = Date.now();
-      const trackTimeOnPage = () => {
-        const timeSpent = Math.round((Date.now() - startTime) / 1000);
-        if (timeSpent % 30 === 0 && timeSpent > 0) {
-          trackEvent('time_on_page', {
-            time_spent_seconds: timeSpent,
-          });
-        }
-      };
-
-      // Agregar event listeners
-      document.addEventListener('click', handleCourseClick);
-      document.addEventListener('click', handleCTAClick);
-      window.addEventListener('scroll', handleScroll, { passive: true });
-      const timeInterval = setInterval(trackTimeOnPage, 1000);
-
-      // Cleanup
-      return () => {
-        document.removeEventListener('click', handleCourseClick);
-        document.removeEventListener('click', handleCTAClick);
-        window.removeEventListener('scroll', handleScroll);
-        clearInterval(timeInterval);
-      };
+  // Calcular score cuando cambien las métricas
+  useEffect(() => {
+    const score = speedUtils.calculateScore(metrics);
+    setMetrics(prev => ({ ...prev, score }));
+    
+    if (onMetricsUpdate) {
+      onMetricsUpdate({ ...metrics, score });
     }
-  }, [enableCoreWebVitals, enablePerformanceTracking, enableUserBehaviorTracking]);
+  }, [metrics.lcp, metrics.fid, metrics.cls, onMetricsUpdate]);
 
-  return null; // Este componente no renderiza nada
+  // Optimizaciones automáticas
+  useEffect(() => {
+    // Preload recursos críticos
+    const preloadCriticalResources = () => {
+      const criticalPaths = [
+        '/styles/critical.css',
+        '/fonts/inter-var.woff2',
+        '/images/optimized/logo.webp',
+      ];
+
+      criticalPaths.forEach(path => {
+        if (!document.querySelector(`link[href="${path}"]`)) {
+          const link = document.createElement('link');
+          link.rel = 'preload';
+          link.href = path;
+          link.as = path.includes('.css') ? 'style' : 
+                   path.includes('.woff') ? 'font' : 'image';
+          if (path.includes('.woff')) link.crossOrigin = 'anonymous';
+          document.head.appendChild(link);
+        }
+      });
+    };
+
+    // Optimizar fuentes
+    const optimizeFonts = () => {
+      const fontLinks = document.querySelectorAll('link[rel="preload"][as="font"]');
+      fontLinks.forEach(link => {
+        link.setAttribute('crossorigin', 'anonymous');
+      });
+    };
+
+    // Lazy load imágenes no críticas
+    const lazyLoadImages = () => {
+      const images = document.querySelectorAll('img[data-src]');
+      const imageObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const img = entry.target as HTMLImageElement;
+            img.src = img.dataset.src || '';
+            img.classList.remove('lazy');
+            imageObserver.unobserve(img);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '50px' });
+
+      images.forEach(img => imageObserver.observe(img));
+    };
+
+    preloadCriticalResources();
+    optimizeFonts();
+    lazyLoadImages();
+  }, []);
+
+  // Debug panel
+  if (!showDebug) return null;
+
+  return (
+    <div className="fixed bottom-4 right-4 bg-black bg-opacity-90 text-white p-4 rounded-lg text-xs font-mono z-50 max-w-xs">
+      <h3 className="font-bold mb-2">Core Web Vitals</h3>
+      <div className="space-y-1">
+        <div className="flex justify-between">
+          <span>LCP:</span>
+          <span className={metrics.lcp && metrics.lcp <= speedTargets.lcp ? 'text-green-400' : 'text-red-400'}>
+            {metrics.lcp ? `${Math.round(metrics.lcp)}ms` : '...'}
+          </span>
+        </div>
+        <div className="flex justify-between">
+          <span>FID:</span>
+          <span className={metrics.fid && metrics.fid <= speedTargets.fid ? 'text-green-400' : 'text-red-400'}>
+            {metrics.fid ? `${Math.round(metrics.fid)}ms` : '...'}
+          </span>
+        </div>
+        <div className="flex justify-between">
+          <span>CLS:</span>
+          <span className={metrics.cls && metrics.cls <= speedTargets.cls ? 'text-green-400' : 'text-red-400'}>
+            {metrics.cls ? metrics.cls.toFixed(3) : '...'}
+          </span>
+        </div>
+        <div className="flex justify-between">
+          <span>FCP:</span>
+          <span className={metrics.fcp && metrics.fcp <= speedTargets.fcp ? 'text-green-400' : 'text-red-400'}>
+            {metrics.fcp ? `${Math.round(metrics.fcp)}ms` : '...'}
+          </span>
+        </div>
+        <div className="flex justify-between">
+          <span>TTFB:</span>
+          <span className={metrics.ttfb && metrics.ttfb <= speedTargets.ttfb ? 'text-green-400' : 'text-red-400'}>
+            {metrics.ttfb ? `${Math.round(metrics.ttfb)}ms` : '...'}
+          </span>
+        </div>
+        <div className="border-t border-gray-600 pt-1 mt-1">
+          <div className="flex justify-between">
+            <span>Score:</span>
+            <span className={metrics.score >= 90 ? 'text-green-400' : metrics.score >= 50 ? 'text-yellow-400' : 'text-red-400'}>
+              {metrics.score}/100
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
-// Hook para tracking personalizado
-export const usePerformanceTracking = () => {
-  const trackEvent = (eventName: string, parameters: any = {}) => {
-    if (window.gtag) {
-      window.gtag('event', eventName, {
-        event_category: 'egrow_academy',
-        event_label: window.location.pathname,
-        ...parameters,
-      });
-    }
-
-    if (window.fbq) {
-      window.fbq('track', eventName, parameters);
-    }
-  };
-
-  const trackPageView = (pageTitle?: string, pageUrl?: string) => {
-    const title = pageTitle || document.title;
-    const url = pageUrl || window.location.href;
-
-    if (window.gtag) {
-      window.gtag('config', process.env.NEXT_PUBLIC_GA_ID, {
-        page_title: title,
-        page_location: url,
-      });
-    }
-
-    if (window.fbq) {
-      window.fbq('track', 'PageView');
-    }
-  };
-
-  const trackConversion = (value?: number, currency: string = 'MXN') => {
-    if (window.gtag) {
-      window.gtag('event', 'conversion', {
-        send_to: 'AW-CONVERSION_ID/CONVERSION_LABEL',
-        value: value,
-        currency: currency,
-      });
-    }
-
-    if (window.fbq) {
-      window.fbq('track', 'Purchase', {
-        value: value,
-        currency: currency,
-      });
-    }
-  };
+// Hook para usar métricas de rendimiento
+export function usePerformanceMetrics() {
+  const [metrics, setMetrics] = useState<PerformanceMetrics>({
+    lcp: null,
+    fid: null,
+    cls: null,
+    fcp: null,
+    ttfb: null,
+    score: 0,
+  });
 
   return {
-    trackEvent,
-    trackPageView,
-    trackConversion,
+    metrics,
+    setMetrics,
+    isOptimized: metrics.score >= 90,
+    needsOptimization: metrics.score < 50,
   };
-};
+}
 
 // Tipos para TypeScript
 declare global {

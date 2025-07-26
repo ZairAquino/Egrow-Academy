@@ -11,7 +11,7 @@ import FeaturedCourses from '@/components/courses/FeaturedCourses';
 import Newsletter from '@/components/ui/Newsletter';
 import WhyChoose from '@/components/ui/WhyChoose';
 import Footer from '@/components/layout/Footer';
-import WelcomeModal from '@/components/ui/WelcomeModal';
+import { WelcomeModal } from '@/lib/lazy-components';
 import DynamicSEO from '@/components/seo/DynamicSEO';
 
 
@@ -71,10 +71,12 @@ function HomeContent() {
       <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
       
       {/* Modal de bienvenida */}
-      <WelcomeModal 
-        isOpen={showSuccessNotification} 
-        onClose={() => setShowSuccessNotification(false)} 
-      />
+      <Suspense fallback={<div>Loading...</div>}>
+        <WelcomeModal 
+          isOpen={showSuccessNotification} 
+          onClose={() => setShowSuccessNotification(false)} 
+        />
+      </Suspense>
       
       <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''}`}>
         <Hero />

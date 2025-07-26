@@ -1,17 +1,6 @@
 User-agent: *
 Allow: /
 
-# eGrow Academy - Líder en Cursos de Inteligencia Artificial
-# Plataforma de formación en IA, machine learning y deep learning
-# Cursos de inteligencia artificial en México y Latinoamérica
-# Especialización en IA, formación profesional y c
-# machine learning México, deep learning México, inteligencia artificial México, formación en inteligencia artificial, aprender IA, inteligencia artificial Latinoamérica, formación profesional IA, certificación en inteligencia artificial, aprendizaje automático, redes neuronales, procesamiento de lenguaje natural, visión por computadora, robótica e IAertificación
-# Machine learning México, deep learning México, inteligencia artificial México
-# Formación en inteligencia artificial, aprender IA, inteligencia artificial Latinoamérica
-# Formación profesional IA, certificación en inteligencia artificial
-# Aprendizaje automático, redes neuronales, procesamiento de lenguaje natural
-# Visión por computadora, robótica e IA, cursos de Python para IA
-
 # Sitemaps
 Sitemap: https://egrow-academy.com/sitemap.xml
 Sitemap: https://egrow-academy.com/courses-sitemap.xml

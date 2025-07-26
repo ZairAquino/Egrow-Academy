@@ -1,25 +1,8 @@
 {
-  "critical": {
-    "inline": true,
-    "minify": true,
-    "extract": true
-  },
-  "nonCritical": {
-    "defer": true,
-    "preload": false,
-    "minify": true
-  },
-  "fonts": {
-    "preload": [
-      "Inter",
-      "Poppins"
-    ],
-    "display": "swap",
-    "fallback": "system-ui"
-  },
-  "tailwind": {
-    "purge": true,
-    "minify": true,
-    "critical": true
-  }
+  "originalSize": 122186,
+  "criticalSize": 39030,
+  "optimizedSize": 123042,
+  "minifiedSize": 93115,
+  "reduction": "23.79",
+  "timestamp": "2025-07-26T17:24:02.848Z"
 }

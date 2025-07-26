@@ -1,0 +1,17 @@
+{
+  "name": "og-about.jpg",
+  "title": "Sobre Nosotros",
+  "subtitle": "eGrow Academy",
+  "description": "Líder en Educación de IA",
+  "colors": {
+    "primary": "#7c3aed",
+    "secondary": "#6d28d9",
+    "text": "#ffffff"
+  },
+  "id": 4,
+  "dimensions": {
+    "width": 1200,
+    "height": 630
+  },
+  "generated": "2025-07-26T17:45:28.908Z"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "blog-default.jpg",
+  "title": "Blog IA",
+  "subtitle": "eGrow Academy",
+  "description": "Artículos y Noticias",
+  "colors": {
+    "primary": "#059669",
+    "secondary": "#047857",
+    "text": "#ffffff"
+  },
+  "id": 7,
+  "dimensions": {
+    "width": 1200,
+    "height": 630
+  },
+  "generated": "2025-07-26T17:45:28.911Z"
+}

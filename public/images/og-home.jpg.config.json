@@ -1,0 +1,17 @@
+{
+  "name": "og-home.jpg",
+  "title": "eGrow Academy",
+  "subtitle": "Cursos de Inteligencia Artificial",
+  "description": "Líder en México y Latinoamérica",
+  "colors": {
+    "primary": "#2563eb",
+    "secondary": "#667eea",
+    "text": "#ffffff"
+  },
+  "id": 1,
+  "dimensions": {
+    "width": 1200,
+    "height": 630
+  },
+  "generated": "2025-07-26T17:45:28.904Z"
+}

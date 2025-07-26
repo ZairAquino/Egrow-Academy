@@ -3,6 +3,7 @@
 import { useCourseAccess } from '@/hooks/useCourseAccess';
 import { useAnalytics } from '@/hooks/useAnalytics';
 import SubscriptionModal from '@/components/payments/SubscriptionModal';
+import OptimizedImage from '@/components/ui/OptimizedImage';
 
 interface CourseCardProps {
   id: string;
@@ -64,7 +65,14 @@ export default function CourseCard({
   const CardContent = (
     <>
       <div className="course-image-new">
-        <img src={image} alt={title} />
+        <OptimizedImage 
+          src={image} 
+          alt={title} 
+          width={400}
+          height={250}
+          className="course-image"
+          priority={false}
+        />
         <span className="course-type-badge">{getAccessMessage(course)}</span>
       </div>
       <div className="course-content-new">

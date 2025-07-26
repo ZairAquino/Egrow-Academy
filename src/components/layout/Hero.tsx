@@ -29,8 +29,10 @@ export default function Hero() {
               <DynamicLogo 
                 width={95}
                 height={95}
-                priority
+                priority={true}
                 className="hero-bottom-logo-image"
+                sizes="95px"
+                quality={90}
               />
             </div>
           </div>

@@ -1,17 +1,24 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
+import "./critical.css";
 import "./globals.css";
 
 import Providers from "@/components/Providers";
 import { baseSEOConfig, generateStructuredData } from "@/lib/seo-config";
+import { generateEducationalOrganizationSchema } from "@/lib/schema-advanced";
+import { openGraphConfigs } from "@/lib/open-graph-config";
+import CanonicalURL from "@/components/seo/CanonicalURL";
 import Analytics from "@/components/seo/Analytics";
 import PerformanceOptimizer from "@/components/seo/PerformanceOptimizer";
+import { speedUtils } from "@/lib/speed-optimization-config";
 
 const inter = Inter({ 
   subsets: ["latin"],
   display: 'swap',
   variable: '--font-inter',
   preload: true,
+  fallback: ['system-ui', 'arial'],
+  adjustFontFallback: true,
 });
 
 export const metadata: Metadata = baseSEOConfig;
@@ -37,11 +44,31 @@ export default function RootLayout({
         <meta name="theme-color" content="#2563eb" />
         <meta name="google-site-verification" content="ppV50-xAiHZYc7B8SSMk9lJapqLgxMPvv0wDv" />
         
-        {/* Structured Data */}
+        {/* Open Graph Meta Tags - Página Principal */}
+        <meta property="og:title" content={openGraphConfigs.home.title} />
+        <meta property="og:description" content={openGraphConfigs.home.description} />
+        <meta property="og:image" content={openGraphConfigs.home.image} />
+        <meta property="og:url" content="https://egrow-academy.com" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="eGrow Academy" />
+        <meta property="og:locale" content="es_MX" />
+        
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@egrowacademy" />
+        <meta name="twitter:creator" content="@egrowacademy" />
+        <meta name="twitter:title" content={openGraphConfigs.home.title} />
+        <meta name="twitter:description" content={openGraphConfigs.home.description} />
+        <meta name="twitter:image" content={openGraphConfigs.home.image} />
+        
+        {/* URL Canónica */}
+        <CanonicalURL />
+        
+        {/* Structured Data - Schema.org Avanzado */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(generateStructuredData('Organization', {})),
+            __html: JSON.stringify(generateEducationalOrganizationSchema()),
           }}
         />
         <script
@@ -52,8 +79,11 @@ export default function RootLayout({
         />
         
         {/* Preload critical resources */}
+        <link rel="preload" href="/images/optimized/logop.webp" as="image" type="image/webp" />
         <link rel="preload" href="/images/og-image.jpg" as="image" />
-        <link rel="preload" href="/images/logo.png" as="image" />
+        
+        {/* Preload critical CSS */}
+        <link rel="preload" href="/globals.optimized.css" as="style" />
         
         {/* DNS Prefetch for external domains */}
         <link rel="dns-prefetch" href="//www.google-analytics.com" />
@@ -71,7 +101,10 @@ export default function RootLayout({
 
         {/* SEO Analytics and Performance Tracking */}
         <Analytics />
-        <PerformanceOptimizer />
+        <PerformanceOptimizer 
+          trackMetrics={true}
+          showDebug={process.env.NODE_ENV === 'development'}
+        />
       </body>
     </html>
   );

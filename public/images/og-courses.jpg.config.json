@@ -1,0 +1,17 @@
+{
+  "name": "og-courses.jpg",
+  "title": "Cursos de IA",
+  "subtitle": "eGrow Academy",
+  "description": "Machine Learning • Deep Learning • Python",
+  "colors": {
+    "primary": "#3b82f6",
+    "secondary": "#1d4ed8",
+    "text": "#ffffff"
+  },
+  "id": 2,
+  "dimensions": {
+    "width": 1200,
+    "height": 630
+  },
+  "generated": "2025-07-26T17:45:28.906Z"
+}

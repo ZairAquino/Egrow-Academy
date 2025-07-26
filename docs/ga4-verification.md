@@ -70,5 +70,5 @@ npm run seo-analysis
 
 ---
 
-**ID de GA4 configurado**: G-XXXXXXXXXX
-**Fecha de verificación**: 2025-07-26T15:44:00.695Z
+**ID de GA4 configurado**: G-RSHD1HL9R0
+**Fecha de verificación**: 2025-07-26T17:18:45.077Z

@@ -1,0 +1,17 @@
+{
+  "name": "event-default.jpg",
+  "title": "Eventos IA",
+  "subtitle": "eGrow Academy",
+  "description": "Webinars y Workshops",
+  "colors": {
+    "primary": "#7c3aed",
+    "secondary": "#6d28d9",
+    "text": "#ffffff"
+  },
+  "id": 8,
+  "dimensions": {
+    "width": 1200,
+    "height": 630
+  },
+  "generated": "2025-07-26T17:45:28.912Z"
+}

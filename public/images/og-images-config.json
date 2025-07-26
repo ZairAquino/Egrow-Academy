@@ -1,0 +1,19 @@
+{
+  "site": "eGrow Academy",
+  "baseUrl": "https://egrow-academy.com",
+  "images": [
+    "og-home.jpg",
+    "og-courses.jpg",
+    "og-contact.jpg",
+    "og-about.jpg",
+    "og-pricing.jpg",
+    "course-default.jpg",
+    "blog-default.jpg",
+    "event-default.jpg"
+  ],
+  "dimensions": {
+    "width": 1200,
+    "height": 630
+  },
+  "generated": "2025-07-26T17:45:28.912Z"
+}

@@ -1,100 +1,202 @@
 #!/usr/bin/env node
 
-/**
- * Script para optimizar JavaScript de eGrow Academy
- * Implementa code splitting, tree shaking y optimizaciones
- */
+const fs = require('fs');
+const path = require('path');
 
-import fs from 'fs';
-import path from 'path';
+console.log('⚡ Optimizando JavaScript - eGrow Academy');
 
-console.log('⚡ Optimizando JavaScript - eGrow Academy\n');
-
-// Verificar archivos JavaScript principales
-const jsFiles = [
-  'src/app/layout.tsx',
-  'src/app/page.tsx',
-  'src/components/ui/DynamicLogo.tsx',
-  'src/components/courses/CourseCard.tsx',
-  'src/hooks/useAnalytics.ts'
-];
-
-console.log('📁 Verificando archivos JavaScript:');
-jsFiles.forEach(file => {
-  const filePath = path.join(process.cwd(), file);
-  if (fs.existsSync(filePath)) {
-    console.log(`✅ ${file}`);
-  } else {
-    console.log(`⚠️ ${file} (no encontrado)`);
+// Función para analizar imports
+function analyzeImports(filePath) {
+  try {
+    const content = fs.readFileSync(filePath, 'utf8');
+    const imports = [];
+    
+    // Buscar imports de React
+    const reactImports = content.match(/import.*from ['"]react['"]/g) || [];
+    const nextImports = content.match(/import.*from ['"]next\/[^'"]*['"]/g) || [];
+    const componentImports = content.match(/import.*from ['"]@\/components[^'"]*['"]/g) || [];
+    const hookImports = content.match(/import.*from ['"]@\/hooks[^'"]*['"]/g) || [];
+    
+    return {
+      react: reactImports.length,
+      next: nextImports.length,
+      components: componentImports.length,
+      hooks: hookImports.length,
+      total: reactImports.length + nextImports.length + componentImports.length + hookImports.length
+    };
+  } catch (error) {
+    return { react: 0, next: 0, components: 0, hooks: 0, total: 0 };
   }
-});
+}
 
-// Analizar optimizaciones JavaScript
-console.log('\n🔍 ANÁLISIS DE OPTIMIZACIONES JAVASCRIPT:');
-console.log('========================================');
-
-const jsOptimizations = [
-  'Code splitting por rutas',
-  'Lazy loading de componentes',
-  'Tree shaking (eliminar código no usado)',
-  'Defer scripts no críticos',
-  'Minificación y compresión',
-  'Bundle analysis',
-  'Dynamic imports',
-  'Preload de recursos críticos'
-];
-
-console.log('🎯 Optimizaciones Identificadas:');
-jsOptimizations.forEach(opt => {
-  console.log(`• ${opt}`);
-});
-
-console.log('\n💡 RECOMENDACIONES DE OPTIMIZACIÓN JS:');
-console.log('=====================================');
-console.log('1. Implementar React.lazy() para componentes pesados');
-console.log('2. Usar dynamic imports para code splitting');
-console.log('3. Optimizar bundle size con webpack-bundle-analyzer');
-console.log('4. Defer scripts de analytics y tracking');
-console.log('5. Implementar service workers para caching');
-
-console.log('\n🛠️ ACCIONES INMEDIATAS:');
-console.log('=====================');
-console.log('1. Crear componentes lazy-loaded');
-console.log('2. Configurar dynamic imports');
-console.log('3. Optimizar imports de librerías');
-console.log('4. Implementar bundle analysis');
-
-// Crear configuración de optimización JavaScript
-const jsOptimizationConfig = {
-  codeSplitting: {
-    routes: true,
-    components: true,
-    vendors: true
-  },
-  lazyLoading: {
-    components: ['CourseCard', 'DynamicLogo', 'Analytics'],
-    routes: ['/curso', '/courses', '/admin']
-  },
-  treeShaking: {
-    enabled: true,
-    analyze: true,
-    minify: true
-  },
-  bundling: {
-    analyze: true,
-    splitChunks: true,
-    optimization: true
-  },
-  caching: {
-    serviceWorker: true,
-    staticAssets: true,
-    apiResponses: true
+// Función para identificar componentes pesados
+function findHeavyComponents() {
+  const componentsDir = path.join(process.cwd(), 'src', 'components');
+  const heavyComponents = [];
+  
+  if (fs.existsSync(componentsDir)) {
+    const files = fs.readdirSync(componentsDir, { recursive: true });
+    
+    files.forEach(file => {
+      if (file.endsWith('.tsx') || file.endsWith('.ts')) {
+        const filePath = path.join(componentsDir, file);
+        const stats = fs.statSync(filePath);
+        const imports = analyzeImports(filePath);
+        
+        if (stats.size > 5000 || imports.total > 10) {
+          heavyComponents.push({
+            file: file,
+            size: stats.size,
+            imports: imports
+          });
+        }
+      }
+    });
   }
-};
+  
+  return heavyComponents;
+}
 
-const configPath = path.join(process.cwd(), 'docs', 'javascript-optimization-config.json');
-fs.writeFileSync(configPath, JSON.stringify(jsOptimizationConfig, null, 2));
+// Función para generar recomendaciones de lazy loading
+function generateLazyLoadingRecommendations(heavyComponents) {
+  const recommendations = [];
+  
+  heavyComponents.forEach(component => {
+    if (component.size > 10000) {
+      recommendations.push({
+        component: component.file,
+        type: 'lazy-load',
+        reason: 'Componente muy pesado',
+        size: component.size
+      });
+    } else if (component.imports.total > 15) {
+      recommendations.push({
+        component: component.file,
+        type: 'code-split',
+        reason: 'Muchos imports',
+        imports: component.imports.total
+      });
+    }
+  });
+  
+  return recommendations;
+}
 
-console.log('\n✅ Análisis de JavaScript completado');
-console.log('📄 Configuración guardada en: docs/javascript-optimization-config.json');
-console.log('🎯 Próximo paso: Implementar optimizaciones JavaScript'); 
+// Función para optimizar bundle
+function optimizeBundle() {
+  console.log('📊 Analizando componentes...');
+  
+  const heavyComponents = findHeavyComponents();
+  const recommendations = generateLazyLoadingRecommendations(heavyComponents);
+  
+  console.log(`🔍 Encontrados ${heavyComponents.length} componentes pesados`);
+  
+  if (heavyComponents.length > 0) {
+    console.log('\n📋 Componentes que requieren optimización:');
+    heavyComponents.forEach(comp => {
+      console.log(`• ${comp.file} (${(comp.size / 1024).toFixed(2)} KB, ${comp.imports.total} imports)`);
+    });
+  }
+  
+  if (recommendations.length > 0) {
+    console.log('\n💡 Recomendaciones de optimización:');
+    recommendations.forEach(rec => {
+      console.log(`• ${rec.component}: ${rec.type} - ${rec.reason}`);
+    });
+  }
+  
+  return { heavyComponents, recommendations };
+}
+
+// Función para crear configuración de optimización
+function createOptimizationConfig(heavyComponents, recommendations) {
+  const config = {
+    analysis: {
+      totalComponents: heavyComponents.length,
+      totalRecommendations: recommendations.length,
+      timestamp: new Date().toISOString()
+    },
+    heavyComponents: heavyComponents.map(comp => ({
+      file: comp.file,
+      size: comp.size,
+      sizeKB: (comp.size / 1024).toFixed(2),
+      imports: comp.imports
+    })),
+    recommendations: recommendations,
+    optimizations: {
+      lazyLoading: recommendations.filter(r => r.type === 'lazy-load').length,
+      codeSplitting: recommendations.filter(r => r.type === 'code-split').length,
+      treeShaking: true,
+      minification: true
+    }
+  };
+  
+  const configPath = path.join(process.cwd(), 'docs', 'javascript-optimization-config.json');
+  fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+  
+  return config;
+}
+
+// Función para generar código de lazy loading
+function generateLazyLoadingCode(components) {
+  const lazyComponents = components.filter(comp => comp.size > 10000);
+  
+  if (lazyComponents.length === 0) {
+    return null;
+  }
+  
+  let code = '// Lazy Loading Components\n';
+  code += 'import { lazy, Suspense } from \'react\';\n\n';
+  
+  lazyComponents.forEach(comp => {
+    const componentName = path.basename(comp.file, path.extname(comp.file));
+    code += `const ${componentName} = lazy(() => import('@/components/${comp.file}'));\n`;
+  });
+  
+  code += '\n// Usage example:\n';
+  code += '// <Suspense fallback={<div>Loading...</div>}>\n';
+  code += '//   <ComponentName />\n';
+  code += '// </Suspense>\n';
+  
+  return code;
+}
+
+// Función principal
+function optimizeJavaScript() {
+  try {
+    console.log('🚀 Iniciando optimización de JavaScript...\n');
+    
+    // Analizar componentes
+    const { heavyComponents, recommendations } = optimizeBundle();
+    
+    // Crear configuración
+    const config = createOptimizationConfig(heavyComponents, recommendations);
+    
+    // Generar código de lazy loading
+    const lazyCode = generateLazyLoadingCode(heavyComponents);
+    
+    if (lazyCode) {
+      const lazyPath = path.join(process.cwd(), 'src', 'lib', 'lazy-components.ts');
+      fs.writeFileSync(lazyPath, lazyCode);
+      console.log(`📁 Código lazy loading generado: src/lib/lazy-components.ts`);
+    }
+    
+    console.log('\n✅ Optimización de JavaScript completada!');
+    console.log(`📁 Configuración: docs/javascript-optimization-config.json`);
+    console.log(`📊 Componentes analizados: ${config.analysis.totalComponents}`);
+    console.log(`💡 Recomendaciones generadas: ${config.analysis.totalRecommendations}`);
+    
+    return config;
+    
+  } catch (error) {
+    console.error('❌ Error optimizando JavaScript:', error.message);
+    return null;
+  }
+}
+
+// Ejecutar optimización
+if (require.main === module) {
+  optimizeJavaScript();
+}
+
+module.exports = { optimizeJavaScript, analyzeImports, findHeavyComponents }; 
