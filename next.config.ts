@@ -111,6 +111,32 @@ const nextConfig: NextConfig = {
         ],
       },
       {
+        source: '/fonts/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+          {
+            key: 'Content-Type',
+            value: 'font/woff2',
+          },
+        ],
+      },
+      {
+        source: '/styles/(.*\.css)',
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'text/css',
+          },
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=3600',
+          },
+        ],
+      },
+      {
         source: '/_next/static/(.*)',
         headers: [
           {
@@ -134,35 +160,35 @@ const nextConfig: NextConfig = {
         destination: '/',
         permanent: true,
       },
-      // Redirección de /courses a /cursos para compatibilidad
-      {
-        source: '/courses',
-        destination: '/cursos',
-        permanent: true,
-      },
+      // Redirecciones para cursos
       {
         source: '/cursos-de-ia',
-        destination: '/cursos',
+        destination: '/courses',
         permanent: true,
       },
       {
         source: '/cursos-inteligencia-artificial',
-        destination: '/cursos',
+        destination: '/courses',
+        permanent: true,
+      },
+      {
+        source: '/cursos',
+        destination: '/courses',
         permanent: true,
       },
       {
         source: '/machine-learning',
-        destination: '/cursos/machine-learning',
+        destination: '/courses',
         permanent: true,
       },
       {
         source: '/deep-learning',
-        destination: '/cursos/deep-learning',
+        destination: '/courses',
         permanent: true,
       },
       {
         source: '/python-ia',
-        destination: '/cursos/python-para-ia',
+        destination: '/courses',
         permanent: true,
       },
     ];
