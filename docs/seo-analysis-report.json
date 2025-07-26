@@ -1,0 +1,58 @@
+{
+  "timestamp": "2025-07-25T23:51:39.727Z",
+  "siteUrl": "https://egrow-academy.com",
+  "seoFiles": {
+    "sitemap": true,
+    "robots": true,
+    "manifest": true,
+    "sitemaps": []
+  },
+  "keywords": {
+    "totalKeywords": 20,
+    "foundInSitemap": 6,
+    "foundInRobots": 2,
+    "foundInManifest": 1,
+    "missingKeywords": [
+      "machine learning México",
+      "deep learning México",
+      "inteligencia artificial México",
+      "formación en inteligencia artificial",
+      "aprender IA",
+      "inteligencia artificial Latinoamérica",
+      "formación profesional IA",
+      "certificación en inteligencia artificial",
+      "aprendizaje automático",
+      "redes neuronales",
+      "procesamiento de lenguaje natural",
+      "visión por computadora",
+      "robótica e IA"
+    ]
+  },
+  "urls": {
+    "home": [
+      "/"
+    ],
+    "courses": [
+      "/curso/introduccion-llms",
+      "/curso/monetiza-ia",
+      "/curso/desarrollo-web-fullstack",
+      "/curso/fundamentos-ml",
+      "/curso/computer-vision"
+    ],
+    "resources": [
+      "/resources/manual-gpt",
+      "/resources/manual-gem"
+    ],
+    "static": [
+      "/cursos",
+      "/cursos-gratuitos",
+      "/community",
+      "/resources",
+      "/contacto",
+      "/terminos-condiciones",
+      "/politica-privacidad"
+    ]
+  },
+  "seoScore": 72,
+  "maxScore": 100
+}

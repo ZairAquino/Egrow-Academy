@@ -1,0 +1,5 @@
+[33mb27c007[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Add API routes for sitemaps and robots.txt
+[33m6c823f7[m Add SEO sitemaps and configuration files
+[33mc22fdbb[m Clean up duplicate directories and temporary files
+[33m70885e6[m Eliminar archivo test-premium-logo.html y actualizar cambios del proyecto
+[33m6cae020[m Revert SEO optimizations - Remove all MCP servers and SEO analysis tools

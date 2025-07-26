@@ -12,6 +12,7 @@ import Newsletter from '@/components/ui/Newsletter';
 import WhyChoose from '@/components/ui/WhyChoose';
 import Footer from '@/components/layout/Footer';
 import WelcomeModal from '@/components/ui/WelcomeModal';
+import DynamicSEO from '@/components/seo/DynamicSEO';
 
 
 function HomeContent() {
@@ -45,6 +46,25 @@ function HomeContent() {
 
   return (
     <>
+      {/* SEO Dinámico para la página principal */}
+      <DynamicSEO 
+        title="eGrow Academy - Cursos de Inteligencia Artificial | Líder en México y Latinoamérica"
+        description="Aprende Inteligencia Artificial con los mejores cursos online en español. Formación profesional en IA, Machine Learning, Deep Learning y más. Líder en México y Latinoamérica."
+        keywords={[
+          "cursos de inteligencia artificial",
+          "cursos de IA",
+          "machine learning México",
+          "deep learning México",
+          "inteligencia artificial México",
+          "cursos de IA en español",
+          "formación en inteligencia artificial",
+          "aprender IA",
+          "cursos online de inteligencia artificial",
+          "especialización en IA"
+        ]}
+        type="website"
+      />
+
       {/* UserProfile fijo en esquina superior derecha */}
       <UserProfile className="user-profile-fixed" />
       

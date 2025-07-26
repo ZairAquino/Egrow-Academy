@@ -1,7 +1,7 @@
 {
   "name": "eGrow Academy - Cursos de Inteligencia Artificial",
   "short_name": "eGrow Academy",
-  "description": "Plataforma líder en cursos de inteligencia artificial en español",
+  "description": "Plataforma líder en cursos de inteligencia artificial, machine learning y deep learning en México y Latinoamérica. Formación profesional en IA, especialización y certificación.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

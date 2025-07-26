@@ -16,7 +16,17 @@
     "send-coupon-email": "tsx scripts/send-coupon-email.ts",
     "restore-email-verification": "tsx scripts/restore-email-verification.ts",
     "fix-build": "tsx scripts/fix-build-issues.ts",
-    "prepare-deploy": "tsx scripts/prepare-for-deploy.ts"
+    "prepare-deploy": "tsx scripts/prepare-for-deploy.ts",
+    "generate-sitemap": "next-sitemap",
+    "generate-seo-files": "node scripts/generate-seo-files.js",
+    "analyze": "ANALYZE=true npm run build",
+    "seo-audit": "npm run generate-sitemap && npm run analyze",
+    "lighthouse": "lighthouse https://egrow-academy.com --output=json --output-path=./lighthouse-report.json",
+    "seo-check": "npm run generate-sitemap && npm run lighthouse",
+    "seo-setup": "npm run generate-seo-files && npm run generate-sitemap",
+    "seo-analysis": "node scripts/seo-analysis.js",
+    "seo-full": "npm run generate-seo-files && npm run seo-analysis && npm run lighthouse",
+    "seo-monitor": "npm run seo-analysis && npm run lighthouse"
   },
   "dependencies": {
     "@prisma/client": "^6.12.0",
@@ -45,6 +55,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@next/bundle-analyzer": "^15.4.4",
     "@tailwindcss/postcss": "^4",
     "@types/bcryptjs": "^3.0.0",
     "@types/jsonwebtoken": "^9.0.10",
@@ -53,8 +64,10 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.4.1",
+    "lighthouse": "^12.8.0",
     "prisma": "^6.12.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "webpack-bundle-analyzer": "^4.10.2"
   }
 }
