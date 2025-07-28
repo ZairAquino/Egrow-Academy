@@ -26,7 +26,7 @@ export default function MonetizaIAPage() {
   const [progressPercentage, setProgressPercentage] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   // Estados del contador eliminados
-  const { user } = useAuth();
+  const { user, status } = useAuth();
   const router = useRouter();
   
   console.log('🔍 [DEBUG] Estados iniciales:', { 
@@ -35,7 +35,9 @@ export default function MonetizaIAPage() {
     completedLessons: completedLessons.length,
     progressPercentage,
     isLoading,
-    user: !!user 
+    user: !!user,
+    userDetails: user ? { id: user.id, email: user.email } : null,
+    authStatus: status
   });
 
   const toggleSidebar = () => {
@@ -46,9 +48,35 @@ export default function MonetizaIAPage() {
 
   // Función completamente nueva para redirección directa
   const goToCourseContent = () => {
-    console.log('🎯 Botón clickeado - Redirigiendo a contenido del curso');
+    console.log('🎯 Botón clickeado - Estado de autenticación:', { 
+      user: !!user, 
+      status, 
+      userEmail: user?.email 
+    });
+    
+    // Verificar si el usuario está autenticado
+    if (status === 'loading') {
+      console.log('⏳ Estado de autenticación cargando, esperando...');
+      return;
+    }
+    
+    if (!user || status === 'unauthenticated') {
+      // Si el usuario no está logueado, redirigir al login con redirect
+      const loginUrl = `/login?redirect=/curso/monetiza-ia/contenido`;
+      console.log(`🔐 Usuario no logueado - Redirigiendo a login: ${loginUrl}`);
+      
+      if (typeof window !== 'undefined') {
+        window.location.href = loginUrl;
+      }
+      return;
+    }
+    
+    // Si el usuario está logueado, ir directamente al contenido
+    const contentUrl = '/curso/monetiza-ia/contenido';
+    console.log(`✅ Usuario logueado (${user.email}) - Redirigiendo a contenido: ${contentUrl}`);
+    
     if (typeof window !== 'undefined') {
-      window.location.href = '/curso/monetiza-ia/contenido';
+      window.location.href = contentUrl;
     }
   };
 
@@ -268,17 +296,21 @@ export default function MonetizaIAPage() {
     return `${hours}h ${minutes}min`;
   };
 
-  console.log('🔍 [DEBUG] Renderizando componente, isLoading:', isLoading);
+  console.log('🔍 [DEBUG] Renderizando componente, isLoading:', isLoading, 'authStatus:', status);
   
-  if (isLoading) {
-    console.log('🔍 [DEBUG] Mostrando loading spinner');
+  // Mostrar loading mientras se verifica la autenticación o se carga el progreso
+  if (status === 'loading' || isLoading) {
+    console.log('🔍 [DEBUG] Mostrando loading unificado:', { status, isLoading });
     return (
       <div className="loading-container">
         <LoadingSpinner />
-        <p>Cargando progreso del curso...</p>
+        <p>Cargando...</p>
       </div>
     );
   }
+
+  // Verificar que el estado de autenticación esté completamente cargado
+  const isUserAuthenticated = user && status === 'authenticated';
 
   console.log('🔍 [DEBUG] Renderizando JSX principal');
   
@@ -304,7 +336,7 @@ export default function MonetizaIAPage() {
                 
                 {/* Botón nuevo completamente desde cero */}
                 <div className="new-course-actions">
-                  {completedLessons.length > 0 ? (
+                  {isUserAuthenticated && completedLessons.length > 0 ? (
                     <div className="progress-section-new">
                       <div className="progress-info-new">
                         <p className="progress-text-new">
@@ -327,7 +359,7 @@ export default function MonetizaIAPage() {
                         className="course-action-button course-action-start"
                         onClick={goToCourseContent}
                       >
-                        🎯 Comenzar Curso Gratis
+                        {isUserAuthenticated ? '🎯 Comenzar Curso Gratis' : '🔐 Iniciar Sesión para Comenzar'}
                       </div>
                       
                       {/* Contador eliminado */}
@@ -352,7 +384,7 @@ export default function MonetizaIAPage() {
                   </div>
                 </div>
                 
-                {user && !isLoading && (
+                {isUserAuthenticated && (
                   <div className="progress-card">
                     <h3>Tu Progreso</h3>
                     <div className="progress-bar">
@@ -808,6 +840,54 @@ export default function MonetizaIAPage() {
         .btn-small {
           padding: 0.75rem 1.5rem;
           font-size: 0.9rem;
+        }
+
+        .course-action-button {
+          padding: 1rem 2rem;
+          border-radius: 8px;
+          font-weight: 600;
+          font-size: 1rem;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          border: none;
+          text-decoration: none;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          width: 100%;
+          justify-content: center;
+        }
+
+        .course-action-start {
+          background: linear-gradient(135deg, #22c55e, #16a34a);
+          color: white;
+        }
+
+        .course-action-start:hover {
+          background: linear-gradient(135deg, #16a34a, #15803d);
+          transform: translateY(-2px);
+          box-shadow: 0 8px 25px rgba(34, 197, 94, 0.3);
+        }
+
+        .course-action-continue {
+          background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+          color: white;
+        }
+
+        .course-action-continue:hover {
+          background: linear-gradient(135deg, #1d4ed8, #1e40af);
+          box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        .course-action-resume {
+          background: linear-gradient(135deg, #f59e0b, #d97706);
+          color: white;
+          margin-top: 1rem;
+        }
+
+        .course-action-resume:hover {
+          background: linear-gradient(135deg, #d97706, #b45309);
+          box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
         }
 
         .course-content {
