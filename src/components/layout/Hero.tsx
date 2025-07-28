@@ -71,13 +71,6 @@ export default function Hero() {
           }
         }
 
-        /* Asegurar que la animación funcione en el contenedor también */
-        .hero-bottom-logo {
-          display: flex;
-          justify-content: center;
-          margin-top: 32px;
-        }
-
         .logo-animation-wrapper {
           animation: logoFloat 3s ease-in-out infinite;
           display: flex;

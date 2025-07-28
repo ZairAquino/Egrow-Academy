@@ -6280,6 +6280,9 @@ input:checked + .toggle-slider:before {
   object-fit: contain;
   filter: brightness(0) invert(1);
   opacity: 0.9;
+  /* Prevenir duplicación de imágenes */
+  position: relative;
+  z-index: 1;
 }
 
 /* Safari Mobile Specific Fixes */

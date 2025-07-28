@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./critical.css";
 import "./globals.css";
+import "./premium-logo.css";
 
 import Providers from "@/components/Providers";
 import { baseSEOConfig, generateStructuredData } from "@/lib/seo-config";
