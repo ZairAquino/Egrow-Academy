@@ -12,6 +12,7 @@ export default function ContenidoCVPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isCheckingEnrollment, setIsCheckingEnrollment] = useState(true);
   const { user } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
@@ -809,6 +810,8 @@ if __name__ == "__main__":
         console.error('❌ [DEBUG] Error crítico:', enrollError);
         router.push('/curso/computer-vision');
       }
+    } finally {
+      setIsCheckingEnrollment(false);
     }
   };
 
@@ -984,7 +987,7 @@ if __name__ == "__main__":
     );
   };
 
-  if (!user || isLoading) {
+  if (!user || isLoading || isCheckingEnrollment) {
     return <div className="loading-container" suppressHydrationWarning>Cargando...</div>;
   }
 

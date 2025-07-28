@@ -13,6 +13,7 @@ export default function ContenidoCursoPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isCheckingEnrollment, setIsCheckingEnrollment] = useState(true);
   const { user } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
@@ -333,6 +334,8 @@ function Counter() {
         console.error('❌ [DEBUG] Error crítico:', enrollError);
         router.push('/curso/desarrollo-web-fullstack');
       }
+    } finally {
+      setIsCheckingEnrollment(false);
     }
   };
 
@@ -545,7 +548,7 @@ function Counter() {
     console.log('  - isEnrolled:', isEnrolled);
   };
 
-  if (!user || isLoading) {
+  if (!user || isLoading || isCheckingEnrollment) {
     return <div className="loading-container" suppressHydrationWarning>Cargando...</div>;
   }
 

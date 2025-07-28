@@ -12,6 +12,7 @@ export default function ContenidoMLPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isCheckingEnrollment, setIsCheckingEnrollment] = useState(true);
   const { user } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
@@ -559,6 +560,8 @@ class MovieRecommender:
         console.error('❌ [DEBUG] Error crítico:', enrollError);
         router.push('/curso/fundamentos-ml');
       }
+    } finally {
+      setIsCheckingEnrollment(false);
     }
   };
 
@@ -734,7 +737,7 @@ class MovieRecommender:
     );
   };
 
-  if (!user || isLoading) {
+  if (!user || isLoading || isCheckingEnrollment) {
     return <div className="loading-container" suppressHydrationWarning>Cargando...</div>;
   }
 

@@ -13,6 +13,7 @@ export default function ContenidoMonetizaIAPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isCheckingEnrollment, setIsCheckingEnrollment] = useState(true);
   const { user } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
@@ -486,6 +487,8 @@ Estrategias para aumentar RPH:
         console.error('❌ [DEBUG] Error crítico:', enrollError);
         router.push('/curso/monetiza-ia');
       }
+    } finally {
+      setIsCheckingEnrollment(false);
     }
   };
 
@@ -661,7 +664,7 @@ Estrategias para aumentar RPH:
     );
   };
 
-  if (!user || isLoading) {
+  if (!user || isLoading || isCheckingEnrollment) {
     return <div className="loading-container" suppressHydrationWarning>Cargando...</div>;
   }
 

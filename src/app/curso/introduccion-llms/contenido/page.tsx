@@ -12,6 +12,7 @@ export default function ContenidoCursoPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isCheckingEnrollment, setIsCheckingEnrollment] = useState(true);
   const { user } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
@@ -601,6 +602,8 @@ if prompt := st.chat_input(&quot;Escribe tu mensaje...&quot;):
         console.error('❌ [DEBUG] Error crítico:', enrollError);
         router.push('/curso/introduccion-llms');
       }
+    } finally {
+      setIsCheckingEnrollment(false);
     }
   };
 
@@ -815,7 +818,7 @@ if prompt := st.chat_input(&quot;Escribe tu mensaje...&quot;):
     console.log('  - Total de lecciones:', courseData.lessons.length);
   };
 
-  if (!user || isLoading) {
+  if (!user || isLoading || isCheckingEnrollment) {
     return <div className="loading-container" suppressHydrationWarning>Cargando...</div>;
   }
 
