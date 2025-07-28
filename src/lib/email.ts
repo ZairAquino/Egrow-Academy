@@ -34,6 +34,43 @@ export function getFromEmail(): string {
 }
 
 /**
+ * Función genérica para enviar emails
+ */
+export async function sendEmail(
+  to: string,
+  subject: string,
+  html: string
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    // Verificar que la API key esté configurada
+    if (!process.env.RESEND_API_KEY) {
+      console.error('❌ [EMAIL] No hay API key de Resend configurada')
+      return { success: false, error: 'Configuración de email incompleta' }
+    }
+    
+    const fromEmail = getFromEmail()
+    
+    const { data, error } = await resend.emails.send({
+      from: fromEmail,
+      to: [to],
+      subject,
+      html
+    })
+
+    if (error) {
+      console.error('❌ [EMAIL] Error enviando email:', error)
+      return { success: false, error: error.message }
+    }
+
+    console.log('✅ [EMAIL] Email enviado exitosamente a:', to)
+    return { success: true }
+  } catch (error) {
+    console.error('❌ [EMAIL] Error inesperado enviando email:', error)
+    return { success: false, error: 'Error interno del servidor' }
+  }
+}
+
+/**
  * Envía un código de verificación por email
  */
 export async function sendVerificationEmail(

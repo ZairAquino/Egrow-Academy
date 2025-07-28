@@ -13,6 +13,56 @@
 
 ## 📅 **Historial de Cambios**
 
+### **2025-01-28 - Sistema Completo de Restablecimiento de Contraseña**
+
+#### ✅ **Nuevas Funcionalidades Implementadas**
+1. **API de Restablecimiento de Contraseña**
+   - **Endpoint forgot-password:** Genera token único y envía email con enlace
+   - **Endpoint reset-password:** Valida token y actualiza contraseña
+   - **Seguridad:** Tokens con expiración de 1 hora
+   - **Validación:** Verificación de email existente sin revelar información
+
+2. **Páginas de Usuario**
+   - **Página forgot-password:** Formulario para solicitar restablecimiento
+   - **Página reset-password:** Formulario para establecer nueva contraseña
+   - **Diseño:** Interfaz moderna y responsive
+   - **UX:** Mensajes de éxito/error claros
+
+3. **Integración con Login**
+   - **Enlace actualizado:** "¿Olvidaste tu contraseña? Restablecer contraseña"
+   - **Flujo completo:** Login → Forgot Password → Reset Password → Login
+   - **Navegación:** Enlaces directos entre páginas
+
+4. **Mejoras Adicionales**
+   - **Botón "Continuar Curso":** Diseño mejorado con efectos visuales
+   - **Colores:** Verde moderno con efectos de hover
+   - **Animaciones:** Shimmer effect y transiciones suaves
+
+#### 🔧 **Archivos Creados/Modificados**
+- `src/app/api/auth/forgot-password/route.ts` - API para solicitar restablecimiento
+- `src/app/api/auth/reset-password/route.ts` - API para restablecer contraseña
+- `src/app/forgot-password/page.tsx` - Página de solicitud
+- `src/app/reset-password/page.tsx` - Página de restablecimiento
+- `src/components/auth/LoginForm.tsx` - Enlace actualizado
+- `src/app/my-courses/page.tsx` - Diseño mejorado del botón continuar
+- `src/app/globals.css` - Estilos del botón continuar
+
+#### 🧪 **Funcionalidades Verificadas**
+- ✅ **Solicitud de restablecimiento:** Formulario funcional
+- ✅ **Envío de emails:** Configurado con Resend
+- ✅ **Validación de tokens:** Seguridad implementada
+- ✅ **Actualización de contraseña:** Proceso completo
+- ✅ **Navegación:** Enlaces funcionando correctamente
+- ✅ **Diseño responsive:** Funciona en móvil y desktop
+
+#### 📊 **Estado Final**
+- **Sistema de restablecimiento:** 100% funcional
+- **Seguridad:** Tokens únicos con expiración
+- **UX:** Flujo intuitivo y moderno
+- **Integración:** Perfectamente conectado con el sistema de login
+
+---
+
 ### **2025-07-28 - Verificación de Seguridad de Plataforma**
 
 #### ✅ **Verificación Completa Realizada**
