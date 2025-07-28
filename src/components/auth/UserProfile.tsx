@@ -19,14 +19,19 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
 
   // Detectar cuando el componente se hidrata
   useEffect(() => {
+    console.log('🔍 [UserProfile] Componente hidratado');
     setIsHydrated(true);
   }, []);
 
   // Logs de depuración
   useEffect(() => {
-    console.log('UserProfile - Status:', status);
-    console.log('UserProfile - User:', user);
-  }, [user, status]);
+    console.log('🔍 [UserProfile] Estado actualizado:', { 
+      status, 
+      hasUser: !!user, 
+      isHydrated,
+      userEmail: user?.email 
+    });
+  }, [user, status, isHydrated]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -88,7 +93,7 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
 
   // Durante la hidratación inicial, mostrar siempre el estado base
   // Esto asegura que server y client rendericen lo mismo
-  if (!isHydrated || status === 'loading') {
+  if (!isHydrated) {
     return (
       <div className={`user-profile-container ${className}`} suppressHydrationWarning>
         <div className="profile-trigger">
@@ -96,6 +101,17 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
             <span className="avatar-text">👤</span>
           </div>
           <span className="dropdown-arrow">▼</span>
+        </div>
+      </div>
+    );
+  }
+
+  // Mostrar loading spinner mientras se verifica la autenticación
+  if (status === 'loading') {
+    return (
+      <div className={`user-profile-container ${className}`} suppressHydrationWarning>
+        <div className="loading-spinner">
+          ⏳
         </div>
       </div>
     );

@@ -1,12 +1,13 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import GmailQuickSelect from './GmailQuickSelect'
 
 export default function LoginForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { refreshUser } = useAuth()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -95,9 +96,13 @@ export default function LoginForm() {
       // Refrescar el contexto de autenticación
       await refreshUser()
       
-      // Redirigir al home después de un breve delay
+      // Obtener la URL de redirección si existe
+      const redirectUrl = searchParams.get('redirect') || '/'
+      
+      // Redirigir después de un breve delay
       setTimeout(() => {
-        router.push('/')
+        console.log('🔀 [LoginForm] Redirigiendo a:', redirectUrl)
+        router.push(redirectUrl)
         router.refresh()
       }, 1500)
     } catch (err) {

@@ -1,17 +1,90 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import LoginForm from '@/components/auth/LoginForm';
 import Sidebar from '@/components/layout/Sidebar';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useAuth } from '@/contexts/AuthContext';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 export default function LoginPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [hasRedirected, setHasRedirected] = useState(false);
+  const { user, status } = useAuth();
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
+
+  // Verificar si el usuario ya está logueado
+  useEffect(() => {
+    console.log('🔍 [DEBUG] LoginPage - Estado de autenticación:', { 
+      user: !!user, 
+      status, 
+      hasRedirected,
+      userDetails: user ? { id: user.id, email: user.email } : null 
+    });
+
+    if (status === 'loading') {
+      console.log('🔍 [DEBUG] LoginPage - Verificando autenticación...');
+      return;
+    }
+
+    if (user && status === 'authenticated' && !hasRedirected) {
+      console.log('✅ [DEBUG] LoginPage - Usuario ya logueado, redirigiendo...');
+      setHasRedirected(true);
+      
+      // Obtener la URL de redirección si existe
+      const redirectUrl = searchParams.get('redirect') || '/';
+      console.log('🔀 [DEBUG] LoginPage - Redirigiendo a:', redirectUrl);
+      
+      // Usar setTimeout para asegurar que la redirección se ejecute después del render
+      setTimeout(() => {
+        router.push(redirectUrl);
+      }, 100);
+      return;
+    }
+  }, [user, status, router, searchParams, hasRedirected]);
+
+  // Mostrar loading mientras se verifica la autenticación
+  if (status === 'loading') {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        gap: '1rem'
+      }}>
+        <LoadingSpinner />
+        <p style={{ color: 'white', fontSize: '1.1rem' }}>Verificando autenticación...</p>
+      </div>
+    );
+  }
+
+  // Si el usuario ya está logueado, no mostrar la página de login
+  if (user && status === 'authenticated') {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        gap: '1rem'
+      }}>
+        <LoadingSpinner />
+        <p style={{ color: 'white', fontSize: '1.1rem' }}>Redirigiendo...</p>
+      </div>
+    );
+  }
 
   return (
     <>

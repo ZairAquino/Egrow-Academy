@@ -43,7 +43,7 @@ interface AuthProviderProps {
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null)
-  const [status, setStatus] = useState<'loading' | 'authenticated' | 'unauthenticated'>('unauthenticated')
+  const [status, setStatus] = useState<'loading' | 'authenticated' | 'unauthenticated'>('loading')
   const [token, setToken] = useState<string | null>(null)
   const [isInitialized, setIsInitialized] = useState(false)
 
@@ -75,22 +75,28 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   // Función para refrescar la información del usuario
   const refreshUser = async () => {
+    console.log('🔍 [AuthContext] refreshUser iniciado...');
     setStatus('loading')
     
-    console.log('🔍 AuthContext - Verificando autenticación...')
+    console.log('🔍 [AuthContext] Verificando autenticación...')
     
     // El token se maneja automáticamente a través de cookies
     const apiUser = await fetchUserFromAPI()
+    console.log('🔍 [AuthContext] Resultado de fetchUserFromAPI:', { 
+      hasUser: !!apiUser, 
+      userEmail: apiUser?.email 
+    });
+    
     if (apiUser) {
       setUser(apiUser)
       setStatus('authenticated')
       setToken('cookie-based') // Indicador de que usa cookies
-      console.log('✅ AuthContext - Usuario autenticado:', apiUser.email)
+      console.log('✅ [AuthContext] Usuario autenticado:', apiUser.email)
     } else {
       setUser(null)
       setStatus('unauthenticated')
       setToken(null)
-      console.log('❌ AuthContext - Usuario no autenticado')
+      console.log('❌ [AuthContext] Usuario no autenticado')
     }
   }
 
@@ -112,13 +118,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   // Effect para verificar la sesión al cargar la página (solo en cliente)
   useEffect(() => {
+    console.log('🔍 [AuthContext] Inicializando contexto de autenticación...');
+    
     if (typeof window !== 'undefined') {
-      setStatus('loading')
+      console.log('🔍 [AuthContext] Ejecutando en cliente, verificando autenticación...');
       refreshUser().finally(() => {
+        console.log('🔍 [AuthContext] Verificación completada, estableciendo isInitialized = true');
         setIsInitialized(true)
       })
     } else {
-      // En el servidor, establecer estado inicial consistente
+      console.log('🔍 [AuthContext] Ejecutando en servidor, estableciendo estado inicial');
+      // En el servidor, mantener status como 'loading' para consistencia
       setIsInitialized(true)
     }
   }, [])
