@@ -41,7 +41,10 @@ export async function POST(request: NextRequest) {
     });
 
     // Enviar email de restablecimiento
-    const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/reset-password?token=${resetToken}`;
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 
+                   process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 
+                   'https://egrowacademy.com';
+    const resetUrl = `${baseUrl}/reset-password?token=${resetToken}`;
     
     const emailContent = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
