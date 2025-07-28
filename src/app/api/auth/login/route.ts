@@ -2,96 +2,118 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { verifyPassword, generateToken, createSafeUser } from '@/lib/auth'
 import { LoginData } from '@/types/auth'
+import { 
+  getClientIP, 
+  checkLoginRateLimit, 
+  resetLoginAttempts, 
+  logSecurityEvent,
+  validateEmailSecurity,
+  sanitizeInput,
+  addSecurityHeaders 
+} from '@/lib/security'
 
 export async function POST(request: NextRequest) {
+  const ip = getClientIP(request)
+  
   try {
-    console.log('🔍 [LOGIN] Iniciando proceso de login')
+    console.log('🔍 [LOGIN] Iniciando proceso de login desde IP:', ip)
     
     const body: LoginData = await request.json()
     const { email, password } = body
     
+    // Sanitizar entrada
+    const sanitizedEmail = sanitizeInput(email)
+    const sanitizedPassword = sanitizeInput(password)
+    
     console.log('📝 [LOGIN] Datos recibidos:', { 
-      email, 
-      passwordLength: password?.length || 0 
+      email: sanitizedEmail, 
+      passwordLength: sanitizedPassword?.length || 0 
     })
 
     // Validar campos requeridos
-    if (!email || !password) {
+    if (!sanitizedEmail || !sanitizedPassword) {
       console.log('❌ [LOGIN] Campos requeridos faltantes')
-      return NextResponse.json(
+      await logSecurityEvent('LOGIN_FAILED_MISSING_FIELDS', { ip }, ip)
+      return addSecurityHeaders(NextResponse.json(
         { error: 'Por favor, completa todos los campos requeridos' },
         { status: 400 }
-      )
+      ))
     }
 
-    // Validar formato de email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) {
-      console.log('❌ [LOGIN] Email inválido:', email)
-      return NextResponse.json(
-        { error: 'Por favor, ingresa un correo electrónico válido' },
+    // Validar email con seguridad mejorada
+    const emailValidation = validateEmailSecurity(sanitizedEmail)
+    if (!emailValidation.valid) {
+      console.log('❌ [LOGIN] Email inválido:', sanitizedEmail, emailValidation.reason)
+      await logSecurityEvent('LOGIN_FAILED_INVALID_EMAIL', { email: sanitizedEmail, reason: emailValidation.reason }, ip)
+      return addSecurityHeaders(NextResponse.json(
+        { error: emailValidation.reason || 'Por favor, ingresa un correo electrónico válido' },
         { status: 400 }
-      )
+      ))
     }
 
     console.log('✅ [LOGIN] Validaciones pasadas, buscando usuario')
 
     // Buscar usuario
     const user = await prisma.user.findUnique({
-      where: { email }
+      where: { email: sanitizedEmail }
     })
 
     if (!user) {
-      console.log('❌ [LOGIN] Usuario no encontrado:', email)
-      return NextResponse.json(
+      console.log('❌ [LOGIN] Usuario no encontrado:', sanitizedEmail)
+      await logSecurityEvent('LOGIN_FAILED_USER_NOT_FOUND', { email: sanitizedEmail }, ip)
+      return addSecurityHeaders(NextResponse.json(
         { error: 'No existe una cuenta con este correo electrónico. ¿Te registraste?' },
         { status: 401 }
-      )
+      ))
     }
 
     console.log('✅ [LOGIN] Usuario encontrado, verificando contraseña')
 
     // Verificar si el usuario tiene contraseña (no es usuario OAuth)
     if (!user.passwordHash) {
-      console.log('❌ [LOGIN] Usuario sin contraseña (probablemente OAuth):', email)
-      return NextResponse.json(
+      console.log('❌ [LOGIN] Usuario sin contraseña (probablemente OAuth):', sanitizedEmail)
+      await logSecurityEvent('LOGIN_FAILED_NO_PASSWORD', { email: sanitizedEmail }, ip)
+      return addSecurityHeaders(NextResponse.json(
         { error: 'Esta cuenta fue creada con Google. Por favor, inicia sesión con Google' },
         { status: 401 }
-      )
+      ))
     }
 
     // Verificar contraseña
-    const isValidPassword = await verifyPassword(password, user.passwordHash)
+    const isValidPassword = await verifyPassword(sanitizedPassword, user.passwordHash)
 
     if (!isValidPassword) {
-      console.log('❌ [LOGIN] Contraseña incorrecta para:', email)
-      return NextResponse.json(
+      console.log('❌ [LOGIN] Contraseña incorrecta para:', sanitizedEmail)
+      await logSecurityEvent('LOGIN_FAILED_INVALID_PASSWORD', { email: sanitizedEmail }, ip)
+      return addSecurityHeaders(NextResponse.json(
         { error: 'La contraseña es incorrecta. Inténtalo de nuevo' },
         { status: 401 }
-      )
+      ))
     }
 
     console.log('✅ [LOGIN] Contraseña correcta, verificando cuenta activa')
 
     // Verificar si la cuenta está activa
     if (!user.isActive) {
-      console.log('❌ [LOGIN] Cuenta desactivada:', email)
-      return NextResponse.json(
+      console.log('❌ [LOGIN] Cuenta desactivada:', sanitizedEmail)
+      await logSecurityEvent('LOGIN_FAILED_INACTIVE_ACCOUNT', { email: sanitizedEmail }, ip)
+      return addSecurityHeaders(NextResponse.json(
         { error: 'Tu cuenta está desactivada. Contacta al administrador' },
         { status: 403 }
-      )
+      ))
     }
 
     // Verificar que el email esté verificado
     if (!user.emailVerified) {
-      console.log('❌ [LOGIN] Email no verificado para:', email)
-      return NextResponse.json(
+      console.log('❌ [LOGIN] Email no verificado para:', sanitizedEmail)
+      await logSecurityEvent('LOGIN_FAILED_UNVERIFIED_EMAIL', { email: sanitizedEmail }, ip)
+      return addSecurityHeaders(NextResponse.json(
         { 
           error: 'Tu cuenta no está verificada. Revisa tu correo electrónico para el código de verificación.',
           requiresVerification: true
         },
         { status: 401 }
-      )
+      ))
     }
 
     console.log('✅ [LOGIN] Cuenta activa, generando token')
@@ -121,6 +143,15 @@ export async function POST(request: NextRequest) {
 
     console.log('✅ [LOGIN] Último login actualizado')
 
+    // Reset login attempts on successful login
+    resetLoginAttempts(ip)
+
+    // Log successful login
+    await logSecurityEvent('LOGIN_SUCCESS', { 
+      email: sanitizedEmail, 
+      userId: user.id 
+    }, ip)
+
     // Devolver usuario sin passwordHash
     const safeUser = createSafeUser(user)
 
@@ -141,9 +172,15 @@ export async function POST(request: NextRequest) {
     })
 
     console.log('✅ [LOGIN] Login completado exitosamente')
-    return response
+    return addSecurityHeaders(response)
   } catch (error) {
     console.error('💥 [LOGIN] Error completo:', error)
+    
+    // Log security event for errors
+    await logSecurityEvent('LOGIN_ERROR', { 
+      error: error instanceof Error ? error.message : 'Unknown error',
+      email: body?.email 
+    }, ip)
     
     // Manejar errores específicos de base de datos
     if (error instanceof Error) {
@@ -152,29 +189,28 @@ export async function POST(request: NextRequest) {
       
       if (error.message.includes('connect')) {
         console.error('💥 [LOGIN] Error de conexión a BD')
-        return NextResponse.json(
+        return addSecurityHeaders(NextResponse.json(
           { error: 'Error de conexión con la base de datos. Inténtalo más tarde' },
           { status: 503 }
-        )
+        ))
       }
       
       // Devolver error más específico en desarrollo
       if (process.env.NODE_ENV === 'development') {
-        return NextResponse.json(
+        return addSecurityHeaders(NextResponse.json(
           { 
             error: 'Error interno del servidor',
             details: error.message,
-            stack: error.stack
           },
           { status: 500 }
-        )
+        ))
       }
     }
     
     console.error('💥 [LOGIN] Error genérico, devolviendo 500')
-    return NextResponse.json(
+    return addSecurityHeaders(NextResponse.json(
       { error: 'Error interno del servidor. Inténtalo más tarde' },
       { status: 500 }
-    )
+    ))
   }
 }

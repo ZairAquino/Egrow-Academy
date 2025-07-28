@@ -38,6 +38,7 @@ model User {
   resourceAccessLogs      ResourceAccessLog[]
   sessions                Session[]
   subscriptions           Subscription[]
+  securityLogs            SecurityLog[]
 
   @@index([membershipLevel])
   @@index([email, membershipLevel])
@@ -381,6 +382,21 @@ model Rating {
 
   @@unique([userId, courseId, postId, type])
   @@map("ratings")
+}
+
+model SecurityLog {
+  id        String   @id @default(cuid())
+  event     String
+  details   String   // JSON string
+  ipAddress String
+  timestamp DateTime @default(now())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+
+  @@index([event])
+  @@index([ipAddress])
+  @@index([timestamp])
+  @@map("security_logs")
 }
 
 enum CourseProgressStatus {

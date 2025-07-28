@@ -3,6 +3,13 @@
 import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { usePerformanceMetrics } from './PerformanceOptimizer';
+import { 
+  validateSEOContent, 
+  generateFallbackContent, 
+  handleEmptyContent,
+  generateFallbackMetaTags,
+  hasValidContent
+} from '@/lib/seo-error-prevention';
 
 interface DynamicSEOProps {
   title?: string;
@@ -12,6 +19,9 @@ interface DynamicSEOProps {
   type?: 'website' | 'article' | 'course';
   courseData?: any;
   resourceData?: any;
+  noindex?: boolean;
+  canonical?: string;
+  errorPage?: boolean;
 }
 
 export default function DynamicSEO({
@@ -22,6 +32,9 @@ export default function DynamicSEO({
   type = 'website',
   courseData,
   resourceData,
+  noindex = false,
+  canonical,
+  errorPage = false,
 }: DynamicSEOProps) {
   const pathname = usePathname();
   const { metrics } = usePerformanceMetrics();
@@ -30,13 +43,29 @@ export default function DynamicSEO({
     // Solo ejecutar en el cliente
     if (typeof window === 'undefined') return;
     
+    // Validar y corregir contenido SEO
+    const validatedTitle = handleEmptyContent(pathname, title || '', 'title');
+    const validatedDescription = handleEmptyContent(pathname, description || '', 'description');
+    const validatedKeywords = handleEmptyContent(pathname, keywords.join(', ') || '', 'keywords');
+    
     // Actualizar título de la página
-    if (title) {
-      document.title = title;
+    if (validatedTitle) {
+      document.title = validatedTitle;
     }
 
     // Actualizar meta tags dinámicamente
     const updateMetaTags = () => {
+      // Robots meta tag para páginas de error
+      if (errorPage || noindex) {
+        let robotsMeta = document.querySelector('meta[name="robots"]');
+        if (!robotsMeta) {
+          robotsMeta = document.createElement('meta');
+          robotsMeta.setAttribute('name', 'robots');
+          document.head.appendChild(robotsMeta);
+        }
+        robotsMeta.setAttribute('content', 'noindex, nofollow');
+      }
+
       // Meta description
       let metaDescription = document.querySelector('meta[name="description"]');
       if (!metaDescription) {
@@ -44,7 +73,7 @@ export default function DynamicSEO({
         metaDescription.setAttribute('name', 'description');
         document.head.appendChild(metaDescription);
       }
-      metaDescription.setAttribute('content', description || '');
+      metaDescription.setAttribute('content', validatedDescription);
 
       // Meta keywords
       let metaKeywords = document.querySelector('meta[name="keywords"]');
@@ -53,12 +82,12 @@ export default function DynamicSEO({
         metaKeywords.setAttribute('name', 'keywords');
         document.head.appendChild(metaKeywords);
       }
-      metaKeywords.setAttribute('content', keywords.join(', '));
+      metaKeywords.setAttribute('content', validatedKeywords);
 
       // Open Graph tags
       const ogTags = {
-        'og:title': title || document.title,
-        'og:description': description || '',
+        'og:title': validatedTitle || document.title,
+        'og:description': validatedDescription,
         'og:type': type,
         'og:url': `${window.location.origin}${pathname}`,
         'og:image': image || `${window.location.origin}/images/eGrowAcademylogo.png`,
@@ -81,8 +110,8 @@ export default function DynamicSEO({
         'twitter:card': 'summary_large_image',
         'twitter:site': '@egrowacademy',
         'twitter:creator': '@egrowacademy',
-        'twitter:title': title || document.title,
-        'twitter:description': description || '',
+        'twitter:title': validatedTitle || document.title,
+        'twitter:description': validatedDescription,
         'twitter:image': image || `${window.location.origin}/images/twitter-image.jpg`,
       };
 
@@ -103,7 +132,7 @@ export default function DynamicSEO({
         canonicalLink.setAttribute('rel', 'canonical');
         document.head.appendChild(canonicalLink);
       }
-      canonicalLink.setAttribute('href', `${window.location.origin}${pathname}`);
+      canonicalLink.setAttribute('href', canonical || `${window.location.origin}${pathname}`);
     };
 
     // Actualizar structured data
@@ -217,7 +246,7 @@ export default function DynamicSEO({
       }
     }
 
-  }, [title, description, keywords, image, type, courseData, resourceData, pathname]);
+  }, [title, description, keywords, image, type, courseData, resourceData, pathname, noindex, canonical, errorPage]);
 
   return null; // Este componente no renderiza nada
 }

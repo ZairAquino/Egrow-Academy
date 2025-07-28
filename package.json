@@ -32,7 +32,10 @@
     "performance-analysis": "node scripts/performance-analysis.js",
     "optimize-performance": "node scripts/optimize-performance.js",
     "seed-courses": "tsx scripts/seed-courses.ts",
-    "verify-platform": "tsx scripts/verify-platform.ts"
+    "verify-platform": "tsx scripts/verify-platform.ts",
+    "backup-database": "tsx scripts/backup-database.ts",
+    "security-audit": "tsx scripts/security-audit.ts",
+    "monitor-security": "tsx scripts/monitor-security.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.12.0",
@@ -46,6 +49,7 @@
     "clsx": "^2.1.1",
     "dotenv": "^17.2.0",
     "email-validator": "^2.0.4",
+    "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.525.0",
     "next": "15.4.1",

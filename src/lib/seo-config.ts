@@ -97,7 +97,7 @@ export const baseSEOConfig = {
     },
   },
   verification: {
-    google: 'tu-google-verification-code',
+    google: 'ppV50-xAiHZYc7B8SSMk9lJapqLgxMPvv0wDv',
     yandex: 'tu-yandex-verification-code',
     yahoo: 'tu-yahoo-verification-code',
     bing: 'tu-bing-verification-code',
