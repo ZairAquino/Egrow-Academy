@@ -81,11 +81,19 @@ export async function POST(request: NextRequest) {
       </div>
     `;
 
-    await sendEmail({
-      to: user.email,
-      subject: '🔐 Restablecer Contraseña - eGrow Academy',
-      html: emailContent
-    });
+    const emailResult = await sendEmail(
+      user.email,
+      '🔐 Restablecer Contraseña - eGrow Academy',
+      emailContent
+    );
+
+    if (!emailResult.success) {
+      console.error('Error enviando email:', emailResult.error);
+      return NextResponse.json(
+        { error: 'Error enviando email de restablecimiento' },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({
       message: 'Si el email existe en nuestra base de datos, recibirás un enlace de restablecimiento'
