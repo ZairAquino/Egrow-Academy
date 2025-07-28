@@ -314,7 +314,7 @@ function LoginFormContent() {
         <p style={{ marginTop: '0.5rem' }}>
           ¿Olvidaste tu contraseña?{' '}
           <a 
-            href="/contacto" 
+            href="/forgot-password" 
             style={{
               color: '#667eea',
               textDecoration: 'none',
@@ -327,7 +327,7 @@ function LoginFormContent() {
               e.currentTarget.style.textDecoration = 'none';
             }}
           >
-            Contacta soporte
+            Restablecer contraseña
           </a>
         </p>
       </div>

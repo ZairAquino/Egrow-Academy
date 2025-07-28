@@ -540,15 +540,41 @@ function CourseCard({ userCourse }: { userCourse: UserCourse }) {
         }
 
         .continue-btn {
-          background: linear-gradient(135deg, #3b82f6, #2563eb);
+          background: linear-gradient(135deg, #10b981, #059669);
           color: white;
-          box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+          box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+          border: none;
+          position: relative;
+          overflow: hidden;
+          font-weight: 600;
+          letter-spacing: 0.025em;
+          transition: all 0.3s ease;
+        }
+
+        .continue-btn::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+          transition: left 0.5s ease;
         }
 
         .continue-btn:hover {
-          background: linear-gradient(135deg, #2563eb, #1d4ed8);
-          transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+          background: linear-gradient(135deg, #059669, #047857);
+          transform: translateY(-3px);
+          box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        .continue-btn:hover::before {
+          left: 100%;
+        }
+
+        .continue-btn:active {
+          transform: translateY(-1px);
+          box-shadow: 0 4px 15px rgba(16, 185, 129, 0.5);
         }
 
         .review-btn {

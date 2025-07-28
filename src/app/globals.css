@@ -240,8 +240,8 @@ button, a, input, select, textarea {
 }
 
 .profile-avatar {
-    width: 42px;
-    height: 42px;
+    width: 53px;
+    height: 53px;
     border-radius: 50%;
     background: #000000;
     display: flex;
@@ -6011,8 +6011,8 @@ input:checked + .toggle-slider:before {
 /* User Profile Fixed Position */
 .user-profile-fixed {
   position: fixed;
-  top: 0;
-  right: 20px;
+  top: 50px;
+  right: 50px;
   z-index: 1000;
   pointer-events: auto;
   background: transparent;
