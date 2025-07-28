@@ -15,10 +15,22 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
     }
 
+    // Verificar token JWT
     const decoded = verifyToken(token);
     if (!decoded) {
       console.log('❌ [ENROLL] Token inválido');
       return NextResponse.json({ error: 'Token inválido' }, { status: 401 });
+    }
+
+    // Verificar si es una sesión de base de datos
+    const session = await prisma.session.findUnique({
+      where: { token }
+    });
+
+    // Si es una sesión de BD, verificar que no haya expirado
+    if (session && session.expiresAt < new Date()) {
+      console.log('❌ [ENROLL] Sesión expirada');
+      return NextResponse.json({ error: 'Sesión expirada' }, { status: 401 });
     }
 
     const { courseId } = await request.json();

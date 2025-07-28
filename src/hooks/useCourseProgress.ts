@@ -42,8 +42,8 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
     totalSessions: 0,
     averageSessionTime: 0,
     longestSession: 0,
-    startedAt: new Date().toISOString(),
-    lastAccessed: new Date().toISOString(),
+    startedAt: '2024-01-01T00:00:00.000Z',
+    lastAccessed: '2024-01-01T00:00:00.000Z',
     lessonProgress: [],
     totalLessons: 5
   });
@@ -67,8 +67,8 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
     }));
 
     try {
-      // Obtener token del localStorage
-      const token = localStorage.getItem('authToken');
+      // Obtener token del localStorage solo en el cliente
+      const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
       
       const response = await fetch(`/api/courses/progress?courseId=${courseId}`, {
         headers: {
@@ -90,39 +90,41 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
           totalLessons: 5
         });
       } else {
-        // Fallback a localStorage si la API falla
-        const localStorageKey = `course-progress-${courseId}`;
-        const savedProgress = localStorage.getItem(localStorageKey);
-        
-        if (savedProgress) {
-          const data = JSON.parse(savedProgress);
+        // Fallback a localStorage si la API falla (solo en cliente)
+        if (typeof window !== 'undefined') {
+          const localStorageKey = `course-progress-${courseId}`;
+          const savedProgress = localStorage.getItem(localStorageKey);
           
-          // Asegurar que currentLesson no exceda el número de lecciones disponibles
-          const maxLessonIndex = 4; // 5 lecciones (índices 0-4)
-          const safeCurrentLesson = Math.min(data.currentLesson || 0, maxLessonIndex);
-          
-          setProgress({
-            ...data,
-            currentLesson: safeCurrentLesson,
-            totalLessons: 5
-          });
-        } else {
-          // Si no hay progreso guardado, usar valores por defecto
-          const defaultProgress: CourseProgress = {
-            currentLesson: 0,
-            completedLessons: [],
-            progressPercentage: 0,
-            status: 'NOT_STARTED',
-            totalTimeSpent: 0,
-            totalSessions: 0,
-            averageSessionTime: 0,
-            longestSession: 0,
-            startedAt: new Date().toISOString(),
-            lastAccessed: new Date().toISOString(),
-            lessonProgress: [],
-            totalLessons: 10
-          };
-          setProgress(defaultProgress);
+          if (savedProgress) {
+            const data = JSON.parse(savedProgress);
+            
+            // Asegurar que currentLesson no exceda el número de lecciones disponibles
+            const maxLessonIndex = 4; // 5 lecciones (índices 0-4)
+            const safeCurrentLesson = Math.min(data.currentLesson || 0, maxLessonIndex);
+            
+            setProgress({
+              ...data,
+              currentLesson: safeCurrentLesson,
+              totalLessons: 5
+            });
+          } else {
+            // Si no hay progreso guardado, usar valores por defecto
+            const defaultProgress: CourseProgress = {
+              currentLesson: 0,
+              completedLessons: [],
+              progressPercentage: 0,
+              status: 'NOT_STARTED',
+              totalTimeSpent: 0,
+              totalSessions: 0,
+              averageSessionTime: 0,
+              longestSession: 0,
+              startedAt: new Date().toISOString(),
+              lastAccessed: new Date().toISOString(),
+              lessonProgress: [],
+              totalLessons: 10
+            };
+            setProgress(defaultProgress);
+          }
         }
       }
     } catch (error) {
@@ -149,8 +151,8 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
       const lessonToSave = currentLesson ?? currentProgress.currentLesson;
       const lessonsToSave = completedLessons ?? currentProgress.completedLessons;
       
-      // Obtener token del localStorage
-      const token = localStorage.getItem('authToken');
+      // Obtener token del localStorage solo en el cliente
+      const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
       
       const response = await fetch('/api/courses/progress', {
         method: 'POST',
@@ -176,26 +178,28 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
           ...data.progress
         }));
       } else {
-        // Fallback a localStorage si la API falla
-        const localStorageKey = `course-progress-${courseId}`;
-        const progressData: CourseProgress = {
-          currentLesson: lessonToSave,
-          completedLessons: lessonsToSave,
-          progressPercentage: Math.round((lessonsToSave.length / currentProgress.totalLessons) * 100),
-          status: lessonsToSave.length === 0 ? 'NOT_STARTED' : 
-                  lessonsToSave.length === currentProgress.totalLessons ? 'COMPLETED' : 'IN_PROGRESS',
-          totalTimeSpent: currentProgress.totalTimeSpent,
-          totalSessions: currentProgress.totalSessions,
-          averageSessionTime: currentProgress.averageSessionTime,
-          longestSession: currentProgress.longestSession,
-          startedAt: currentProgress.startedAt,
-          lastAccessed: new Date().toISOString(),
-          lessonProgress: currentProgress.lessonProgress,
-          totalLessons: currentProgress.totalLessons
-        };
-        
-        localStorage.setItem(localStorageKey, JSON.stringify(progressData));
-        setProgress(progressData);
+        // Fallback a localStorage si la API falla (solo en cliente)
+        if (typeof window !== 'undefined') {
+          const localStorageKey = `course-progress-${courseId}`;
+          const progressData: CourseProgress = {
+            currentLesson: lessonToSave,
+            completedLessons: lessonsToSave,
+            progressPercentage: Math.round((lessonsToSave.length / currentProgress.totalLessons) * 100),
+            status: lessonsToSave.length === 0 ? 'NOT_STARTED' : 
+                    lessonsToSave.length === currentProgress.totalLessons ? 'COMPLETED' : 'IN_PROGRESS',
+            totalTimeSpent: currentProgress.totalTimeSpent,
+            totalSessions: currentProgress.totalSessions,
+            averageSessionTime: currentProgress.averageSessionTime,
+            longestSession: currentProgress.longestSession,
+            startedAt: currentProgress.startedAt,
+            lastAccessed: new Date().toISOString(),
+            lessonProgress: currentProgress.lessonProgress,
+            totalLessons: currentProgress.totalLessons
+          };
+          
+          localStorage.setItem(localStorageKey, JSON.stringify(progressData));
+          setProgress(progressData);
+        }
       }
     } catch (error) {
       console.error('Error guardando progreso:', error);

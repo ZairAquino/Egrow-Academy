@@ -662,7 +662,7 @@ Estrategias para aumentar RPH:
   };
 
   if (!user || isLoading) {
-    return <div className="loading-container">Cargando...</div>;
+    return <div className="loading-container" suppressHydrationWarning>Cargando...</div>;
   }
 
   if (!isEnrolled) {

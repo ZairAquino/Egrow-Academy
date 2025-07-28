@@ -30,6 +30,16 @@ export async function GET(request: NextRequest) {
     
     const userId = decoded.userId;
 
+    // Verificar si es una sesión de base de datos
+    const session = await prisma.session.findUnique({
+      where: { token }
+    });
+
+    // Si es una sesión de BD, verificar que no haya expirado
+    if (session && session.expiresAt < new Date()) {
+      return NextResponse.json({ error: 'Session expired' }, { status: 401 });
+    }
+
     // Buscar el curso por slug si es necesario
     let actualCourseId = courseId;
     
@@ -164,6 +174,16 @@ export async function POST(request: NextRequest) {
 
     const decoded = verifyToken(token);
     const userId = decoded.userId;
+
+    // Verificar si es una sesión de base de datos
+    const session = await prisma.session.findUnique({
+      where: { token }
+    });
+
+    // Si es una sesión de BD, verificar que no haya expirado
+    if (session && session.expiresAt < new Date()) {
+      return NextResponse.json({ error: 'Session expired' }, { status: 401 });
+    }
 
     // Buscar el curso por slug si es necesario
     let actualCourseId = courseId;

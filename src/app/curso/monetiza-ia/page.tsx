@@ -302,7 +302,7 @@ export default function MonetizaIAPage() {
   if (status === 'loading' || isLoading) {
     console.log('🔍 [DEBUG] Mostrando loading unificado:', { status, isLoading });
     return (
-      <div className="loading-container">
+      <div className="loading-container" suppressHydrationWarning>
         <LoadingSpinner />
         <p>Cargando...</p>
       </div>

@@ -21,8 +21,21 @@ async function checkEnrollmentStatus(request: NextRequest) {
       );
     }
 
-    // Verificar token
+    // Verificar token JWT
     const { userId } = verifyToken(token);
+
+    // Verificar si es una sesión de base de datos
+    const session = await prisma.session.findUnique({
+      where: { token }
+    });
+
+    // Si es una sesión de BD, verificar que no haya expirado
+    if (session && session.expiresAt < new Date()) {
+      return NextResponse.json(
+        { error: 'Sesión expirada' },
+        { status: 401 }
+      );
+    }
 
     // Obtener courseId de los query parameters o del body
     const { searchParams } = new URL(request.url);
