@@ -17,7 +17,7 @@
     "restore-email-verification": "tsx scripts/restore-email-verification.ts",
     "fix-build": "tsx scripts/fix-build-issues.ts",
     "prepare-deploy": "tsx scripts/prepare-for-deploy.ts",
-    "generate-sitemap": "next-sitemap",
+    "generate-sitemap": "next-sitemap --config config/deployment/next-sitemap.config.js",
     "generate-seo-files": "node scripts/generate-seo-files.js",
     "analyze": "ANALYZE=true npm run build",
     "seo-audit": "npm run generate-sitemap && npm run analyze",
