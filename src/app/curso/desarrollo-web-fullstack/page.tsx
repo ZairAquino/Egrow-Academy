@@ -23,19 +23,86 @@ export default function DesarrolloWebFullStackPage() {
   const [completedLessons, setCompletedLessons] = useState<number[]>([]);
   const [progressPercentage, setProgressPercentage] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const { user } = useAuth();
+  const { user, status } = useAuth();
   const router = useRouter();
   const { hasPremiumAccess, isLoading: subscriptionLoading } = useSubscriptionStatus();
+
+  console.log('🔍 [DEBUG] Estados iniciales:', { 
+    sidebarOpen, 
+    currentLesson, 
+    completedLessons: completedLessons.length,
+    progressPercentage,
+    isLoading,
+    user: !!user,
+    userDetails: user ? { id: user.id, email: user.email } : null,
+    authStatus: status
+  });
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
   // Función de redirección directa copiada de monetiza-ia
-  const goToCourseContent = () => {
-    console.log('🎯 Botón clickeado - Redirigiendo a contenido del curso');
+  const goToCourseContent = async () => {
+    console.log('🎯 Botón clickeado - Usuario logueado:', !!user, 'Premium Access:', hasPremiumAccess);
+    
+    if (!user) {
+      // Si el usuario no está logueado, redirigir al login con redirect
+      const loginUrl = `/login?redirect=/curso/desarrollo-web-fullstack/contenido`;
+      console.log(`🔐 Usuario no logueado - Redirigiendo a login: ${loginUrl}`);
+      
+      if (typeof window !== 'undefined') {
+        window.location.href = loginUrl;
+      }
+      return;
+    }
+    
+    if (!hasPremiumAccess) {
+      // Si el usuario no tiene acceso premium, redirigir a suscripción
+      console.log(`🔒 Usuario no tiene acceso premium - Redirigiendo a suscripción`);
+      router.push('/subscription');
+      return;
+    }
+    
+    // Si el usuario está logueado y tiene acceso premium, verificar inscripción e inscribir si es necesario
+    try {
+      console.log('🔍 [DEBUG] Verificando inscripción en el curso premium...');
+      const response = await fetch(`/api/courses/enrollment-status?courseId=${courseData.id}`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        
+        if (!data.isEnrolled) {
+          console.log('🔍 [DEBUG] Usuario no inscrito, inscribiendo automáticamente...');
+          // Inscribir automáticamente
+          const enrollResponse = await fetch('/api/courses/enroll', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ courseId: courseData.id }),
+            credentials: 'include',
+          });
+          
+          if (enrollResponse.ok) {
+            console.log('✅ [DEBUG] Usuario inscrito automáticamente');
+          } else {
+            console.error('❌ [DEBUG] Error en inscripción automática');
+          }
+        } else {
+          console.log('✅ [DEBUG] Usuario ya inscrito en el curso');
+        }
+      }
+    } catch (error) {
+      console.error('❌ [DEBUG] Error verificando inscripción:', error);
+    }
+    
+    // Ir al contenido del curso
+    const contentUrl = '/curso/desarrollo-web-fullstack/contenido';
+    console.log(`✅ Usuario logueado con premium - Redirigiendo a contenido: ${contentUrl}`);
+    
     if (typeof window !== 'undefined') {
-      window.location.href = '/curso/desarrollo-web-fullstack/contenido';
+      window.location.href = contentUrl;
     }
   };
 
@@ -266,21 +333,20 @@ export default function DesarrolloWebFullStackPage() {
     console.log('  - Tiene acceso premium:', hasPremiumAccess);
   }, [currentLesson, completedLessons, progressPercentage, hasPremiumAccess]);
 
-  if (isLoading || subscriptionLoading) {
+  console.log('🔍 [DEBUG] Renderizando componente, isLoading:', isLoading, 'authStatus:', status);
+  
+  // Mostrar loading mientras se verifica la autenticación o se carga el progreso
+  if (status === 'loading' || isLoading || subscriptionLoading) {
+    console.log('🔍 [DEBUG] Mostrando loading unificado:', { status, isLoading, subscriptionLoading });
     return (
-      <>
-        <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
-        <UserProfile className="user-profile-fixed" />
-        <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''}`}>
-          <div className="loading-container">
-            <LoadingSpinner />
-            <p>Cargando curso...</p>
-          </div>
-        </main>
-        <Footer />
-      </>
+      <div className="loading-container" suppressHydrationWarning>
+        <LoadingSpinner />
+        <p>Cargando...</p>
+      </div>
     );
   }
+
+  console.log('🔍 [DEBUG] Renderizando JSX principal');
 
   return (
     <>

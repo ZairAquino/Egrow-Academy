@@ -230,6 +230,15 @@ function Counter() {
   }, []);
 
   const checkEnrollment = async () => {
+    // Primero verificar si el usuario está autenticado
+    if (!user) {
+      console.log('🔍 [DEBUG] Usuario no autenticado, redirigiendo al login');
+      router.push('/login?redirect=/curso/desarrollo-web-fullstack/contenido');
+      return;
+    }
+
+    console.log('🔍 [DEBUG] Usuario autenticado, verificando inscripción...');
+    
     try {
       console.log('🔍 [DEBUG] Verificando inscripción para curso: desarrollo-web-fullstack');
       const response = await fetch(`/api/courses/enrollment-status?courseId=desarrollo-web-fullstack`);
@@ -263,14 +272,67 @@ function Counter() {
           setIsEnrolled(data.isEnrolled);
         }
       } else {
-        console.error('🔍 [DEBUG] Error en respuesta de enrollment-status');
-        // Si hay error verificando inscripción, redirigir a página del curso
+        const errorData = await response.json();
+        console.error('🔍 [DEBUG] Error en respuesta:', errorData);
+        
+        // Si el error es de autenticación, verificar si realmente no está autenticado
+        if (response.status === 401) {
+          console.log('🔍 [DEBUG] Error 401 - Verificando si realmente no está autenticado...');
+          
+          // Intentar inscribir directamente sin verificar inscripción previa
+          try {
+            const enrollResponse = await fetch('/api/courses/enroll', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ courseId: 'desarrollo-web-fullstack' }),
+              credentials: 'include',
+            });
+            
+            if (enrollResponse.ok) {
+              console.log('✅ [DEBUG] Usuario inscrito exitosamente tras error 401');
+              setIsEnrolled(true);
+            } else {
+              console.log('🔍 [DEBUG] Error en inscripción tras 401 - Redirigiendo al login');
+              router.push('/login?redirect=/curso/desarrollo-web-fullstack/contenido');
+            }
+          } catch (enrollError) {
+            console.error('❌ [DEBUG] Error crítico en inscripción:', enrollError);
+            router.push('/login?redirect=/curso/desarrollo-web-fullstack/contenido');
+          }
+          return;
+        }
+        
+        // Para otros errores, redirigir a página del curso
         router.push('/curso/desarrollo-web-fullstack');
       }
     } catch (error) {
       console.error('Error verificando inscripción:', error);
-      // Si hay error, redirigir a página del curso
-      router.push('/curso/desarrollo-web-fullstack');
+      // En caso de error de red o similar, intentar inscripción directa
+      console.log('🔍 [DEBUG] Error de conexión, intentando inscripción directa...');
+      
+      try {
+        const enrollResponse = await fetch('/api/courses/enroll', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ courseId: 'desarrollo-web-fullstack' }),
+          credentials: 'include',
+        });
+        
+        if (enrollResponse.ok) {
+          console.log('✅ [DEBUG] Usuario inscrito exitosamente tras error de conexión');
+          setIsEnrolled(true);
+        } else {
+          console.error('❌ [DEBUG] Error en inscripción tras error de conexión');
+          router.push('/curso/desarrollo-web-fullstack');
+        }
+      } catch (enrollError) {
+        console.error('❌ [DEBUG] Error crítico:', enrollError);
+        router.push('/curso/desarrollo-web-fullstack');
+      }
     }
   };
 
@@ -484,12 +546,12 @@ function Counter() {
   };
 
   if (!user || isLoading) {
-    return <div className="loading-container">Cargando...</div>;
+    return <div className="loading-container" suppressHydrationWarning>Cargando...</div>;
   }
 
   // Verificar que el progreso se haya cargado correctamente
   if (!progress || progress.currentLesson === undefined) {
-    return <div className="loading-container">Cargando progreso del curso...</div>;
+    return <div className="loading-container" suppressHydrationWarning>Cargando...</div>;
   }
 
   // Verificar que la lección actual esté dentro del rango válido
@@ -497,7 +559,7 @@ function Counter() {
   const currentLesson = courseData.lessons[currentLessonIndex];
   
   if (!currentLesson) {
-    return <div className="loading-container">Error: Lección no encontrada</div>;
+    return <div className="loading-container" suppressHydrationWarning>Error: Lección no encontrada</div>;
   }
 
   if (!isEnrolled) {

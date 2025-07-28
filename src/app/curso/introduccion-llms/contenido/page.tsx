@@ -501,6 +501,15 @@ if prompt := st.chat_input(&quot;Escribe tu mensaje...&quot;):
   }, [pathname]); // Solo dependencia de pathname para evitar ejecuciones múltiples
 
   const checkEnrollment = async () => {
+    // Primero verificar si el usuario está autenticado
+    if (!user) {
+      console.log('🔍 [DEBUG] Usuario no autenticado, redirigiendo al login');
+      router.push('/login?redirect=/curso/introduccion-llms/contenido');
+      return;
+    }
+
+    console.log('🔍 [DEBUG] Usuario autenticado, verificando inscripción...');
+    
     try {
       const response = await fetch(`/api/courses/enrollment-status?courseId=${courseData.id}`);
       if (response.ok) {
@@ -534,10 +543,32 @@ if prompt := st.chat_input(&quot;Escribe tu mensaje...&quot;):
         const errorData = await response.json();
         console.error('🔍 [DEBUG] Error en respuesta:', errorData);
         
-        // Si el error es de autenticación, redirigir al login
+        // Si el error es de autenticación, verificar si realmente no está autenticado
         if (response.status === 401) {
-          console.log('🔍 [DEBUG] Error 401 - Redirigiendo al login');
-          router.push('/login?redirect=/curso/introduccion-llms/contenido');
+          console.log('🔍 [DEBUG] Error 401 - Verificando si realmente no está autenticado...');
+          
+          // Intentar inscribir directamente sin verificar inscripción previa
+          try {
+            const enrollResponse = await fetch('/api/courses/enroll', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ courseId: courseData.id }),
+              credentials: 'include',
+            });
+            
+            if (enrollResponse.ok) {
+              console.log('✅ [DEBUG] Usuario inscrito exitosamente tras error 401');
+              setIsEnrolled(true);
+            } else {
+              console.log('🔍 [DEBUG] Error en inscripción tras 401 - Redirigiendo al login');
+              router.push('/login?redirect=/curso/introduccion-llms/contenido');
+            }
+          } catch (enrollError) {
+            console.error('❌ [DEBUG] Error crítico en inscripción:', enrollError);
+            router.push('/login?redirect=/curso/introduccion-llms/contenido');
+          }
           return;
         }
         
@@ -785,7 +816,7 @@ if prompt := st.chat_input(&quot;Escribe tu mensaje...&quot;):
   };
 
   if (!user || isLoading) {
-    return <div className="loading-container">Cargando...</div>;
+    return <div className="loading-container" suppressHydrationWarning>Cargando...</div>;
   }
 
   if (!isEnrolled) {
