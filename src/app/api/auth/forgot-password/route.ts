@@ -41,9 +41,8 @@ export async function POST(request: NextRequest) {
     });
 
     // Enviar email de restablecimiento
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 
-                   process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 
-                   'https://egrowacademy.com';
+    // Usar siempre el dominio personalizado para los emails
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://egrowacademy.com';
     const resetUrl = `${baseUrl}/reset-password?token=${resetToken}`;
     
     const emailContent = `
