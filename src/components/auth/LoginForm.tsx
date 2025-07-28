@@ -1,11 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import GmailQuickSelect from './GmailQuickSelect'
 
-export default function LoginForm() {
+// Componente que maneja la lógica de searchParams
+function LoginFormContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { refreshUser } = useAuth()
@@ -331,5 +332,13 @@ export default function LoginForm() {
         </p>
       </div>
     </div>
+  )
+}
+
+export default function LoginForm() {
+  return (
+    <Suspense fallback={<div>Cargando...</div>}>
+      <LoginFormContent />
+    </Suspense>
   )
 }

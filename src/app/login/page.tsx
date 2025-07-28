@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import LoginForm from '@/components/auth/LoginForm';
 import Sidebar from '@/components/layout/Sidebar';
@@ -9,7 +9,8 @@ import Image from 'next/image';
 import { useAuth } from '@/contexts/AuthContext';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
-export default function LoginPage() {
+// Componente que maneja la lógica de searchParams
+function LoginPageContent() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [hasRedirected, setHasRedirected] = useState(false);
   const { user, status } = useAuth();
@@ -207,4 +208,26 @@ export default function LoginPage() {
       </main>
     </>
   )
+}
+
+// Componente principal que envuelve en Suspense
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div style={{
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        gap: '1rem'
+      }}>
+        <LoadingSpinner />
+        <p style={{ color: 'white', fontSize: '1.1rem' }}>Cargando...</p>
+      </div>
+    }>
+      <LoginPageContent />
+    </Suspense>
+  );
 }
