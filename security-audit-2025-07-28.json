@@ -1,9 +1,9 @@
 {
-  "timestamp": "2025-07-28T20:47:51.342Z",
+  "timestamp": "2025-07-28T21:02:54.467Z",
   "totalChecks": 23,
-  "passedChecks": 18,
+  "passedChecks": 21,
   "failedChecks": 0,
-  "warnings": 5,
+  "warnings": 2,
   "results": [
     {
       "category": "Environment Variables",
@@ -123,23 +123,20 @@
     {
       "category": "Security Headers",
       "check": "Header: X-Content-Type-Options",
-      "status": "WARNING",
-      "details": "Header X-Content-Type-Options no está configurado",
-      "recommendation": "Agregar header X-Content-Type-Options al middleware"
+      "status": "PASS",
+      "details": "Header X-Content-Type-Options está configurado"
     },
     {
       "category": "Security Headers",
       "check": "Header: X-Frame-Options",
-      "status": "WARNING",
-      "details": "Header X-Frame-Options no está configurado",
-      "recommendation": "Agregar header X-Frame-Options al middleware"
+      "status": "PASS",
+      "details": "Header X-Frame-Options está configurado"
     },
     {
       "category": "Security Headers",
       "check": "Header: X-XSS-Protection",
-      "status": "WARNING",
-      "details": "Header X-XSS-Protection no está configurado",
-      "recommendation": "Agregar header X-XSS-Protection al middleware"
+      "status": "PASS",
+      "details": "Header X-XSS-Protection está configurado"
     },
     {
       "category": "Security Headers",
