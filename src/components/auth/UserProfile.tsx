@@ -14,7 +14,13 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
   const { user, status, logout } = useAuth();
   const { stats } = useUserStats();
   const [isOpen, setIsOpen] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Detectar cuando el componente se hidrata
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   // Logs de depuración
   useEffect(() => {
@@ -37,7 +43,9 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
     try {
       await logout();
       // Redirigir a la página principal después del logout
-      window.location.href = '/';
+      if (typeof window !== 'undefined') {
+        window.location.href = '/';
+      }
     } catch (error) {
       console.error('Error logging out:', error);
     }
@@ -78,12 +86,17 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
     return 'U';
   };
 
-  // Mostrar estado de carga
-  if (status === 'loading') {
+  // Durante la hidratación inicial, mostrar siempre el estado base
+  // Esto asegura que server y client rendericen lo mismo
+  if (!isHydrated || status === 'loading') {
     return (
-      <div className={`user-profile-container ${className}`}>
-        <div className="loading-spinner">⏳</div>
-        <div style={{ fontSize: '10px', color: '#666' }}>Cargando sesión...</div>
+      <div className={`user-profile-container ${className}`} suppressHydrationWarning>
+        <div className="profile-trigger">
+          <div className="profile-avatar">
+            <span className="avatar-text">👤</span>
+          </div>
+          <span className="dropdown-arrow">▼</span>
+        </div>
       </div>
     );
   }
@@ -91,7 +104,7 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
   // Mostrar estado no autenticado
   if (!user) {
     return (
-      <div className={`user-profile-container ${className}`} ref={dropdownRef}>
+      <div className={`user-profile-container ${className}`} ref={dropdownRef} suppressHydrationWarning>
         <button 
           onClick={() => setIsOpen(!isOpen)}
           className="profile-trigger"
@@ -133,7 +146,7 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
   // El usuario ya está disponible del contexto
 
   return (
-    <div className={`user-profile-container ${className}`} ref={dropdownRef}>
+    <div className={`user-profile-container ${className}`} ref={dropdownRef} suppressHydrationWarning>
       <button 
         onClick={() => setIsOpen(!isOpen)}
         className="profile-trigger"

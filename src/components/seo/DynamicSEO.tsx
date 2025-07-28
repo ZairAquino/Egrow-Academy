@@ -27,6 +27,9 @@ export default function DynamicSEO({
   const { metrics } = usePerformanceMetrics();
 
   useEffect(() => {
+    // Solo ejecutar en el cliente
+    if (typeof window === 'undefined') return;
+    
     // Actualizar título de la página
     if (title) {
       document.title = title;

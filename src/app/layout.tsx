@@ -7,7 +7,6 @@ import Providers from "@/components/Providers";
 import { baseSEOConfig, generateStructuredData } from "@/lib/seo-config";
 import { generateEducationalOrganizationSchema } from "@/lib/schema-advanced";
 import { openGraphConfigs } from "@/lib/open-graph-config";
-import CanonicalURL from "@/components/seo/CanonicalURL";
 import Analytics from "@/components/seo/Analytics";
 import PerformanceOptimizer from "@/components/seo/PerformanceOptimizer";
 import { speedUtils } from "@/lib/speed-optimization-config";
@@ -61,9 +60,6 @@ export default function RootLayout({
         <meta name="twitter:description" content={openGraphConfigs.home.description} />
         <meta name="twitter:image" content={openGraphConfigs.home.image} />
         
-        {/* URL Canónica */}
-        <CanonicalURL />
-        
         {/* Structured Data - Schema.org Avanzado */}
         <script
           type="application/ld+json"
@@ -93,10 +89,7 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <Providers>
-          {/* Main Content */}
-          <main className="main-content">
-            {children}
-          </main>
+          {children}
         </Providers>
 
         {/* SEO Analytics and Performance Tracking */}

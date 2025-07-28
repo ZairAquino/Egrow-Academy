@@ -62,7 +62,7 @@ body {
 
 .main-content {
   min-height: 100vh;
-  padding-top: 80px;
+  padding-top: 0;
 }
 
 /* Hero crítico */

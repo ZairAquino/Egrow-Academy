@@ -43,8 +43,9 @@ interface AuthProviderProps {
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null)
-  const [status, setStatus] = useState<'loading' | 'authenticated' | 'unauthenticated'>('loading')
+  const [status, setStatus] = useState<'loading' | 'authenticated' | 'unauthenticated'>('unauthenticated')
   const [token, setToken] = useState<string | null>(null)
+  const [isInitialized, setIsInitialized] = useState(false)
 
   // Función para obtener usuario desde el endpoint /api/auth/me
   const fetchUserFromAPI = async (): Promise<User | null> => {
@@ -109,9 +110,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
-  // Effect para verificar la sesión al cargar la página
+  // Effect para verificar la sesión al cargar la página (solo en cliente)
   useEffect(() => {
-    refreshUser()
+    if (typeof window !== 'undefined') {
+      setStatus('loading')
+      refreshUser().finally(() => {
+        setIsInitialized(true)
+      })
+    } else {
+      // En el servidor, establecer estado inicial consistente
+      setIsInitialized(true)
+    }
   }, [])
 
   // Effect para actualizar automáticamente cada 30 segundos

@@ -8,6 +8,7 @@ import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Footer from '@/components/layout/Footer';
 import UserProfile from '@/components/auth/UserProfile';
 import { useAuth } from '@/contexts/AuthContext';
+// Eliminamos CourseActionButton para usar la lógica directa que funciona
 
 // Lazy load components
 const CompaniesMarquee = dynamic(() => import('@/components/ui/CompaniesMarquee'), {
@@ -28,32 +29,11 @@ export default function IntroduccionLLMsPage() {
     setSidebarOpen(!sidebarOpen);
   };
 
-  const handleEnrollClick = async () => {
-    if (!user) {
-      router.push('/login?redirect=/curso/introduccion-llms/contenido');
-      return;
-    }
-
-    try {
-      const response = await fetch('/api/courses/enroll', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ courseId: 'introduccion-llms' }),
-        credentials: 'include', // Incluir cookies
-      });
-
-      if (response.ok) {
-        router.push('/curso/introduccion-llms/contenido');
-      } else {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Error al inscribirse en el curso');
-      }
-    } catch (error) {
-      console.error('❌ Error al inscribirse en el curso:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
-      alert(`Error al inscribirse en el curso: ${errorMessage}`);
+  // Función de redirección directa copiada de monetiza-ia
+  const goToCourseContent = () => {
+    console.log('🎯 Botón clickeado - Redirigiendo a contenido del curso');
+    if (typeof window !== 'undefined') {
+      window.location.href = '/curso/introduccion-llms/contenido';
     }
   };
 
@@ -356,36 +336,34 @@ export default function IntroduccionLLMsPage() {
                   <h1 className="course-title-large">{courseData.title}</h1>
                   <p className="course-description">{courseData.description}</p>
                   
-                  <div className="course-actions">
+                  {/* Botones copiados exactamente de monetiza-ia */}
+                  <div className="new-course-actions">
                     {completedLessons.length > 0 ? (
-                      <div className="course-actions-with-progress">
-                        <div className="progress-summary">
-                          <p className="progress-status">
+                      <div className="progress-section-new">
+                        <div className="progress-info-new">
+                          <p className="progress-text-new">
                             📚 <strong>Progreso actual:</strong> Lección {currentLesson + 1} de {courseData.lessons.length}
                           </p>
-                          <p className="progress-detail">
+                          <p className="progress-detail-new">
                             {completedLessons.length} lecciones completadas • {Math.round(progressPercentage)}% del curso
                           </p>
                         </div>
-                        <button 
-                          className="btn btn-primary btn-large btn-continue-course"
-                          onClick={async () => {
-                            // Recargar progreso antes de navegar
-                            await loadUserProgress();
-                            router.push('/curso/introduccion-llms/contenido');
-                          }}
+                        <div 
+                          className="course-action-button course-action-continue"
+                          onClick={goToCourseContent}
                         >
                           🚀 Continuar con el curso
-                        </button>
+                        </div>
                       </div>
                     ) : (
-                      <button 
-                        className="btn btn-primary btn-large btn-start-course"
-                        onClick={handleEnrollClick}
-                        disabled={isLoading}
-                      >
-                        {isLoading ? '⏳ Inscribiéndote...' : '🎯 Comenzar Curso Gratis'}
-                      </button>
+                      <div className="start-section-new">
+                        <div 
+                          className="course-action-button course-action-start"
+                          onClick={goToCourseContent}
+                        >
+                          🎯 Comenzar Curso Gratis
+                        </div>
+                      </div>
                     )}
                   </div>
                   
@@ -421,16 +399,12 @@ export default function IntroduccionLLMsPage() {
                         </p>
                       </div>
                       {completedLessons.length > 0 && (
-                        <button 
-                          className="btn btn-outline btn-small btn-continue-progress"
-                          onClick={async () => {
-                            // Recargar progreso antes de navegar
-                            await loadUserProgress();
-                            router.push('/curso/introduccion-llms/contenido');
-                          }}
+                        <div 
+                          className="course-action-button course-action-resume"
+                          onClick={goToCourseContent}
                         >
                           🔄 Continuar donde lo dejaste
-                        </button>
+                        </div>
                       )}
                       
 

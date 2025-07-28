@@ -3,15 +3,16 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
-import Sidebar from '@/components/layout/Sidebar';
-import UserProfile from '@/components/auth/UserProfile';
 import Hero from '@/components/layout/Hero';
 import CompaniesMarquee from '@/components/ui/CompaniesMarquee';
 import FeaturedCourses from '@/components/courses/FeaturedCourses';
 import Newsletter from '@/components/ui/Newsletter';
 import WhyChoose from '@/components/ui/WhyChoose';
 import Footer from '@/components/layout/Footer';
-import { WelcomeModal } from '@/lib/lazy-components';
+import ClientOnly from '@/components/ClientOnly';
+import Sidebar from '@/components/layout/Sidebar';
+import UserProfile from '@/components/auth/UserProfile';
+import WelcomeModal from '@/components/ui/WelcomeModal';
 import DynamicSEO from '@/components/seo/DynamicSEO';
 
 
@@ -66,17 +67,23 @@ function HomeContent() {
       />
 
       {/* UserProfile fijo en esquina superior derecha */}
-      <UserProfile className="user-profile-fixed" />
+      <div suppressHydrationWarning>
+        <ClientOnly>
+          <UserProfile className="user-profile-fixed" />
+        </ClientOnly>
+      </div>
       
-      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
+      <ClientOnly>
+        <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
+      </ClientOnly>
       
       {/* Modal de bienvenida */}
-      <Suspense fallback={<div>Loading...</div>}>
+      <ClientOnly>
         <WelcomeModal 
           isOpen={showSuccessNotification} 
           onClose={() => setShowSuccessNotification(false)} 
         />
-      </Suspense>
+      </ClientOnly>
       
       <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''}`}>
         <Hero />

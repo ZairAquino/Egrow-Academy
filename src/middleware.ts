@@ -31,8 +31,11 @@ export function middleware(request: NextRequest) {
 
   // 5. Validar slugs de cursos
   if (pathname.startsWith('/curso/')) {
-    const slug = pathname.replace('/curso/', '');
-    if (!urlUtils.validateCourseSlug(slug)) {
+    const pathParts = pathname.replace('/curso/', '').split('/');
+    const courseSlug = pathParts[0]; // Solo validar el slug principal del curso
+    
+    // Solo validar si es la página principal del curso (no subpáginas como /contenido)
+    if (pathParts.length === 1 && !urlUtils.validateCourseSlug(courseSlug)) {
       return NextResponse.redirect(new URL('/courses', request.url));
     }
   }

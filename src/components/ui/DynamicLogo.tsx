@@ -76,12 +76,10 @@ export default function DynamicLogo({
     }
   }, [isPremium]);
 
-  // Generar URL con múltiples parámetros de cache busting
-  const timestamp = Date.now();
-  const randomId = Math.random().toString(36).substring(7);
+  // Generar URL con parámetros de cache busting estáticos para SSR
   const logoSrc = isPremium 
-    ? `/images/optimized/logop.webp?v=${timestamp}&key=${logoKey}&reload=${forceReload}&r=${randomId}` 
-    : `/images/logog.png?v=${timestamp}&key=${logoKey}&reload=${forceReload}&r=${randomId}`;
+    ? `/images/optimized/logop.webp?key=${logoKey}&reload=${forceReload}` 
+    : `/images/logog.png?key=${logoKey}&reload=${forceReload}`;
   const logoAlt = isPremium ? "eGrow Academy Premium" : "eGrow Academy";
 
   // Logs detallados para depuración

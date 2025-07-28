@@ -9,29 +9,7 @@ import Footer from '@/components/layout/Footer';
 import UserProfile from '@/components/auth/UserProfile';
 import { useAuth } from '@/contexts/AuthContext';
 
-// Función para calcular el tiempo restante hasta el viernes a las 12:00
-const getTimeUntilFriday = () => {
-  const now = new Date();
-  const friday = new Date();
-  
-  // Configurar para el próximo viernes a las 12:00
-  const daysUntilFriday = (5 - now.getDay() + 7) % 7;
-  friday.setDate(now.getDate() + daysUntilFriday);
-  friday.setHours(12, 0, 0, 0);
-  
-  const timeLeft = friday.getTime() - now.getTime();
-  
-  if (timeLeft <= 0) {
-    return { days: 0, hours: 0, minutes: 0, seconds: 0 };
-  }
-  
-  const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-  const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-  
-  return { days, hours, minutes, seconds };
-};
+// Contador eliminado - ya no se necesita
 
 // Lazy load components
 const CompaniesMarquee = dynamic(() => import('@/components/ui/CompaniesMarquee'), {
@@ -47,7 +25,7 @@ export default function MonetizaIAPage() {
   const [completedLessons, setCompletedLessons] = useState<number[]>([]);
   const [progressPercentage, setProgressPercentage] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [timeLeft, setTimeLeft] = useState(getTimeUntilFriday());
+  // Estados del contador eliminados
   const { user } = useAuth();
   const router = useRouter();
   
@@ -64,58 +42,13 @@ export default function MonetizaIAPage() {
     setSidebarOpen(!sidebarOpen);
   };
 
-  // Actualizar el contador cada segundo
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(getTimeUntilFriday());
-    }, 1000);
+  // useEffect del contador eliminado
 
-    return () => clearInterval(timer);
-  }, []);
-
-  const handleEnrollClick = async () => {
-    console.log('🔍 [DEBUG] handleEnrollClick iniciado');
-    console.log('🔍 [DEBUG] Estado del usuario:', { user: !!user, userId: user?.id });
-    
-    if (!user) {
-      console.log('🔍 [DEBUG] Usuario no autenticado, redirigiendo a login');
-      router.push('/login?redirect=/curso/monetiza-ia/contenido');
-      return;
-    }
-
-    console.log('🔍 [DEBUG] Usuario autenticado, procediendo con inscripción');
-    
-    try {
-      console.log('🔍 [DEBUG] Enviando request de inscripción a /api/courses/enroll');
-      const response = await fetch('/api/courses/enroll', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ courseId: 'monetiza-ia' }),
-        credentials: 'include',
-      });
-
-      console.log('🔍 [DEBUG] Respuesta del servidor:', { 
-        status: response.status, 
-        ok: response.ok,
-        statusText: response.statusText 
-      });
-
-      if (response.ok) {
-        console.log('🔍 [DEBUG] Inscripción exitosa, redirigiendo a contenido');
-        console.log('🔍 [DEBUG] Router disponible:', !!router);
-        router.push('/curso/monetiza-ia/contenido');
-        console.log('🔍 [DEBUG] router.push ejecutado');
-      } else {
-        const errorData = await response.json();
-        console.log('🔍 [DEBUG] Error en respuesta:', errorData);
-        throw new Error(errorData.message || 'Error al inscribirse en el curso');
-      }
-    } catch (error) {
-      console.error('❌ Error al inscribirse en el curso:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
-      alert(`Error al inscribirse en el curso: ${errorMessage}`);
+  // Función completamente nueva para redirección directa
+  const goToCourseContent = () => {
+    console.log('🎯 Botón clickeado - Redirigiendo a contenido del curso');
+    if (typeof window !== 'undefined') {
+      window.location.href = '/curso/monetiza-ia/contenido';
     }
   };
 
@@ -367,109 +300,37 @@ export default function MonetizaIAPage() {
                 </div>
                 
                 <h1 className="course-title-large">{courseData.title}</h1>
-                <p className="course-description" style={{ color: '#000000' }}>{courseData.description}</p>
+                <p className="course-description course-description-dark">{courseData.description}</p>
                 
-                <div className="course-actions">
+                {/* Botón nuevo completamente desde cero */}
+                <div className="new-course-actions">
                   {completedLessons.length > 0 ? (
-                    <div className="course-actions-with-progress">
-                      <div className="progress-summary">
-                        <p className="progress-status">
+                    <div className="progress-section-new">
+                      <div className="progress-info-new">
+                        <p className="progress-text-new">
                           📚 <strong>Progreso actual:</strong> Lección {currentLesson + 1} de {courseData.lessons.length}
                         </p>
-                        <p className="progress-detail">
+                        <p className="progress-detail-new">
                           {completedLessons.length} lecciones completadas • {Math.round(progressPercentage)}% del curso
                         </p>
                       </div>
-                      <button 
-                        className="btn btn-primary btn-large btn-continue-course"
-                        onClick={async () => {
-                          console.log('🔍 [DEBUG] Botón "Continuar con el curso" clickeado');
-                          console.log('🔍 [DEBUG] Estado actual:', { 
-                            currentLesson, 
-                            completedLessons: completedLessons.length,
-                            progressPercentage 
-                          });
-                          
-                          // Verificar si el usuario está inscrito
-                          try {
-                            const enrollmentResponse = await fetch(`/api/courses/enrollment-status?courseId=monetiza-ia`);
-                            if (enrollmentResponse.ok) {
-                              const enrollmentData = await enrollmentResponse.json();
-                              console.log('🔍 [DEBUG] Estado de inscripción:', enrollmentData);
-                              
-                              if (!enrollmentData.isEnrolled) {
-                                console.log('🔍 [DEBUG] Usuario no inscrito, inscribiendo automáticamente...');
-                                // Inscribir al usuario automáticamente
-                                const enrollResponse = await fetch('/api/courses/enroll', {
-                                  method: 'POST',
-                                  headers: {
-                                    'Content-Type': 'application/json',
-                                  },
-                                  body: JSON.stringify({ courseId: 'monetiza-ia' }),
-                                  credentials: 'include',
-                                });
-                                
-                                if (enrollResponse.ok) {
-                                  console.log('🔍 [DEBUG] Usuario inscrito exitosamente');
-                                } else {
-                                  console.error('🔍 [DEBUG] Error al inscribir usuario');
-                                }
-                              }
-                            }
-                          } catch (error) {
-                            console.error('🔍 [DEBUG] Error verificando inscripción:', error);
-                          }
-                          
-                          await loadUserProgress();
-                          console.log('🔍 [DEBUG] Progreso recargado, redirigiendo a contenido');
-                          console.log('🔍 [DEBUG] Router disponible:', !!router);
-                          router.push('/curso/monetiza-ia/contenido');
-                          console.log('🔍 [DEBUG] router.push ejecutado');
-                        }}
+                      <div 
+                        className="course-action-button course-action-continue"
+                        onClick={goToCourseContent}
                       >
                         🚀 Continuar con el curso
-                      </button>
+                      </div>
                     </div>
                   ) : (
-                    <div className="course-actions">
-                      <button 
-                        className="btn btn-primary btn-large btn-start-course"
-                        onClick={handleEnrollClick}
-                        disabled={isLoading}
+                    <div className="start-section-new">
+                      <div 
+                        className="course-action-button course-action-start"
+                        onClick={goToCourseContent}
                       >
-                        {isLoading ? '⏳ Inscribiéndote...' : '🎯 Comenzar Curso Gratis'}
-                      </button>
-                      
-                      <div className="unlock-counter">
-                        <div className="counter-header">
-                          <span className="counter-icon">🔒</span>
-                          <span className="counter-title">Desbloqueo del curso</span>
-                        </div>
-                        <div className="counter-time">
-                          <div className="time-unit">
-                            <span className="time-value">{timeLeft.days}</span>
-                            <span className="time-label">Días</span>
-                          </div>
-                          <div className="time-separator">:</div>
-                          <div className="time-unit">
-                            <span className="time-value">{timeLeft.hours.toString().padStart(2, '0')}</span>
-                            <span className="time-label">Horas</span>
-                          </div>
-                          <div className="time-separator">:</div>
-                          <div className="time-unit">
-                            <span className="time-value">{timeLeft.minutes.toString().padStart(2, '0')}</span>
-                            <span className="time-label">Min</span>
-                          </div>
-                          <div className="time-separator">:</div>
-                          <div className="time-unit">
-                            <span className="time-value">{timeLeft.seconds.toString().padStart(2, '0')}</span>
-                            <span className="time-label">Seg</span>
-                          </div>
-                        </div>
-                        <div className="counter-info">
-                          <span className="info-text">Viernes a las 12:00</span>
-                        </div>
+                        🎯 Comenzar Curso Gratis
                       </div>
+                      
+                      {/* Contador eliminado */}
                     </div>
                   )}
                 </div>
@@ -506,25 +367,12 @@ export default function MonetizaIAPage() {
                       </p>
                     </div>
                     {completedLessons.length > 0 && (
-                      <button 
-                        className="btn btn-outline btn-small btn-continue-progress"
-                        onClick={async () => {
-                          console.log('🔍 [DEBUG] Botón "Continuar donde lo dejaste" clickeado');
-                          console.log('🔍 [DEBUG] Estado actual:', { 
-                            currentLesson, 
-                            completedLessons: completedLessons.length,
-                            progressPercentage 
-                          });
-                          
-                          await loadUserProgress();
-                          console.log('🔍 [DEBUG] Progreso recargado, redirigiendo a contenido');
-                          console.log('🔍 [DEBUG] Router disponible:', !!router);
-                          router.push('/curso/monetiza-ia/contenido');
-                          console.log('🔍 [DEBUG] router.push ejecutado');
-                        }}
+                      <div 
+                        className="course-action-button course-action-resume"
+                        onClick={goToCourseContent}
                       >
                         🔄 Continuar donde lo dejaste
-                      </button>
+                      </div>
                     )}
                   </div>
                 )}
@@ -739,6 +587,42 @@ export default function MonetizaIAPage() {
           margin-bottom: 2rem;
         }
 
+        .new-course-actions {
+          margin-bottom: 2rem;
+        }
+
+        .progress-section-new {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+          width: 100%;
+        }
+
+        .progress-info-new {
+          background: rgba(255, 255, 255, 0.1);
+          padding: 1rem;
+          border-radius: 8px;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .progress-text-new {
+          margin: 0 0 0.5rem 0;
+          font-weight: 600;
+        }
+
+        .progress-detail-new {
+          margin: 0;
+          font-size: 0.9rem;
+          opacity: 0.8;
+        }
+
+        .start-section-new {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+          align-items: flex-start;
+        }
+
         .course-actions-with-progress {
           display: flex;
           flex-direction: column;
@@ -869,75 +753,7 @@ export default function MonetizaIAPage() {
           align-items: flex-start;
         }
 
-        .unlock-counter {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          border-radius: 12px;
-          padding: 1rem;
-          color: white;
-          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .counter-header {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          margin-bottom: 0.75rem;
-        }
-
-        .counter-icon {
-          font-size: 1.2rem;
-        }
-
-        .counter-title {
-          font-size: 0.9rem;
-          font-weight: 600;
-          opacity: 0.9;
-        }
-
-        .counter-time {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 0.5rem;
-          margin-bottom: 0.5rem;
-        }
-
-        .time-unit {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          min-width: 40px;
-        }
-
-        .time-value {
-          font-size: 1.5rem;
-          font-weight: 700;
-          line-height: 1;
-        }
-
-        .time-label {
-          font-size: 0.7rem;
-          opacity: 0.8;
-          margin-top: 0.25rem;
-        }
-
-        .time-separator {
-          font-size: 1.2rem;
-          font-weight: 600;
-          opacity: 0.7;
-          margin-top: -0.5rem;
-        }
-
-        .counter-info {
-          text-align: center;
-        }
-
-        .info-text {
-          font-size: 0.8rem;
-          opacity: 0.8;
-          font-weight: 500;
-        }
+        /* Estilos del contador eliminados */
 
         .progress-card {
           background: white;

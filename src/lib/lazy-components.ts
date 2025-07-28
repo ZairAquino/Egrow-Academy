@@ -1,15 +1,26 @@
-// Lazy Loading Components
-import { lazy, Suspense } from 'react';
+// Lazy Loading Components using Next.js dynamic imports
+import dynamic from 'next/dynamic';
+import React from 'react';
 
-const LoginForm = lazy(() => import('@/components/auth/LoginForm'));
-const RegisterForm = lazy(() => import('@/components/auth/RegisterForm'));
-const PaymentForm = lazy(() => import('@/components/payments/PaymentForm'));
-const WelcomeModal = lazy(() => import('@/components/ui/WelcomeModal'));
+const LoginForm = dynamic(() => import('@/components/auth/LoginForm'), {
+  loading: () => React.createElement('div', null, 'Loading...'),
+  ssr: false
+});
 
-// Usage example:
-// <Suspense fallback={<div>Loading...</div>}>
-//   <ComponentName />
-// </Suspense>
+const RegisterForm = dynamic(() => import('@/components/auth/RegisterForm'), {
+  loading: () => React.createElement('div', null, 'Loading...'),
+  ssr: false
+});
+
+const PaymentForm = dynamic(() => import('@/components/payments/PaymentForm'), {
+  loading: () => React.createElement('div', null, 'Loading...'),
+  ssr: false
+});
+
+const WelcomeModal = dynamic(() => import('@/components/ui/WelcomeModal'), {
+  loading: () => React.createElement('div', null, 'Loading...'),
+  ssr: false
+});
 
 export {
   LoginForm,

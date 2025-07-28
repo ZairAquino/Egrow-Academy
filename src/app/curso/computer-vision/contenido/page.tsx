@@ -713,10 +713,40 @@ if __name__ == "__main__":
       const response = await fetch(`/api/courses/enrollment-status?courseId=${courseData.id}`);
       if (response.ok) {
         const data = await response.json();
-        setIsEnrolled(data.isEnrolled);
+        
+        if (!data.isEnrolled) {
+          console.log('🔍 [DEBUG] Usuario no inscrito, inscribiendo automáticamente...');
+          // Intentar inscribir automáticamente
+          const enrollResponse = await fetch('/api/courses/enroll', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ courseId: courseData.id }),
+            credentials: 'include',
+          });
+          
+          if (enrollResponse.ok) {
+            console.log('✅ [DEBUG] Usuario inscrito automáticamente');
+            setIsEnrolled(true);
+          } else {
+            console.error('❌ [DEBUG] Error en inscripción automática');
+            // Si falla la inscripción automática, redirigir a página del curso
+            router.push('/curso/computer-vision');
+            return;
+          }
+        } else {
+          setIsEnrolled(data.isEnrolled);
+        }
+      } else {
+        console.error('🔍 [DEBUG] Error en respuesta de enrollment-status');
+        // Si hay error verificando inscripción, redirigir a página del curso
+        router.push('/curso/computer-vision');
       }
     } catch (error) {
       console.error('Error verificando inscripción:', error);
+      // Si hay error, redirigir a página del curso
+      router.push('/curso/computer-vision');
     }
   };
 

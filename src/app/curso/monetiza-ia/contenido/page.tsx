@@ -421,13 +421,71 @@ Estrategias para aumentar RPH:
       if (response.ok) {
         const data = await response.json();
         console.log('🔍 [DEBUG] Datos de inscripción:', data);
-        setIsEnrolled(data.isEnrolled);
+        
+        if (!data.isEnrolled) {
+          console.log('🔍 [DEBUG] Usuario no inscrito, inscribiendo automáticamente...');
+          // Intentar inscribir automáticamente
+          const enrollResponse = await fetch('/api/courses/enroll', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ courseId: courseData.id }),
+            credentials: 'include',
+          });
+          
+          if (enrollResponse.ok) {
+            console.log('✅ [DEBUG] Usuario inscrito automáticamente');
+            setIsEnrolled(true);
+          } else {
+            console.error('❌ [DEBUG] Error en inscripción automática');
+            // Si falla la inscripción automática, redirigir a página del curso
+            router.push('/curso/monetiza-ia');
+            return;
+          }
+        } else {
+          setIsEnrolled(data.isEnrolled);
+        }
       } else {
         const errorData = await response.json();
         console.error('🔍 [DEBUG] Error en respuesta:', errorData);
+        
+        // Si el error es de autenticación, redirigir al login
+        if (response.status === 401) {
+          console.log('🔍 [DEBUG] Error 401 - Redirigiendo al login');
+          router.push('/login?redirect=/curso/monetiza-ia/contenido');
+          return;
+        }
+        
+        // Para otros errores, redirigir a página del curso
+        router.push('/curso/monetiza-ia');
       }
     } catch (error) {
       console.error('Error verificando inscripción:', error);
+      // En caso de error de red o similar, intentar inscripción directa
+      console.log('🔍 [DEBUG] Error de conexión, intentando inscripción directa...');
+      
+      try {
+        const enrollResponse = await fetch('/api/courses/enroll', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ courseId: courseData.id }),
+          credentials: 'include',
+        });
+        
+        if (enrollResponse.ok) {
+          console.log('✅ [DEBUG] Usuario inscrito exitosamente tras error de conexión');
+          setIsEnrolled(true);
+        } else {
+          console.error('❌ [DEBUG] Error en inscripción tras error de conexión');
+          router.push('/curso/monetiza-ia');
+        }
+      } catch (enrollError) {
+        console.error('❌ [DEBUG] Error crítico:', enrollError);
+        router.push('/curso/monetiza-ia');
+      }
     }
   };
 
