@@ -1,12 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { baseSEOConfig } from "@/lib/seo-config";
-import { generateEducationalOrganizationSchema } from "@/lib/schema-advanced";
-import { openGraphConfigs } from "@/lib/open-graph-config";
-import Analytics from "@/components/seo/Analytics";
-import PerformanceOptimizer from "@/components/seo/PerformanceOptimizer";
-import { speedUtils } from "@/lib/speed-optimization-config";
 import Providers from "@/components/Providers";
 
 const inter = Inter({ 
@@ -18,7 +12,13 @@ const inter = Inter({
   adjustFontFallback: true,
 });
 
-export const metadata: Metadata = baseSEOConfig;
+export const metadata: Metadata = {
+  title: {
+    default: "eGrow Academy - Cursos de Inteligencia Artificial | Líder en México y Latinoamérica",
+    template: "%s | eGrow Academy - Cursos de IA"
+  },
+  description: "Aprende Inteligencia Artificial con los mejores cursos online en español. Formación profesional en IA, Machine Learning, Deep Learning y más. Líder en México y Latinoamérica.",
+};
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -42,9 +42,9 @@ export default function RootLayout({
         <meta name="google-site-verification" content="ppV50-xAiHZYc7B8SSMk9lJapqLgxMPvv0wDv" />
         
         {/* Open Graph Meta Tags - Página Principal */}
-        <meta property="og:title" content={openGraphConfigs.home.title} />
-        <meta property="og:description" content={openGraphConfigs.home.description} />
-        <meta property="og:image" content={openGraphConfigs.home.image} />
+        <meta property="og:title" content="eGrow Academy - Cursos de Inteligencia Artificial | Líder en México y Latinoamérica" />
+        <meta property="og:description" content="Aprende Inteligencia Artificial con los mejores cursos online en español. Formación profesional en IA, Machine Learning, Deep Learning y más. Líder en México y Latinoamérica." />
+        <meta property="og:image" content="/images/eGrowAcademylogo.png" />
         <meta property="og:url" content="https://egrow-academy.com" />
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="eGrow Academy" />
@@ -54,17 +54,9 @@ export default function RootLayout({
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@egrowacademy" />
         <meta name="twitter:creator" content="@egrowacademy" />
-        <meta name="twitter:title" content={openGraphConfigs.home.title} />
-        <meta name="twitter:description" content={openGraphConfigs.home.description} />
-        <meta name="twitter:image" content={openGraphConfigs.home.image} />
-        
-        {/* Structured Data - Schema.org Avanzado */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(generateEducationalOrganizationSchema()),
-          }}
-        />
+        <meta name="twitter:title" content="eGrow Academy - Cursos de Inteligencia Artificial | Líder en México y Latinoamérica" />
+        <meta name="twitter:description" content="Aprende Inteligencia Artificial con los mejores cursos online en español. Formación profesional en IA, Machine Learning, Deep Learning y más. Líder en México y Latinoamérica." />
+        <meta name="twitter:image" content="/images/eGrowAcademylogo.png" />
         
         {/* Preload critical resources */}
         <link rel="preload" href="/images/optimized/logop.webp" as="image" type="image/webp" />
@@ -81,12 +73,7 @@ export default function RootLayout({
           {children}
         </Providers>
 
-        {/* SEO Analytics and Performance Tracking */}
-        <Analytics />
-        <PerformanceOptimizer 
-          trackMetrics={true}
-          showDebug={process.env.NODE_ENV === 'development'}
-        />
+
       </body>
     </html>
   );
