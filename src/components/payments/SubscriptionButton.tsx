@@ -142,20 +142,47 @@ export default function SubscriptionButton({
 
       <style jsx>{`
         .subscription-button {
-          background: linear-gradient(135deg, #ffd700, #ffed4e);
-          color: #000;
-          border: none;
-          padding: 12px 24px;
-          border-radius: 8px;
+          background: #000000;
+          color: #ffffff;
+          border: 2px solid #000000;
+          padding: 14px 28px;
+          border-radius: 50px;
           font-weight: 600;
           cursor: pointer;
-          transition: all 0.3s ease;
+          transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
           font-size: 14px;
+          position: relative;
+          overflow: hidden;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .subscription-button::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+          transition: left 0.5s ease;
         }
 
         .subscription-button:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+          transform: translateY(-3px) scale(1.02);
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+          border-color: #333333;
+          background: #111111;
+        }
+
+        .subscription-button:hover::before {
+          left: 100%;
+        }
+
+        .subscription-button:active {
+          transform: translateY(-1px) scale(0.98);
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
         .subscription-button:disabled {

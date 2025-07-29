@@ -137,9 +137,7 @@ export default function SubscriptionPage() {
 
   return (
     <>
-      <Navbar hideSidebar={true} />
-      
-      <main className="subscription-page pt-16">
+      <main className="subscription-page">
         {/* Header */}
         <div className="subscription-header">
           <div className="subscription-header-content">

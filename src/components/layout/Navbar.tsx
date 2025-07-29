@@ -21,46 +21,46 @@ const NavbarContent: React.FC<NavbarProps> = ({ hideSidebar = false }) => {
 
   return (
     <>
-      <nav className="w-full bg-white border-b border-gray-200 fixed top-0 z-50 flex items-center justify-between px-4 py-2 shadow-sm">
-        {/* Botón de sidebar - solo mostrar si no está oculto */}
-        <div className="flex items-center">
-          {!hideSidebar && (
-            <button
-              onClick={toggleSidebar}
-              className="p-2 rounded-md hover:bg-gray-100 transition-colors duration-200"
-              aria-label="Abrir menú"
-            >
-              <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-          )}
-        </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               <nav className="w-full bg-white border-b border-gray-200 fixed top-0 z-50 flex items-center justify-between px-4 py-2 shadow-sm">
+             {/* Botón de sidebar - solo mostrar si no está oculto */}
+             <div className="flex items-center">
+               {!hideSidebar && (
+                 <button
+                   onClick={toggleSidebar}
+                   className="navbar-menu-btn"
+                   aria-label="Abrir menú"
+                 >
+                   <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                   </svg>
+                 </button>
+               )}
+             </div>
 
-      {/* Logo centrado */}
-      <div className="flex-1 flex justify-center">
-        <Link href="/" className="flex items-center">
-          <Image
-            src="https://3o0p1lzj4n.ufs.sh/f/P2bnXUoat3Wf9BfN8GgLgae8NyBbzTISPo645dK2W0tprVHq"
-            alt="eGrow Academy Logo"
-            width={120}
-            height={40}
-            className="h-8 w-auto"
-            priority
-          />
-        </Link>
-      </div>
+                             {/* Logo centrado */}
+         <div className="flex-1 flex justify-center">
+           <Link href="/" className="navbar-logo">
+             <Image
+               src="https://3o0p1lzj4n.ufs.sh/f/P2bnXUoat3Wf9BfN8GgLgae8NyBbzTISPo645dK2W0tprVHq"
+               alt="eGrow Academy Logo"
+               width={120}
+               height={40}
+               className="h-8 w-auto"
+               priority
+             />
+           </Link>
+         </div>
 
-      {/* Botón de suscripción y UserProfile */}
-      <div className="flex items-center space-x-3">
-        <Link
-          href="/subscription"
-          className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors duration-200"
-        >
-          Suscríbete
-        </Link>
-        <UserProfile />
-      </div>
+       {/* Botón de suscripción y UserProfile */}
+       <div className="flex items-center space-x-1">
+         <Link
+           href="/subscription"
+           className="navbar-subscribe-btn"
+         >
+           Suscríbete
+         </Link>
+         <UserProfile />
+       </div>
     </nav>
     
     {/* Sidebar - solo renderizar si no está oculto */}
