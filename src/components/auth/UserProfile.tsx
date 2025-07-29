@@ -77,7 +77,7 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
   // Mostrar loading spinner mientras se verifica la autenticación
   if (status === 'loading') {
     return (
-      <div className={`user-profile-container ${className}`}>
+      <div className={`user-profile-container ${className}`} suppressHydrationWarning>
         <div className="loading-spinner">
           ⏳
         </div>
@@ -88,7 +88,7 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
   // Mostrar estado no autenticado
   if (!user) {
     return (
-      <div className={`user-profile-container ${className}`} ref={dropdownRef}>
+      <div className={`user-profile-container ${className}`} ref={dropdownRef} suppressHydrationWarning>
         <button 
           onClick={() => setIsOpen(!isOpen)}
           className="profile-trigger"
@@ -129,7 +129,7 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
 
   // El usuario ya está disponible del contexto
   return (
-    <div className={`user-profile-container ${className}`} ref={dropdownRef}>
+    <div className={`user-profile-container ${className}`} ref={dropdownRef} suppressHydrationWarning>
       <button 
         onClick={() => setIsOpen(!isOpen)}
         className="profile-trigger"

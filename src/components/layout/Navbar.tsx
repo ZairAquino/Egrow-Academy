@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import UserProfile from '@/components/auth/UserProfile';
 import Link from 'next/link';
 import Image from 'next/image';
+import ClientOnly from '@/components/ClientOnly';
 
 interface NavbarProps {
   onToggleSidebar?: () => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
+const NavbarContent: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -62,6 +63,29 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
         <UserProfile />
       </div>
     </nav>
+  );
+};
+
+const Navbar: React.FC<NavbarProps> = (props) => {
+  return (
+    <ClientOnly fallback={
+      <nav className="w-full bg-white border-b border-gray-200 fixed top-0 z-50 flex items-center justify-between px-4 py-2 shadow-sm">
+        <div className="flex items-center">
+          <div className="p-2 rounded-md">
+            <div className="w-6 h-6 bg-gray-300 rounded"></div>
+          </div>
+        </div>
+        <div className="flex-1 flex justify-center">
+          <div className="h-8 w-32 bg-gray-200 rounded"></div>
+        </div>
+        <div className="flex items-center space-x-3">
+          <div className="px-4 py-2 bg-gray-200 rounded-md w-20 h-8"></div>
+          <div className="w-8 h-8 bg-gray-200 rounded-full"></div>
+        </div>
+      </nav>
+    }>
+      <NavbarContent {...props} />
+    </ClientOnly>
   );
 };
 
