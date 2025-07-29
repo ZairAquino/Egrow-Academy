@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUserStats } from '@/hooks/useUserStats';
+import GlassAvatar from '@/components/ui/GlassAvatar';
 
 interface UserProfileProps {
   className?: string;
@@ -95,18 +96,23 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
           aria-expanded={isOpen}
           aria-haspopup="true"
         >
-          <div className="profile-avatar">
-            <span className="avatar-text">👤</span>
-          </div>
+          <GlassAvatar 
+            size="medium"
+            userInitial="👤"
+            onClick={() => setIsOpen(!isOpen)}
+            isDropdownOpen={isOpen}
+            className="transition-all duration-300"
+          />
           <span className="dropdown-arrow">▼</span>
         </button>
 
-        {isOpen && (
-          <div className="profile-dropdown">
+        <div className={`profile-dropdown ${isOpen ? 'show' : ''}`}>
             <div className="profile-header" style={{ background: 'linear-gradient(135deg, #6b7280, #4b5563)' }}>
-              <div className="profile-avatar large">
-                <span className="avatar-text">👤</span>
-              </div>
+              <GlassAvatar 
+                size="large"
+                userInitial="👤"
+                className="transition-all duration-300"
+              />
               <div className="profile-details">
                 <h3>Bienvenido</h3>
                 <p className="profile-email">Accede a tu cuenta</p>
@@ -121,8 +127,7 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
                 📝 Registrarse
               </Link>
             </div>
-          </div>
-        )}
+        </div>
       </div>
     );
   }
@@ -136,44 +141,25 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
-        <div className="profile-avatar">
-          {user.profileImage ? (
-            <Image 
-              src={user.profileImage} 
-              alt={getUserFullName()} 
-              width={32} 
-              height={32}
-              className="avatar-image"
-              style={{ borderRadius: '50%', objectFit: 'cover' }}
-            />
-          ) : (
-            <span className="avatar-text">
-              {getUserInitial()}
-            </span>
-          )}
-        </div>
+        <GlassAvatar 
+          size="medium"
+          userInitial={getUserInitial()}
+          profileImage={user.profileImage}
+          onClick={() => setIsOpen(!isOpen)}
+          isDropdownOpen={isOpen}
+          className="transition-all duration-300"
+        />
         <span className="dropdown-arrow">▼</span>
       </button>
 
-      {isOpen && (
-        <div className="profile-dropdown">
+      <div className={`profile-dropdown ${isOpen ? 'show' : ''}`}>
           <div className="profile-header">
-            <div className="profile-avatar large">
-              {user.profileImage ? (
-                <Image 
-                  src={user.profileImage} 
-                  alt={getUserFullName()} 
-                  width={48} 
-                  height={48}
-                  className="avatar-image"
-                  style={{ borderRadius: '50%', objectFit: 'cover' }}
-                />
-              ) : (
-                <span className="avatar-text">
-                  {getUserInitial()}
-                </span>
-              )}
-            </div>
+            <GlassAvatar 
+              size="large"
+              userInitial={getUserInitial()}
+              profileImage={user.profileImage}
+              className="transition-all duration-300"
+            />
             <div className="profile-details">
               <h3>{getUserFullName()}</h3>
               <p className="profile-email">{user.email || 'No disponible'}</p>
@@ -213,9 +199,8 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
             <button onClick={handleLogout} className="action-btn logout">
               🚪 Cerrar Sesión
             </button>
-          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }
