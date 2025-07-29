@@ -98,7 +98,6 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
         >
           <GlassAvatar 
             size="medium"
-            userInitial="👤"
             onClick={() => setIsOpen(!isOpen)}
             isDropdownOpen={isOpen}
             className="transition-all duration-300"
@@ -110,7 +109,6 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
             <div className="profile-header" style={{ background: 'linear-gradient(135deg, #6b7280, #4b5563)' }}>
               <GlassAvatar 
                 size="large"
-                userInitial="👤"
                 className="transition-all duration-300"
               />
               <div className="profile-details">
@@ -143,7 +141,6 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
       >
         <GlassAvatar 
           size="medium"
-          userInitial={getUserInitial()}
           profileImage={user.profileImage}
           onClick={() => setIsOpen(!isOpen)}
           isDropdownOpen={isOpen}
@@ -156,7 +153,6 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
           <div className="profile-header">
             <GlassAvatar 
               size="large"
-              userInitial={getUserInitial()}
               profileImage={user.profileImage}
               className="transition-all duration-300"
             />
