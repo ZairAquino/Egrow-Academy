@@ -2,14 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import Sidebar from '@/components/layout/Sidebar';
+
 import Footer from '@/components/layout/Footer';
 import Navbar from '@/components/layout/Navbar';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCourseProgress } from '@/hooks/useCourseProgress';
 
 export default function ContenidoMLPage() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isCheckingEnrollment, setIsCheckingEnrollment] = useState(true);
@@ -565,9 +565,7 @@ class MovieRecommender:
     }
   };
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
+  
 
   const handleManualLessonChange = async (newLessonIndex: number) => {
     const currentLesson = courseData.lessons[progress.currentLesson];
@@ -755,10 +753,10 @@ class MovieRecommender:
 
   return (
     <>
-      <Navbar onToggleSidebar={toggleSidebar} />
-      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
+      <Navbar  />
       
-      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''} pt-16`}>
+      
+      <main className="main-content pt-16">
         <section className="course-header">
           <div className="container">
             <div className="course-header-content">

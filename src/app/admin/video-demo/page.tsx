@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
-import Sidebar from '@/components/layout/Sidebar';
+
 import UserProfile from '@/components/auth/UserProfile';
 import VideoPlayer from '@/components/courses/VideoPlayer';
 import { Card } from '@/components/ui/card';
@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Video, AlertCircle, CheckCircle, ExternalLink } from 'lucide-react';
 
 export default function VideoDemoPage() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  
   const { user, token } = useAuth();
   const router = useRouter();
 
@@ -40,9 +40,7 @@ export default function VideoDemoPage() {
     }
   ];
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
+  
 
   if (!user || !token) {
     return (
@@ -65,10 +63,10 @@ export default function VideoDemoPage() {
 
   return (
     <>
-      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
+      
       <UserProfile className="user-profile-fixed" />
       
-      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''}`}>
+      <main className="main-content pt-16">
         {/* Header */}
         <section className="admin-header">
           <div className="container">

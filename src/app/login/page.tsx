@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import LoginForm from '@/components/auth/LoginForm';
-import Sidebar from '@/components/layout/Sidebar';
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '@/contexts/AuthContext';
@@ -11,15 +11,13 @@ import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 // Componente que maneja la lógica de searchParams
 function LoginPageContent() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  
   const [hasRedirected, setHasRedirected] = useState(false);
   const { user, status } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
+  
 
   // Verificar si el usuario ya está logueado
   useEffect(() => {
@@ -89,9 +87,7 @@ function LoginPageContent() {
 
   return (
     <>
-      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} hideToggle={true} />
-      
-      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''}`}>
+      <main className="main-content pt-16">
         <div style={{
           minHeight: '100vh',
           background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',

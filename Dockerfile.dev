@@ -1,0 +1,27 @@
+# Dockerfile para desarrollo local
+FROM node:18-alpine
+
+# Directorio de trabajo
+WORKDIR /app
+
+# Instalar dependencias del sistema
+RUN apk add --no-cache libc6-compat
+
+# Copiar archivos de dependencias
+COPY package*.json ./
+COPY prisma ./prisma/
+
+# Instalar dependencias
+RUN npm ci --only=production && npm cache clean --force
+
+# Copiar código fuente
+COPY . .
+
+# Generar cliente Prisma
+RUN npx prisma generate
+
+# Exponer puerto
+EXPOSE 3000
+
+# Comando por defecto
+CMD ["npm", "run", "dev:fast"] 

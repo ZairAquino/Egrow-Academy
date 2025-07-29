@@ -2,7 +2,7 @@
 
 import { useState, Suspense } from 'react';
 import dynamic from 'next/dynamic';
-import Sidebar from '@/components/layout/Sidebar';
+
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import CourseCard from '@/components/courses/CourseCard';
 import Footer from '@/components/layout/Footer';
@@ -19,12 +19,10 @@ const CompaniesMarquee = dynamic(() => import('@/components/ui/CompaniesMarquee'
 });
 
 export default function CursosGratuitosPage() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  
   const { user } = useAuth();
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
+  
 
   const freeCourses = [
     // Curso Destacado - Monetización con IA
@@ -98,10 +96,10 @@ export default function CursosGratuitosPage() {
 
   return (
     <>
-      <Navbar onToggleSidebar={toggleSidebar} />
-      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
+      <Navbar  />
       
-      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''} pt-16`}>
+      
+      <main className="main-content pt-16">
         {/* Hero Section */}
         <section className="hero gradient-bg">
           <div className="container">

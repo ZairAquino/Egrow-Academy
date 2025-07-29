@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
-import Sidebar from '@/components/layout/Sidebar';
+
 import UserProfile from '@/components/auth/UserProfile';
 import LessonVideoUpload from '@/components/courses/LessonVideoUpload';
 import { Card } from '@/components/ui/card';
@@ -26,7 +26,7 @@ interface Course {
 }
 
 export default function LessonVideoUploadPage() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  
   const [courses, setCourses] = useState<Course[]>([]);
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
@@ -174,9 +174,7 @@ export default function LessonVideoUploadPage() {
     }
   };
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
+  
 
   if (isLoading) {
     return (
@@ -198,10 +196,10 @@ export default function LessonVideoUploadPage() {
 
   return (
     <>
-      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
+      
       <UserProfile className="user-profile-fixed" />
       
-      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''}`}>
+      <main className="main-content pt-16">
         {/* Header */}
         <section className="admin-header">
           <div className="container">

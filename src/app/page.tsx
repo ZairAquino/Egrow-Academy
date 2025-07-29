@@ -10,7 +10,6 @@ import Newsletter from '@/components/ui/Newsletter';
 import WhyChoose from '@/components/ui/WhyChoose';
 import Footer from '@/components/layout/Footer';
 import ClientOnly from '@/components/ClientOnly';
-import Sidebar from '@/components/layout/Sidebar';
 import Navbar from '@/components/layout/Navbar';
 
 import WelcomeModal from '@/components/ui/WelcomeModal';
@@ -18,14 +17,9 @@ import DynamicSEO from '@/components/seo/DynamicSEO';
 
 
 function HomeContent() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showSuccessNotification, setShowSuccessNotification] = useState(false);
   const searchParams = useSearchParams();
   const { refreshUser } = useAuth();
-
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
 
   // Efecto para mostrar notificación de pago exitoso y refrescar usuario
   useEffect(() => {
@@ -68,12 +62,10 @@ function HomeContent() {
       />
 
       <ClientOnly>
-        <Navbar onToggleSidebar={toggleSidebar} />
+        <Navbar />
       </ClientOnly>
 
-      <ClientOnly>
-        <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
-      </ClientOnly>
+
       
       {/* Modal de bienvenida */}
       <ClientOnly>
@@ -83,7 +75,7 @@ function HomeContent() {
         />
       </ClientOnly>
       
-      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''} pt-16`}>
+      <main className="main-content pt-16">
         <Hero />
         <CompaniesMarquee />
         <FeaturedCourses />

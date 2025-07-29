@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import Sidebar from '@/components/layout/Sidebar';
+
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 function ResetPasswordContent() {
@@ -13,15 +13,13 @@ function ResetPasswordContent() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  
   const [tokenValid, setTokenValid] = useState(false);
   const [token, setToken] = useState('');
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
+  
 
   // Verificar token al cargar la página
   useEffect(() => {
@@ -89,8 +87,7 @@ function ResetPasswordContent() {
   if (!tokenValid) {
     return (
       <>
-        <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} hideToggle={true} />
-        <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''}`}>
+        <main className="main-content pt-16">
           <div style={{
             minHeight: '100vh',
             background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
@@ -133,9 +130,7 @@ function ResetPasswordContent() {
 
   return (
     <>
-      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} hideToggle={true} />
-      
-      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''}`}>
+      <main className="main-content pt-16">
         <div style={{
           minHeight: '100vh',
           background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',

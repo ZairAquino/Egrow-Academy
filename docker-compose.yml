@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  # Base de datos PostgreSQL para desarrollo local
+  postgres:
+    image: postgres:15-alpine
+    container_name: egrow-postgres
+    environment:
+      POSTGRES_DB: egrow_academy_dev
+      POSTGRES_USER: egrow_user
+      POSTGRES_PASSWORD: egrow_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./prisma/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - egrow-network
+
+  # Redis para caché y sesiones
+  redis:
+    image: redis:7-alpine
+    container_name: egrow-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - egrow-network
+
+  # Aplicación Next.js
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: egrow-app
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://egrow_user:egrow_password@postgres:5432/egrow_academy_dev
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - egrow-network
+    command: npm run dev:fast
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  egrow-network:
+    driver: bridge 

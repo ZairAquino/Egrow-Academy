@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import Sidebar from '@/components/layout/Sidebar';
+
 import Navbar from '@/components/layout/Navbar';
 
 import Footer from '@/components/layout/Footer';
@@ -10,7 +10,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useCourseProgress } from '@/hooks/useCourseProgress';
 
 export default function ContenidoCursoPage() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isCheckingEnrollment, setIsCheckingEnrollment] = useState(true);
@@ -608,9 +608,7 @@ if prompt := st.chat_input(&quot;Escribe tu mensaje...&quot;):
     }
   };
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
+  
 
   const handleManualLessonChange = async (newLessonIndex: number) => {
     console.log('🔍 [DEBUG] handleManualLessonChange llamado con newLessonIndex:', newLessonIndex);
@@ -837,11 +835,11 @@ if prompt := st.chat_input(&quot;Escribe tu mensaje...&quot;):
 
   return (
     <>
-      <Navbar onToggleSidebar={toggleSidebar} />
-      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
+      <Navbar  />
       
       
-      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''} pt-16`}>
+      
+      <main className="main-content pt-16">
         {/* Course Header */}
         <section className="course-header">
           <div className="container">

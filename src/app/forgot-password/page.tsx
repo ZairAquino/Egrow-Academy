@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import Sidebar from '@/components/layout/Sidebar';
+
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 export default function ForgotPasswordPage() {
@@ -12,12 +12,10 @@ export default function ForgotPasswordPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  
   const router = useRouter();
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,9 +53,7 @@ export default function ForgotPasswordPage() {
 
   return (
     <>
-      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} hideToggle={true} />
-      
-      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''}`}>
+      <main className="main-content pt-16">
         <div style={{
           minHeight: '100vh',
           background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',

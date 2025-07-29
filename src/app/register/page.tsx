@@ -2,22 +2,18 @@
 
 import { useState } from 'react';
 import RegisterForm from '@/components/auth/RegisterForm';
-import Sidebar from '@/components/layout/Sidebar';
+
 import Link from 'next/link';
 import Image from 'next/image';
 
 export default function RegisterPage() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
+  
 
   return (
     <>
-      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} hideToggle={true} />
-      
-      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''}`}>
+      <main className="main-content pt-16">
         <div style={{
           minHeight: '100vh',
           background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',

@@ -37,28 +37,6 @@ export default function Sidebar({ isOpen, onToggle, hideToggle = false }: Sideba
 
   return (
     <>
-      {/* Menu Toggle Button */}
-      {!hideToggle && (
-        <button 
-          onClick={onToggle}
-          className={`menu-toggle ${isOpen ? 'active' : ''}`}
-          aria-label={isOpen ? 'Cerrar menú' : 'Abrir menú'}
-        >
-          <div className="menu-icon" style={{
-            fontSize: '40px',
-            color: 'white',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '100%',
-            height: '100%',
-            lineHeight: '1'
-          }}>
-            {isOpen ? '‹' : '›'}
-          </div>
-        </button>
-      )}
-
       {/* Sidebar Overlay */}
       <div 
         className={`sidebar-overlay ${isOpen ? 'show' : ''}`}

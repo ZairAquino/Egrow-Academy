@@ -137,7 +137,7 @@ export default function SubscriptionPage() {
 
   return (
     <>
-      <Navbar onToggleSidebar={toggleSidebar} />
+      <Navbar hideSidebar={true} />
       
       <main className="subscription-page pt-16">
         {/* Header */}

@@ -3,7 +3,7 @@
 import { useState, Suspense, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
-import Sidebar from '@/components/layout/Sidebar';
+
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Footer from '@/components/layout/Footer';
 import Navbar from '@/components/layout/Navbar';
@@ -17,7 +17,7 @@ const CompaniesMarquee = dynamic(() => import('@/components/ui/CompaniesMarquee'
 });
 
 export default function ComputerVisionPage() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  
   const [currentLesson, setCurrentLesson] = useState(0);
   const [completedLessons, setCompletedLessons] = useState<number[]>([]);
   const [progressPercentage, setProgressPercentage] = useState(0);
@@ -36,9 +36,7 @@ export default function ComputerVisionPage() {
     authStatus: status
   });
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
+  
 
   // Función de redirección directa copiada de monetiza-ia
   const goToCourseContent = async () => {
@@ -378,10 +376,10 @@ export default function ComputerVisionPage() {
 
   return (
     <>
-      <Navbar onToggleSidebar={toggleSidebar} />
-      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
+      <Navbar  />
       
-      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''} pt-16`}>
+      
+      <main className="main-content pt-16">
         {/* Hero Section */}
         <section className="hero-section">
           <div className="container">

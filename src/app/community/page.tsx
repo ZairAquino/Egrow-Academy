@@ -3,7 +3,7 @@
 import { useState, Suspense, useEffect, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import DynamicLogo from '@/components/ui/DynamicLogo';
-import Sidebar from '@/components/layout/Sidebar';
+
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Footer from '@/components/layout/Footer';
 import Navbar from '@/components/layout/Navbar';
@@ -21,7 +21,7 @@ const CompaniesMarquee = dynamic(() => import('@/components/ui/CompaniesMarquee'
 });
 
 export default function CommunityPage() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  
   const [showCreateDiscussionModal, setShowCreateDiscussionModal] = useState(false);
   const [discussionForm, setDiscussionForm] = useState({
     title: '',
@@ -38,9 +38,7 @@ export default function CommunityPage() {
   const { stats: communityStats, loading: statsLoading } = useCommunityStats();
   const { events: dbEvents, userRegistrations, loading: eventsLoading, registerToEvent, isUserRegistered } = useEvents();
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
+  
 
   const handleCreateDiscussion = () => {
     if (!user) {
@@ -356,11 +354,11 @@ export default function CommunityPage() {
 
   return (
     <>
-      <Navbar onToggleSidebar={toggleSidebar} />
-      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
+      <Navbar  />
       
       
-      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''} pt-16`}>
+      
+      <main className="main-content pt-16">
         {/* Hero Section */}
         <section className="hero gradient-bg">
           <div className="container">

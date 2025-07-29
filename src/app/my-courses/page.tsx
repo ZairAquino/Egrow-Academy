@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import Sidebar from '@/components/layout/Sidebar';
+
 import Navbar from '@/components/layout/Navbar';
 
 import Footer from '@/components/layout/Footer';
@@ -34,15 +34,13 @@ interface UserCourse {
 
 export default function MyCoursesPage() {
   const { user, status } = useAuth();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  
   const [activeTab, setActiveTab] = useState('all');
   const [courses, setCourses] = useState<UserCourse[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
+  
 
   // Cargar cursos del usuario
   useEffect(() => {
@@ -126,11 +124,11 @@ export default function MyCoursesPage() {
 
   return (
     <>
-      <Navbar onToggleSidebar={toggleSidebar} />
-      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
+      <Navbar  />
       
       
-      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''} pt-16`}>
+      
+      <main className="main-content pt-16">
         {/* Hero Section */}
         <section className="hero gradient-bg">
           <div className="container">

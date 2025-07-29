@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
-import Sidebar from '@/components/layout/Sidebar';
+
 
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -18,7 +18,7 @@ interface VideoStatus {
 }
 
 export default function VideoStatusPage() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  
   const [videos, setVideos] = useState<VideoStatus[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -74,9 +74,7 @@ export default function VideoStatusPage() {
     }
   };
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
+  
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -132,10 +130,10 @@ export default function VideoStatusPage() {
 
   return (
     <>
-      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
       
       
-      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''}`}>
+      
+      <main className="main-content pt-16">
         {/* Header */}
         <section className="admin-header">
           <div className="container">

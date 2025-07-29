@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import DynamicLogo from '@/components/ui/DynamicLogo';
 import { useAuth } from '@/contexts/AuthContext';
 import { useResource } from '@/hooks/useResources';
-import Sidebar from '@/components/layout/Sidebar';
+
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Footer from '@/components/layout/Footer';
 
@@ -13,16 +13,14 @@ export default function ResourcePage() {
   const params = useParams();
   const router = useRouter();
   const { isAuthenticated, token, user } = useAuth();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  
   const [accessChecked, setAccessChecked] = useState(false);
   const [hasAccess, setHasAccess] = useState(false);
 
   const slug = params.slug as string;
   const { resource, loading, error, checkAccess } = useResource(slug);
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
+  
 
   useEffect(() => {
     const verifyAccess = async () => {
@@ -69,8 +67,8 @@ export default function ResourcePage() {
   if (loading) {
     return (
       <>
-        <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
-        <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''}`}>
+        
+        <main className="main-content pt-16">
           <div className="flex justify-center items-center min-h-screen">
             <LoadingSpinner />
           </div>
@@ -82,8 +80,8 @@ export default function ResourcePage() {
   if (error || !resource) {
     return (
       <>
-        <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
-        <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''}`}>
+        
+        <main className="main-content pt-16">
           <div className="container mx-auto px-4 py-8">
             <div className="text-center">
               <h1 className="text-2xl font-bold text-gray-900 mb-4">Recurso no encontrado</h1>
@@ -103,9 +101,9 @@ export default function ResourcePage() {
 
   return (
     <>
-      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
       
-      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''}`}>
+      
+      <main className="main-content pt-16">
         {/* Hero Section */}
         <section style={{
           background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',

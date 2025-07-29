@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useParams } from 'next/navigation';
-import Sidebar from '@/components/layout/Sidebar';
+
 import Footer from '@/components/layout/Footer';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Link from 'next/link';
@@ -25,14 +25,12 @@ export default function CertificatePage() {
   const params = useParams();
   const courseId = params.courseId as string;
   
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  
   const [certificate, setCertificate] = useState<Certificate | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
+  
 
   // Cargar certificado
   useEffect(() => {
@@ -81,10 +79,10 @@ export default function CertificatePage() {
 
   return (
     <>
-      <Navbar onToggleSidebar={toggleSidebar} />
-      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
+      <Navbar  />
       
-      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''} pt-16`}>
+      
+      <main className="main-content pt-16">
         {/* Hero Section */}
         <section className="hero gradient-bg">
           <div className="container">

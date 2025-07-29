@@ -1,8 +1,25 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Suprimir warnings de hidratación en desarrollo para componentes específicos
+  // Configuraciones optimizadas para desarrollo
   reactStrictMode: false,
+  
+  // Optimizaciones para desarrollo más rápido
+  experimental: {
+    optimizePackageImports: ['@next/font'],
+  },
+  
+  // Configuración de Turbopack (estable)
+  turbopack: {
+    rules: {
+      '*.svg': {
+        loaders: ['@svgr/webpack'],
+        as: '*.js',
+      },
+    },
+  },
+  
+  // Configuración de imágenes optimizada
   images: {
     remotePatterns: [
       {
@@ -35,10 +52,6 @@ const nextConfig: NextConfig = {
     formats: ['image/webp', 'image/avif'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-  },
-  // Configuración simplificada para Next.js 15
-  experimental: {
-    optimizePackageImports: ['@next/font'],
   },
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',

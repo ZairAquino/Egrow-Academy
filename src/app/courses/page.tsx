@@ -3,7 +3,7 @@
 import { useState, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import DynamicLogo from '@/components/ui/DynamicLogo';
-import Sidebar from '@/components/layout/Sidebar';
+
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import CourseCard from '@/components/courses/CourseCard';
 import Footer from '@/components/layout/Footer';
@@ -34,13 +34,8 @@ interface Course {
 }
 
 export default function CoursesPage() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('todos');
   const { user } = useAuth();
-
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
 
   const categories = [
     { id: 'todos', name: 'Todos los Cursos' },
@@ -147,11 +142,9 @@ export default function CoursesPage() {
 
   return (
     <>
-      <Navbar onToggleSidebar={toggleSidebar} />
-      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
+      <Navbar />
       
-      
-      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''} pt-16`}>
+      <main className="main-content pt-16">
         {/* Hero Section */}
         <section className="hero gradient-bg">
           <div className="container">

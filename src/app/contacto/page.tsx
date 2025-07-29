@@ -3,7 +3,7 @@
 import { useState, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import DynamicLogo from '@/components/ui/DynamicLogo';
-import Sidebar from '@/components/layout/Sidebar';
+
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Footer from '@/components/layout/Footer';
 import Navbar from '@/components/layout/Navbar';
@@ -17,7 +17,7 @@ const CompaniesMarquee = dynamic(() => import('@/components/ui/CompaniesMarquee'
 });
 
 export default function ContactoPage() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -28,9 +28,7 @@ export default function ContactoPage() {
   const [submitMessage, setSubmitMessage] = useState('');
   const { user } = useAuth();
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
+  
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -102,11 +100,11 @@ export default function ContactoPage() {
 
   return (
     <>
-      <Navbar onToggleSidebar={toggleSidebar} />
-      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
+      <Navbar  />
       
       
-      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''} pt-16`}>
+      
+      <main className="main-content pt-16">
         {/* Hero Section */}
         <section className="hero gradient-bg">
           <div className="container">

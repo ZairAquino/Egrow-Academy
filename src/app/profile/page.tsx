@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import dynamic from 'next/dynamic';
-import Sidebar from '@/components/layout/Sidebar';
+
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Footer from '@/components/layout/Footer';
 import Navbar from '@/components/layout/Navbar';
@@ -40,7 +40,7 @@ interface ProfileFormData {
 }
 
 export default function ProfilePage() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  
   const [activeTab, setActiveTab] = useState('personal');
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
@@ -70,9 +70,7 @@ export default function ProfilePage() {
     },
   });
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
+  
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
@@ -147,11 +145,11 @@ export default function ProfilePage() {
 
   return (
     <>
-      <Navbar onToggleSidebar={toggleSidebar} />
-      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
+      <Navbar  />
       
       
-      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''} pt-16`}>
+      
+      <main className="main-content pt-16">
         {/* Hero Section */}
         <section className="hero gradient-bg">
           <div className="container">
