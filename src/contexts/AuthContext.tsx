@@ -133,13 +133,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }, [])
 
-  // Effect para actualizar automáticamente cada 30 segundos
+  // Effect para actualizar automáticamente cada 5 minutos (reducido de 30 segundos)
   useEffect(() => {
     if (status === 'authenticated' && user) {
       const interval = setInterval(() => {
         console.log('🔄 [AuthContext] Auto-refreshing user data...')
         refreshUser()
-      }, 30000) // 30 segundos
+      }, 300000) // 5 minutos (300000ms)
 
       return () => clearInterval(interval)
     }
