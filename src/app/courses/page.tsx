@@ -223,5 +223,4 @@ export default function CoursesPage() {
       <Footer />
     </SimpleLayout>
   </>
-);
-} 
+); 
