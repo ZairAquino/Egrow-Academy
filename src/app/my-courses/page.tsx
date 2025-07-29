@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import Sidebar from '@/components/layout/Sidebar';
-import UserProfile from '@/components/auth/UserProfile';
 import Footer from '@/components/layout/Footer';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Link from 'next/link';
@@ -126,7 +125,6 @@ export default function MyCoursesPage() {
   return (
     <>
       <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
-      <UserProfile className="user-profile-fixed" />
       
       <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''}`}>
         {/* Hero Section */}

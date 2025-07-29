@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Sidebar from '@/components/layout/Sidebar';
-import UserProfile from '@/components/auth/UserProfile';
 import Footer from '@/components/layout/Footer';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCourseProgress } from '@/hooks/useCourseProgress';
@@ -738,7 +737,7 @@ class MovieRecommender:
   };
 
   if (!user || isLoading || isCheckingEnrollment) {
-    return <div className="loading-container" suppressHydrationWarning>Cargando...</div>;
+    return <div className="loading-container">Cargando...</div>;
   }
 
   if (!isEnrolled) {
@@ -756,7 +755,6 @@ class MovieRecommender:
   return (
     <>
       <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
-      <UserProfile className="user-profile-fixed" />
       
       <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''}`}>
         <section className="course-header">

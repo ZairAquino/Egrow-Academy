@@ -1,107 +1,35 @@
-'use client';
-
-import { useState, useEffect, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { useAuth } from '@/contexts/AuthContext';
+import { Metadata } from 'next';
+import SimpleLayout from '@/components/layout/SimpleLayout';
 import Hero from '@/components/layout/Hero';
 import CompaniesMarquee from '@/components/ui/CompaniesMarquee';
 import FeaturedCourses from '@/components/courses/FeaturedCourses';
 import Newsletter from '@/components/ui/Newsletter';
 import WhyChoose from '@/components/ui/WhyChoose';
 import Footer from '@/components/layout/Footer';
-import ClientOnly from '@/components/ClientOnly';
-import Sidebar from '@/components/layout/Sidebar';
-import UserProfile from '@/components/auth/UserProfile';
-import WelcomeModal from '@/components/ui/WelcomeModal';
-import DynamicSEO from '@/components/seo/DynamicSEO';
 
+export const metadata: Metadata = {
+  title: 'eGrow Academy - Cursos de Inteligencia Artificial | Líder en México y Latinoamérica',
+  description: 'Aprende Inteligencia Artificial, Machine Learning y desarrollo web con los mejores cursos en línea. Certificaciones reconocidas y mentores expertos.',
+  keywords: 'inteligencia artificial, machine learning, desarrollo web, cursos online, certificaciones, México, Latinoamérica',
+  openGraph: {
+    title: 'eGrow Academy - Cursos de Inteligencia Artificial',
+    description: 'Aprende Inteligencia Artificial, Machine Learning y desarrollo web con los mejores cursos en línea.',
+    type: 'website',
+    images: ['/images/og-home.jpg'],
+  },
+};
 
-function HomeContent() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [showSuccessNotification, setShowSuccessNotification] = useState(false);
-  const searchParams = useSearchParams();
-  const { refreshUser } = useAuth();
-
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
-
-  // Efecto para mostrar notificación de pago exitoso y refrescar usuario
-  useEffect(() => {
-    const paymentSuccess = searchParams.get('payment_success');
-    if (paymentSuccess === 'true') {
-      setShowSuccessNotification(true);
-      
-      // Refrescar la información del usuario después del pago exitoso
-      refreshUser();
-      
-      // Ocultar la notificación después de 5 segundos
-      const timer = setTimeout(() => {
-        setShowSuccessNotification(false);
-      }, 5000);
-      return () => clearTimeout(timer);
-    }
-  }, [searchParams]); // Removemos refreshUser de las dependencias
-
-
-
+export default function Home() {
   return (
-    <>
-      {/* SEO Dinámico para la página principal */}
-      <DynamicSEO 
-        title="eGrow Academy - Cursos de Inteligencia Artificial | Líder en México y Latinoamérica"
-        description="Aprende Inteligencia Artificial con los mejores cursos online en español. Formación profesional en IA, Machine Learning, Deep Learning y más. Líder en México y Latinoamérica."
-        keywords={[
-          "cursos de inteligencia artificial",
-          "cursos de IA",
-          "machine learning México",
-          "deep learning México",
-          "inteligencia artificial México",
-          "cursos de IA en español",
-          "formación en inteligencia artificial",
-          "aprender IA",
-          "cursos online de inteligencia artificial",
-          "especialización en IA"
-        ]}
-        type="website"
-      />
-
-      {/* UserProfile fijo en esquina superior derecha */}
-      <div suppressHydrationWarning>
-        <ClientOnly>
-          <UserProfile className="user-profile-fixed" />
-        </ClientOnly>
-      </div>
-      
-      <ClientOnly>
-        <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
-      </ClientOnly>
-      
-      {/* Modal de bienvenida */}
-      <ClientOnly>
-        <WelcomeModal 
-          isOpen={showSuccessNotification} 
-          onClose={() => setShowSuccessNotification(false)} 
-        />
-      </ClientOnly>
-      
-      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''}`}>
+    <SimpleLayout>
+      <main className="main-content" style={{ paddingTop: '80px' }}>
         <Hero />
         <CompaniesMarquee />
         <FeaturedCourses />
         <WhyChoose />
         <Newsletter />
       </main>
-
       <Footer />
-    </>
-  );
-}
-
-export default function Home() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <HomeContent />
-    </Suspense>
+    </SimpleLayout>
   );
 }

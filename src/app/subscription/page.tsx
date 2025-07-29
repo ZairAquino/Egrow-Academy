@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import Footer from '@/components/layout/Footer';
-import UserProfile from '@/components/auth/UserProfile';
 import './subscription.css';
 
 interface SubscriptionPlan {
@@ -136,7 +135,6 @@ export default function SubscriptionPage() {
 
   return (
     <>
-      <UserProfile className="user-profile-fixed" />
       <main className="subscription-page">
         {/* Header */}
         <div className="subscription-header">

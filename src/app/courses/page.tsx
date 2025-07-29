@@ -2,12 +2,12 @@
 
 import { useState, Suspense } from 'react';
 import dynamic from 'next/dynamic';
+import SimpleLayout from '@/components/layout/SimpleLayout';
 import DynamicLogo from '@/components/ui/DynamicLogo';
 import Sidebar from '@/components/layout/Sidebar';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import CourseCard from '@/components/courses/CourseCard';
 import Footer from '@/components/layout/Footer';
-import UserProfile from '@/components/auth/UserProfile';
 import { useAuth } from '@/contexts/AuthContext';
 
 // Lazy load components
@@ -33,13 +33,8 @@ interface Course {
 }
 
 export default function CoursesPage() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('todos');
   const { user } = useAuth();
-
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
 
   const categories = [
     { id: 'todos', name: 'Todos los Cursos' },
@@ -145,11 +140,8 @@ export default function CoursesPage() {
   const filteredCourses = getFilteredCourses();
 
   return (
-    <>
-      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
-      <UserProfile className="user-profile-fixed" />
-      
-      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''}`}>
+    <SimpleLayout>
+      <main className="main-content" style={{ paddingTop: '80px' }}>
         {/* Hero Section */}
         <section className="hero gradient-bg">
           <div className="container">
@@ -228,64 +220,8 @@ export default function CoursesPage() {
           </div>
         </section>
       </main>
-
       <Footer />
-      
-      <style jsx>{`
-        .hero-bottom-logo {
-          display: flex;
-          justify-content: center;
-          margin-top: 32px;
-        }
-
-        .hero-bottom-logo-image {
-          height: auto;
-          max-height: 71px;
-          width: auto;
-          max-width: 95px;
-          opacity: 0.9;
-          transition: all 0.3s ease;
-        }
-
-        .logo-animation-wrapper {
-          animation: logoFloat 3s ease-in-out infinite;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        .logo-animation-wrapper:hover {
-          animation-play-state: paused;
-        }
-
-        .logo-animation-wrapper:hover .hero-bottom-logo-image {
-          transform: scale(1.1) rotate(5deg);
-          filter: brightness(1.2);
-        }
-
-        @keyframes logoFloat {
-          0%, 100% {
-            transform: translateY(0px);
-          }
-          50% {
-            transform: translateY(-10px);
-          }
-        }
-
-        @media (max-width: 768px) {
-          .hero-bottom-logo-image {
-            max-width: 76px;
-            max-height: 57px;
-          }
-        }
-
-        @media (max-width: 480px) {
-          .hero-bottom-logo-image {
-            max-width: 66px;
-            max-height: 48px;
-          }
-        }
-      `}</style>
-    </>
-  );
+    </SimpleLayout>
+  </>
+);
 } 

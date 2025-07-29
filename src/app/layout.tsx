@@ -1,16 +1,13 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
-import "./critical.css";
 import "./globals.css";
-import "./premium-logo.css";
-
-import Providers from "@/components/Providers";
-import { baseSEOConfig, generateStructuredData } from "@/lib/seo-config";
+import { baseSEOConfig } from "@/lib/seo-config";
 import { generateEducationalOrganizationSchema } from "@/lib/schema-advanced";
 import { openGraphConfigs } from "@/lib/open-graph-config";
 import Analytics from "@/components/seo/Analytics";
 import PerformanceOptimizer from "@/components/seo/PerformanceOptimizer";
 import { speedUtils } from "@/lib/speed-optimization-config";
+import Providers from "@/components/Providers";
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -68,19 +65,10 @@ export default function RootLayout({
             __html: JSON.stringify(generateEducationalOrganizationSchema()),
           }}
         />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(generateStructuredData('WebSite', {})),
-          }}
-        />
         
         {/* Preload critical resources */}
         <link rel="preload" href="/images/optimized/logop.webp" as="image" type="image/webp" />
         <link rel="preload" href="/images/eGrowAcademylogo.png" as="image" />
-        
-        {/* Preload critical CSS */}
-        <link rel="preload" href="/styles/critical.css" as="style" />
         
         {/* DNS Prefetch for external domains */}
         <link rel="dns-prefetch" href="//www.google-analytics.com" />

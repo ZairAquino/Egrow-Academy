@@ -2,11 +2,11 @@
 
 import { useState, Suspense, useEffect, useMemo } from 'react';
 import dynamic from 'next/dynamic';
+import SimpleLayout from '@/components/layout/SimpleLayout';
 import DynamicLogo from '@/components/ui/DynamicLogo';
 import Sidebar from '@/components/layout/Sidebar';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Footer from '@/components/layout/Footer';
-import UserProfile from '@/components/auth/UserProfile';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useCommunityPosts, CommunityPost } from '@/hooks/useCommunityPosts';
@@ -20,7 +20,6 @@ const CompaniesMarquee = dynamic(() => import('@/components/ui/CompaniesMarquee'
 });
 
 export default function CommunityPage() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showCreateDiscussionModal, setShowCreateDiscussionModal] = useState(false);
   const [discussionForm, setDiscussionForm] = useState({
     title: '',
@@ -36,10 +35,6 @@ export default function CommunityPage() {
   const { posts, loading, error, createPost, toggleLike, createComment } = useCommunityPosts();
   const { stats: communityStats, loading: statsLoading } = useCommunityStats();
   const { events: dbEvents, userRegistrations, loading: eventsLoading, registerToEvent, isUserRegistered } = useEvents();
-
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
 
   const handleCreateDiscussion = () => {
     if (!user) {
@@ -354,11 +349,8 @@ export default function CommunityPage() {
 
 
   return (
-    <>
-      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
-      <UserProfile className="user-profile-fixed" />
-      
-      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''}`}>
+    <SimpleLayout>
+      <main className="main-content" style={{ paddingTop: '80px' }}>
         {/* Hero Section */}
         <section className="hero gradient-bg">
           <div className="container">
@@ -984,8 +976,9 @@ export default function CommunityPage() {
       )}
 
       <Footer />
-      
-      <style jsx>{`
+    </SimpleLayout>
+    
+    <style jsx>{`
         .hero-bottom-logo {
           display: flex;
           justify-content: center;

@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import Sidebar from '@/components/layout/Sidebar';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Footer from '@/components/layout/Footer';
-import UserProfile from '@/components/auth/UserProfile';
 import { useAuth } from '@/contexts/AuthContext';
 // Eliminamos CourseActionButton para usar la lógica directa que funciona
 
@@ -367,7 +366,7 @@ export default function FundamentosMLPage() {
   if (status === 'loading' || isLoading) {
     console.log('🔍 [DEBUG] Mostrando loading unificado:', { status, isLoading });
     return (
-      <div className="loading-container" suppressHydrationWarning>
+      <div className="loading-container">
         <LoadingSpinner />
         <p>Cargando...</p>
       </div>
@@ -379,7 +378,6 @@ export default function FundamentosMLPage() {
   return (
     <>
       <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
-      <UserProfile className="user-profile-fixed" />
       
       <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''}`}>
         {/* Hero Section */}
