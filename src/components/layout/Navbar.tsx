@@ -70,8 +70,7 @@ const NavbarContent: React.FC<NavbarProps> = ({ hideSidebar = false }) => {
 const Navbar: React.FC<NavbarProps> = (props) => {
   return (
     <ClientOnly fallback={
-       <nav className="w-full bg-white/61 backdrop-blur-sm border-b border-gray-200/61 
-       fixed top-0 z-50 flex items-center justify-between px-4 py-2 shadow-sm">
+               <nav className="w-full bg-white/61 backdrop-blur-sm border-b border-gray-200/61 fixed top-0 z-50 flex items-center justify-between px-4 py-2 shadow-sm">
         <div className="flex items-center">
           {!props.hideSidebar && (
             <div className="p-2 rounded-md">
