@@ -2,11 +2,12 @@
 
 import { useState, Suspense, useEffect, useMemo } from 'react';
 import dynamic from 'next/dynamic';
-import SimpleLayout from '@/components/layout/SimpleLayout';
 import DynamicLogo from '@/components/ui/DynamicLogo';
 import Sidebar from '@/components/layout/Sidebar';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Footer from '@/components/layout/Footer';
+import Navbar from '@/components/layout/Navbar';
+
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useCommunityPosts, CommunityPost } from '@/hooks/useCommunityPosts';
@@ -20,6 +21,7 @@ const CompaniesMarquee = dynamic(() => import('@/components/ui/CompaniesMarquee'
 });
 
 export default function CommunityPage() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showCreateDiscussionModal, setShowCreateDiscussionModal] = useState(false);
   const [discussionForm, setDiscussionForm] = useState({
     title: '',
@@ -35,6 +37,10 @@ export default function CommunityPage() {
   const { posts, loading, error, createPost, toggleLike, createComment } = useCommunityPosts();
   const { stats: communityStats, loading: statsLoading } = useCommunityStats();
   const { events: dbEvents, userRegistrations, loading: eventsLoading, registerToEvent, isUserRegistered } = useEvents();
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
 
   const handleCreateDiscussion = () => {
     if (!user) {
@@ -349,8 +355,12 @@ export default function CommunityPage() {
 
 
   return (
-    <SimpleLayout>
-      <main className="main-content" style={{ paddingTop: '80px' }}>
+    <>
+      <Navbar onToggleSidebar={toggleSidebar} />
+      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
+      
+      
+      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''} pt-16`}>
         {/* Hero Section */}
         <section className="hero gradient-bg">
           <div className="container">
@@ -976,8 +986,199 @@ export default function CommunityPage() {
       )}
 
       <Footer />
-    </SimpleLayout>
+      
+      <style jsx>{`
+        .hero-bottom-logo {
+          display: flex;
+          justify-content: center;
+          margin-top: 32px;
+        }
 
+        .hero-bottom-logo-image {
+          height: auto;
+          max-height: 71px;
+          width: auto;
+          max-width: 95px;
+          opacity: 0.9;
+          transition: all 0.3s ease;
+        }
+
+        .logo-animation-wrapper {
+          animation: logoFloat 3s ease-in-out infinite;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .logo-animation-wrapper:hover {
+          animation-play-state: paused;
+        }
+
+        .logo-animation-wrapper:hover .hero-bottom-logo-image {
+          transform: scale(1.1) rotate(5deg);
+          filter: brightness(1.2);
+        }
+
+        @keyframes logoFloat {
+          0%, 100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
+        }
+
+        @media (max-width: 768px) {
+          .hero-bottom-logo-image {
+            max-width: 76px;
+            max-height: 57px;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .hero-bottom-logo-image {
+            max-width: 66px;
+            max-height: 48px;
+          }
+        }
+
+        /* Estilos para el modal de crear discusión */
+        .modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.7);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 10000;
+          padding: 1rem;
+        }
+
+        .modal-content {
+          background: white;
+          border-radius: 16px;
+          max-width: 600px;
+          width: 100%;
+          max-height: 90vh;
+          overflow-y: auto;
+          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+        }
+
+        .modal-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 1.5rem 2rem;
+          border-bottom: 1px solid #e2e8f0;
+        }
+
+        .modal-header h3 {
+          margin: 0;
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: #2d3748;
+        }
+
+        .modal-close {
+          background: none;
+          border: none;
+          font-size: 2rem;
+          cursor: pointer;
+          color: #718096;
+          padding: 0;
+          width: 32px;
+          height: 32px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50%;
+          transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+          background: #f7fafc;
+          color: #2d3748;
+        }
+
+        .modal-body {
+          padding: 2rem;
+        }
+
+        .form-group {
+          margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+          display: block;
+          margin-bottom: 0.5rem;
+          font-weight: 600;
+          color: #2d3748;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+          width: 100%;
+          padding: 0.75rem;
+          border: 2px solid #e2e8f0;
+          border-radius: 8px;
+          font-size: 1rem;
+          transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+          outline: none;
+          border-color: #3b82f6;
+        }
+
+        .form-textarea {
+          resize: vertical;
+          min-height: 120px;
+        }
+
+        .modal-actions {
+          display: flex;
+          gap: 1rem;
+          justify-content: flex-end;
+          margin-top: 2rem;
+          padding-top: 1.5rem;
+          border-top: 1px solid #e2e8f0;
+        }
+
+        .btn-secondary {
+          background: #f7fafc;
+          color: #4a5568;
+          border: 2px solid #e2e8f0;
+          padding: 0.75rem 1.5rem;
+          border-radius: 8px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+          background: #edf2f7;
+          border-color: #cbd5e0;
+        }
+
+        @media (max-width: 768px) {
+          .modal-content {
+            margin: 1rem;
+            max-height: calc(100vh - 2rem);
+          }
+
+          .modal-header,
+          .modal-body {
+            padding: 1rem;
+          }
+
+          .modal-actions {
+            flex-direction: column;
           }
 
           .modal-actions .btn {

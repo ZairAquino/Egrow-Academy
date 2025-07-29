@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Sidebar from '@/components/layout/Sidebar';
 import Footer from '@/components/layout/Footer';
+import Navbar from '@/components/layout/Navbar';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCourseProgress } from '@/hooks/useCourseProgress';
 import VideoPlayer from '@/components/courses/VideoPlayer';
@@ -548,12 +549,12 @@ function Counter() {
   };
 
   if (!user || isLoading || isCheckingEnrollment) {
-    return <div className="loading-container">Cargando...</div>;
+    return <div className="loading-container" suppressHydrationWarning>Cargando...</div>;
   }
 
   // Verificar que el progreso se haya cargado correctamente
   if (!progress || progress.currentLesson === undefined) {
-    return <div className="loading-container">Cargando...</div>;
+    return <div className="loading-container" suppressHydrationWarning>Cargando...</div>;
   }
 
   // Verificar que la lección actual esté dentro del rango válido
@@ -561,7 +562,7 @@ function Counter() {
   const currentLesson = courseData.lessons[currentLessonIndex];
   
   if (!currentLesson) {
-    return <div className="loading-container">Error: Lección no encontrada</div>;
+    return <div className="loading-container" suppressHydrationWarning>Error: Lección no encontrada</div>;
   }
 
   if (!isEnrolled) {
@@ -578,9 +579,10 @@ function Counter() {
 
   return (
     <>
+      <Navbar onToggleSidebar={toggleSidebar} />
       <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
       
-      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''}`}>
+      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''} pt-16`}>
         {/* Course Header */}
         <section className="course-header">
           <div className="container">

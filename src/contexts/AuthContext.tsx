@@ -45,36 +45,58 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null)
   const [status, setStatus] = useState<'loading' | 'authenticated' | 'unauthenticated'>('loading')
   const [token, setToken] = useState<string | null>(null)
+  const [isInitialized, setIsInitialized] = useState(false)
 
-  // Función para refrescar la información del usuario
-  const refreshUser = async () => {
+  // Función para obtener usuario desde el endpoint /api/auth/me
+  const fetchUserFromAPI = async (): Promise<User | null> => {
     try {
       const response = await fetch('/api/auth/me', {
         method: 'GET',
-        credentials: 'include',
+        credentials: 'include', // Incluir cookies automáticamente
       })
       
       if (response.ok) {
-        const data = await response.json()
-        if (data.user) {
-          setUser(data.user)
-          setStatus('authenticated')
-          setToken('cookie-based')
+        const contentType = response.headers.get('content-type')
+        if (contentType && contentType.includes('application/json')) {
+          const data = await response.json()
+          console.log('🔍 [AuthContext] User fetched from API:', data.user?.email, 'Membership:', data.user?.membershipLevel)
+          return data.user
         } else {
-          setUser(null)
-          setStatus('unauthenticated')
-          setToken(null)
+          console.error('Respuesta no es JSON:', contentType)
+          return null
         }
-      } else {
-        setUser(null)
-        setStatus('unauthenticated')
-        setToken(null)
       }
+      return null
     } catch (error) {
-      console.error('Error fetching user:', error)
+      console.error('Error fetching user from API:', error)
+      return null
+    }
+  }
+
+  // Función para refrescar la información del usuario
+  const refreshUser = async () => {
+    console.log('🔍 [AuthContext] refreshUser iniciado...');
+    setStatus('loading')
+    
+    console.log('🔍 [AuthContext] Verificando autenticación...')
+    
+    // El token se maneja automáticamente a través de cookies
+    const apiUser = await fetchUserFromAPI()
+    console.log('🔍 [AuthContext] Resultado de fetchUserFromAPI:', { 
+      hasUser: !!apiUser, 
+      userEmail: apiUser?.email 
+    });
+    
+    if (apiUser) {
+      setUser(apiUser)
+      setStatus('authenticated')
+      setToken('cookie-based') // Indicador de que usa cookies
+      console.log('✅ [AuthContext] Usuario autenticado:', apiUser.email)
+    } else {
       setUser(null)
       setStatus('unauthenticated')
       setToken(null)
+      console.log('❌ [AuthContext] Usuario no autenticado')
     }
   }
 
@@ -83,7 +105,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       await fetch('/api/auth/logout', {
         method: 'POST',
-        credentials: 'include',
+        credentials: 'include', // Incluir cookies automáticamente
       })
       
       setUser(null)
@@ -94,19 +116,34 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
-  // Effect para verificar la sesión al cargar la página
+  // Effect para verificar la sesión al cargar la página (solo en cliente)
   useEffect(() => {
+    console.log('🔍 [AuthContext] Inicializando contexto de autenticación...');
+    
     if (typeof window !== 'undefined') {
+      console.log('🔍 [AuthContext] Ejecutando en cliente, verificando autenticación...');
       refreshUser().finally(() => {
-        // Si no se pudo obtener el usuario, establecer como no autenticado
-        if (status === 'loading') {
-          setStatus('unauthenticated')
-        }
+        console.log('🔍 [AuthContext] Verificación completada, estableciendo isInitialized = true');
+        setIsInitialized(true)
       })
     } else {
-      setStatus('unauthenticated')
+      console.log('🔍 [AuthContext] Ejecutando en servidor, estableciendo estado inicial');
+      // En el servidor, mantener status como 'loading' para consistencia
+      setIsInitialized(true)
     }
   }, [])
+
+  // Effect para actualizar automáticamente cada 30 segundos
+  useEffect(() => {
+    if (status === 'authenticated' && user) {
+      const interval = setInterval(() => {
+        console.log('🔄 [AuthContext] Auto-refreshing user data...')
+        refreshUser()
+      }, 30000) // 30 segundos
+
+      return () => clearInterval(interval)
+    }
+  }, [status, user]) // Añadir dependencias necesarias
 
   const value: AuthContextType = {
     user,

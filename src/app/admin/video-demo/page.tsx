@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import Sidebar from '@/components/layout/Sidebar';
+import UserProfile from '@/components/auth/UserProfile';
 import VideoPlayer from '@/components/courses/VideoPlayer';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -65,6 +66,7 @@ export default function VideoDemoPage() {
   return (
     <>
       <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
+      <UserProfile className="user-profile-fixed" />
       
       <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''}`}>
         {/* Header */}

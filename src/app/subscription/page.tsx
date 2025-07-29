@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import Footer from '@/components/layout/Footer';
+import Navbar from '@/components/layout/Navbar';
+
 import './subscription.css';
 
 interface SubscriptionPlan {
@@ -135,7 +137,9 @@ export default function SubscriptionPage() {
 
   return (
     <>
-      <main className="subscription-page">
+      <Navbar onToggleSidebar={toggleSidebar} />
+      
+      <main className="subscription-page pt-16">
         {/* Header */}
         <div className="subscription-header">
           <div className="subscription-header-content">

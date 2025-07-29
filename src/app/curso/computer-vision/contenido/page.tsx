@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Sidebar from '@/components/layout/Sidebar';
 import Footer from '@/components/layout/Footer';
+import Navbar from '@/components/layout/Navbar';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCourseProgress } from '@/hooks/useCourseProgress';
 
@@ -987,7 +988,7 @@ if __name__ == "__main__":
   };
 
   if (!user || isLoading || isCheckingEnrollment) {
-    return <div className="loading-container">Cargando...</div>;
+    return <div className="loading-container" suppressHydrationWarning>Cargando...</div>;
   }
 
   if (!isEnrolled) {
@@ -1004,9 +1005,10 @@ if __name__ == "__main__":
 
   return (
     <>
+      <Navbar onToggleSidebar={toggleSidebar} />
       <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
       
-      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''}`}>
+      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''} pt-16`}>
         <section className="course-header">
           <div className="container">
             <div className="course-header-content">

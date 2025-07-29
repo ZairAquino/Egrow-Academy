@@ -7,6 +7,7 @@ import Sidebar from '@/components/layout/Sidebar';
 import Footer from '@/components/layout/Footer';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Link from 'next/link';
+import Navbar from '@/components/layout/Navbar';
 
 interface Certificate {
   id: string;
@@ -80,9 +81,10 @@ export default function CertificatePage() {
 
   return (
     <>
+      <Navbar onToggleSidebar={toggleSidebar} />
       <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
       
-      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''}`}>
+      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''} pt-16`}>
         {/* Hero Section */}
         <section className="hero gradient-bg">
           <div className="container">

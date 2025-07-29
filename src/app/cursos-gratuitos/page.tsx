@@ -2,11 +2,12 @@
 
 import { useState, Suspense } from 'react';
 import dynamic from 'next/dynamic';
-import SimpleLayout from '@/components/layout/SimpleLayout';
 import Sidebar from '@/components/layout/Sidebar';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import CourseCard from '@/components/courses/CourseCard';
 import Footer from '@/components/layout/Footer';
+import Navbar from '@/components/layout/Navbar';
+
 import StatsContainer from '@/components/ui/StatsContainer';
 import DynamicLogo from '@/components/ui/DynamicLogo';
 import { useAuth } from '@/contexts/AuthContext';
@@ -18,7 +19,12 @@ const CompaniesMarquee = dynamic(() => import('@/components/ui/CompaniesMarquee'
 });
 
 export default function CursosGratuitosPage() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const { user } = useAuth();
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
 
   const freeCourses = [
     // Curso Destacado - Monetización con IA
@@ -91,8 +97,11 @@ export default function CursosGratuitosPage() {
   ];
 
   return (
-    <SimpleLayout>
-      <main className="main-content" style={{ paddingTop: '80px' }}>
+    <>
+      <Navbar onToggleSidebar={toggleSidebar} />
+      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
+      
+      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''} pt-16`}>
         {/* Hero Section */}
         <section className="hero gradient-bg">
           <div className="container">
@@ -132,15 +141,17 @@ export default function CursosGratuitosPage() {
           <CompaniesMarquee />
         </Suspense>
 
-        {/* Features Section */}
+        {/* Courses Section */}
         <section className="section">
           <div className="container">
+            {/* Features Section */}
             <div className="features-section-header">
               <h2 className="section-title">¿Por qué elegir nuestros Cursos Gratuitos?</h2>
               <p className="section-description">
                 Descubre las ventajas de aprender IA con nosotros sin ningún costo
               </p>
             </div>
+
             <div className="features-stats-layout">
               {/* Left side - Features */}
               <div className="features-container">
@@ -167,6 +178,7 @@ export default function CursosGratuitosPage() {
                   </div>
                 </div>
               </div>
+
               {/* Right side - Stats */}
               <StatsContainer showFreeCourses={true} />
             </div>
@@ -182,6 +194,7 @@ export default function CursosGratuitosPage() {
                 Aprende habilidades específicas de IA completamente gratis. Acceso inmediato sin necesidad de suscripción.
               </p>
             </div>
+
             {/* Courses Grid */}
             <div className="courses-grid">
               {freeCourses.map((course) => (
@@ -204,7 +217,7 @@ export default function CursosGratuitosPage() {
           </div>
         </section>
 
-        {/* CTA Section */}
+        {/* CTA Section - Moved from footer to body */}
         <section className="section cta-section" style={{
           background: 'white',
           color: '#2d3748',
@@ -246,7 +259,83 @@ export default function CursosGratuitosPage() {
           </div>
         </section>
       </main>
+
       <Footer />
-    </SimpleLayout>
-  </>
-);
+      
+      <style jsx>{`
+        .hero-bottom-logo {
+          display: flex;
+          justify-content: center;
+          margin-top: 32px;
+        }
+
+        .hero-bottom-logo-image {
+          height: auto;
+          max-height: 71px;
+          width: auto;
+          max-width: 95px;
+          opacity: 0.9;
+          transition: all 0.3s ease;
+        }
+
+        .logo-animation-wrapper {
+          animation: logoFloat 3s ease-in-out infinite;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .logo-animation-wrapper:hover {
+          animation-play-state: paused;
+        }
+
+        .logo-animation-wrapper:hover .hero-bottom-logo-image {
+          transform: scale(1.1) rotate(5deg);
+          filter: brightness(1.2);
+        }
+
+        @keyframes logoFloat {
+          0%, 100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
+        }
+
+        @media (max-width: 768px) {
+          .hero-bottom-logo-image {
+            max-width: 76px;
+            max-height: 57px;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .hero-bottom-logo-image {
+            max-width: 66px;
+            max-height: 48px;
+          }
+        }
+
+        /* Estilos para el botón CTA */
+        .cta-section .btn-primary:hover {
+          background: #2563eb !important;
+          color: white !important;
+          border-color: #2563eb !important;
+          transform: translateY(-2px);
+          box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        @media (max-width: 768px) {
+          .cta-section h2 {
+            font-size: 2rem !important;
+          }
+          
+          .cta-section p {
+            font-size: 1rem !important;
+          }
+        }
+      `}</style>
+    </>
+  );
+} 

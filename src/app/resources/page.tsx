@@ -6,6 +6,8 @@ import DynamicLogo from '@/components/ui/DynamicLogo';
 import Sidebar from '@/components/layout/Sidebar';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Footer from '@/components/layout/Footer';
+import Navbar from '@/components/layout/Navbar';
+
 import ResourceCard from '@/components/resources/ResourceCard';
 import { useResources } from '@/hooks/useResources';
 import { useAuth } from '@/contexts/AuthContext';
@@ -66,9 +68,11 @@ export default function ResourcesPage() {
 
   return (
     <>
+      <Navbar onToggleSidebar={toggleSidebar} />
       <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
       
-      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''}`}>
+      
+      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''} pt-16`}>
         {/* Hero Section */}
         <section className="hero gradient-bg">
           <div className="container">
@@ -192,6 +196,91 @@ export default function ResourcesPage() {
       </main>
 
       <Footer />
+      
+      <style jsx>{`
+        .hero-bottom-logo {
+          display: flex;
+          justify-content: center;
+          margin-top: 32px;
+        }
+
+        .hero-bottom-logo-image {
+          height: auto;
+          max-height: 71px;
+          width: auto;
+          max-width: 95px;
+          opacity: 0.9;
+          transition: all 0.3s ease;
+        }
+
+        .logo-animation-wrapper {
+          animation: logoFloat 3s ease-in-out infinite;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .logo-animation-wrapper:hover {
+          animation-play-state: paused;
+        }
+
+        .logo-animation-wrapper:hover .hero-bottom-logo-image {
+          transform: scale(1.1) rotate(5deg);
+          filter: brightness(1.2);
+        }
+
+        @keyframes logoFloat {
+          0%, 100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
+        }
+
+        @media (max-width: 768px) {
+          .hero-bottom-logo-image {
+            max-width: 76px;
+            max-height: 57px;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .hero-bottom-logo-image {
+            max-width: 66px;
+            max-height: 48px;
+          }
+        }
+
+        /* Estilos para botón de autenticación en recursos */
+        .resource-auth-btn {
+          background: linear-gradient(135deg, rgba(102, 126, 234, 0.08), rgba(118, 75, 162, 0.08)) !important;
+          border: 2px solid rgba(102, 126, 234, 0.3) !important;
+          color: #667eea !important;
+          transition: all 0.3s ease;
+          position: relative;
+        }
+
+        .resource-auth-btn:hover {
+          background: linear-gradient(135deg, rgba(102, 126, 234, 0.12), rgba(118, 75, 162, 0.12)) !important;
+          border-color: rgba(102, 126, 234, 0.5) !important;
+          transform: translateY(-2px);
+          box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+          color: #667eea !important;
+        }
+
+        .resource-auth-btn:active {
+          transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+          .resource-auth-btn {
+            width: 100%;
+            justify-content: center;
+          }
+        }
+
+      `}</style>
     </>
   );
 } 

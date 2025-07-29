@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Sidebar from '@/components/layout/Sidebar';
+import Navbar from '@/components/layout/Navbar';
+
 import Footer from '@/components/layout/Footer';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCourseProgress } from '@/hooks/useCourseProgress';
@@ -818,7 +820,7 @@ if prompt := st.chat_input(&quot;Escribe tu mensaje...&quot;):
   };
 
   if (!user || isLoading || isCheckingEnrollment) {
-    return <div className="loading-container">Cargando...</div>;
+    return <div className="loading-container" suppressHydrationWarning>Cargando...</div>;
   }
 
   if (!isEnrolled) {
@@ -835,9 +837,11 @@ if prompt := st.chat_input(&quot;Escribe tu mensaje...&quot;):
 
   return (
     <>
+      <Navbar onToggleSidebar={toggleSidebar} />
       <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
       
-      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''}`}>
+      
+      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''} pt-16`}>
         {/* Course Header */}
         <section className="course-header">
           <div className="container">

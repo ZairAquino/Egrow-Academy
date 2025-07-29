@@ -6,6 +6,8 @@ import DynamicLogo from '@/components/ui/DynamicLogo';
 import Sidebar from '@/components/layout/Sidebar';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Footer from '@/components/layout/Footer';
+import Navbar from '@/components/layout/Navbar';
+
 import { useAuth } from '@/contexts/AuthContext';
 import { useCommunityPosts, CommunityPost } from '@/hooks/useCommunityPosts';
 
@@ -177,9 +179,11 @@ export default function ForoPage() {
 
   return (
     <>
+      <Navbar onToggleSidebar={toggleSidebar} />
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(false)} />
       
-      <div className="main-content">
+      
+      <div className="main-content pt-16">
         {/* Hero Section */}
         <section className="hero gradient-bg">
           <div className="container">

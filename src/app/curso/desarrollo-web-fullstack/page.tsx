@@ -6,8 +6,7 @@ import { useRouter } from 'next/navigation';
 import Sidebar from '@/components/layout/Sidebar';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Footer from '@/components/layout/Footer';
-import { useAuth } from '@/contexts/AuthContext';
-import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
+import Navbar from '@/components/layout/Navbar';
 // Eliminamos CourseActionButton para usar la lógica directa que funciona
 
 // Lazy load components
@@ -338,7 +337,7 @@ export default function DesarrolloWebFullStackPage() {
   if (status === 'loading' || isLoading || subscriptionLoading) {
     console.log('🔍 [DEBUG] Mostrando loading unificado:', { status, isLoading, subscriptionLoading });
     return (
-      <div className="loading-container">
+      <div className="loading-container" suppressHydrationWarning>
         <LoadingSpinner />
         <p>Cargando...</p>
       </div>
@@ -349,9 +348,10 @@ export default function DesarrolloWebFullStackPage() {
 
   return (
     <>
+      <Navbar onToggleSidebar={toggleSidebar} />
       <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
       
-      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''}`}>
+      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''} pt-16`}>
         {/* Course Header */}
         <section className="course-header">
           <div className="container">

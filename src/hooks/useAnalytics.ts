@@ -27,23 +27,16 @@ export const useAnalytics = () => {
     eventName: string, 
     parameters: Record<string, any> = {}
   ) => {
-    // Solo ejecutar en el cliente y si las funciones están disponibles
-    if (typeof window !== 'undefined') {
-      try {
-        if (window.gtag) {
-          window.gtag('event', eventName, {
-            event_category: 'egrow_academy',
-            event_label: window.location.pathname,
-            ...parameters,
-          });
-        }
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', eventName, {
+        event_category: 'egrow_academy',
+        event_label: window.location.pathname,
+        ...parameters,
+      });
+    }
 
-        if (window.fbq) {
-          window.fbq('track', eventName, parameters);
-        }
-      } catch (error) {
-        console.warn('Analytics error:', error);
-      }
+    if (typeof window !== 'undefined' && window.fbq) {
+      window.fbq('track', eventName, parameters);
     }
   }, []);
 
@@ -194,28 +187,22 @@ export const useAnalytics = () => {
     page_url?: string;
     page_category?: string;
   } = {}) => {
-    if (typeof window !== 'undefined') {
-      try {
-        const title = data.page_title || document.title;
-        const url = data.page_url || window.location.href;
-        
-        if (window.gtag) {
-          window.gtag('config', process.env.NEXT_PUBLIC_GA_ID, {
-            page_title: title,
-            page_location: url,
-            custom_map: {
-              'custom_parameter_1': 'page_category',
-            },
-            custom_parameter_1: data.page_category,
-          });
-        }
+    const title = data.page_title || document.title;
+    const url = data.page_url || window.location.href;
+    
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('config', process.env.NEXT_PUBLIC_GA_ID, {
+        page_title: title,
+        page_location: url,
+        custom_map: {
+          'custom_parameter_1': 'page_category',
+        },
+        custom_parameter_1: data.page_category,
+      });
+    }
 
-        if (window.fbq) {
-          window.fbq('track', 'PageView');
-        }
-      } catch (error) {
-        console.warn('PageView tracking error:', error);
-      }
+    if (typeof window !== 'undefined' && window.fbq) {
+      window.fbq('track', 'PageView');
     }
   }, []);
 
@@ -295,7 +282,7 @@ export const useAnalytics = () => {
 // Tipos para TypeScript
 declare global {
   interface Window {
-    gtag?: (...args: any[]) => void;
-    fbq?: (...args: any[]) => void;
+    gtag: (...args: any[]) => void;
+    fbq: (...args: any[]) => void;
   }
 } 

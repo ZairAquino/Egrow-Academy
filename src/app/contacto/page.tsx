@@ -2,11 +2,12 @@
 
 import { useState, Suspense } from 'react';
 import dynamic from 'next/dynamic';
-import SimpleLayout from '@/components/layout/SimpleLayout';
 import DynamicLogo from '@/components/ui/DynamicLogo';
 import Sidebar from '@/components/layout/Sidebar';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Footer from '@/components/layout/Footer';
+import Navbar from '@/components/layout/Navbar';
+
 import { useAuth } from '@/contexts/AuthContext';
 
 // Lazy load components
@@ -16,6 +17,7 @@ const CompaniesMarquee = dynamic(() => import('@/components/ui/CompaniesMarquee'
 });
 
 export default function ContactoPage() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -25,6 +27,10 @@ export default function ContactoPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
   const { user } = useAuth();
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -95,8 +101,12 @@ export default function ContactoPage() {
   ];
 
   return (
-    <SimpleLayout>
-      <main className="main-content" style={{ paddingTop: '80px' }}>
+    <>
+      <Navbar onToggleSidebar={toggleSidebar} />
+      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
+      
+      
+      <main className={`main-content ${sidebarOpen ? 'sidebar-open' : ''} pt-16`}>
         {/* Hero Section */}
         <section className="hero gradient-bg">
           <div className="container">
@@ -306,8 +316,198 @@ export default function ContactoPage() {
           </div>
         </section>
       </main>
+
       <Footer />
-    </SimpleLayout>
+      
+      <style jsx>{`
+        .hero-bottom-logo {
+          display: flex;
+          justify-content: center;
+          margin-top: 32px;
+        }
+
+        .hero-bottom-logo-image {
+          height: auto;
+          max-height: 71px;
+          width: auto;
+          max-width: 95px;
+          opacity: 0.9;
+          transition: all 0.3s ease;
+        }
+
+        .logo-animation-wrapper {
+          animation: logoFloat 3s ease-in-out infinite;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .logo-animation-wrapper:hover {
+          animation-play-state: paused;
+        }
+
+        .logo-animation-wrapper:hover .hero-bottom-logo-image {
+          transform: scale(1.1) rotate(5deg);
+          filter: brightness(1.2);
+        }
+
+        @keyframes logoFloat {
+          0%, 100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
+        }
+
+        @media (max-width: 768px) {
+          .hero-bottom-logo-image {
+            max-width: 76px;
+            max-height: 57px;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .hero-bottom-logo-image {
+            max-width: 66px;
+            max-height: 48px;
+          }
+        }
+
+        .submit-message {
+          margin-top: 16px;
+          padding: 12px 16px;
+          border-radius: 8px;
+          font-weight: 600;
+          text-align: center;
+        }
+
+        .submit-message.success {
+          background-color: #dcfce7;
+          color: #166534;
+          border: 1px solid #bbf7d0;
+        }
+
+        .submit-message.error {
+          background-color: #fef2f2;
+          color: #dc2626;
+          border: 1px solid #fecaca;
+        }
+
+        /* Estilos para la sección de autenticación requerida */
+        .auth-required-contact {
+          min-height: 600px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: linear-gradient(135deg, rgba(102, 126, 234, 0.02), rgba(118, 75, 162, 0.02));
+          border-radius: 16px;
+          border: 2px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .auth-contact-content {
+          text-align: center;
+          max-width: 500px;
+          padding: 40px 30px;
+        }
+
+        .auth-icon {
+          font-size: 64px;
+          margin-bottom: 24px;
+          opacity: 0.8;
+        }
+
+        .auth-header h2 {
+          color: #374151;
+          font-size: 28px;
+          font-weight: 700;
+          margin-bottom: 12px;
+        }
+
+        .auth-header p {
+          color: #6b7280;
+          font-size: 16px;
+          line-height: 1.6;
+          margin-bottom: 32px;
+        }
+
+        .auth-benefits {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          margin-bottom: 32px;
+          text-align: left;
+        }
+
+        .benefit-item {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 12px 0;
+        }
+
+        .benefit-icon {
+          font-size: 20px;
+          width: 28px;
+          flex-shrink: 0;
+        }
+
+        .benefit-item span:last-child {
+          color: #374151;
+          font-weight: 500;
+        }
+
+        .auth-contact-buttons {
+          display: flex;
+          gap: 16px;
+          justify-content: center;
+          margin-bottom: 32px;
+        }
+
+        .alternative-contact {
+          background: rgba(102, 126, 234, 0.05);
+          border-radius: 12px;
+          padding: 20px;
+          border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .alternative-contact p {
+          margin: 0;
+          color: #6b7280;
+          font-size: 14px;
+        }
+
+        .alternative-contact p:first-child {
+          margin-bottom: 8px;
+          font-weight: 600;
+        }
+
+        .alternative-contact strong {
+          color: #374151;
+        }
+
+        @media (max-width: 768px) {
+          .auth-contact-content {
+            padding: 24px 20px;
+          }
+
+          .auth-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+          }
+
+          .auth-header h2 {
+            font-size: 24px;
+          }
+
+          .auth-header p {
+            font-size: 15px;
+          }
+
+          .auth-contact-buttons {
+            flex-direction: column;
+            gap: 12px;
+          }
 
           .auth-contact-buttons .btn {
             width: 100%;
