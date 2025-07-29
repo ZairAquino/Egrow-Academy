@@ -249,4 +249,4 @@ export default function CursosGratuitosPage() {
       <Footer />
     </SimpleLayout>
   </>
-); 
+);
