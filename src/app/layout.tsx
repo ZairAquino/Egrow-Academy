@@ -9,8 +9,6 @@ import { baseSEOConfig, generateStructuredData } from "@/lib/seo-config";
 import { generateEducationalOrganizationSchema } from "@/lib/schema-advanced";
 import { openGraphConfigs } from "@/lib/open-graph-config";
 import Analytics from "@/components/seo/Analytics";
-import PerformanceOptimizer from "@/components/seo/PerformanceOptimizer";
-import { speedUtils } from "@/lib/speed-optimization-config";
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -93,12 +91,8 @@ export default function RootLayout({
           {children}
         </Providers>
 
-        {/* SEO Analytics and Performance Tracking */}
+        {/* SEO Analytics */}
         <Analytics />
-        <PerformanceOptimizer 
-          trackMetrics={true}
-          showDebug={process.env.NODE_ENV === 'development'}
-        />
       </body>
     </html>
   );

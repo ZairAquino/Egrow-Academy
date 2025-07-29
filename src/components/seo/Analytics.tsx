@@ -1,6 +1,3 @@
-'use client';
-
-import { useEffect } from 'react';
 import Script from 'next/script';
 
 interface AnalyticsProps {
@@ -21,44 +18,6 @@ export default function Analytics({
   const fbPixelId = facebookPixelId || process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID;
   const hjId = hotjarId || process.env.NEXT_PUBLIC_HOTJAR_ID;
 
-  useEffect(() => {
-    // Google Analytics 4
-    if (googleAnalyticsId && typeof window !== 'undefined') {
-      window.gtag = window.gtag || function() {
-        (window.gtag as any).q = (window.gtag as any).q || [];
-        (window.gtag as any).q.push(arguments);
-      };
-      
-      window.gtag('js', new Date());
-      window.gtag('config', googleAnalyticsId, {
-        page_title: document.title,
-        page_location: window.location.href,
-      });
-    }
-
-    // Facebook Pixel
-    if (fbPixelId && typeof window !== 'undefined') {
-      window.fbq = window.fbq || function() {
-        (window.fbq as any).callMethod ? (window.fbq as any).callMethod.apply(window.fbq, arguments) : (window.fbq as any).queue.push(arguments);
-      };
-      
-      if (!(window as any)._fbq) (window as any)._fbq = window.fbq;
-      window.fbq('init', fbPixelId);
-      window.fbq('track', 'PageView');
-    }
-
-    // Hotjar
-    if (hjId && typeof window !== 'undefined') {
-      (window as any).hjid = hjId;
-      (window as any).hjsv = 6;
-      
-      const hotjarScript = document.createElement('script');
-      hotjarScript.async = true;
-      hotjarScript.src = `https://static.hotjar.com/c/hotjar-${hjId}.js?sv=6`;
-      document.head.appendChild(hotjarScript);
-    }
-  }, [googleAnalyticsId, fbPixelId, hjId]);
-
   return (
     <>
       {/* Google Analytics */}
@@ -73,15 +32,7 @@ export default function Analytics({
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
-              gtag('config', '${googleAnalyticsId}', {
-                page_title: document.title,
-                page_location: window.location.href,
-                custom_map: {
-                  'custom_parameter_1': 'course_category',
-                  'custom_parameter_2': 'course_level',
-                  'custom_parameter_3': 'user_type'
-                }
-              });
+              gtag('config', '${googleAnalyticsId}');
             `}
           </Script>
         </>
@@ -136,6 +87,22 @@ export default function Analytics({
             />
           </noscript>
         </>
+      )}
+
+      {/* Hotjar */}
+      {hjId && (
+        <Script id="hotjar" strategy="afterInteractive">
+          {`
+            (function(h,o,t,j,a,r){
+              h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+              h._hjSettings={hjid:${hjId},hjsv:6};
+              a=o.getElementsByTagName('head')[0];
+              r=o.createElement('script');r.async=1;
+              r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+              a.appendChild(r);
+            })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+          `}
+        </Script>
       )}
     </>
   );

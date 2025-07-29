@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -12,6 +12,17 @@ interface SidebarProps {
 
 export default function Sidebar({ isOpen, onToggle, hideToggle = false }: SidebarProps) {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const toggleDropdown = (menuItem: string) => {
     setActiveDropdown(activeDropdown === menuItem ? null : menuItem);
@@ -19,7 +30,7 @@ export default function Sidebar({ isOpen, onToggle, hideToggle = false }: Sideba
 
   const handleLinkClick = () => {
     // Cerrar sidebar en móviles al hacer clic en un enlace
-    if (window.innerWidth <= 768) {
+    if (isMobile) {
       onToggle();
     }
   };

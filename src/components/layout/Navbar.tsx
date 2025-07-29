@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import UserProfile from '@/components/auth/UserProfile';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -9,22 +9,8 @@ interface NavbarProps {
 }
 
 const NavbarContent: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      setIsScrolled(scrollTop > 10);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   return (
-    <nav className={`w-full bg-white border-b border-gray-200 fixed top-0 z-50 flex items-center justify-between px-4 py-2 transition-all duration-300 ${
-      isScrolled ? 'shadow-lg bg-white/95 backdrop-blur-sm' : 'shadow-sm'
-    }`}>
+    <nav className="w-full bg-white border-b border-gray-200 fixed top-0 z-50 flex items-center justify-between px-4 py-2 shadow-sm">
       {/* Botón de sidebar */}
       <div className="flex items-center">
         <button

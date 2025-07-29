@@ -67,7 +67,9 @@ function HomeContent() {
         type="website"
       />
 
-      <Navbar onToggleSidebar={toggleSidebar} />
+      <ClientOnly>
+        <Navbar onToggleSidebar={toggleSidebar} />
+      </ClientOnly>
 
       <ClientOnly>
         <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
