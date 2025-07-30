@@ -5,48 +5,39 @@ export async function GET() {
   try {
     console.log('🔍 [EVENTS] Obteniendo eventos');
 
-    // Obtener todos los eventos activos
-    const events = await prisma.event.findMany({
-      where: { isActive: true },
-      orderBy: { date: 'asc' }
-    });
+    // Obtener todos los eventos activos usando la estructura correcta de la tabla
+    const events = await prisma.$queryRaw`
+      SELECT 
+        id,
+        title,
+        description,
+        date,
+        time,
+        type,
+        category,
+        instructor,
+        image,
+        max_attendees as "maxAttendees",
+        is_active as "isActive",
+        attendees,
+        status
+      FROM events 
+      WHERE status != 'CANCELLED' 
+      ORDER BY date ASC
+    `;
 
     console.log('✅ [EVENTS] Eventos obtenidos:', events.length);
 
-    // Formatear la respuesta con conteo de asistentes
-    const eventsWithAttendees = await Promise.all(
-      events.map(async (event) => {
-        const attendeesCount = await prisma.eventRegistration.count({
-          where: { eventId: event.id }
-        });
-
-        return {
-          id: event.id,
-          title: event.title,
-          description: event.description,
-          date: event.date,
-          time: event.time,
-          type: event.type,
-          category: event.category,
-          instructor: event.instructor,
-          image: event.image,
-          maxAttendees: event.maxAttendees,
-          isActive: event.isActive,
-          attendees: attendeesCount
-        };
-      })
-    );
-
     return NextResponse.json({
       success: true,
-      events: eventsWithAttendees
+      events: events
     });
 
   } catch (error) {
     console.error('💥 [EVENTS] Error completo:', error);
     
     return NextResponse.json(
-      { error: 'Error interno del servidor' },
+      { error: 'Error interno del servidor', details: error instanceof Error ? error.message : 'Error desconocido' },
       { status: 500 }
     );
   }

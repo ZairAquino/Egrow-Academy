@@ -1,63 +1,61 @@
 import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
-async function testDatabaseConnection() {
-  console.log('🔍 Verificando conexión a la base de datos...');
-
+async function testConnection() {
   try {
+    console.log('🔍 Probando conexión a la base de datos...');
+    
     // Verificar conexión
     await prisma.$connect();
-    console.log('✅ Conexión a la base de datos establecida');
-
-    // Verificar si existe el usuario de prueba
-    const existingUser = await prisma.user.findUnique({
-      where: { email: 'test@egrowacademy.com' }
-    });
-
-    if (existingUser) {
-      console.log('✅ Usuario de prueba ya existe');
-      console.log('📧 Email: test@egrowacademy.com');
-      console.log('🔑 Contraseña: test123');
-      return;
-    }
-
-    // Crear usuario de prueba
-    const hashedPassword = await bcrypt.hash('test123', 12);
+    console.log('✅ Conexión exitosa a la base de datos');
     
-    const testUser = await prisma.user.create({
-      data: {
-        email: 'test@egrowacademy.com',
-        passwordHash: hashedPassword,
-        firstName: 'Usuario',
-        lastName: 'Prueba',
-        username: 'testuser',
-        membershipLevel: 'FREE',
-        isActive: true,
-        emailVerified: true
-      }
-    });
-
-    console.log('✅ Usuario de prueba creado exitosamente');
-    console.log('📧 Email: test@egrowacademy.com');
-    console.log('🔑 Contraseña: test123');
-    console.log('🆔 User ID:', testUser.id);
-
-    // Verificar que se puede hacer login
-    const loginUser = await prisma.user.findUnique({
-      where: { email: 'test@egrowacademy.com' }
-    });
-
-    if (loginUser) {
-      console.log('✅ Usuario disponible para login');
+    // Listar todas las tablas
+    const tables = await prisma.$queryRaw`
+      SELECT table_name 
+      FROM information_schema.tables 
+      WHERE table_schema = 'public'
+      ORDER BY table_name
+    `;
+    
+    console.log('📋 Tablas disponibles en la base de datos:');
+    console.log(tables);
+    
+    // Verificar si existe la tabla events
+    const eventsTable = await prisma.$queryRaw`
+      SELECT table_name 
+      FROM information_schema.tables 
+      WHERE table_schema = 'public' AND table_name = 'events'
+    `;
+    
+    if (eventsTable && Array.isArray(eventsTable) && eventsTable.length > 0) {
+      console.log('✅ La tabla "events" existe');
+      
+      // Verificar estructura de la tabla events
+      const columns = await prisma.$queryRaw`
+        SELECT column_name, data_type 
+        FROM information_schema.columns 
+        WHERE table_schema = 'public' AND table_name = 'events'
+        ORDER BY ordinal_position
+      `;
+      
+      console.log('📊 Estructura de la tabla events:');
+      console.log(columns);
+      
+      // Intentar obtener datos
+      const events = await prisma.$queryRaw`SELECT * FROM events LIMIT 3`;
+      console.log('📅 Datos de eventos:');
+      console.log(events);
+      
+    } else {
+      console.log('❌ La tabla "events" NO existe');
     }
-
+    
   } catch (error) {
-    console.error('❌ Error al conectar con la base de datos:', error);
+    console.error('❌ Error:', error);
   } finally {
     await prisma.$disconnect();
   }
 }
 
-testDatabaseConnection(); 
+testConnection(); 
