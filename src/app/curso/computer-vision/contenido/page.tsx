@@ -1006,8 +1006,8 @@ if __name__ == "__main__":
       <Navbar  />
       
       
-      <main className="main-content pt-16">
-        <section className="course-header">
+      <main className="main-content">
+        <section className="course-header pt-14 md:pt-[95px]">
           <div className="container">
             <div className="course-header-content">
               <div className="course-breadcrumb">

@@ -839,9 +839,9 @@ if prompt := st.chat_input(&quot;Escribe tu mensaje...&quot;):
       
       
       
-      <main className="main-content pt-16">
+      <main className="main-content">
         {/* Course Header */}
-        <section className="course-header">
+        <section className="course-header pt-14 md:pt-[95px]">
           <div className="container">
             <div className="course-header-content">
               <div className="course-breadcrumb">

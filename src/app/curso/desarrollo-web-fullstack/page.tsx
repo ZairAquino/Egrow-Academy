@@ -28,7 +28,6 @@ export default function DesarrolloWebFullStackPage() {
   const { hasPremiumAccess, isLoading: subscriptionLoading } = useSubscriptionStatus();
 
   console.log('🔍 [DEBUG] Estados iniciales:', { 
-    sidebarOpen, 
     currentLesson, 
     completedLessons: completedLessons.length,
     progressPercentage,
@@ -348,12 +347,14 @@ export default function DesarrolloWebFullStackPage() {
 
   return (
     <>
-      <Navbar  />
+      {/* Header separado con altura exacta del navbar */}
+      <header className="navbar-spacer h-14 md:h-16"></header>
       
+      <Navbar />
       
-      <main className="main-content pt-16">
+      <main className="main-content">
         {/* Course Header */}
-        <section className="course-header">
+        <section className="course-header pt-14 md:pt-[95px]">
           <div className="container">
             <div className="course-header-content">
               <div className="course-breadcrumb">
@@ -369,7 +370,17 @@ export default function DesarrolloWebFullStackPage() {
                   </div>
                   
                   <h1 className="course-title-large">{courseData.title}</h1>
-                  <p className="course-description">{courseData.description}</p>
+                  <p className="course-description course-description-dark">{courseData.description}</p>
+                  
+                  {/* Video solo para móvil - entre descripción y botón */}
+                  <div className="mobile-video-preview">
+                    <div className="preview-video">
+                      <img src="/images/optimized/p1.webp" alt={courseData.title} />
+                      <div className="play-button" onClick={() => window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ', '_blank')}>
+                        <span>▶</span>
+                      </div>
+                    </div>
+                  </div>
                   
                   {/* Botones copiados exactamente de monetiza-ia */}
                   <div className="new-course-actions">
@@ -592,6 +603,93 @@ export default function DesarrolloWebFullStackPage() {
                   </div>
                   <p>{courseData.instructor.bio}</p>
                 </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Mobile Instructor Section */}
+        <section className="mobile-instructor-section">
+          <div className="container">
+            <div className="instructor-card">
+              <h3>Tu Instructor</h3>
+              <div className="instructor-info">
+                <div className="instructor-avatar-container">
+                  <img src={courseData.instructor.image} alt={courseData.instructor.name} className="instructor-avatar" />
+                </div>
+                <div className="instructor-details">
+                  <h4>{courseData.instructor.name}</h4>
+                  <p className="instructor-title">{courseData.instructor.title}</p>
+                  <p className="instructor-bio">{courseData.instructor.bio}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Mobile Prerequisites Section */}
+        <section className="mobile-prerequisites-section">
+          <div className="container">
+            <div className="prerequisites-card">
+              <h3>Prerrequisitos</h3>
+              <ul className="prerequisites-list">
+                {courseData.prerequisites.map((prereq, index) => (
+                  <li key={index}>{prereq}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* Mobile Learning Objectives Section */}
+        <section className="mobile-learning-section">
+          <div className="container">
+            <div className="learning-objectives">
+              <h2>Lo que Aprenderás</h2>
+              
+              <div className="course-introduction">
+                <p>
+                  El <strong>desarrollo web full stack</strong> es una de las habilidades más demandadas 
+                  en el mercado tecnológico actual. Este curso completo te llevará desde los fundamentos 
+                  hasta la implementación de aplicaciones web profesionales y escalables.
+                </p>
+                
+                <p>
+                  Aprenderás tanto el frontend como el backend, utilizando las tecnologías más modernas 
+                  y demandadas por la industria. Desde HTML, CSS y JavaScript hasta frameworks como 
+                  React y Node.js, cubriremos todo lo necesario para convertirte en un desarrollador completo.
+                </p>
+                
+                <p>
+                  Al finalizar este curso, tendrás las habilidades para crear aplicaciones web completas 
+                  desde cero y estarás preparado para enfrentar los desafíos del desarrollo web profesional.
+                </p>
+              </div>
+              
+              <div className="objectives-grid">
+                {courseData.whatYouWillLearn.map((objective, index) => (
+                  <div key={index} className="objective-item">
+                    <span className="objective-check">✓</span>
+                    <span>{objective}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Mobile Tools Section */}
+        <section className="mobile-tools-section">
+          <div className="container">
+            <div className="tools-section">
+              <h2>Herramientas y Tecnologías</h2>
+              <div className="tools-grid">
+                {courseData.tools.map((tool, index) => (
+                  <div key={index} className="tool-item">
+                    <span className="tool-icon">🔧</span>
+                    <span>{tool}</span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -891,6 +989,7 @@ export default function DesarrolloWebFullStackPage() {
           border: 1px solid #e5e7eb;
           border-radius: 8px;
           transition: all 0.3s ease;
+          min-height: 80px;
         }
 
         .lesson-item:hover {
@@ -1195,6 +1294,8 @@ export default function DesarrolloWebFullStackPage() {
           border: 1px solid #eee;
           border-radius: 8px;
           transition: all 0.3s ease;
+          height: 100px;
+          overflow: hidden;
         }
 
         .lesson-item:hover {
@@ -1217,6 +1318,9 @@ export default function DesarrolloWebFullStackPage() {
         .lesson-content h3 {
           margin: 0 0 0.25rem 0;
           font-size: 1rem;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
 
         .lesson-meta {
@@ -1230,6 +1334,7 @@ export default function DesarrolloWebFullStackPage() {
           margin-left: auto;
           font-size: 1.2rem;
         }
+
 
         .content-sidebar {
           position: sticky;
@@ -1322,6 +1427,123 @@ export default function DesarrolloWebFullStackPage() {
           font-size: 0.9rem;
         }
 
+        .navbar-spacer {
+          width: 100%;
+          background: transparent;
+        }
+
+        /* Ocultar video móvil en desktop */
+        .mobile-video-preview {
+          display: none;
+        }
+
+        .mobile-instructor-section {
+          display: none;
+          padding: 2rem 0;
+          background: #f9fafb;
+        }
+
+        .mobile-prerequisites-section {
+          display: none;
+          padding: 2rem 0;
+          background: #f3f4f6;
+        }
+
+        .mobile-learning-section {
+          display: none;
+          padding: 2rem 0;
+          background: #f9fafb;
+        }
+
+        .mobile-tools-section {
+          display: none;
+          padding: 2rem 0;
+          background: #ffffff;
+        }
+
+        .instructor-card, .prerequisites-card {
+          background: white;
+          padding: 2rem;
+          border-radius: 12px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .instructor-card h3, .prerequisites-card h3 {
+          margin: 0 0 1.5rem 0;
+          color: #1f2937;
+          font-size: 1.25rem;
+          font-weight: 700;
+        }
+
+        .instructor-info {
+          display: flex;
+          flex-direction: column;
+          gap: 1.5rem;
+          align-items: center;
+          text-align: center;
+        }
+
+        .instructor-avatar-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .instructor-avatar {
+          width: 180px;
+          height: 180px;
+          border-radius: 50%;
+          object-fit: cover;
+          flex-shrink: 0;
+          border: 4px solid #f3f4f6;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .instructor-details h4 {
+          margin: 0 0 0.5rem 0;
+          color: #1f2937;
+          font-size: 1.25rem;
+          font-weight: 700;
+        }
+
+        .instructor-title {
+          margin: 0 0 0.75rem 0;
+          color: #22c55e;
+          font-weight: 600;
+          font-size: 1rem;
+        }
+
+        .instructor-bio {
+          margin: 0;
+          font-size: 0.95rem;
+          line-height: 1.6;
+          color: #6b7280;
+          max-width: 280px;
+        }
+
+        .prerequisites-list {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+        }
+
+        .prerequisites-list li {
+          padding: 0.5rem 0;
+          border-bottom: 1px solid #e5e7eb;
+          color: #4b5563;
+        }
+
+        .prerequisites-list li:last-child {
+          border-bottom: none;
+        }
+
+        .prerequisites-list li::before {
+          content: "✓";
+          color: #22c55e;
+          font-weight: 700;
+          margin-right: 0.5rem;
+        }
+
         @media (max-width: 768px) {
           .content-layout {
             grid-template-columns: 1fr;
@@ -1330,14 +1552,159 @@ export default function DesarrolloWebFullStackPage() {
           .course-hero {
             grid-template-columns: 1fr;
             text-align: center;
+            gap: 1.5rem;
+            padding: 1rem 0;
           }
           
           .course-title-large {
-            font-size: 2rem;
+            font-size: 1.8rem;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+          }
+
+          .course-description {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
           }
           
           .course-stats {
             grid-template-columns: repeat(2, 1fr);
+          }
+
+          /* Ajustar badges en móvil */
+          .course-badges {
+            gap: 0.4rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+          }
+
+          .badge {
+            padding: 0.2rem 0.6rem;
+            font-size: 0.75rem;
+          }
+
+          .course-badges-secondary {
+            gap: 0.4rem;
+            flex-wrap: wrap;
+            justify-content: center;
+          }
+
+          .badge-language, .badge-includes, .badge-access {
+            font-size: 0.7rem;
+            padding: 0.15rem 0.5rem;
+          }
+
+          /* Ajustar botones en móvil */
+          .btn-large {
+            padding: 0.9rem 1.8rem;
+            font-size: 0.95rem;
+          }
+
+          .course-action-button {
+            font-size: 0.9rem;
+            padding: 0.8rem 1.4rem;
+            border-radius: 8px;
+          }
+
+          /* Ajustar secciones de progreso en móvil */
+          .progress-info-new {
+            padding: 0.8rem;
+            text-align: left;
+          }
+
+          .progress-text-new {
+            font-size: 0.85rem;
+          }
+
+          .progress-detail-new {
+            font-size: 0.75rem;
+          }
+
+          /* Ajustar hero section en móvil */
+          .course-header {
+            padding: 1.5rem 0;
+          }
+
+          .course-header-content {
+            padding: 0 1rem;
+          }
+
+          .container {
+            padding: 0 1rem;
+          }
+
+          .course-meta {
+            margin-top: 1.5rem;
+          }
+
+          /* Ajustar navbar spacer en móvil */
+          .navbar-spacer {
+            height: 3.5rem; /* 56px - altura exacta del navbar móvil */
+          }
+
+          /* Mostrar video móvil entre descripción y botón */
+          .mobile-video-preview {
+            display: block;
+            margin: 1.5rem 0;
+          }
+
+          .mobile-video-preview .preview-video {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+          }
+
+          .mobile-video-preview .preview-video img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+          }
+
+          .mobile-video-preview .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+          }
+
+          .mobile-video-preview .play-button:hover {
+            background: white;
+            transform: translate(-50%, -50%) scale(1.1);
+          }
+
+          .mobile-video-preview .play-button span {
+            font-size: 1.5rem;
+            color: #333;
+          }
+
+          /* Mostrar secciones móviles */
+          .mobile-instructor-section {
+            display: block;
+          }
+
+          .mobile-prerequisites-section {
+            display: block;
+          }
+
+          .mobile-learning-section {
+            display: block;
+          }
+
+          .mobile-tools-section {
+            display: block;
           }
         }
       `}</style>

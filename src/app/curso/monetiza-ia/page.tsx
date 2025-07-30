@@ -31,7 +31,6 @@ export default function MonetizaIAPage() {
   const router = useRouter();
   
   console.log('🔍 [DEBUG] Estados iniciales:', { 
-    sidebarOpen, 
     currentLesson, 
     completedLessons: completedLessons.length,
     progressPercentage,
@@ -315,11 +314,12 @@ export default function MonetizaIAPage() {
   
   return (
     <>
-      <Navbar  />
+      {/* Header separado con altura exacta del navbar */}
+      <header className="navbar-spacer h-14 md:h-16"></header>
       
+      <Navbar />
       
-      
-      <main className="main-content pt-16">
+      <main className="main-content">
         {/* Hero Section */}
         <section className="hero-section">
           <div className="container">
@@ -333,6 +333,16 @@ export default function MonetizaIAPage() {
                 
                 <h1 className="course-title-large">{courseData.title}</h1>
                 <p className="course-description course-description-dark">{courseData.description}</p>
+                
+                {/* Video solo para móvil - entre descripción y botón */}
+                <div className="mobile-video-preview">
+                  <div className="preview-video">
+                    <img src="/images/optimized/p1.webp" alt={courseData.title} />
+                    <div className="play-button" onClick={() => window.open('https://www.youtube.com/watch?v=hBuXs6NYesw', '_blank')}>
+                      <span>▶</span>
+                    </div>
+                  </div>
+                </div>
                 
                 {/* Botón nuevo completamente desde cero */}
                 <div className="new-course-actions">
@@ -417,8 +427,8 @@ export default function MonetizaIAPage() {
         <section className="course-content">
           <div className="container">
             <div className="content-layout">
-              {/* Main Content */}
-              <div className="main-content-area">
+              {/* Main Content - Desktop */}
+              <div className="main-content-area desktop-content">
                 {/* Curriculum */}
                 <div className="curriculum-section">
                   <h2>Contenido del Curso</h2>
@@ -438,24 +448,26 @@ export default function MonetizaIAPage() {
                   </div>
                   
                   <div className="lessons-list">
-                    {courseData.lessons.map((lesson, index) => (
-                      <div key={lesson.id} className={`lesson-item ${completedLessons.includes(index) ? 'completed' : ''}`}>
-                        <div className="lesson-number">{index + 1}</div>
-                        <div className="lesson-content">
+                    <div className="lessons-grid">
+                      {courseData.lessons.map((lesson, index) => (
+                        <div key={lesson.id} className={`lesson-card ${completedLessons.includes(index) ? 'completed' : ''}`}>
                           <div className="lesson-header">
-                            <h3>{lesson.title}</h3>
-                            <div className="lesson-meta">
-                              <span className="lesson-type">{lesson.type}</span>
-                              <span className="lesson-duration">{lesson.duration}</span>
+                            <div className="lesson-number">{index + 1}</div>
+                            <div className="lesson-status">
+                              {completedLessons.includes(index) ? '✓' : '○'}
                             </div>
                           </div>
-                          <p className="lesson-description">{lesson.description}</p>
+                          <div className="lesson-content">
+                            <h4 className="lesson-title">{lesson.title}</h4>
+                            <p className="lesson-description">{lesson.description}</p>
+                            <div className="lesson-meta">
+                              <span className="lesson-type">{lesson.type}</span>
+                              <span className="lesson-duration">{lesson.duration}min</span>
+                            </div>
+                          </div>
                         </div>
-                        <div className="lesson-status">
-                          {completedLessons.includes(index) ? '✓' : '○'}
-                        </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
                 </div>
 
@@ -509,7 +521,7 @@ export default function MonetizaIAPage() {
                 </div>
               </div>
 
-              {/* Sidebar */}
+              {/* Sidebar - Desktop Only */}
               <div className="content-sidebar">
                 {/* Instructor */}
                 <div className="instructor-card">
@@ -539,6 +551,142 @@ export default function MonetizaIAPage() {
             </div>
           </div>
         </section>
+
+        {/* Mobile Curriculum Section */}
+        <section className="mobile-curriculum-section">
+          <div className="container">
+            <div className="curriculum-section">
+              <h2>Contenido del Curso</h2>
+              <div className="curriculum-stats">
+                <div className="stat-item">
+                  <span className="stat-number">{courseData.lessons.length}</span>
+                  <span className="stat-label">Lecciones</span>
+                </div>
+                <div className="stat-item">
+                  <span className="stat-number">{totalDuration}</span>
+                  <span className="stat-label">Minutos</span>
+                </div>
+                <div className="stat-item">
+                  <span className="stat-number">{courseData.level}</span>
+                  <span className="stat-label">Nivel</span>
+                </div>
+              </div>
+              
+              <div className="lessons-list">
+                <div className="lessons-grid">
+                  {courseData.lessons.map((lesson, index) => (
+                    <div key={lesson.id} className={`lesson-card ${completedLessons.includes(index) ? 'completed' : ''}`}>
+                      <div className="lesson-header">
+                        <div className="lesson-number">{index + 1}</div>
+                        <div className="lesson-status">
+                          {completedLessons.includes(index) ? '✓' : '○'}
+                        </div>
+                      </div>
+                      <div className="lesson-content">
+                        <h4 className="lesson-title">{lesson.title}</h4>
+                        <p className="lesson-description">{lesson.description}</p>
+                        <div className="lesson-meta">
+                          <span className="lesson-type">{lesson.type}</span>
+                          <span className="lesson-duration">{lesson.duration}min</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Mobile Instructor Section */}
+        <section className="mobile-instructor-section">
+          <div className="container">
+            <div className="instructor-card">
+              <h3>Tu Instructor</h3>
+              <div className="instructor-info">
+                <div className="instructor-avatar-container">
+                  <img src={courseData.instructor.image} alt={courseData.instructor.name} className="instructor-avatar" />
+                </div>
+                <div className="instructor-details">
+                  <h4>{courseData.instructor.name}</h4>
+                  <p className="instructor-title">{courseData.instructor.title}</p>
+                  <p className="instructor-bio">{courseData.instructor.bio}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Mobile Prerequisites Section */}
+        <section className="mobile-prerequisites-section">
+          <div className="container">
+            <div className="prerequisites-card">
+              <h3>Prerrequisitos</h3>
+              <ul className="prerequisites-list">
+                {courseData.prerequisites.map((prereq, index) => (
+                  <li key={index}>{prereq}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* Mobile Learning Objectives Section */}
+        <section className="mobile-learning-section">
+          <div className="container">
+            <div className="learning-objectives">
+              <h2>Lo que Aprenderás</h2>
+              
+              <div className="course-introduction">
+                <p>
+                  La <strong>monetización con inteligencia artificial</strong> representa una de las oportunidades 
+                  más prometedoras en el panorama digital actual. Con el auge de herramientas como ChatGPT, 
+                  Claude y otras plataformas de IA, se han abierto nuevas posibilidades para crear fuentes 
+                  de ingresos innovadoras y escalables.
+                </p>
+                
+                <p>
+                  Este curso te guiará a través de estrategias prácticas y probadas para monetizar 
+                  efectivamente las herramientas de IA. Desde la creación de productos digitales hasta 
+                  la automatización de procesos de venta, aprenderás cómo construir un negocio digital 
+                  que funcione las 24 horas del día, los 7 días de la semana.
+                </p>
+                
+                <p>
+                  A diferencia de otros cursos que se enfocan únicamente en la teoría, aquí encontrarás 
+                  implementaciones reales y casos de estudio de personas que ya están generando ingresos 
+                  significativos utilizando estas estrategias.
+                </p>
+              </div>
+              
+              <div className="objectives-grid">
+                {courseData.whatYouWillLearn.map((objective, index) => (
+                  <div key={index} className="objective-item">
+                    <span className="objective-check">✓</span>
+                    <span>{objective}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Mobile Tools Section */}
+        <section className="mobile-tools-section">
+          <div className="container">
+            <div className="tools-section">
+              <h2>Herramientas y Tecnologías</h2>
+              <div className="tools-grid">
+                {courseData.tools.map((tool, index) => (
+                  <div key={index} className="tool-item">
+                    <span className="tool-icon">🔧</span>
+                    <span>{tool}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
 
       <Footer />
@@ -553,16 +701,22 @@ export default function MonetizaIAPage() {
           gap: 1rem;
         }
 
+        .navbar-spacer {
+          width: 100%;
+          background: transparent;
+        }
+
         .hero-section {
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
           color: white;
-          padding: 4rem 0;
+          padding: 1rem 0;
+          margin-top: 0;
         }
 
         .course-hero {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: 3rem;
+          gap: 1.5rem;
           align-items: start;
           max-width: 1200px;
           margin: 0 auto;
@@ -571,8 +725,8 @@ export default function MonetizaIAPage() {
 
         .course-badges {
           display: flex;
-          gap: 0.5rem;
-          margin-bottom: 1rem;
+          gap: 0.4rem;
+          margin-bottom: 0.5rem;
           flex-wrap: wrap;
         }
 
@@ -602,16 +756,16 @@ export default function MonetizaIAPage() {
         }
 
         .course-title-large {
-          font-size: 3rem;
+          font-size: 2.5rem;
           font-weight: 700;
-          margin: 0 0 1rem 0;
+          margin: 0 0 0.6rem 0;
           line-height: 1.2;
         }
 
         .course-description {
-          font-size: 1.1rem;
-          line-height: 1.6;
-          margin: 0 0 2rem 0;
+          font-size: 1rem;
+          line-height: 1.5;
+          margin: 0 0 1rem 0;
           opacity: 0.9;
         }
 
@@ -620,7 +774,12 @@ export default function MonetizaIAPage() {
         }
 
         .new-course-actions {
-          margin-bottom: 2rem;
+          margin-bottom: 1.5rem;
+        }
+
+        /* Ocultar video móvil en desktop */
+        .mobile-video-preview {
+          display: none;
         }
 
         .progress-section-new {
@@ -720,7 +879,7 @@ export default function MonetizaIAPage() {
         }
 
         .course-meta {
-          margin-top: 1rem;
+          margin-top: 0.75rem;
         }
 
         .course-badges-secondary {
@@ -947,15 +1106,177 @@ export default function MonetizaIAPage() {
           gap: 1rem;
         }
 
-        .lesson-item {
-          display: flex;
-          align-items: center;
+        .lessons-grid {
+          display: grid;
+          grid-template-columns: 1fr;
           gap: 1rem;
-          padding: 1rem;
+          max-width: 800px;
+          margin: 0 auto;
+        }
+
+        .lesson-card {
+          background: white;
           border: 1px solid #e5e7eb;
           border-radius: 8px;
+          padding: 1rem;
           transition: all 0.3s ease;
+          display: flex;
+          flex-direction: row;
+          gap: 1rem;
+          align-items: flex-start;
+          width: 100%;
+          min-height: 140px;
+          box-sizing: border-box;
         }
+
+        .lesson-card:hover {
+          border-color: #22c55e;
+          box-shadow: 0 2px 8px rgba(34, 197, 94, 0.1);
+          transform: translateY(-2px);
+        }
+
+        .lesson-card.completed {
+          background: #f0fdf4;
+          border-color: #22c55e;
+        }
+
+        .lesson-card.completed:hover {
+          background: #dcfce7;
+        }
+
+        .lesson-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          flex-shrink: 0;
+        }
+
+        .lesson-number {
+          width: 32px;
+          height: 32px;
+          background: #22c55e;
+          color: white;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 600;
+          font-size: 0.9rem;
+        }
+
+        .lesson-status {
+          font-size: 1.2rem;
+          font-weight: 700;
+          color: #22c55e;
+        }
+
+        .lesson-content {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+          flex: 1;
+        }
+
+        .lesson-title {
+          margin: 0;
+          font-size: 0.9rem;
+          font-weight: 600;
+          color: #1f2937;
+          line-height: 1.3;
+        }
+
+        .lesson-description {
+          margin: 0;
+          font-size: 0.75rem;
+          color: #6b7280;
+          line-height: 1.4;
+        }
+
+        .lesson-meta {
+          display: flex;
+          gap: 0.5rem;
+          margin-top: 0.5rem;
+        }
+
+        .lesson-type, .lesson-duration {
+          font-size: 0.65rem;
+          color: #6b7280;
+          background: #f3f4f6;
+          padding: 0.2rem 0.4rem;
+          border-radius: 4px;
+          font-weight: 500;
+        }
+
+                  .lesson-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+          }
+
+          /* Estilos responsive para grid móvil */
+          @media (max-width: 768px) {
+            .lessons-grid {
+              grid-template-columns: repeat(2, 1fr);
+              gap: 0.75rem;
+              justify-items: stretch;
+              align-items: stretch;
+              width: 100%;
+              max-width: 100%;
+            }
+
+            .lesson-card {
+              padding: 0.75rem;
+              gap: 0.5rem;
+              width: 100%;
+              height: 300px;
+              box-sizing: border-box;
+              flex-direction: column;
+              overflow: hidden;
+              display: flex;
+            }
+
+            .lesson-number {
+              width: 28px;
+              height: 28px;
+              font-size: 0.8rem;
+            }
+
+            .lesson-status {
+              font-size: 1rem;
+            }
+
+            .lesson-title {
+              font-size: 0.8rem;
+              line-height: 1.2;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+
+            .lesson-description {
+              font-size: 0.7rem;
+              line-height: 1.3;
+              overflow: hidden;
+              display: -webkit-box;
+              -webkit-line-clamp: 5;
+              -webkit-box-orient: vertical;
+              text-overflow: ellipsis;
+            }
+
+            .lesson-meta {
+              gap: 0.4rem;
+              margin-top: 0.4rem;
+            }
+
+            .lesson-type, .lesson-duration {
+              font-size: 0.6rem;
+              padding: 0.15rem 0.3rem;
+            }
+          }
 
         .lesson-item:hover {
           border-color: #22c55e;
@@ -1083,6 +1404,36 @@ export default function MonetizaIAPage() {
           gap: 2rem;
         }
 
+        .mobile-instructor-section {
+          display: none;
+          padding: 2rem 0;
+          background: #f9fafb;
+        }
+
+        .mobile-prerequisites-section {
+          display: none;
+          padding: 2rem 0;
+          background: #f3f4f6;
+        }
+
+        .mobile-curriculum-section {
+          display: none;
+          padding: 2rem 0;
+          background: #ffffff;
+        }
+
+        .mobile-learning-section {
+          display: none;
+          padding: 2rem 0;
+          background: #f9fafb;
+        }
+
+        .mobile-tools-section {
+          display: none;
+          padding: 2rem 0;
+          background: #ffffff;
+        }
+
         .instructor-card, .prerequisites-card {
           background: white;
           padding: 2rem;
@@ -1169,12 +1520,94 @@ export default function MonetizaIAPage() {
         @media (max-width: 768px) {
           .course-hero {
             grid-template-columns: 1fr;
-            gap: 2rem;
+            gap: 1rem;
+          }
+
+          /* Ocultar video en su posición original en móvil */
+          .course-preview {
+            display: none;
+          }
+
+          /* Mostrar video móvil entre descripción y botón */
+          .mobile-video-preview {
+            display: block;
+            margin: 1.5rem 0;
+          }
+
+          .mobile-video-preview .preview-video {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+          }
+
+          .mobile-video-preview .preview-video img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+          }
+
+          .mobile-video-preview .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+          }
+
+          .mobile-video-preview .play-button:hover {
+            background: white;
+            transform: translate(-50%, -50%) scale(1.1);
+          }
+
+          .mobile-video-preview .play-button span {
+            font-size: 1.5rem;
+            color: #333;
           }
 
           .content-layout {
             grid-template-columns: 1fr;
             gap: 2rem;
+            justify-items: center;
+          }
+
+          /* Ocultar contenido desktop en móvil */
+          .desktop-content {
+            display: none;
+          }
+
+          .content-sidebar {
+            display: none;
+          }
+
+          /* Mostrar secciones móviles */
+          .mobile-curriculum-section {
+            display: block;
+          }
+
+          .mobile-learning-section {
+            display: block;
+          }
+
+          .mobile-tools-section {
+            display: block;
+          }
+
+          .mobile-instructor-section {
+            display: block;
+          }
+
+          .mobile-prerequisites-section {
+            display: block;
           }
 
           .curriculum-stats {
@@ -1187,16 +1620,89 @@ export default function MonetizaIAPage() {
           }
 
           .course-title-large {
-            font-size: 2rem;
+            font-size: 1.4rem;
+            line-height: 1.2;
+            margin-bottom: 0.5rem;
           }
 
           .course-description {
-            font-size: 1rem;
+            font-size: 0.85rem;
+            line-height: 1.3;
+            margin-bottom: 0.75rem;
           }
 
           .btn-large {
-            padding: 1rem 2rem;
-            font-size: 1rem;
+            padding: 0.9rem 1.8rem;
+            font-size: 0.95rem;
+          }
+
+          /* Ajustar badges en móvil */
+          .course-badges {
+            gap: 0.25rem;
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+          }
+
+          .badge {
+            padding: 0.15rem 0.5rem;
+            font-size: 0.7rem;
+            border-radius: 6px;
+          }
+
+          .course-badges-secondary {
+            gap: 0.3rem;
+            flex-wrap: wrap;
+          }
+
+          .badge-language, .badge-includes, .badge-access {
+            font-size: 0.65rem;
+            padding: 0.1rem 0.4rem;
+          }
+
+          /* Ajustar botones de acción en móvil */
+          .course-action-button {
+            font-size: 0.85rem;
+            padding: 0.7rem 1.2rem;
+            border-radius: 8px;
+          }
+
+          /* Ajustar secciones de progreso en móvil */
+          .progress-info-new {
+            padding: 0.8rem;
+            border-radius: 6px;
+          }
+
+          .progress-text-new {
+            font-size: 0.85rem;
+            margin-bottom: 0.4rem;
+          }
+
+          .progress-detail-new {
+            font-size: 0.75rem;
+          }
+
+          /* Ajustar hero section padding en móvil */
+          .hero-section {
+            padding: 0.75rem 0;
+          }
+
+          /* Ajustar navbar spacer en móvil */
+          .navbar-spacer {
+            height: 3.5rem; /* 56px - altura exacta del navbar móvil */
+          }
+
+          .course-hero {
+            gap: 0.75rem;
+            padding: 0.5rem 0;
+          }
+
+          .container {
+            padding: 0 1rem;
+          }
+
+          /* Ajustar espaciado de elementos */
+          .course-meta {
+            margin-top: 0.75rem;
           }
         }
       `}</style>

@@ -27,7 +27,6 @@ export default function IntroduccionLLMsPage() {
   const router = useRouter();
 
   console.log('🔍 [DEBUG] Estados iniciales:', { 
-    sidebarOpen, 
     currentLesson, 
     completedLessons: completedLessons.length,
     progressPercentage,
@@ -389,9 +388,9 @@ export default function IntroduccionLLMsPage() {
       
       
       
-      <main className="main-content pt-16">
+      <main className="main-content">
         {/* Course Header */}
-        <section className="course-header">
+        <section className="course-header pt-14 md:pt-[95px]">
           <div className="container">
             <div className="course-header-content">
               <div className="course-breadcrumb">
@@ -407,7 +406,17 @@ export default function IntroduccionLLMsPage() {
                   </div>
                   
                   <h1 className="course-title-large">{courseData.title}</h1>
-                  <p className="course-description">{courseData.description}</p>
+                  <p className="course-description course-description-dark">{courseData.description}</p>
+                  
+                  {/* Video solo para móvil - entre descripción y botón */}
+                  <div className="mobile-video-preview">
+                    <div className="preview-video">
+                      <img src="/images/optimized/p1.webp" alt={courseData.title} />
+                      <div className="play-button" onClick={() => window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ', '_blank')}>
+                        <span>▶</span>
+                      </div>
+                    </div>
+                  </div>
                   
                   {/* Botones copiados exactamente de monetiza-ia */}
                   <div className="new-course-actions">
@@ -607,6 +616,96 @@ export default function IntroduccionLLMsPage() {
             </div>
           </div>
         </section>
+
+        {/* Mobile Instructor Section */}
+        <section className="mobile-instructor-section">
+          <div className="container">
+            <div className="instructor-card">
+              <h3>Tu Instructor</h3>
+              <div className="instructor-info">
+                <div className="instructor-avatar-container">
+                  <img src={courseData.instructor.image} alt={courseData.instructor.name} className="instructor-avatar" />
+                </div>
+                <div className="instructor-details">
+                  <h4>{courseData.instructor.name}</h4>
+                  <p className="instructor-title">{courseData.instructor.title}</p>
+                  <p className="instructor-bio">{courseData.instructor.bio}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Mobile Prerequisites Section */}
+        <section className="mobile-prerequisites-section">
+          <div className="container">
+            <div className="prerequisites-card">
+              <h3>Prerrequisitos</h3>
+              <ul className="prerequisites-list">
+                {courseData.prerequisites.map((prereq, index) => (
+                  <li key={index}>{prereq}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* Mobile Learning Objectives Section */}
+        <section className="mobile-learning-section">
+          <div className="container">
+            <div className="learning-objectives">
+              <h2>Lo que Aprenderás</h2>
+              
+              <div className="course-introduction">
+                <p>
+                  Los <strong>Large Language Models (LLMs)</strong> representan uno de los avances más significativos 
+                  en inteligencia artificial de la última década. Estos modelos, basados en la arquitectura 
+                  Transformer introducida por Vaswani et al. en 2017, han revolucionado el procesamiento 
+                  de lenguaje natural al demostrar capacidades emergentes extraordinarias.
+                </p>
+                
+                <p>
+                  Desde el lanzamiento de GPT-3 en 2020 y posteriormente ChatGPT en 2022, hemos sido testigos 
+                  de una transformación radical en cómo interactuamos con la tecnología. Estos modelos no solo 
+                  comprenden y generan texto de manera coherente, sino que también pueden realizar tareas complejas 
+                  como razonamiento, traducción, programación y análisis.
+                </p>
+                
+                <p>
+                  En este curso, exploraremos los fundamentos técnicos y prácticos que hacen posible esta 
+                  revolución tecnológica, desde los conceptos matemáticos subyacentes hasta las implementaciones 
+                  reales que están transformando industrias enteras.
+                </p>
+              </div>
+              
+              <div className="objectives-grid">
+                {courseData.whatYouWillLearn.map((objective, index) => (
+                  <div key={index} className="objective-item">
+                    <span className="objective-check">✓</span>
+                    <span>{objective}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Mobile Tools Section */}
+        <section className="mobile-tools-section">
+          <div className="container">
+            <div className="tools-section">
+              <h2>Herramientas y Tecnologías</h2>
+              <div className="tools-grid">
+                {courseData.tools.map((tool, index) => (
+                  <div key={index} className="tool-item">
+                    <span className="tool-icon">🔧</span>
+                    <span>{tool}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
 
       <Footer />
@@ -620,6 +719,89 @@ export default function IntroduccionLLMsPage() {
           border-radius: 8px;
           margin-top: 1rem;
           font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+          .course-hero {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            text-align: center;
+            padding: 1rem 0;
+          }
+
+          .course-title-large {
+            font-size: 1.8rem;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+          }
+
+          .course-description {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+          }
+
+          /* Ajustar badges en móvil */
+          .course-badges {
+            gap: 0.4rem;
+            margin-bottom: 0.8rem;
+            flex-wrap: wrap;
+            justify-content: center;
+          }
+
+          .badge {
+            padding: 0.2rem 0.6rem;
+            font-size: 0.75rem;
+          }
+
+          .course-badges-secondary {
+            gap: 0.4rem;
+            flex-wrap: wrap;
+            justify-content: center;
+          }
+
+          .badge-language, .badge-includes, .badge-access {
+            font-size: 0.7rem;
+            padding: 0.15rem 0.5rem;
+          }
+
+          /* Ajustar botones en móvil */
+          .btn-large {
+            padding: 0.9rem 1.8rem;
+            font-size: 0.95rem;
+          }
+
+          .course-action-button {
+            font-size: 0.9rem;
+            padding: 0.8rem 1.4rem;
+            border-radius: 8px;
+          }
+
+          /* Ajustar secciones de progreso en móvil */
+          .progress-info-new {
+            padding: 0.8rem;
+          }
+
+          .progress-text-new {
+            font-size: 0.85rem;
+          }
+
+          .progress-detail-new {
+            font-size: 0.75rem;
+          }
+
+          /* Ajustar hero section en móvil */
+          .course-header {
+            padding: 1rem 0;
+          }
+
+          .container {
+            padding: 0 1rem;
+          }
+
+          .content-layout {
+            grid-template-columns: 1fr;
+          }
         }
       `}</style>
     </>
