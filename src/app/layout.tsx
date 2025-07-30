@@ -77,6 +77,9 @@ export default function RootLayout({
         <link rel="preload" href="/images/optimized/logop.webp" as="image" type="image/webp" />
         <link rel="preload" href="/images/eGrowAcademylogo.png" as="image" />
         
+        {/* Preload video background for faster loading */}
+        <link rel="preload" href="/videos/background.webm" as="video" type="video/webm" />
+        
         {/* Preload critical CSS */}
         <link rel="preload" href="/styles/critical.css" as="style" />
         

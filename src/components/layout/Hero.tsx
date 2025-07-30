@@ -13,11 +13,16 @@ export default function Hero() {
 
   useEffect(() => {
     setIsClient(true);
+    
+    // Optimizar la carga del video
+    if (videoRef.current) {
+      videoRef.current.load();
+    }
   }, []);
 
   return (
     <section className="hero">
-      {/* Video de fondo - solo renderizar en el cliente */}
+      {/* Video de fondo optimizado para carga rápida */}
       {isClient && (
         <video
           ref={videoRef}
@@ -25,6 +30,7 @@ export default function Hero() {
           muted
           loop
           playsInline
+          preload="auto"
           style={{
             position: 'absolute',
             top: 0,
@@ -32,11 +38,20 @@ export default function Hero() {
             width: '100%',
             height: '100%',
             objectFit: 'cover',
-            zIndex: -0.5
+            zIndex: -1
           }}
         >
           <source src="/videos/background.webm" type="video/webm" />
-          Tu navegador no soporta el elemento video.
+          {/* Fallback para navegadores que no soporten video */}
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            zIndex: -1
+          }} />
         </video>
       )}
       
@@ -60,8 +75,6 @@ export default function Hero() {
                 height={95}
                 priority={true}
                 className="hero-bottom-logo-image"
-                sizes="95px"
-                quality={90}
               />
             </div>
           </div>
