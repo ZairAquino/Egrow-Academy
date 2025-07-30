@@ -5,24 +5,9 @@ export async function GET() {
   try {
     console.log('🔍 [EVENTS] Obteniendo eventos');
 
-    // Obtener todos los eventos activos usando la estructura correcta de la tabla
+    // Obtener todos los eventos para ver la estructura exacta
     const events = await prisma.$queryRaw`
-      SELECT 
-        id,
-        title,
-        description,
-        date,
-        time,
-        type,
-        category,
-        instructor,
-        image,
-        max_attendees as "maxAttendees",
-        is_active as "isActive",
-        attendees,
-        status
-      FROM events 
-      WHERE status != 'CANCELLED' 
+      SELECT * FROM events 
       ORDER BY date ASC
     `;
 
