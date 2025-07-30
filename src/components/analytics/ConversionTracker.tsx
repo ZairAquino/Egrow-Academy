@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { trackPromotionConversion } from '@/lib/analytics';
 
-export default function ConversionTracker() {
+function ConversionTrackerContent() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -57,4 +57,12 @@ export default function ConversionTracker() {
   }, [searchParams]);
 
   return null; // Componente invisible
+}
+
+export default function ConversionTracker() {
+  return (
+    <Suspense fallback={null}>
+      <ConversionTrackerContent />
+    </Suspense>
+  );
 } 
