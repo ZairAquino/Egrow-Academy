@@ -1878,6 +1878,7 @@ button, a, input, select, textarea {
 /* Hero Section */
 .hero {
   padding: 80px 0;
+  padding-top: 120px;
   color: white;
   margin-top: 0;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);

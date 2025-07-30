@@ -50,7 +50,7 @@ const NavbarContent: React.FC<NavbarProps> = ({ hideSidebar = false }) => {
              alt="eGrow Academy Logo"
              width={71}
              height={46}
-             className="w-auto h-8 md:w-full md:h-full object-contain"
+             className="w-auto h-9 md:w-full md:h-full object-contain"
              priority
            />
          </Link>
