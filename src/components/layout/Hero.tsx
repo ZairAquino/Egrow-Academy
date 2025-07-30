@@ -17,6 +17,16 @@ export default function Hero() {
     // Optimizar la carga del video
     if (videoRef.current) {
       videoRef.current.load();
+      console.log('Video cargando...');
+      
+      // Verificar que el video se cargue correctamente
+      videoRef.current.addEventListener('loadeddata', () => {
+        console.log('Video cargado exitosamente');
+      });
+      
+      videoRef.current.addEventListener('error', (e) => {
+        console.error('Error al cargar el video:', e);
+      });
     }
   }, []);
 
@@ -42,6 +52,7 @@ export default function Hero() {
           }}
         >
           <source src="/videos/background.webm" type="video/webm" />
+          <source src="/videos/background.mp4" type="video/mp4" />
           {/* Fallback para navegadores que no soporten video */}
           <div style={{
             position: 'absolute',
@@ -55,7 +66,7 @@ export default function Hero() {
         </video>
       )}
       
-      <div className="container" style={{ position: 'relative', zIndex: 10 }}>
+      <div className="container" style={{ position: 'relative', zIndex: 1 }}>
         <div className="hero-content">
           <h1 className="hero-title">
             Aprende habilidades
