@@ -51,6 +51,20 @@ export function usePromotions() {
     ? sessionStorage.getItem('banner_closed') === 'true'
     : false;
 
+  // Verificar si el banner ya apareció hoy
+  const hasShownToday = typeof window !== 'undefined' 
+    ? (() => {
+        const today = new Date().toDateString();
+        const lastShown = sessionStorage.getItem('banner_last_shown');
+        return lastShown === today;
+      })()
+    : false;
+
+  // Verificar si el usuario es nuevo (primer acceso)
+  const isNewUser = typeof window !== 'undefined' 
+    ? !sessionStorage.getItem('banner_has_shown')
+    : false;
+
   useEffect(() => {
     const fetchActivePromotion = async () => {
       try {
@@ -78,7 +92,11 @@ export function usePromotions() {
             (b as any).priority - (a as any).priority
           );
 
-          if (filteredPromotions.length > 0 && !hasClosedBanner) {
+          // Mostrar banner si:
+          // 1. Hay promociones disponibles
+          // 2. No se cerró en esta sesión O es un usuario nuevo O no se mostró hoy
+          if (filteredPromotions.length > 0 && 
+              (!hasClosedBanner || isNewUser || !hasShownToday)) {
             setActivePromotion(filteredPromotions[0]);
           }
         }
@@ -90,7 +108,7 @@ export function usePromotions() {
     };
 
     fetchActivePromotion();
-  }, [user, hasClosedBanner]);
+  }, [user, hasClosedBanner, hasShownToday, isNewUser]);
 
   const trackInteraction = async (promotionId: string, interaction: PromotionInteraction) => {
     try {
@@ -139,6 +157,8 @@ export function usePromotions() {
       trackInteraction(activePromotion.id, { action: 'close' });
       if (typeof window !== 'undefined') {
         sessionStorage.setItem('banner_closed', 'true');
+        sessionStorage.setItem('banner_last_shown', new Date().toDateString());
+        sessionStorage.setItem('banner_has_shown', 'true');
       }
     }
     setActivePromotion(null);
@@ -164,6 +184,12 @@ export function usePromotions() {
   const handleBannerImpression = () => {
     if (activePromotion) {
       trackInteraction(activePromotion.id, { action: 'impression' });
+      
+      // Marcar que el banner se mostró
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('banner_last_shown', new Date().toDateString());
+        sessionStorage.setItem('banner_has_shown', 'true');
+      }
     }
   };
 
