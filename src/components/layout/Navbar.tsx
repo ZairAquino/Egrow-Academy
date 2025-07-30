@@ -37,23 +37,20 @@ const NavbarContent: React.FC<NavbarProps> = ({ hideSidebar = false }) => {
                )}
              </div>
 
-                             {/* Logo posicionado */}
-         <Link href="/" className="navbar-logo" style={{
-           display: 'flex',
-           width: '95px',
-           height: '95px',
-           maxWidth: 'var(--width-693_5, 693.5px)',
-           alignItems: 'center',
-           position: 'absolute',
-           right: '50%',
-           transform: 'translateX(50%)',
-         }}>
+                             {/* Logo - Configuración separada para móvil y desktop */}
+         <Link 
+           href="/" 
+           className="navbar-logo flex items-center ml-4 w-auto h-auto md:absolute md:right-1/2 md:transform md:translate-x-1/2 md:ml-0 md:w-[95px] md:h-[95px]"
+           style={{
+             maxWidth: 'var(--width-693_5, 693.5px)',
+           }}
+         >
            <Image
              src="https://3o0p1lzj4n.ufs.sh/f/P2bnXUoat3Wf9BfN8GgLgae8NyBbzTISPo645dK2W0tprVHq"
              alt="eGrow Academy Logo"
              width={71}
              height={46}
-             className="w-full h-full object-contain"
+             className="w-auto h-8 md:w-full md:h-full object-contain"
              priority
            />
          </Link>
