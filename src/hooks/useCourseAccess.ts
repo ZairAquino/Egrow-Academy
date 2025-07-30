@@ -38,13 +38,21 @@ export function useCourseAccess() {
     }
     
     if (course.category !== 'cursos-cortos' && !hasPremiumAccess) {
-      setSelectedCourse(course);
-      setShowSubscriptionModal(true);
-      return false;
+      // Si no tiene acceso premium, mostrar modal de suscripción o redirigir a la página de suscripción
+      if (!isAuthenticated) {
+        // Usuario no registrado: redirigir a la página de suscripción para que vea los planes
+        window.location.href = '/subscription';
+        return false;
+      } else {
+        // Usuario registrado pero sin premium: mostrar modal
+        setSelectedCourse(course);
+        setShowSubscriptionModal(true);
+        return false;
+      }
     }
     
     if (!isAuthenticated) {
-      // Redirigir al login
+      // Para cursos que requieren login pero no son premium, redirigir al login
       window.location.href = '/login';
       return false;
     }

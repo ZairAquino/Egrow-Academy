@@ -36,7 +36,8 @@ export default function SubscriptionButton({
     }
 
     if (!user) {
-      window.location.href = '/login';
+      // Redirigir a la página de suscripción en lugar de directamente al login
+      window.location.href = '/subscription';
       return;
     }
 

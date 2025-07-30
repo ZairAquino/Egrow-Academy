@@ -58,13 +58,15 @@ export default function SubscriptionPage() {
   const [selectedPlan, setSelectedPlan] = useState<string>('yearly');
   const [isProcessing, setIsProcessing] = useState(false);
 
-  useEffect(() => {
-    if (status !== 'loading' && !user) {
-      router.push('/login?redirect=/subscription');
-    }
-  }, [user, status, router]);
+  // Removemos la redirección automática para permitir que usuarios no registrados vean los planes
+  // useEffect(() => {
+  //   if (status !== 'loading' && !user) {
+  //     router.push('/login?redirect=/subscription');
+  //   }
+  // }, [user, status, router]);
 
   const handleSubscribe = async (planId: string) => {
+    // Solo requerir login cuando intentan suscribirse
     if (!user) {
       router.push('/login?redirect=/subscription');
       return;
@@ -160,9 +162,12 @@ export default function SubscriptionPage() {
               <img src="/images/egacademylogoblanco.png" alt="eGrow Academy" />
               <span className="subscription-logo-text">eGrow Academy</span>
             </Link>
-            <Link href="/courses" className="subscription-back-link">
-              ← Volver a Cursos
-            </Link>
+            <button 
+              onClick={() => window.history.back()}
+              className="subscription-back-link"
+            >
+              ← Volver
+            </button>
           </div>
         </div>
 
@@ -256,6 +261,8 @@ export default function SubscriptionPage() {
                       <div className="loading-spinner rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
                       Procesando...
                     </div>
+                  ) : !user ? (
+                    'Iniciar Sesión para Suscribirse'
                   ) : (
                     `Suscribirse por $${plan.price}`
                   )}
@@ -264,8 +271,6 @@ export default function SubscriptionPage() {
             </div>
           ))}
         </div>
-
-
 
         {/* CTA Section */}
         <div className="cta-section">
@@ -282,14 +287,14 @@ export default function SubscriptionPage() {
                 disabled={isProcessing}
                 className="cta-button primary"
               >
-                Comenzar Plan Anual
+                {!user ? 'Iniciar Sesión para Comenzar' : 'Comenzar Plan Anual'}
               </button>
               <button
                 onClick={() => handleSubscribe('monthly')}
                 disabled={isProcessing}
                 className="cta-button secondary"
               >
-                Comenzar Plan Mensual
+                {!user ? 'Iniciar Sesión para Comenzar' : 'Comenzar Plan Mensual'}
               </button>
             </div>
           </div>
