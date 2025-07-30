@@ -738,11 +738,9 @@ button, a, input, select, textarea {
 }
 
 .menu-link.ai-news-btn {
-    background: linear-gradient(45deg, #00ffff 0%, #ff00ff 25%, #ffff00 50%, #00ff00 75%, #ff0080 100%) !important;
-    background-size: 400% 400% !important;
-    border: 3px solid #000000 !important;
-    border-style: outset !important;
-    border-radius: 0 !important;
+    border: var(--stroke-weight-3, 3px) solid #000;
+    background: linear-gradient(82deg, #0FF 0%, #F0F 25%, #FF0 50%, #0F0 75%, #FF0080 100%);
+    box-shadow: 2px 2px 4px 3px rgba(255, 255, 255, 0.60) inset, -2px -2px 4px 3px rgba(0, 0, 0, 0.60) inset, 2px 2px 4px 0 rgba(0, 0, 0, 0.30);
     padding: 10px 14px !important;
     margin: 8px 0 !important;
     position: relative !important;
@@ -751,13 +749,7 @@ button, a, input, select, textarea {
     text-transform: uppercase !important;
     letter-spacing: 2px !important;
     font-weight: 900 !important;
-    box-shadow: 
-        inset 2px 2px 4px rgba(255, 255, 255, 0.6),
-        inset -2px -2px 4px rgba(0, 0, 0, 0.6),
-        2px 2px 4px rgba(0, 0, 0, 0.3) !important;
-    animation: rainbow-bg 3s linear infinite !important;
     cursor: pointer !important;
-    border-left: 3px outset #000000 !important;
     transition: none !important;
 }
 
@@ -766,9 +758,9 @@ button, a, input, select, textarea {
     border-style: inset !important;
     box-shadow: 
         inset -2px -2px 4px rgba(255, 255, 255, 0.6),
-        inset 2px 2px 4px rgba(0, 0, 0, 0.6) !important;
-    background-color: transparent !important;
-    animation: rainbow-bg 1s linear infinite !important;
+        inset 2px 2px 4px rgba(0, 0, 0, 0.6),
+        2px 2px 4px 0 rgba(0, 0, 0, 0.30) !important;
+    background: linear-gradient(82deg, #0FF 0%, #F0F 25%, #FF0 50%, #0F0 75%, #FF0080 100%) !important;
 }
 
 .menu-link.ai-news-btn::before {
