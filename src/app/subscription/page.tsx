@@ -72,13 +72,28 @@ export default function SubscriptionPage() {
 
     setIsProcessing(true);
     try {
+      // Capturar parámetros de tracking de la URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const trackingData = {
+        promotionId: urlParams.get('promotionId'),
+        sessionId: urlParams.get('sessionId'),
+        pageUrl: urlParams.get('pageUrl'),
+        referrer: urlParams.get('referrer'),
+        userAgent: urlParams.get('userAgent'),
+      };
+
       // Crear sesión de checkout con Stripe
       const response = await fetch('/api/stripe/create-checkout-session', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ planId }),
+        body: JSON.stringify({ 
+          planId,
+          trackingData: Object.fromEntries(
+            Object.entries(trackingData).filter(([_, value]) => value !== null)
+          ),
+        }),
       });
 
       const data = await response.json();

@@ -9,10 +9,218 @@
 - **Emails:** Resend con dominio verificado egrowacademy.com
 - **Deploy:** Vercel
 - **UI/UX:** Avatar de cristal con diseño ReactBits implementado
+- **Marketing:** Sistema de promociones con banners dinámicos
+
+---
+
+### **2025-01-30 - Integración Google Analytics 4**
+
+#### ✅ **Nuevas Funcionalidades Implementadas**
+1. **Google Analytics 4 Integration**
+   - **Eventos personalizados:** `promotion_impression`, `promotion_click`, `promotion_close`, `promotion_conversion`
+   - **Parámetros detallados:** ID de promoción, título, tipo, revenue, session_id
+   - **Ecommerce tracking:** Eventos de compra automáticos para conversiones
+   - **Revenue tracking:** Ingresos estimados por promoción y plan
+
+2. **Analytics Dashboard Avanzado**
+   - **URL:** `/admin/analytics` - Dashboard combinado de promociones y GA4
+   - **Métricas de promociones:** Impresiones, clicks, CTR, revenue
+   - **Métricas de GA4:** Page views, sessions, users, bounce rate
+   - **Filtros temporales:** 7, 30, 90 días
+   - **Visualización:** Cards con iconos y métricas en tiempo real
+
+3. **Servicio de Analytics**
+   - **`src/lib/analytics.ts`:** Servicio completo para GA4
+   - **Eventos automáticos:** Tracking sin intervención manual
+   - **Conversión tracking:** Revenue y métricas de negocio
+   - **Funnel tracking:** Seguimiento completo del funnel de promociones
+
+4. **Componente ConversionTracker**
+   - **Tracking automático:** Detección de conversiones por URL
+   - **Revenue calculation:** Cálculo automático basado en plan
+   - **GA4 integration:** Envío de eventos de conversión
+   - **LocalStorage:** Persistencia de datos de promoción
+
+5. **Configuración GA4**
+   - **Variables de entorno:** `NEXT_PUBLIC_GA_MEASUREMENT_ID`
+   - **Script automático:** Carga de GA4 en layout principal
+   - **Eventos estándar:** Compatible con GA4 y ecommerce
+   - **Documentación:** Guía completa de configuración
+
+#### 🔧 **Archivos Creados/Modificados**
+- `src/lib/analytics.ts` - Servicio completo de Google Analytics 4
+- `src/components/analytics/ConversionTracker.tsx` - Componente para tracking de conversiones
+- `src/app/admin/analytics/page.tsx` - Dashboard de analytics combinado
+- `src/app/layout.tsx` - Integración de GA4 y ConversionTracker
+- `src/hooks/usePromotions.ts` - Integración con eventos de GA4
+- `env.example` - Variables de entorno para GA4
+- `scripts/setup-ga4.md` - Guía completa de configuración
+
+#### 📊 **Métricas de GA4 Disponibles**
+- **Eventos de Promociones:** Impresiones, clicks, cierres, conversiones
+- **Parámetros Detallados:** ID, título, tipo, revenue, session
+- **Ecommerce Events:** Purchase events con revenue tracking
+- **Funnel Analysis:** Seguimiento completo del journey
+- **Real-time Tracking:** Eventos en tiempo real en GA4
+
+#### 🎯 **URLs de Acceso**
+- **Dashboard Analytics:** `http://localhost:3001/admin/analytics`
+- **Panel Promociones:** `http://localhost:3001/admin/promotions`
+- **Configuración GA4:** Ver `scripts/setup-ga4.md`
 
 ---
 
 ## 📅 **Historial de Cambios**
+
+### **2025-01-30 - Sistema de Promociones y Banners Dinámicos**
+
+#### ✅ **Nuevas Funcionalidades Implementadas**
+1. **Sistema de Promociones Completo**
+   - **Base de datos:** Tablas `promotions` y `promotion_interactions`
+   - **Tipos de promoción:** PREMIUM_SUBSCRIPTION, NEW_COURSE, SPECIAL_OFFER
+   - **Audiencia objetivo:** ALL, NON_PREMIUM, SPECIFIC_COURSE_VIEWERS, NEW_USERS
+   - **Tracking completo:** Impresiones, clicks, cierres y conversiones
+   - **Prioridades:** Sistema de cola con prioridades 1-10
+
+2. **Componente PremiumBanner**
+   - **Diseño similar a DeepLearning.AI:** Banner superior con gradiente púrpura-azul
+   - **Animaciones suaves:** Aparece después de 3 segundos con transiciones
+   - **CTA personalizable:** Botón de acción con texto y URL dinámicos
+   - **Responsive:** Adaptación perfecta en móvil y desktop
+   - **Tracking automático:** Registro de impresiones, clicks y cierres
+
+3. **Hook usePromotions**
+   - **Lógica inteligente:** Filtrado por tipo de usuario (premium/no premium)
+   - **Session management:** Control de banners por sesión
+   - **API integration:** Comunicación con endpoints de tracking
+   - **Performance:** Carga asíncrona sin bloquear la UI
+
+4. **API Endpoints Completos**
+   - `GET /api/promotions/active` - Promociones activas filtradas
+   - `POST /api/promotions/track` - Tracking de interacciones
+   - `GET /api/promotions/stats` - Estadísticas detalladas
+   - `GET /api/promotions` - Lista completa de promociones
+   - `POST /api/promotions` - Crear nuevas promociones
+   - `PATCH /api/promotions/[id]` - Actualizar promociones
+   - `DELETE /api/promotions/[id]` - Eliminar promociones
+
+5. **Panel de Administración**
+   - **Dashboard completo:** `/admin/promotions` con estadísticas en tiempo real
+   - **Gestión visual:** Tabla con todas las promociones activas
+   - **Métricas detalladas:** CTR, conversiones, impresiones por promoción
+   - **Acciones rápidas:** Activar/desactivar, editar, eliminar
+   - **Filtros avanzados:** Por tipo, audiencia y estado
+
+6. **Integración en Layout**
+   - **Banner global:** Integrado en `layout.tsx` para todas las páginas
+   - **Lógica de mostrado:** Solo para usuarios no premium inicialmente
+   - **Session control:** Una vez por sesión para evitar spam
+   - **Performance:** Carga asíncrona sin impacto en rendimiento
+
+#### 🔧 **Archivos Creados/Modificados**
+- `prisma/schema.prisma` - Nuevas tablas y enums para promociones
+- `src/components/PremiumBanner.tsx` - Componente principal del banner
+- `src/components/PromotionBannerWrapper.tsx` - Wrapper para integración
+- `src/hooks/usePromotions.ts` - Hook para lógica de promociones
+- `src/app/api/promotions/` - Endpoints completos de la API
+- `src/app/admin/promotions/page.tsx` - Panel de administración con ROI
+- `scripts/setup-promotions-db.ts` - Script de configuración inicial
+- `src/app/layout.tsx` - Integración del banner en el layout
+- `src/app/api/stripe/webhook/route.ts` - Integración con Stripe para conversiones
+- `src/app/api/promotions/roi/route.ts` - Endpoint para cálculo de ROI
+- `src/app/subscription/page.tsx` - Captura de parámetros de tracking
+- `src/app/api/stripe/create-checkout-session/route.ts` - Inclusión de metadata de tracking
+- `scripts/test-promotion-tracking.ts` - Script de prueba del sistema completo
+
+#### 🎨 **Características del Diseño**
+- **Inspiración:** DeepLearning.AI banner con colores de eGrow Academy
+- **Gradiente púrpura-azul:** Consistente con la marca
+- **Animaciones suaves:** Transiciones de 300ms para UX profesional
+- **Iconos Lucide:** X para cerrar, emojis para títulos
+- **Responsive:** Adaptación perfecta en todos los dispositivos
+
+#### 📊 **Métricas y Analytics**
+- **CTR (Click Through Rate):** Porcentaje de clicks vs impresiones
+- **Conversion Rate:** Conversiones vs clicks
+- **Impresiones totales:** Contador automático por promoción
+- **Session tracking:** Control de frecuencia por usuario
+- **A/B testing ready:** Estructura preparada para testing
+- **ROI Tracking:** Revenue estimado por promoción
+- **Stripe Integration:** Conversiones reales de pagos exitosos
+
+#### 🚀 **Próximos Pasos**
+- **Automatización:** Crear promociones automáticas al publicar cursos
+- **A/B testing:** Sistema para probar diferentes mensajes
+- **Personalización:** Promociones específicas por comportamiento
+- **Optimización:** Mejorar tasas de conversión basado en datos reales
+- **Google Analytics 4:** Integración completa con eventos personalizados
+- **Analytics Dashboard:** Métricas combinadas de promociones y GA4
+
+---
+
+### **2025-01-30 - Integración Completa con Stripe para ROI Tracking**
+
+#### ✅ **Nuevas Funcionalidades Implementadas**
+1. **Integración con Webhook de Stripe**
+   - **Tracking automático:** Conversiones registradas cuando se completa un pago
+   - **Metadata completa:** SessionId, pageUrl, referrer, userAgent capturados
+   - **Funnel completo:** Banner → Click → Suscripción → Pago Exitoso
+   - **Logs detallados:** Registro de conversiones con información completa
+
+2. **Sistema de Tracking Avanzado**
+   - **URL Parameters:** Promoción ID y datos de sesión en URLs
+   - **Session Management:** Control de frecuencia y datos de sesión
+   - **Cross-page tracking:** Datos persisten entre páginas
+   - **Stripe Metadata:** Información de tracking incluida en sesiones de pago
+
+3. **Endpoint de ROI Avanzado**
+   - **Revenue estimado:** Cálculo basado en conversiones reales
+   - **Métricas detalladas:** CTR, conversion rate, revenue per click
+   - **Agregación de datos:** Estadísticas globales y por promoción
+   - **Filtros temporales:** Análisis por períodos personalizables
+
+4. **Panel de Administración Mejorado**
+   - **Métricas de ROI:** Revenue estimado por promoción
+   - **Conversion tracking:** Tasas de conversión reales
+   - **Revenue per click:** Valor monetario por interacción
+   - **Dashboard visual:** Métricas destacadas con colores
+
+5. **Scripts de Prueba y Verificación**
+   - **Test completo:** Simulación de funnel completo
+   - **Verificación de datos:** Comprobación de interacciones
+   - **Estadísticas automáticas:** Cálculo de métricas de prueba
+   - **Logs detallados:** Información completa del sistema
+
+#### 🔧 **Configuración Requerida**
+- **Stripe Webhook:** Ya configurado en `/api/stripe/webhook`
+- **Variables de entorno:** STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET
+- **Base de datos:** Tablas de promociones ya creadas
+- **Endpoints:** Todos los endpoints de tracking funcionando
+
+#### 📊 **Métricas de ROI Disponibles**
+- **Revenue Estimado:** $6.99 por conversión mensual, $59.99 anual
+- **Revenue per Impression:** Valor generado por impresión
+- **Revenue per Click:** Valor generado por click
+- **Conversion Rate:** % de usuarios que se suscriben
+- **Overall Conversion Rate:** % de impresiones que resultan en suscripción
+
+#### 🎯 **Flujo Completo de Tracking**
+1. **Usuario ve banner** → Registro de IMPRESSION
+2. **Usuario hace click** → Registro de CLICK + redirección con tracking
+3. **Usuario llega a suscripción** → Parámetros capturados
+4. **Usuario completa pago** → Webhook registra CONVERSION
+5. **Dashboard actualizado** → Métricas de ROI en tiempo real
+
+#### ✅ **Estado Final**
+- **Sistema completo:** Tracking desde banner hasta pago exitoso
+- **ROI medible:** Revenue estimado por promoción
+- **Datos reales:** Conversiones basadas en pagos de Stripe
+- **Panel avanzado:** Dashboard con métricas de negocio
+- **Testing completo:** Scripts de verificación funcionando
+
+---
+
+### **2025-01-29 - Implementación de Avatar de Cristal con Efecto Palpitante**
 
 ### **2025-01-29 - Implementación de Avatar de Cristal con Efecto Palpitante**
 

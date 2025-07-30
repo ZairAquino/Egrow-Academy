@@ -40,16 +40,17 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Session expired' }, { status: 401 });
     }
 
-    // Buscar el curso por slug si es necesario
+    // ✅ OPTIMIZADO: Buscar curso y enrollment en una sola consulta
     let actualCourseId = courseId;
     
-    // Verificar si es un UUID válido (contiene solo caracteres hexadecimales y guiones)
+    // Verificar si es un UUID válido
     const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(courseId);
     
     if (!isUUID) {
       // Si no es un UUID, buscar por slug
       const course = await prisma.course.findFirst({
-        where: { slug: courseId }
+        where: { slug: courseId },
+        select: { id: true } // ✅ Solo necesitamos el ID
       });
       if (course) {
         actualCourseId = course.id;
@@ -58,68 +59,97 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // Buscar la inscripción del usuario
-    let enrollment;
-    try {
-      enrollment = await prisma.enrollment.findFirst({
-        where: {
-          userId: userId,
-          courseId: actualCourseId
+    // ✅ OPTIMIZADO: Una sola consulta para enrollment y progress
+    const enrollmentWithProgress = await prisma.enrollment.findFirst({
+      where: {
+        userId: userId,
+        courseId: actualCourseId
+      },
+      select: {
+        id: true,
+        enrolledAt: true,
+        progressPercentage: true,
+        status: true,
+        progress: {
+          select: {
+            id: true,
+            currentLesson: true,
+            completedLessons: true,
+            progressPercentage: true,
+            lastAccessed: true,
+            startedAt: true,
+            completedAt: true,
+            totalTimeSpent: true,
+            totalSessions: true,
+            averageSessionTime: true,
+            longestSession: true,
+            status: true,
+            lessonProgress: {
+              select: {
+                id: true,
+                lessonNumber: true,
+                lessonTitle: true,
+                isCompleted: true,
+                completedAt: true,
+                timeSpent: true,
+                firstAccessed: true,
+                lastAccessed: true,
+                accessCount: true,
+                completionAttempts: true
+              },
+              orderBy: { lessonNumber: 'asc' }
+            }
+          }
         }
-      });
-    } catch (enrollmentError) {
-      return NextResponse.json({ error: 'Database error' }, { status: 500 });
-    }
+      }
+    });
 
-    if (!enrollment) {
+    if (!enrollmentWithProgress) {
       return NextResponse.json({ error: 'User not enrolled in this course' }, { status: 404 });
     }
 
-    // Obtener el progreso guardado
-    
-    let progress;
-    try {
-      progress = await prisma.courseProgress.findFirst({
-        where: {
-          enrollmentId: enrollment.id
+    // Si no existe progress, crear uno inicial
+    let progress = enrollmentWithProgress.progress;
+    if (!progress) {
+      progress = await prisma.courseProgress.create({
+        data: {
+          enrollmentId: enrollmentWithProgress.id,
+          currentLesson: 0,
+          completedLessons: [],
+          progressPercentage: 0,
+          status: 'NOT_STARTED',
+          lastAccessed: new Date()
         },
-        include: {
+        select: {
+          id: true,
+          currentLesson: true,
+          completedLessons: true,
+          progressPercentage: true,
+          lastAccessed: true,
+          startedAt: true,
+          completedAt: true,
+          totalTimeSpent: true,
+          totalSessions: true,
+          averageSessionTime: true,
+          longestSession: true,
+          status: true,
           lessonProgress: {
-            orderBy: {
-              lessonNumber: 'asc'
-            }
+            select: {
+              id: true,
+              lessonNumber: true,
+              lessonTitle: true,
+              isCompleted: true,
+              completedAt: true,
+              timeSpent: true,
+              firstAccessed: true,
+              lastAccessed: true,
+              accessCount: true,
+              completionAttempts: true
+            },
+            orderBy: { lessonNumber: 'asc' }
           }
         }
       });
-    } catch (progressError) {
-      return NextResponse.json({ error: 'Database error' }, { status: 500 });
-    }
-
-    // Si no existe, crear un registro inicial
-    if (!progress) {
-      let newProgress;
-      try {
-        newProgress = await prisma.courseProgress.create({
-          data: {
-            enrollmentId: enrollment.id,
-            currentLesson: 0,
-            completedLessons: [],
-            progressPercentage: 0,
-            status: 'NOT_STARTED',
-            lastAccessed: new Date()
-          },
-          include: {
-            lessonProgress: {
-              orderBy: {
-                lessonNumber: 'asc'
-              }
-            }
-          }
-        });
-        progress = newProgress;
-      } catch (createError) {
-        return NextResponse.json({ error: 'Error creating progress' }, { status: 500 });
-      }
     }
 
     // Formatear la respuesta
@@ -185,16 +215,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Session expired' }, { status: 401 });
     }
 
-    // Buscar el curso por slug si es necesario
+    // ✅ OPTIMIZADO: Buscar curso por slug si es necesario
     let actualCourseId = courseId;
     
-    // Verificar si es un UUID válido (contiene solo caracteres hexadecimales y guiones)
+    // Verificar si es un UUID válido
     const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(courseId);
     
     if (!isUUID) {
       // Si no es un UUID, buscar por slug
       const course = await prisma.course.findFirst({
-        where: { slug: courseId }
+        where: { slug: courseId },
+        select: { id: true } // ✅ Solo necesitamos el ID
       });
       if (course) {
         actualCourseId = course.id;
@@ -203,26 +234,56 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Buscar la inscripción del usuario
-    let enrollment = await prisma.enrollment.findFirst({
+    // ✅ OPTIMIZADO: Buscar enrollment y progress en una sola consulta
+    let enrollmentWithProgress = await prisma.enrollment.findFirst({
       where: {
         userId: userId,
         courseId: actualCourseId
+      },
+      select: {
+        id: true,
+        progressPercentage: true,
+        progress: {
+          select: {
+            id: true,
+            currentLesson: true,
+            completedLessons: true,
+            progressPercentage: true,
+            totalTimeSpent: true,
+            totalSessions: true,
+            status: true
+          }
+        }
       }
     });
 
-    if (!enrollment) {
+    if (!enrollmentWithProgress) {
       console.log('🔍 [API] Usuario no inscrito, creando inscripción automática');
       
       try {
         // Crear inscripción automática
-        enrollment = await prisma.enrollment.create({
+        enrollmentWithProgress = await prisma.enrollment.create({
           data: {
             userId: userId,
             courseId: actualCourseId,
             enrolledAt: new Date(),
             status: 'ACTIVE',
             progressPercentage: 0
+          },
+          select: {
+            id: true,
+            progressPercentage: true,
+            progress: {
+              select: {
+                id: true,
+                currentLesson: true,
+                completedLessons: true,
+                progressPercentage: true,
+                totalTimeSpent: true,
+                totalSessions: true,
+                status: true
+              }
+            }
           }
         });
       } catch (enrollmentError) {
@@ -231,21 +292,26 @@ export async function POST(request: NextRequest) {
     }
 
     // Obtener o crear el progreso del curso
-    let progress = await prisma.courseProgress.findFirst({
-      where: {
-        enrollmentId: enrollment.id
-      }
-    });
+    let progress = enrollmentWithProgress.progress;
 
     if (!progress) {
       progress = await prisma.courseProgress.create({
         data: {
-          enrollmentId: enrollment.id,
+          enrollmentId: enrollmentWithProgress.id,
           currentLesson: 0,
           completedLessons: [],
           progressPercentage: 0,
           status: 'IN_PROGRESS',
           lastAccessed: new Date()
+        },
+        select: {
+          id: true,
+          currentLesson: true,
+          completedLessons: true,
+          progressPercentage: true,
+          totalTimeSpent: true,
+          totalSessions: true,
+          status: true
         }
       });
     }
@@ -262,7 +328,7 @@ export async function POST(request: NextRequest) {
       newStatus = 'COMPLETED';
     }
 
-    // Actualizar progreso general del curso
+    // ✅ OPTIMIZADO: Actualizar progreso general del curso
     const updatedProgress = await prisma.courseProgress.update({
       where: { id: progress.id },
       data: {
@@ -278,57 +344,56 @@ export async function POST(request: NextRequest) {
           increment: 1
         },
         completedAt: newStatus === 'COMPLETED' ? new Date() : null
+      },
+      select: {
+        currentLesson: true,
+        completedLessons: true,
+        progressPercentage: true,
+        status: true,
+        totalTimeSpent: true
       }
     });
 
     // Si se proporciona información de lección específica, actualizar o crear
     if (lessonNumber !== undefined && lessonTitle) {
-      let lessonProgress = await prisma.lessonProgress.findFirst({
+      // ✅ OPTIMIZADO: Upsert para lessonProgress
+      await prisma.lessonProgress.upsert({
         where: {
+          courseProgressId_lessonNumber: {
+            courseProgressId: progress.id,
+            lessonNumber: lessonNumber
+          }
+        },
+        update: {
+          isCompleted: action === 'complete' ? true : undefined,
+          completedAt: action === 'complete' ? new Date() : undefined,
+          timeSpent: {
+            increment: timeSpent || 0
+          },
+          lastAccessed: new Date(),
+          accessCount: {
+            increment: 1
+          },
+          completionAttempts: action === 'complete' ? {
+            increment: 1
+          } : undefined
+        },
+        create: {
           courseProgressId: progress.id,
-          lessonNumber: lessonNumber
+          lessonNumber: lessonNumber,
+          lessonTitle: lessonTitle,
+          isCompleted: action === 'complete',
+          completedAt: action === 'complete' ? new Date() : null,
+          timeSpent: timeSpent || 0,
+          accessCount: 1,
+          completionAttempts: action === 'complete' ? 1 : 0
         }
       });
-
-      if (!lessonProgress) {
-        // Crear nuevo registro de progreso de lección
-        lessonProgress = await prisma.lessonProgress.create({
-          data: {
-            courseProgressId: progress.id,
-            lessonNumber: lessonNumber,
-            lessonTitle: lessonTitle,
-            isCompleted: action === 'complete',
-            completedAt: action === 'complete' ? new Date() : null,
-            timeSpent: timeSpent || 0,
-            accessCount: 1,
-            completionAttempts: action === 'complete' ? 1 : 0
-          }
-        });
-      } else {
-        // Actualizar progreso existente de lección
-        await prisma.lessonProgress.update({
-          where: { id: lessonProgress.id },
-          data: {
-            isCompleted: action === 'complete' ? true : lessonProgress.isCompleted,
-            completedAt: action === 'complete' ? new Date() : lessonProgress.completedAt,
-            timeSpent: {
-              increment: timeSpent || 0
-            },
-            lastAccessed: new Date(),
-            accessCount: {
-              increment: 1
-            },
-            completionAttempts: action === 'complete' ? {
-              increment: 1
-            } : lessonProgress.completionAttempts
-          }
-        });
-      }
     }
 
-    // Actualizar el porcentaje de progreso en la inscripción general
+    // ✅ OPTIMIZADO: Actualizar el porcentaje de progreso en la inscripción
     await prisma.enrollment.update({
-      where: { id: enrollment.id },
+      where: { id: enrollmentWithProgress.id },
       data: { progressPercentage: newProgressPercentage }
     });
 

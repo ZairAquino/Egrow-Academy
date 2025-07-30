@@ -9,6 +9,9 @@ import { baseSEOConfig, generateStructuredData } from "@/lib/seo-config";
 import { generateEducationalOrganizationSchema } from "@/lib/schema-advanced";
 import { openGraphConfigs } from "@/lib/open-graph-config";
 import Analytics from "@/components/seo/Analytics";
+import PromotionBannerWrapper from "@/components/PromotionBannerWrapper";
+import ConversionTracker from "@/components/analytics/ConversionTracker";
+import { initializeGA4 } from "@/lib/analytics";
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -92,10 +95,31 @@ export default function RootLayout({
       <body className={inter.className}>
         <Providers>
           {children}
-        </Providers>
+          
+                  {/* Conversion Tracker */}
+        <ConversionTracker />
+      </Providers>
 
-        {/* SEO Analytics */}
-        <Analytics />
+      {/* SEO Analytics */}
+      <Analytics />
+        
+        {/* Google Analytics 4 */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              // Inicializar GA4
+              if (typeof window !== 'undefined') {
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-XXXXXXXXXX'}', {
+                  page_title: document.title,
+                  page_location: window.location.href,
+                });
+              }
+            `,
+          }}
+        />
       </body>
     </html>
   );

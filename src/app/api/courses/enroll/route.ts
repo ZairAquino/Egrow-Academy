@@ -43,17 +43,33 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Course ID es requerido' }, { status: 400 });
     }
 
-    // Buscar el curso por ID o slug
+    // ✅ OPTIMIZADO: Buscar el curso con select específico
     let course;
     if (courseId.length === 25) { // Es un ID de Prisma (25 caracteres)
       console.log('🔍 [ENROLL] Buscando curso por ID...');
       course = await prisma.course.findUnique({
-        where: { id: courseId }
+        where: { id: courseId },
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          status: true,
+          isFree: true,
+          requiresAuth: true
+        }
       });
     } else { // Es un slug
       console.log('🔍 [ENROLL] Buscando curso por slug...');
       course = await prisma.course.findUnique({
-        where: { slug: courseId }
+        where: { slug: courseId },
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          status: true,
+          isFree: true,
+          requiresAuth: true
+        }
       });
     }
 
@@ -62,14 +78,25 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Curso no encontrado' }, { status: 404 });
     }
 
+    if (course.status !== 'PUBLISHED') {
+      console.log('❌ [ENROLL] Curso no publicado');
+      return NextResponse.json({ error: 'Curso no disponible' }, { status: 400 });
+    }
+
     console.log('✅ [ENROLL] Curso encontrado:', course.title);
     const actualCourseId = course.id;
 
-    // Verificar si el usuario ya está inscrito
+    // ✅ OPTIMIZADO: Verificar inscripción existente con select específico
     const existingEnrollment = await prisma.enrollment.findFirst({
       where: {
         userId: userId,
         courseId: actualCourseId
+      },
+      select: {
+        id: true,
+        enrolledAt: true,
+        progressPercentage: true,
+        status: true
       }
     });
 
@@ -81,7 +108,7 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Crear la inscripción
+    // ✅ OPTIMIZADO: Crear la inscripción con select específico
     console.log('🔍 [ENROLL] Creando inscripción...');
     const enrollment = await prisma.enrollment.create({
       data: {
@@ -90,6 +117,19 @@ export async function POST(request: NextRequest) {
         enrolledAt: new Date(),
         status: 'ACTIVE',
         progressPercentage: 0
+      },
+      select: {
+        id: true,
+        enrolledAt: true,
+        progressPercentage: true,
+        status: true,
+        course: {
+          select: {
+            id: true,
+            title: true,
+            slug: true
+          }
+        }
       }
     });
 

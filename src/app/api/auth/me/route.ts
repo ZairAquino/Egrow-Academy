@@ -33,14 +33,66 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // Obtener usuario con enrollments
+    // ✅ OPTIMIZADO: Consulta con select específico y paginación
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      include: {
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        username: true,
+        profileImage: true,
+        bio: true,
+        membershipLevel: true,
+        isActive: true,
+        emailVerified: true,
+        createdAt: true,
+        updatedAt: true,
+        lastLogin: true,
+        stripeCustomerId: true,
+        country: true,
+        hasBeenPremium: true,
+        // ✅ Solo enrollments recientes con datos esenciales
         enrollments: {
-          include: {
-            course: true
-          }
+          select: {
+            id: true,
+            enrolledAt: true,
+            progressPercentage: true,
+            status: true,
+            course: {
+              select: {
+                id: true,
+                title: true,
+                slug: true,
+                imageUrl: true,
+                shortDescription: true,
+                lessonsCount: true,
+                rating: true
+              }
+            }
+          },
+          take: 10, // ✅ Limitar a 10 cursos más recientes
+          orderBy: { enrolledAt: 'desc' }
+        },
+        // ✅ Solo suscripciones activas
+        subscriptions: {
+          where: {
+            status: { in: ['ACTIVE', 'TRIALING'] }
+          },
+          select: {
+            id: true,
+            status: true,
+            currentPeriodEnd: true,
+            price: {
+              select: {
+                unitAmount: true,
+                currency: true,
+                interval: true
+              }
+            }
+          },
+          take: 1 // ✅ Solo la suscripción más reciente
         }
       }
     })

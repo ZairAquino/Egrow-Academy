@@ -39,9 +39,13 @@ model User {
   sessions                Session[]
   subscriptions           Subscription[]
   securityLogs            SecurityLog[]
+  promotionInteractions   PromotionInteraction[]
 
   @@index([membershipLevel])
   @@index([email, membershipLevel])
+  @@index([createdAt]) // ✅ Nuevo: Para consultas por fecha
+  @@index([isActive, emailVerified]) // ✅ Nuevo: Para filtros de usuarios activos
+  @@index([stripeCustomerId]) // ✅ Nuevo: Para consultas de Stripe
   @@map("users")
 }
 
@@ -53,6 +57,7 @@ model Session {
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([expiresAt]) // ✅ Nuevo: Para limpiar sesiones expiradas
   @@map("sessions")
 }
 
@@ -82,6 +87,9 @@ model Course {
   payments         Payment[]
   ratings          Rating[]
 
+  @@index([status, createdAt]) // ✅ Nuevo: Para listar cursos publicados
+  @@index([instructorId]) // ✅ Nuevo: Para cursos por instructor
+  @@index([slug]) // ✅ Nuevo: Para búsquedas por slug
   @@map("courses")
 }
 
@@ -102,6 +110,8 @@ model Comment {
   user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   likes     Like[]
 
+  @@index([courseId, createdAt]) // ✅ Nuevo: Para comentarios de cursos
+  @@index([userId, createdAt]) // ✅ Nuevo: Para comentarios por usuario
   @@map("comments")
 }
 
@@ -118,6 +128,8 @@ model CommunityPost {
   likes     Like[]
   ratings   Rating[]
 
+  @@index([userId, createdAt]) // ✅ Nuevo: Para posts por usuario
+  @@index([category, createdAt]) // ✅ Nuevo: Para posts por categoría
   @@map("community_posts")
 }
 
@@ -134,6 +146,9 @@ model Enrollment {
   user               User             @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, courseId])
+  @@index([userId, status]) // ✅ Nuevo: Para inscripciones activas del usuario
+  @@index([courseId, status]) // ✅ Nuevo: Para estudiantes de un curso
+  @@index([enrolledAt]) // ✅ Nuevo: Para estadísticas por fecha
   @@map("enrollments")
 }
 
@@ -155,6 +170,8 @@ model CourseProgress {
   enrollment         Enrollment           @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
   lessonProgress     LessonProgress[]
 
+  @@index([enrollmentId]) // ✅ Nuevo: Para joins rápidos
+  @@index([status, lastAccessed]) // ✅ Nuevo: Para progreso reciente
   @@map("course_progress")
 }
 
@@ -175,6 +192,7 @@ model LessonProgress {
   courseProgress     CourseProgress @relation(fields: [courseProgressId], references: [id], onDelete: Cascade)
 
   @@unique([courseProgressId, lessonNumber])
+  @@index([courseProgressId, lessonNumber]) // ✅ Nuevo: Para ordenamiento eficiente
   @@map("lesson_progress")
 }
 
@@ -189,6 +207,7 @@ model Like {
   user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, commentId, postId])
+  @@index([userId, createdAt]) // ✅ Nuevo: Para likes por usuario
   @@map("likes")
 }
 
@@ -204,6 +223,7 @@ model Lesson {
   courseId  String
   course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
+  @@index([courseId, order]) // ✅ Nuevo: Para lecciones ordenadas
   @@map("lessons")
 }
 
@@ -225,6 +245,9 @@ model Payment {
   subscription    Subscription? @relation(fields: [subscriptionId], references: [id])
   user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([userId, createdAt]) // ✅ Nuevo: Para pagos por usuario
+  @@index([status, createdAt]) // ✅ Nuevo: Para pagos por estado
+  @@index([courseId]) // ✅ Nuevo: Para pagos de cursos
   @@map("payments")
 }
 
@@ -250,6 +273,7 @@ model Subscription {
 
   @@index([userId, status, currentPeriodEnd])
   @@index([status, currentPeriodEnd])
+  @@index([userId, status]) // ✅ Nuevo: Para suscripciones activas del usuario
   @@map("subscriptions")
 }
 
@@ -264,6 +288,7 @@ model Product {
   updatedAt       DateTime @updatedAt
   prices          Price[]
 
+  @@index([active]) // ✅ Nuevo: Para productos activos
   @@map("products")
 }
 
@@ -284,6 +309,7 @@ model Price {
   product         Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
   subscriptions   Subscription[]
 
+  @@index([active, productId]) // ✅ Nuevo: Para precios activos por producto
   @@map("prices")
 }
 
@@ -298,78 +324,83 @@ model Resource {
   type             ResourceType
   author           String?
   fileUrl          String?
-  requiresAuth     Boolean             @default(true)
-  isFree           Boolean             @default(true)
-  rating           Decimal             @default(0)
-  downloadsCount   Int                 @default(0)
-  status           ResourceStatus      @default(DRAFT)
-  createdAt        DateTime            @default(now())
-  updatedAt        DateTime            @updatedAt
-  accessLogs       ResourceAccessLog[]
+  fileSize         Int?
+  downloadCount    Int                @default(0)
+  viewCount        Int                @default(0)
+  rating           Decimal            @default(0)
+  status           ResourceStatus     @default(DRAFT)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
   topics           ResourceTopic[]
+  accessLogs       ResourceAccessLog[]
 
+  @@index([category, status]) // ✅ Nuevo: Para recursos por categoría
+  @@index([status, createdAt]) // ✅ Nuevo: Para recursos publicados
   @@map("resources")
 }
 
 model ResourceTopic {
-  id          String   @id @default(cuid())
-  title       String
-  description String?
-  order       Int
-  resourceId  String
-  resource    Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  id         String   @id @default(cuid())
+  name       String
+  resourceId String
+  resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
 
+  @@unique([resourceId, name])
   @@map("resource_topics")
 }
 
 model ResourceAccessLog {
   id         String   @id @default(cuid())
+  accessedAt DateTime @default(now())
   userId     String
   resourceId String
-  accessedAt DateTime @default(now())
-  resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
 
+  @@index([userId, accessedAt]) // ✅ Nuevo: Para acceso por usuario
+  @@index([resourceId, accessedAt]) // ✅ Nuevo: Para estadísticas de recurso
   @@map("resource_access_logs")
 }
 
 model Event {
-  id            String              @id @default(cuid())
-  title         String
-  description   String
-  date          DateTime
-  time          String
-  type          EventType
-  category      String
-  instructor    String
-  image         String?
-  maxAttendees  Int?
-  isActive      Boolean             @default(true)
-  createdAt     DateTime            @default(now())
-  updatedAt     DateTime            @updatedAt
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  startDate   DateTime
+  endDate     DateTime
+  location    String?
+  type        EventType
+  maxCapacity Int?
+  currentCapacity Int    @default(0)
+  price       Decimal   @default(0)
+  isFree      Boolean   @default(true)
+  status      String    @default("UPCOMING")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   registrations EventRegistration[]
 
+  @@index([startDate, status]) // ✅ Nuevo: Para eventos próximos
+  @@index([type, status]) // ✅ Nuevo: Para eventos por tipo
   @@map("events")
 }
 
 model EventRegistration {
-  id             String    @id @default(cuid())
-  userId         String
-  eventId        String
-  registeredAt   DateTime  @default(now())
-  reminderSent   Boolean   @default(false)
-  reminderSentAt DateTime?
-  event          Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        String   @id @default(cuid())
+  registeredAt DateTime @default(now())
+  userId    String
+  eventId   String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   @@unique([userId, eventId])
+  @@index([eventId, registeredAt]) // ✅ Nuevo: Para registros por evento
+  @@index([userId, registeredAt]) // ✅ Nuevo: Para registros por usuario
   @@map("event_registrations")
 }
 
 model Rating {
   id        String      @id @default(cuid())
   rating    Int
-  comment   String?
   type      RatingType
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
@@ -380,22 +411,23 @@ model Rating {
   post      CommunityPost? @relation(fields: [postId], references: [id], onDelete: Cascade)
   user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, courseId, postId, type])
+  @@index([courseId, rating]) // ✅ Nuevo: Para ratings de cursos
+  @@index([userId, type]) // ✅ Nuevo: Para ratings por usuario
   @@map("ratings")
 }
 
 model SecurityLog {
   id        String   @id @default(cuid())
   event     String
-  details   String   // JSON string
-  ipAddress String
-  timestamp DateTime @default(now())
+  details   Json?
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
   userId    String?
-  user      User?    @relation(fields: [userId], references: [id])
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
 
-  @@index([event])
-  @@index([ipAddress])
-  @@index([timestamp])
+  @@index([event, createdAt]) // ✅ Nuevo: Para logs de seguridad
+  @@index([userId, createdAt]) // ✅ Nuevo: Para logs por usuario
   @@map("security_logs")
 }
 
@@ -425,15 +457,16 @@ enum Difficulty {
 }
 
 enum CommentType {
-  FORUM
-  QUESTION
-  COURSE_COMMENT
+  COURSE
+  POST
+  RESOURCE
 }
 
 enum EnrollmentStatus {
   ACTIVE
   COMPLETED
   CANCELLED
+  PAUSED
 }
 
 enum PaymentStatus {
@@ -441,6 +474,7 @@ enum PaymentStatus {
   SUCCEEDED
   FAILED
   CANCELED
+  REFUNDED
 }
 
 enum SubscriptionStatus {
@@ -466,23 +500,29 @@ enum BillingInterval {
 }
 
 enum ResourceCategory {
+  EBOOK
+  VIDEO
+  TEMPLATE
+  TOOL
+  GUIDE
+  CASE_STUDY
+  WHITEPAPER
+  CHECKLIST
+  WORKSHOP
   WEBINAR
-  MANUAL
-  TUTORIAL
-  PAPER
-  HERRAMIENTA
-  DATASET
-  PODCAST
-  LIBRO
 }
 
 enum ResourceType {
   PDF
   VIDEO
   AUDIO
+  IMAGE
+  DOCUMENT
+  PRESENTATION
+  SPREADSHEET
+  ARCHIVE
   LINK
-  TOOL
-  DATASET
+  OTHER
 }
 
 enum ResourceStatus {
@@ -492,15 +532,82 @@ enum ResourceStatus {
 }
 
 enum EventType {
-  LANZAMIENTO
   WORKSHOP
   WEBINAR
-  MASTERCLASS
+  CONFERENCE
   MEETUP
+  COURSE_LAUNCH
+  Q_A
+  NETWORKING
 }
 
 enum RatingType {
-  COURSE_COMPLETION
-  COMMUNITY_POST
-  COURSE_COMMENT
+  COURSE
+  POST
+  RESOURCE
+}
+
+enum PromotionType {
+  PREMIUM_SUBSCRIPTION
+  NEW_COURSE
+  SPECIAL_OFFER
+}
+
+enum TargetAudience {
+  ALL
+  NON_PREMIUM
+  SPECIFIC_COURSE_VIEWERS
+  NEW_USERS
+}
+
+enum InteractionAction {
+  IMPRESSION
+  CLICK
+  CLOSE
+  CONVERSION
+}
+
+model Promotion {
+  id              String           @id @default(cuid())
+  type            PromotionType
+  title           String
+  description     String?
+  ctaText         String
+  ctaUrl          String
+  imageUrl        String?
+  isActive        Boolean          @default(true)
+  startDate       DateTime?
+  endDate         DateTime?
+  priority        Int              @default(5)
+  targetAudience  TargetAudience  @default(ALL)
+  maxImpressions  Int?
+  currentImpressions Int           @default(0)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  interactions    PromotionInteraction[]
+
+  @@index([type, isActive])
+  @@index([startDate, endDate])
+  @@index([priority])
+  @@map("promotions")
+}
+
+model PromotionInteraction {
+  id           String   @id @default(cuid())
+  promotionId  String
+  userId       String?
+  action       InteractionAction
+  sessionId    String?
+  pageUrl      String?
+  referrer     String?
+  userAgent    String?
+  timestamp    DateTime @default(now())
+  promotion    Promotion @relation(fields: [promotionId], references: [id], onDelete: Cascade)
+  user         User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([promotionId])
+  @@index([userId])
+  @@index([action])
+  @@index([timestamp])
+  @@map("promotion_interactions")
 }

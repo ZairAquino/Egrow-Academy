@@ -21,8 +21,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Token inválido' }, { status: 401 });
     }
 
-    const { planId } = await request.json();
+    const { planId, trackingData } = await request.json();
     console.log('🔧 [CHECKOUT] Plan solicitado:', planId);
+    console.log('🔧 [CHECKOUT] Tracking data:', trackingData);
 
     // Validar el plan
     const plan = SUBSCRIPTION_PLANS[planId as keyof typeof SUBSCRIPTION_PLANS];
@@ -98,6 +99,12 @@ export async function POST(request: NextRequest) {
       metadata: {
         userId: decoded.userId,
         planId: plan.id,
+        // Agregar datos de tracking si existen
+        ...(trackingData?.promotionId && { promotionId: trackingData.promotionId }),
+        ...(trackingData?.sessionId && { sessionId: trackingData.sessionId }),
+        ...(trackingData?.pageUrl && { pageUrl: trackingData.pageUrl }),
+        ...(trackingData?.referrer && { referrer: trackingData.referrer }),
+        ...(trackingData?.userAgent && { userAgent: trackingData.userAgent }),
         planName: plan.name,
       },
       subscription_data: {

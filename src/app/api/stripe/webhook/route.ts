@@ -64,6 +64,7 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
   try {
     const userId = session.metadata?.userId;
     const planId = session.metadata?.planId;
+    const promotionId = session.metadata?.promotionId; // Nuevo: ID de la promoción
 
     if (!userId || !planId) {
       console.error('Metadata faltante en checkout session:', session.id);
@@ -79,6 +80,41 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
         hasBeenPremium: true,
       },
     });
+
+    // Tracking de conversión de promoción si existe
+    if (promotionId) {
+      try {
+        // Obtener información de la promoción
+        const promotion = await prisma.promotion.findUnique({
+          where: { id: promotionId },
+        });
+
+        // Registrar conversión en base de datos
+        await prisma.promotionInteraction.create({
+          data: {
+            promotionId,
+            userId,
+            action: 'CONVERSION',
+            sessionId: session.metadata?.sessionId || null,
+            pageUrl: session.metadata?.pageUrl || null,
+            referrer: session.metadata?.referrer || null,
+            userAgent: session.metadata?.userAgent || null,
+          },
+        });
+
+        // Determinar revenue basado en el plan
+        const planId = session.metadata?.planId;
+        const revenue = planId === 'yearly' ? 59.99 : 6.99;
+
+        console.log(`🎯 Conversión registrada: Usuario ${userId} se suscribió desde promoción ${promotionId} - Revenue: $${revenue}`);
+
+        // Nota: Para tracking de GA4 en conversiones, necesitarías enviar un evento desde el frontend
+        // o usar Google Analytics Measurement Protocol para eventos del servidor
+        console.log(`📊 [GA4] Conversión disponible para tracking: ${promotion?.title} - $${revenue}`);
+      } catch (error) {
+        console.error('Error registrando conversión de promoción:', error);
+      }
+    }
 
     console.log(`✅ Usuario ${userId} actualizado a PREMIUM con plan ${planId}`);
   } catch (error) {

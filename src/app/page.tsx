@@ -14,6 +14,7 @@ import Navbar from '@/components/layout/Navbar';
 
 import WelcomeModal from '@/components/ui/WelcomeModal';
 import DynamicSEO from '@/components/seo/DynamicSEO';
+import PromotionBannerWrapper from '@/components/PromotionBannerWrapper';
 
 
 function HomeContent() {
@@ -77,6 +78,12 @@ function HomeContent() {
       
       <main className="main-content pt-16">
         <Hero />
+        
+        {/* Banner Promocional - Posición elegante después del Hero */}
+        <div className="w-full bg-gradient-to-b from-white to-gray-50 py-8">
+          <PromotionBannerWrapper />
+        </div>
+        
         <CompaniesMarquee />
         <FeaturedCourses />
         <WhyChoose />
