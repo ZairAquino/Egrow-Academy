@@ -37,6 +37,11 @@ export default function CommunityPage() {
   const { posts, loading, error, createPost, toggleLike, createComment } = useCommunityPosts();
   const { stats: communityStats, loading: statsLoading } = useCommunityStats();
   const { events: dbEvents, userRegistrations, loading: eventsLoading, registerToEvent, isUserRegistered } = useEvents();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   
 
@@ -361,15 +366,37 @@ export default function CommunityPage() {
       <main className="main-content pt-16">
         {/* Hero Section */}
         <section className="hero gradient-bg">
-          <div className="container">
+          {/* Video de fondo - solo renderizar en el cliente */}
+          {isClient && (
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                zIndex: -0.5
+              }}
+            >
+              <source src="/videos/background.webm" type="video/webm" />
+              Tu navegador no soporta el elemento video.
+            </video>
+          )}
+          
+          <div className="container" style={{ position: 'relative', zIndex: 10 }}>
             <div className="hero-content">
               <h1 className="hero-title">
                 Únete a nuestra
-                <span className="block">Comunidad de IA</span>
+                <span className="block">Comunidad </span>
               </h1>
               <p className="hero-description">
-                Conecta con profesionales, expertos y entusiastas de la inteligencia artificial. 
-                Aprende, comparte y crece junto a una comunidad global apasionada por la IA.
+              Construye relaciones que transforman tu carrera. Conecta con expertos, 
+              comparte conocimientos y accede a oportunidades exclusivas en el mundo de la IA.
               </p>
               
               {/* Logo blanco debajo del texto */}

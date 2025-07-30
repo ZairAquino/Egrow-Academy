@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, Suspense } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import DynamicLogo from '@/components/ui/DynamicLogo';
 
@@ -36,6 +36,11 @@ interface Course {
 export default function CoursesPage() {
   const [selectedCategory, setSelectedCategory] = useState('todos');
   const { user } = useAuth();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const categories = [
     { id: 'todos', name: 'Todos los Cursos' },
@@ -147,15 +152,37 @@ export default function CoursesPage() {
       <main className="main-content pt-16">
         {/* Hero Section */}
         <section className="hero gradient-bg">
-          <div className="container">
+          {/* Video de fondo - solo renderizar en el cliente */}
+          {isClient && (
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                zIndex: -0.5
+              }}
+            >
+              <source src="/videos/background.webm" type="video/webm" />
+              Tu navegador no soporta el elemento video.
+            </video>
+          )}
+          
+          <div className="container" style={{ position: 'relative', zIndex: 10 }}>
             <div className="hero-content">
               <h1 className="hero-title">
                 Todos los Cursos
                 <span className="block">de Inteligencia Artificial</span>
               </h1>
               <p className="hero-description">
-                Descubre nuestra colección completa de cursos de IA. Desde principiantes hasta expertos, 
-                encuentra el curso perfecto para tu nivel y objetivos.
+                Cada curso diseñado para un objetivo específico. Desde introducción hasta especialización, 
+              construye tu expertise en IA paso a paso.
               </p>
               
               {/* Logo blanco debajo del texto */}

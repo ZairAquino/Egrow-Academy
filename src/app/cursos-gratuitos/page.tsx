@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, Suspense } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
@@ -21,8 +21,11 @@ const CompaniesMarquee = dynamic(() => import('@/components/ui/CompaniesMarquee'
 export default function CursosGratuitosPage() {
   
   const { user } = useAuth();
+  const [isClient, setIsClient] = useState(false);
 
-  
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const freeCourses = [
     // Curso Destacado - Monetización con IA
@@ -102,15 +105,36 @@ export default function CursosGratuitosPage() {
       <main className="main-content pt-16">
         {/* Hero Section */}
         <section className="hero gradient-bg">
-          <div className="container">
+          {/* Video de fondo - solo renderizar en el cliente */}
+          {isClient && (
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                zIndex: -0.5
+              }}
+            >
+              <source src="/videos/background.webm" type="video/webm" />
+              Tu navegador no soporta el elemento video.
+            </video>
+          )}
+          
+          <div className="container" style={{ position: 'relative', zIndex: 10 }}>
             <div className="hero-content">
               <h1 className="hero-title">
-                Cursos Gratuitos
-                <span className="block">de Inteligencia Artificial</span>
+                Aprende IA gratis
+                <span className="block">conviertete en un experto</span>
               </h1>
-              <p className="hero-description">
-                Aprende conceptos clave de IA sin costo alguno. Sesiones intensivas y prácticas 
-                perfectas para profesionales que quieren iniciarse en inteligencia artificial.
+              <p className="hero-description">Únete a nuestra comunidad de aprendizaje gratuito. Cursos diseñados 
+              para que todos puedan acceder al futuro de la tecnología.
               </p>
               
               {/* Logo blanco debajo del texto */}

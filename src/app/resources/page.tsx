@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, Suspense } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import DynamicLogo from '@/components/ui/DynamicLogo';
 
@@ -22,6 +22,11 @@ export default function ResourcesPage() {
   
   const [selectedCategory, setSelectedCategory] = useState('todos');
   const { user } = useAuth();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   
 
@@ -73,7 +78,29 @@ export default function ResourcesPage() {
       <main className="main-content pt-16">
         {/* Hero Section */}
         <section className="hero gradient-bg">
-          <div className="container">
+          {/* Video de fondo - solo renderizar en el cliente */}
+          {isClient && (
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                zIndex: -0.5
+              }}
+            >
+              <source src="/videos/background.webm" type="video/webm" />
+              Tu navegador no soporta el elemento video.
+            </video>
+          )}
+          
+          <div className="container" style={{ position: 'relative', zIndex: 10 }}>
             <div className="hero-content">
               <h1 className="hero-title">
                 Recursos de

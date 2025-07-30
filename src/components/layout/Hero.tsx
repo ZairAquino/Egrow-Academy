@@ -4,18 +4,47 @@ import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import SubscriptionButton from '@/components/payments/SubscriptionButton';
 import DynamicLogo from '@/components/ui/DynamicLogo';
+import { useEffect, useRef, useState } from 'react';
 
 export default function Hero() {
   const { user } = useAuth();
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   return (
-    <section className="hero gradient-bg">
-
-      <div className="container">
+    <section className="hero">
+      {/* Video de fondo - solo renderizar en el cliente */}
+      {isClient && (
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          loop
+          playsInline
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            zIndex: -0.5
+          }}
+        >
+          <source src="/videos/background.webm" type="video/webm" />
+          Tu navegador no soporta el elemento video.
+        </video>
+      )}
+      
+      <div className="container" style={{ position: 'relative', zIndex: 10 }}>
         <div className="hero-content">
           <h1 className="hero-title">
-            La IA es la nueva electricidad.
-            <span className="block">Tú eres la chispa.</span>
+            Aprende habilidades
+            <span className="block">irremplazables</span>
           </h1>
           <p className="hero-description">
             Domina el aprendizaje automático e inteligencia artificial con
