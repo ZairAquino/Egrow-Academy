@@ -60,8 +60,9 @@ const NavbarContent: React.FC<NavbarProps> = ({ hideSidebar = false }) => {
   return (
     <>
       <nav className="w-full bg-white/80 backdrop-blur-sm border-b border-gray-200/80 fixed top-0 z-50 flex items-center justify-between px-4 py-1 md:py-2 shadow-sm h-14 md:h-auto relative">
-        {/* Botón de sidebar - solo mostrar si no está oculto */}
-        <div className="flex items-center">
+        {/* Lado izquierdo: Botón de sidebar + Buscador */}
+        <div className="flex items-center space-x-4">
+          {/* Botón de sidebar - solo mostrar si no está oculto */}
           {!hideSidebar && (
             <button
               onClick={toggleSidebar}
@@ -73,6 +74,17 @@ const NavbarContent: React.FC<NavbarProps> = ({ hideSidebar = false }) => {
               </svg>
             </button>
           )}
+          
+          {/* Buscador global */}
+          <div className="hidden md:block">
+            <AdvancedSearch
+              onSearch={handleGlobalSearch}
+              onSuggestionClick={handleSuggestionClick}
+              placeholder="Search"
+              className="w-full"
+              showFilters={false}
+            />
+          </div>
         </div>
 
         {/* Logo - Centrado absolutamente */}
@@ -92,17 +104,6 @@ const NavbarContent: React.FC<NavbarProps> = ({ hideSidebar = false }) => {
             priority
           />
         </Link>
-
-        {/* Buscador global */}
-        <div className="flex-1 max-w-md mx-4 hidden md:block">
-          <AdvancedSearch
-            onSearch={handleGlobalSearch}
-            onSuggestionClick={handleSuggestionClick}
-            placeholder="Buscar en toda la plataforma..."
-            className="w-full"
-            showFilters={false}
-          />
-        </div>
 
         {/* Botón de suscripción y UserProfile */}
         <div className="flex items-center space-x-1">

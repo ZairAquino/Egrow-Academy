@@ -32,7 +32,7 @@ const categories: CourseCategory[] = [
     icon: '🚀',
     color: 'bg-purple-500',
     gradient: 'from-purple-500 to-purple-600',
-    count: 0,
+    count: 1,
   },
   {
     id: 'DESARROLLO_WEB',
@@ -41,7 +41,7 @@ const categories: CourseCategory[] = [
     icon: '💻',
     color: 'bg-green-500',
     gradient: 'from-green-500 to-green-600',
-    count: 0,
+    count: 1,
   },
   {
     id: 'MARKETING_DIGITAL',
@@ -95,6 +95,7 @@ interface CategoryNavigationProps {
   showCounts?: boolean;
   layout?: 'grid' | 'list' | 'compact';
   onCategoryChange?: (category: string) => void;
+  categoryCounts?: Record<string, number>;
 }
 
 export const CategoryNavigation: React.FC<CategoryNavigationProps> = ({
@@ -102,12 +103,19 @@ export const CategoryNavigation: React.FC<CategoryNavigationProps> = ({
   showCounts = true,
   layout = 'grid',
   onCategoryChange,
+  categoryCounts = {},
 }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
 
   const handleCategoryClick = (categoryId: string) => {
+    console.log('🔄 Categoría seleccionada:', categoryId);
+    
+    // Llamar al callback inmediatamente para filtrado directo
+    onCategoryChange?.(categoryId);
+    
+    // Actualizar URL
     const params = new URLSearchParams(searchParams);
     
     if (categoryId === 'all') {
@@ -116,8 +124,10 @@ export const CategoryNavigation: React.FC<CategoryNavigationProps> = ({
       params.set('category', categoryId);
     }
     
-    router.push(`/courses?${params.toString()}`);
-    onCategoryChange?.(categoryId);
+    // Navegar a la nueva URL
+    router.replace(`/courses?${params.toString()}`);
+    
+    console.log('✅ Filtrado aplicado para:', categoryId);
   };
 
   const getLayoutClasses = () => {
@@ -193,7 +203,7 @@ export const CategoryNavigation: React.FC<CategoryNavigationProps> = ({
                   {showCounts && (
                     <div className="mt-2">
                       <span className="text-xs text-gray-500">
-                        {category.count} curso{category.count !== 1 ? 's' : ''}
+                        {categoryCounts[category.id] || 0} curso{(categoryCounts[category.id] || 0) !== 1 ? 's' : ''}
                       </span>
                     </div>
                   )}

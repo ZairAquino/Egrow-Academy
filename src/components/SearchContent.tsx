@@ -14,7 +14,7 @@ interface SearchResult {
   id: string;
   title: string;
   description: string;
-  type: 'course' | 'resource' | 'community' | 'event';
+  type: 'course' | 'resource' | 'community' | 'event' | 'page';
   category: string;
   tags: string[];
   relevance: number;
@@ -32,12 +32,11 @@ export default function SearchContent() {
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
   const [currentQuery, setCurrentQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   
   const { 
-    searchResults,
     searchSuggestions,
     isSearching,
-    performSearch,
     clearSearch 
   } = useSearchEngine();
 
@@ -50,59 +49,31 @@ export default function SearchContent() {
     }
   }, [searchParams]);
 
-  const handleSearch = (query: string) => {
+  const handleSearch = async (query: string) => {
     setCurrentQuery(query);
     if (query.trim()) {
       setIsLoading(true);
       
-      // Mock data for search - replace with actual API call
-      const mockResults: SearchResult[] = [
-        {
-          id: '1',
-          title: 'Desarrollo Web Full Stack con React y Node.js',
-          description: 'Aprende a crear aplicaciones web completas desde cero',
-          type: 'course',
-          category: 'DESARROLLO_WEB',
-          tags: ['react', 'nodejs', 'javascript', 'fullstack'],
-          relevance: 0.95,
-          level: 'Intermedio',
-          duration: '12 semanas',
-          price: 'Gratis',
-          image: '/images/courses/fullstack-react-node.jpg',
-          tag: 'Más Popular',
-          isFree: true,
-          requiresAuth: true,
-          link: '/courses/desarrollo-web-fullstack'
-        },
-        {
-          id: '2',
-          title: 'Inteligencia Artificial para Emprendedores',
-          description: 'Descubre cómo aplicar IA en tu negocio',
-          type: 'course',
-          category: 'IA_PARA_EMPRENDER',
-          tags: ['ai', 'machine learning', 'emprendimiento'],
-          relevance: 0.87,
-          level: 'Principiante',
-          duration: '8 semanas',
-          price: 'Premium',
-          image: '/images/courses/ai-entrepreneurs.jpg',
-          tag: 'Nuevo',
-          isFree: false,
-          requiresAuth: true
+      try {
+        console.log('Buscando:', query);
+        const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+        
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Resultados del API:', data.results);
+          setSearchResults(data.results || []);
+        } else {
+          console.error('Error en API:', response.status);
+          setSearchResults([]);
         }
-      ];
-
-      // Filter results based on query
-      const filtered = mockResults.filter(item =>
-        item.title.toLowerCase().includes(query.toLowerCase()) ||
-        item.description.toLowerCase().includes(query.toLowerCase()) ||
-        item.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase()))
-      );
-
-      performSearch(query, filtered);
-      setIsLoading(false);
+      } catch (error) {
+        console.error('Error en búsqueda:', error);
+        setSearchResults([]);
+      } finally {
+        setIsLoading(false);
+      }
     } else {
-      clearSearch();
+      setSearchResults([]);
       setCurrentQuery('');
     }
   };
@@ -113,6 +84,11 @@ export default function SearchContent() {
   ];
 
   const displayResults = searchResults || [];
+  
+  // Debug log
+  console.log('SearchContent - currentQuery:', currentQuery);
+  console.log('SearchContent - searchResults:', searchResults);
+  console.log('SearchContent - displayResults:', displayResults);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
@@ -137,11 +113,10 @@ export default function SearchContent() {
         {/* Search Bar */}
         <div className="mb-8">
           <AdvancedSearch 
-            onSearch={handleSearch}
-            suggestions={searchSuggestions}
-            isLoading={isSearching || isLoading}
+            onSearch={(query, filters) => handleSearch(query)}
+            onSuggestionClick={(suggestion) => handleSearch(suggestion)}
             placeholder="Buscar cursos, recursos, eventos..."
-            initialValue={currentQuery}
+            showFilters={false}
           />
         </div>
 
@@ -155,7 +130,7 @@ export default function SearchContent() {
               <button 
                 onClick={() => {
                   setCurrentQuery('');
-                  clearSearch();
+                  setSearchResults([]);
                   window.history.pushState({}, '', '/search');
                 }}
                 className="text-blue-600 hover:text-blue-800 underline"
@@ -170,35 +145,153 @@ export default function SearchContent() {
         {isLoading ? (
           <SkeletonGrid>
             {[...Array(6)].map((_, i) => (
-              <div key={i} className="bg-white rounded-lg shadow-md h-64 animate-pulse">
-                <div className="h-32 bg-gray-200 rounded-t-lg"></div>
-                <div className="p-4 space-y-2">
-                  <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                  <div className="h-3 bg-gray-200 rounded w-1/2"></div>
-                  <div className="h-3 bg-gray-200 rounded w-2/3"></div>
+              <div key={i} className="bg-white rounded-lg shadow-md h-48 animate-pulse">
+                <div className="p-6 space-y-4">
+                  <div className="flex items-center space-x-2">
+                    <div className="h-6 bg-gray-200 rounded w-20"></div>
+                    <div className="h-4 bg-gray-200 rounded w-24"></div>
+                  </div>
+                  <div className="h-6 bg-gray-200 rounded w-3/4"></div>
+                  <div className="space-y-2">
+                    <div className="h-3 bg-gray-200 rounded w-full"></div>
+                    <div className="h-3 bg-gray-200 rounded w-2/3"></div>
+                  </div>
+                  <div className="flex items-center justify-between pt-2">
+                    <div className="h-4 bg-gray-200 rounded w-16"></div>
+                    <div className="h-8 bg-gray-200 rounded w-24"></div>
+                  </div>
                 </div>
               </div>
             ))}
           </SkeletonGrid>
         ) : displayResults.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-            {displayResults.map((result) => (
-              <CourseCard
-                key={result.id}
-                title={result.title}
-                description={result.description}
-                category={result.category}
-                duration={result.duration || ''}
-                level={result.level || ''}
-                price={result.price || ''}
-                image={result.image || '/images/courses/default.jpg'}
-                tag={result.tag || ''}
-                link={result.link}
-                isFree={result.isFree || false}
-                requiresAuth={result.requiresAuth || true}
-                isAuthenticated={true}
-              />
-            ))}
+            {displayResults.map((result) => {
+              // Renderizar diferentes tipos de resultados
+              if (result.type === 'course') {
+                return (
+                  <CourseCard
+                    key={result.id}
+                    title={result.title}
+                    description={result.description}
+                    category={result.category}
+                    duration={result.duration || ''}
+                    level={result.level || ''}
+                    price={result.price || ''}
+                    image={result.image || '/images/courses/default.jpg'}
+                    tag={result.tag || ''}
+                    link={result.link}
+                    isFree={result.isFree || false}
+                    requiresAuth={result.requiresAuth || true}
+                    isAuthenticated={true}
+                  />
+                );
+              } else if (result.type === 'resource') {
+                return (
+                  <div key={result.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                    <div className="p-6">
+                      <div className="flex items-center mb-3">
+                        <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded mr-2">📖 Recurso</span>
+                        <span className="text-sm text-gray-500">{result.category}</span>
+                      </div>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2">{result.title}</h3>
+                      <p className="text-gray-600 mb-4">{result.description}</p>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-gray-500">{result.price || 'Gratis'}</span>
+                        <a 
+                          href={result.link} 
+                          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+                        >
+                          Ver Recurso
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                );
+              } else if (result.type === 'event') {
+                return (
+                  <div key={result.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                    <div className="p-6">
+                      <div className="flex items-center mb-3">
+                        <span className="bg-purple-500 text-white text-xs px-2 py-1 rounded mr-2">🎯 Evento</span>
+                        <span className="text-sm text-gray-500">{result.category}</span>
+                      </div>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2">{result.title}</h3>
+                      <p className="text-gray-600 mb-4">{result.description}</p>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-gray-500">{result.duration || 'Evento'}</span>
+                        <a 
+                          href={result.link} 
+                          className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition-colors"
+                        >
+                          Ver Evento
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                );
+              } else if (result.type === 'community') {
+                return (
+                  <div key={result.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                    <div className="p-6">
+                      <div className="flex items-center mb-3">
+                        <span className="bg-green-500 text-white text-xs px-2 py-1 rounded mr-2">💬 Comunidad</span>
+                        <span className="text-sm text-gray-500">{result.category}</span>
+                      </div>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2">{result.title}</h3>
+                      <p className="text-gray-600 mb-4">{result.description}</p>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-gray-500">Discusión</span>
+                        <a 
+                          href={result.link} 
+                          className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors"
+                        >
+                          Ver Post
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                );
+              } else if (result.type === 'page') {
+                return (
+                  <div key={result.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                    <div className="p-6">
+                      <div className="flex items-center mb-3">
+                        <span className="bg-indigo-500 text-white text-xs px-2 py-1 rounded mr-2">📄 Página</span>
+                        <span className="text-sm text-gray-500">{result.category}</span>
+                      </div>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2">{result.title}</h3>
+                      <p className="text-gray-600 mb-4">{result.description}</p>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-gray-500">{result.price || 'Gratis'}</span>
+                        <a 
+                          href={result.link} 
+                          className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors"
+                        >
+                          Ir a Página
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
+              
+              // Fallback para tipos no reconocidos
+              return (
+                <div key={result.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">{result.title}</h3>
+                    <p className="text-gray-600 mb-4">{result.description}</p>
+                    <a 
+                      href={result.link} 
+                      className="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition-colors"
+                    >
+                      Ver Más
+                    </a>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         ) : currentQuery ? (
           <div className="text-center py-12">

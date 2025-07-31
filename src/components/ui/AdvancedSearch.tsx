@@ -39,6 +39,7 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 }) => {
   const [query, setQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [filters, setFilters] = useState<SearchFilter>({
     type: [],
@@ -92,8 +93,27 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
   const handleQueryChange = useCallback((value: string) => {
     setQuery(value);
     generateSuggestions(value);
-    setIsOpen(true);
+    // Abrir automáticamente cuando el usuario escriba
+    if (value.trim()) {
+      setIsOpen(true);
+    } else {
+      setIsOpen(false);
+    }
   }, [generateSuggestions]);
+
+  // Manejar focus del input
+  const handleInputFocus = useCallback(() => {
+    setIsExpanded(true);
+    setIsOpen(true);
+  }, []);
+
+  // Manejar blur del input
+  const handleInputBlur = useCallback(() => {
+    // Solo contraer si no hay texto
+    if (!query.trim()) {
+      setIsExpanded(false);
+    }
+  }, [query]);
 
   // Manejar búsqueda
   const handleSearch = useCallback(() => {
@@ -144,12 +164,16 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
     const handleClickOutside = (event: MouseEvent) => {
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
         setIsOpen(false);
+        // Solo contraer si no hay texto
+        if (!query.trim()) {
+          setIsExpanded(false);
+        }
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  }, [query]);
 
   // Manejar teclas
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
@@ -157,8 +181,11 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
       handleSearch();
     } else if (e.key === 'Escape') {
       setIsOpen(false);
+      if (!query.trim()) {
+        setIsExpanded(false);
+      }
     }
-  }, [handleSearch]);
+  }, [handleSearch, query]);
 
   return (
     <div ref={searchRef} className={`relative ${className}`}>
@@ -170,9 +197,12 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
           value={query}
           onChange={(e) => handleQueryChange(e.target.value)}
           onKeyDown={handleKeyDown}
-          onFocus={() => setIsOpen(true)}
+          onFocus={handleInputFocus}
+          onBlur={handleInputBlur}
           placeholder={placeholder}
-          className="w-full px-4 py-3 pl-12 pr-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+          className={`px-4 py-3 pl-12 pr-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 ease-in-out ${
+            isOpen ? 'ring-2 ring-blue-500 border-blue-500' : ''
+          } ${isExpanded ? 'w-96' : 'w-64'}`}
         />
         
         {/* Icono de búsqueda */}

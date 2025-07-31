@@ -7,7 +7,7 @@ interface SearchResult {
   id: string;
   title: string;
   description: string;
-  type: 'course' | 'resource' | 'community' | 'event';
+  type: 'course' | 'resource' | 'community' | 'event' | 'page';
   category: string;
   tags: string[];
   relevance: number;
@@ -80,14 +80,14 @@ export const useSearchEngine = (options: SearchEngineOptions = {}) => {
 
   // Algoritmo de búsqueda inteligente
   const searchAlgorithm = useCallback((query: string, data: SearchResult[], filters: SearchFilter) => {
-    if (!query.trim()) return [];
+    if (!query.trim() || !data || !Array.isArray(data)) return [];
 
     const searchTerms = query.toLowerCase().split(' ').filter(term => term.length > 0);
     
     return data
       .map(item => {
         let score = 0;
-        const searchableText = `${item.title} ${item.description} ${item.tags.join(' ')} ${item.category}`.toLowerCase();
+        const searchableText = `${item.title} ${item.description} ${(item.tags || []).join(' ')} ${item.category}`.toLowerCase();
 
         // Búsqueda exacta
         if (searchableText.includes(query.toLowerCase())) {
@@ -107,7 +107,7 @@ export const useSearchEngine = (options: SearchEngineOptions = {}) => {
         }
 
         // Búsqueda en tags
-        item.tags.forEach(tag => {
+        (item.tags || []).forEach(tag => {
           if (tag.toLowerCase().includes(query.toLowerCase())) {
             score += 30;
           }
@@ -136,77 +136,39 @@ export const useSearchEngine = (options: SearchEngineOptions = {}) => {
     setIsSearching(true);
     
     try {
-      // Simular búsqueda en base de datos
-      const mockData: SearchResult[] = [
-        {
-          id: '1',
-          title: 'Monetiza con la IA',
-          description: 'Descubre cómo generar ingresos utilizando inteligencia artificial',
-          type: 'course',
-          category: 'IA',
-          tags: ['IA', 'Monetización', 'ChatGPT'],
-          relevance: 0,
-          level: 'Intermedio',
-          duration: '3 horas',
-          price: 'Gratis',
-          image: '/images/optimized/v-5.webp',
-          tag: 'eGrow Academy',
-          isFree: true,
-          requiresAuth: false,
-          link: '/curso/monetiza-ia'
-        },
-        {
-          id: '2',
-          title: 'Desarrollo Web Full Stack',
-          description: 'Aprende a crear aplicaciones web completas desde cero',
-          type: 'course',
-          category: 'Desarrollo Web',
-          tags: ['React', 'Node.js', 'JavaScript'],
-          relevance: 0,
-          level: 'Intermedio',
-          duration: '25 horas',
-          price: '$99.99',
-          image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=250&fit=crop&crop=center',
-          tag: 'Especializado',
-          isFree: false,
-          requiresAuth: true,
-          link: '/curso/desarrollo-web-fullstack'
-        },
-        {
-          id: '3',
-          title: 'Guía de Machine Learning',
-          description: 'Recursos y tutoriales para aprender machine learning',
-          type: 'resource',
-          category: 'Machine Learning',
-          tags: ['Python', 'ML', 'Scikit-learn'],
-          relevance: 0,
-          level: 'Avanzado'
+      // Buscar en el endpoint real
+      const response = await fetch(`/api/search?q=${encodeURIComponent(searchQuery)}`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        const searchResults = data.results || [];
+        setResults(searchResults);
+
+        // Guardar en historial
+        if (searchQuery.trim()) {
+          const newHistory = [searchQuery, ...searchHistory.filter(s => s !== searchQuery)].slice(0, 10);
+          setSearchHistory(newHistory);
+          localStorage.setItem('searchHistory', JSON.stringify(newHistory));
         }
-      ];
 
-      const searchResults = searchAlgorithm(searchQuery, mockData, searchFilters);
-      setResults(searchResults);
-
-      // Guardar en historial
-      if (searchQuery.trim()) {
-        const newHistory = [searchQuery, ...searchHistory.filter(s => s !== searchQuery)].slice(0, 10);
-        setSearchHistory(newHistory);
-        localStorage.setItem('searchHistory', JSON.stringify(newHistory));
+        // Track evento
+        trackEvent('search_performed', {
+          query: searchQuery,
+          results_count: searchResults.length,
+          filters_applied: Object.values(searchFilters).flat().length
+        });
+      } else {
+        console.error('Error en búsqueda:', response.status);
+        setResults([]);
       }
-
-      // Track evento
-      trackEvent('search_performed', {
-        query: searchQuery,
-        results_count: searchResults.length,
-        filters_applied: Object.values(searchFilters).flat().length
-      });
 
     } catch (error) {
       console.error('Error performing search:', error);
+      setResults([]);
     } finally {
       setIsSearching(false);
     }
-  }, [searchAlgorithm, searchHistory, filters, trackEvent]);
+  }, [searchHistory, filters, trackEvent]);
 
   // Búsqueda por voz
   const startVoiceSearch = useCallback(() => {
@@ -286,6 +248,13 @@ export const useSearchEngine = (options: SearchEngineOptions = {}) => {
     }
   }, [filters, query, performSearch]);
 
+  // Limpiar búsqueda
+  const clearSearch = useCallback(() => {
+    setQuery('');
+    setResults([]);
+    setIsSearching(false);
+  }, []);
+
   return {
     query,
     setQuery,
@@ -298,6 +267,7 @@ export const useSearchEngine = (options: SearchEngineOptions = {}) => {
     startVoiceSearch,
     generateSuggestions,
     getRecommendations,
-    updateFilters
+    updateFilters,
+    clearSearch
   };
 }; 

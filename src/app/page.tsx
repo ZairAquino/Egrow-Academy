@@ -87,13 +87,13 @@ function HomeContent() {
         
         <CompaniesMarquee />
         
-        {/* Sección de Recomendaciones Personalizadas */}
-        <RecommendationsSection 
+        {/* Sección de Recomendaciones Personalizadas - Temporalmente deshabilitada */}
+        {/* <RecommendationsSection 
           title="Recomendado para ti"
           limit={6}
           showReason={true}
           className="bg-gray-50"
-        />
+        /> */}
         
         <FeaturedCourses />
         <WhyChoose />
