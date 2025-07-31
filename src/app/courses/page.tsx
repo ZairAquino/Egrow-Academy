@@ -2,10 +2,12 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import dynamic from 'next/dynamic';
+import { useSearchParams } from 'next/navigation';
 import DynamicLogo from '@/components/ui/DynamicLogo';
 import { SkeletonGrid, SkeletonCourseCard } from '@/components/ui/SkeletonLoader';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { AdvancedSearch } from '@/components/ui/AdvancedSearch';
+import { CategoryNavigation } from '@/components/ui/CategoryNavigation';
 import { useSearchEngine } from '@/hooks/useSearchEngine';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import CourseCard from '@/components/courses/CourseCard';
@@ -32,15 +34,18 @@ interface Course {
   link?: string;
   isFree: boolean;
   requiresAuth: boolean;
-  priceId?: string; // ID de Stripe para el precio
+  priceId?: string;
 }
 
 export default function CoursesPage() {
-  const [selectedCategory, setSelectedCategory] = useState('todos');
+  const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const { user } = useAuth();
   const [isClient, setIsClient] = useState(false);
+
+  // Obtener categoría activa de los parámetros de URL
+  const activeCategory = searchParams.get('category') || 'all';
 
   // Motor de búsqueda
   const {
@@ -67,26 +72,12 @@ export default function CoursesPage() {
     return () => clearTimeout(timer);
   }, []);
 
-  const categories = [
-    { id: 'todos', name: 'Todos los Cursos' },
-    { id: 'cursos-cortos', name: 'Cursos Cortos' },
-    { id: 'gratuitos', name: 'Cursos Gratuitos' },
-    { id: 'especializados', name: 'Cursos Especializados' },
-    { id: 'desarrollo-web', name: 'Desarrollo Web' },
-    { id: 'machine-learning', name: 'Machine Learning' },
-    { id: 'deep-learning', name: 'Deep Learning' },
-    { id: 'nlp', name: 'NLP' },
-    { id: 'computer-vision', name: 'Computer Vision' },
-    { id: 'data-science', name: 'Data Science' },
-    { id: 'llms', name: 'LLMs & ChatGPT' }
-  ];
-
   const courses: Course[] = [
     {
       id: 'monetiza-ia',
       title: 'Monetiza con la IA',
       description: 'Descubre cómo generar ingresos utilizando inteligencia artificial. Aprende estrategias prácticas para monetizar herramientas de IA y crear fuentes de ingresos pasivos.',
-      category: 'llms',
+      category: 'IA_PARA_EMPRENDER',
       duration: '3 horas',
       level: 'Intermedio',
       price: 'Gratis',
@@ -100,7 +91,7 @@ export default function CoursesPage() {
       id: 'desarrollo-web-fullstack',
       title: 'Desarrollo Web Full Stack con React y Node.js',
       description: 'Aprende a crear aplicaciones web completas desde cero. Domina React, Node.js, Express, MongoDB y despliegue en la nube.',
-      category: 'desarrollo-web',
+      category: 'DESARROLLO_WEB',
       duration: '25 horas',
       level: 'Intermedio',
       price: '$99.99',
@@ -109,20 +100,42 @@ export default function CoursesPage() {
       link: '/curso/desarrollo-web-fullstack',
       isFree: false,
       requiresAuth: true
+    },
+    {
+      id: 'liderazgo-digital',
+      title: 'Liderazgo en la Era Digital',
+      description: 'Desarrolla habilidades de liderazgo adaptadas al mundo digital. Aprende a gestionar equipos remotos y liderar proyectos tecnológicos.',
+      category: 'LIDERAZGO',
+      duration: '8 horas',
+      level: 'Avanzado',
+      price: '$49.99',
+      image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=250&fit=crop&crop=center',
+      tag: 'Liderazgo',
+      link: '/curso/liderazgo-digital',
+      isFree: false,
+      requiresAuth: true
+    },
+    {
+      id: 'productividad-ia',
+      title: 'Productividad con IA',
+      description: 'Optimiza tu trabajo diario con herramientas de inteligencia artificial. Automatiza tareas repetitivas y aumenta tu eficiencia.',
+      category: 'PRODUCTIVIDAD',
+      duration: '5 horas',
+      level: 'Principiante',
+      price: 'Gratis',
+      image: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=400&h=250&fit=crop&crop=center',
+      tag: 'Productividad',
+      link: '/curso/productividad-ia',
+      isFree: true,
+      requiresAuth: false
     }
   ];
 
   const getFilteredCourses = () => {
-    if (selectedCategory === 'todos') {
+    if (activeCategory === 'all') {
       return courses;
-    } else if (selectedCategory === 'gratuitos') {
-      return courses.filter(course => course.isFree);
-    } else if (selectedCategory === 'especializados') {
-      return courses.filter(course => !course.isFree);
-    } else if (selectedCategory === 'cursos-cortos') {
-      return courses.filter(course => course.category === 'cursos-cortos');
     } else {
-      return courses.filter(course => course.category === selectedCategory);
+      return courses.filter(course => course.category === activeCategory);
     }
   };
 
@@ -140,6 +153,12 @@ export default function CoursesPage() {
     performSearch(suggestion, filters);
   };
 
+  // Manejar cambio de categoría
+  const handleCategoryChange = (category: string) => {
+    setSearchQuery('');
+    setQuery('');
+  };
+
   // Determinar qué cursos mostrar
   const displayCourses = searchQuery.trim() ? searchResults : filteredCourses;
   const isSearchingOrLoading = isSearching || isLoading;
@@ -151,7 +170,6 @@ export default function CoursesPage() {
       <main className="main-content pt-16">
         {/* Hero Section */}
         <section className="hero gradient-bg">
-          {/* Imagen de fondo - solo renderizar en el cliente */}
           {isClient && (
             <img
               src="/images/background.png"
@@ -163,15 +181,14 @@ export default function CoursesPage() {
           <div className="container" style={{ position: 'relative', zIndex: 10 }}>
             <div className="hero-content">
               <h1 className="hero-title">
-                Todos los cursos de
-                <span className="block">Inteligencia Artificial</span>
+                Cursos Organizados por
+                <span className="block">Categorías Específicas</span>
               </h1>
               <p className="hero-description">
-                Cada curso diseñado para un objetivo específico. Desde introducción hasta especialización, 
-              construye tu expertise en IA paso a paso.
+                Encuentra exactamente lo que necesitas. Nuestros cursos están organizados en categorías claras 
+                para que puedas elegir el camino de aprendizaje perfecto para ti.
               </p>
               
-              {/* Logo blanco debajo del texto */}
               <div className="hero-bottom-logo">
                 <div className="logo-animation-wrapper">
                   <DynamicLogo width={95} height={95} priority className="hero-bottom-logo-image" />
@@ -205,20 +222,27 @@ export default function CoursesPage() {
               />
             </div>
 
-            {/* Filtros de categoría */}
-            <div className="category-filters">
-              {categories.map((category) => (
-                <button
-                  key={category.id}
-                  onClick={() => setSelectedCategory(category.id)}
-                  className={`category-filter ${
-                    selectedCategory === category.id ? 'active' : ''
-                  }`}
-                >
-                  <span className="category-name">{category.name}</span>
-                </button>
-              ))}
+            {/* Navegación por categorías */}
+            <div className="mb-8">
+              <CategoryNavigation
+                activeCategory={activeCategory}
+                showCounts={true}
+                layout="grid"
+                onCategoryChange={handleCategoryChange}
+              />
             </div>
+
+            {/* Información de categoría activa */}
+            {activeCategory !== 'all' && !searchQuery.trim() && (
+              <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <h2 className="text-lg font-semibold text-blue-900 mb-2">
+                  Categoría: {getCategoryName(activeCategory)}
+                </h2>
+                <p className="text-blue-700">
+                  {getCategoryDescription(activeCategory)}
+                </p>
+              </div>
+            )}
 
             {/* Resultados de búsqueda o grid de cursos */}
             {isSearchingOrLoading ? (
@@ -242,18 +266,26 @@ export default function CoursesPage() {
                       link={course.link}
                       onCourseClick={(courseId) => {
                         console.log('Curso clickeado:', courseId);
-                        // Aquí puedes agregar la lógica para manejar el clic del curso
                       }}
                     />
                   ))
                 ) : (
                   <div className="no-courses">
-                    <p>
-                      {searchQuery.trim() 
-                        ? `No se encontraron resultados para "${searchQuery}"`
-                        : 'No se encontraron cursos en esta categoría.'
-                      }
-                    </p>
+                    <div className="text-center py-12">
+                      <div className="text-6xl mb-4">📚</div>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                        {searchQuery.trim() 
+                          ? `No se encontraron resultados para "${searchQuery}"`
+                          : 'No hay cursos en esta categoría aún'
+                        }
+                      </h3>
+                      <p className="text-gray-600">
+                        {searchQuery.trim() 
+                          ? 'Intenta con otros términos de búsqueda'
+                          : 'Estamos trabajando en agregar más contenido. ¡Vuelve pronto!'
+                        }
+                      </p>
+                    </div>
                   </div>
                 )}
               </div>
@@ -321,6 +353,17 @@ export default function CoursesPage() {
           }
         }
 
+        .courses-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          gap: 1.5rem;
+          margin-top: 2rem;
+        }
+
+        .no-courses {
+          grid-column: 1 / -1;
+        }
+
         @media (max-width: 768px) {
           .hero-bottom-logo-image {
             max-width: 76px;
@@ -337,4 +380,33 @@ export default function CoursesPage() {
       `}</style>
     </>
   );
+}
+
+// Funciones auxiliares para obtener información de categorías
+function getCategoryName(categoryId: string): string {
+  const categoryMap: Record<string, string> = {
+    'HABILIDADES_IRREMPLAZABLES': 'Habilidades Irremplazables',
+    'IA_PARA_EMPRENDER': 'IA para Emprender',
+    'DESARROLLO_WEB': 'Desarrollo Web',
+    'MARKETING_DIGITAL': 'Marketing Digital',
+    'PRODUCTIVIDAD': 'Productividad',
+    'FINANZAS_PERSONALES': 'Finanzas Personales',
+    'LIDERAZGO': 'Liderazgo',
+    'INNOVACION_TECNOLOGICA': 'Innovación Tecnológica',
+  };
+  return categoryMap[categoryId] || categoryId;
+}
+
+function getCategoryDescription(categoryId: string): string {
+  const descriptionMap: Record<string, string> = {
+    'HABILIDADES_IRREMPLAZABLES': 'Competencias que la IA no puede reemplazar y que serán más valiosas que nunca.',
+    'IA_PARA_EMPRENDER': 'Herramientas de IA para crear negocios y generar ingresos de forma inteligente.',
+    'DESARROLLO_WEB': 'Crea sitios web y aplicaciones modernas con las tecnologías más demandadas.',
+    'MARKETING_DIGITAL': 'Estrategias para vender en internet y hacer crecer tu negocio online.',
+    'PRODUCTIVIDAD': 'Optimiza tu tiempo y resultados con técnicas y herramientas avanzadas.',
+    'FINANZAS_PERSONALES': 'Gestiona tu dinero de forma inteligente y construye riqueza a largo plazo.',
+    'LIDERAZGO': 'Desarrolla habilidades de liderazgo para el mundo digital y tecnológico.',
+    'INNOVACION_TECNOLOGICA': 'Las últimas tendencias en tecnología que están transformando el mundo.',
+  };
+  return descriptionMap[categoryId] || 'Descubre cursos especializados en esta área.';
 } 

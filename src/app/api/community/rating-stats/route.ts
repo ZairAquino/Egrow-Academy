@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
     const allRatings = await prisma.rating.findMany({
       where: {
         type: {
-          in: ['COURSE_COMPLETION', 'COMMUNITY_POST', 'COURSE_COMMENT']
+          in: ['COURSE', 'POST', 'RESOURCE']
         }
       }
     });
@@ -34,9 +34,9 @@ export async function GET(request: NextRequest) {
       : 0;
 
     // Valoraciones por tipo
-    const courseRatings = allRatings.filter(r => r.type === 'COURSE_COMPLETION');
-    const communityRatings = allRatings.filter(r => r.type === 'COMMUNITY_POST');
-    const commentRatings = allRatings.filter(r => r.type === 'COURSE_COMMENT');
+    const courseRatings = allRatings.filter(r => r.type === 'COURSE');
+    const communityRatings = allRatings.filter(r => r.type === 'POST');
+    const resourceRatings = allRatings.filter(r => r.type === 'RESOURCE');
 
     const courseAverage = courseRatings.length > 0 
       ? courseRatings.reduce((acc, r) => acc + r.rating, 0) / courseRatings.length 

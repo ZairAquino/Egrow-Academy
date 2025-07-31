@@ -14,11 +14,12 @@ import {
 
 export async function POST(request: NextRequest) {
   const ip = getClientIP(request)
+  let body: LoginData | null = null
   
   try {
     console.log('🔍 [LOGIN] Iniciando proceso de login desde IP:', ip)
     
-    const body: LoginData = await request.json()
+    body = await request.json()
     const { email, password } = body
     
     // Sanitizar entrada

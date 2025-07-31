@@ -12,7 +12,7 @@ export async function GET(
     const comments = await prisma.comment.findMany({
       where: {
         postId: postId,
-        type: 'FORUM',
+        type: 'POST',
       },
       include: {
         user: {
@@ -79,7 +79,7 @@ export async function POST(
     const comment = await prisma.comment.create({
       data: {
         content: content.trim(),
-        type: 'FORUM',
+        type: 'POST',
         userId,
         postId: postId,
       },

@@ -55,12 +55,15 @@
     "typecheck": "tsc --noEmit",
     "dev:safe": "npm run dev:clean",
     "dev:with-checks": "npm run typecheck && npm run lint && npm run dev:clean",
-    "quick-fix": "tsx scripts/fix-typescript-errors.ts"
+    "quick-fix": "tsx scripts/fix-typescript-errors.ts",
+    "setup-recommendations": "tsx scripts/setup-recommendations-db.ts",
+    "setup-achievements": "tsx scripts/setup-achievements-db.ts",
+    "update-courses-categories": "tsx scripts/update-courses-categories.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/inspector": "^0.16.2",
     "@modelcontextprotocol/sdk": "^1.17.0",
-    "@prisma/client": "^6.12.0",
+    "@prisma/client": "^6.13.0",
     "@stripe/react-stripe-js": "^3.7.0",
     "@stripe/stripe-js": "^7.5.0",
     "@types/node-fetch": "^2.6.12",

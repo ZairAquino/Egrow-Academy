@@ -159,8 +159,7 @@ export async function logSecurityEvent(event: string, details: any, ip: string):
       data: {
         event,
         details: JSON.stringify(details),
-        ipAddress: ip,
-        timestamp: new Date()
+        ipAddress: ip
       }
     })
   } catch (error) {

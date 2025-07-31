@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useAchievements } from '@/hooks/useAchievements';
+import { ProgressIndicator, ProgressGrid, LinearProgress } from '@/components/ui/ProgressIndicator';
+import { AchievementNotification, useAchievements as useAchievementNotifications } from '@/components/ui/AchievementNotification';
 
 import Navbar from '@/components/layout/Navbar';
-
 import Footer from '@/components/layout/Footer';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Link from 'next/link';
@@ -34,13 +36,20 @@ interface UserCourse {
 
 export default function MyCoursesPage() {
   const { user, status } = useAuth();
+  const { achievements, progress, loading: achievementsLoading, recordDailyActivity } = useAchievements();
+  const { achievements: notifications, removeAchievement } = useAchievementNotifications();
   
   const [activeTab, setActiveTab] = useState('all');
   const [courses, setCourses] = useState<UserCourse[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  
+  // Registrar actividad diaria al cargar la página
+  useEffect(() => {
+    if (user?.id) {
+      recordDailyActivity();
+    }
+  }, [user?.id, recordDailyActivity]);
 
   // Cargar cursos del usuario
   useEffect(() => {
@@ -107,6 +116,31 @@ export default function MyCoursesPage() {
     completed: courses.filter(c => c.status === 'COMPLETED' || c.progressPercentage === 100).length,
   };
 
+  // Datos de progreso para el dashboard
+  const progressData = progress ? [
+    {
+      current: progress.lessonsCompleted,
+      total: progress.totalLessons,
+      percentage: progress.percentage,
+      label: 'Lecciones',
+      type: 'lesson' as const,
+    },
+    {
+      current: progress.streak,
+      total: 30,
+      percentage: Math.min((progress.streak / 30) * 100, 100),
+      label: 'Racha',
+      type: 'streak' as const,
+    },
+    {
+      current: achievements.length,
+      total: 50,
+      percentage: Math.min((achievements.length / 50) * 100, 100),
+      label: 'Logros',
+      type: 'milestone' as const,
+    },
+  ] : [];
+
   // Redirigir si no está autenticado
   if (status === 'unauthenticated') {
     return (
@@ -124,9 +158,16 @@ export default function MyCoursesPage() {
 
   return (
     <>
-      <Navbar  />
+      <Navbar />
       
-      
+      {/* Notificaciones de logros */}
+      {notifications.map((achievement) => (
+        <AchievementNotification
+          key={achievement.id}
+          achievement={achievement}
+          onClose={() => removeAchievement(achievement.id)}
+        />
+      ))}
       
       <main className="main-content pt-16">
         {/* Hero Section */}
@@ -149,6 +190,47 @@ export default function MyCoursesPage() {
             </div>
           </div>
         </section>
+
+        {/* Progress Dashboard */}
+        {progress && (
+          <section className="section bg-gradient-to-r from-blue-50 to-purple-50">
+            <div className="container">
+              <div className="progress-dashboard">
+                <div className="dashboard-header">
+                  <h2 className="dashboard-title">Tu Progreso</h2>
+                  <div className="progress-stats">
+                    <div className="stat-item">
+                      <span className="stat-number">{progress.totalPoints}</span>
+                      <span className="stat-label">Puntos</span>
+                    </div>
+                    <div className="stat-item">
+                      <span className="stat-number">{progress.streak}</span>
+                      <span className="stat-label">Días Racha</span>
+                    </div>
+                    <div className="stat-item">
+                      <span className="stat-number">{achievements.length}</span>
+                      <span className="stat-label">Logros</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="progress-grid-container">
+                  <ProgressGrid items={progressData} columns={3} />
+                </div>
+
+                {/* Barra de progreso general */}
+                <div className="overall-progress">
+                  <LinearProgress
+                    percentage={progress.percentage}
+                    label="Progreso General"
+                    color="blue"
+                    className="mt-6"
+                  />
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Stats Section */}
         <section className="section">
@@ -246,6 +328,62 @@ export default function MyCoursesPage() {
       </main>
 
       <style jsx>{`
+        .progress-dashboard {
+          background: white;
+          border-radius: 16px;
+          padding: 2rem;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+          margin-bottom: 2rem;
+        }
+
+        .dashboard-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 2rem;
+          flex-wrap: wrap;
+          gap: 1rem;
+        }
+
+        .dashboard-title {
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: #1f2937;
+          margin: 0;
+        }
+
+        .progress-stats {
+          display: flex;
+          gap: 2rem;
+          flex-wrap: wrap;
+        }
+
+        .stat-item {
+          text-align: center;
+        }
+
+        .stat-number {
+          display: block;
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: #3b82f6;
+        }
+
+        .stat-label {
+          font-size: 0.875rem;
+          color: #6b7280;
+          font-weight: 500;
+        }
+
+        .progress-grid-container {
+          margin-bottom: 2rem;
+        }
+
+        .overall-progress {
+          border-top: 1px solid #e5e7eb;
+          padding-top: 1.5rem;
+        }
+
         .courses-grid {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -300,6 +438,21 @@ export default function MyCoursesPage() {
           height: 100%;
           object-fit: cover;
           z-index: -1;
+        }
+
+        @media (max-width: 768px) {
+          .dashboard-header {
+            flex-direction: column;
+            align-items: flex-start;
+          }
+
+          .progress-stats {
+            gap: 1rem;
+          }
+
+          .stat-item {
+            min-width: 80px;
+          }
         }
       `}</style>
     </>

@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Crear nueva instancia de Prisma
-    const { PrismaClient } = require('@prisma/client')
+    const { PrismaClient } = await import('@prisma/client')
     const prisma = new PrismaClient()
     
     console.log('✅ [LOGIN-TEST] Prisma inicializado, buscando usuario...')

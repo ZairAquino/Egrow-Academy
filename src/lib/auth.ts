@@ -2,6 +2,8 @@ import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 import { SafeUser } from '@/types/auth'
 import { NextRequest } from 'next/server'
+import { cookies } from 'next/headers'
+import prisma from '@/lib/db'
 
 // Función para hashear contraseñas
 export async function hashPassword(password: string): Promise<string> {
@@ -65,4 +67,29 @@ export function extractTokenFromHeader(requestOrHeader: NextRequest | string | n
 export function createSafeUser(user: any): SafeUser {
   const { passwordHash, ...safeUser } = user
   return safeUser
+}
+
+// Función para obtener sesión del servidor
+export async function getServerSession(): Promise<SafeUser | null> {
+  try {
+    const cookieStore = cookies()
+    const token = cookieStore.get('session')?.value
+    
+    if (!token) {
+      return null
+    }
+    
+    const { userId } = verifyToken(token)
+    const user = await prisma.user.findUnique({
+      where: { id: userId }
+    })
+    
+    if (!user) {
+      return null
+    }
+    
+    return createSafeUser(user)
+  } catch (error) {
+    return null
+  }
 } 

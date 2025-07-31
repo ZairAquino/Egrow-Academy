@@ -12,6 +12,8 @@ import Analytics from "@/components/seo/Analytics";
 import PromotionBannerWrapper from "@/components/PromotionBannerWrapper";
 import ConversionTracker from "@/components/analytics/ConversionTracker";
 import { initializeGA4 } from "@/lib/analytics";
+import { NotificationSystem } from '@/components/ui/NotificationSystem';
+import { useBehaviorTracking } from '@/hooks/useBehaviorTracking';
 
 const montserrat = Montserrat({ 
   subsets: ["latin"],
@@ -38,10 +40,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={montserrat.variable}>
+    <html lang="es" className="scroll-smooth">
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#2563eb" />
         <meta name="google-site-verification" content="ppV50-xAiHZYc7B8SSMk9lJapqLgxMPvv0wDv" />
         
@@ -94,33 +96,42 @@ export default function RootLayout({
       </head>
       <body className={montserrat.className}>
         <Providers>
-          {children}
+          <NotificationSystem>
+            <BehaviorTrackingWrapper>
+              {children}
+            </BehaviorTrackingWrapper>
+          </NotificationSystem>
           
-                  {/* Conversion Tracker */}
-        <ConversionTracker />
-      </Providers>
-
-      {/* SEO Analytics */}
-      <Analytics />
-        
-        {/* Google Analytics 4 */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              // Inicializar GA4
-              if (typeof window !== 'undefined') {
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', '${process.env.NEXT_PUBLIC_GA_ID || 'G-XXXXXXXXXX'}', {
-                  page_title: document.title,
-                  page_location: window.location.href,
-                });
-              }
-            `,
-          }}
-        />
+          {/* Google Analytics 4 */}
+          {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
+            <>
+              <script
+                async
+                src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}`}
+              />
+              <script
+                dangerouslySetInnerHTML={{
+                  __html: `
+                    window.dataLayer = window.dataLayer || [];
+                    function gtag(){dataLayer.push(arguments);}
+                    gtag('js', new Date());
+                    gtag('config', '${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}');
+                  `,
+                }}
+              />
+            </>
+          )}
+          
+          {/* Conversion Tracker */}
+          <ConversionTracker />
+        </Providers>
       </body>
     </html>
   );
+}
+
+// Componente wrapper para tracking de comportamiento
+function BehaviorTrackingWrapper({ children }: { children: React.ReactNode }) {
+  useBehaviorTracking();
+  return <>{children}</>;
 }

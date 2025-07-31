@@ -50,8 +50,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!event.isActive) {
-      console.error('🔍 [EVENT-REGISTER] Evento inactivo:', eventId);
+    if (event.status !== 'UPCOMING') {
+      console.error('🔍 [EVENT-REGISTER] Evento no disponible:', eventId);
       return NextResponse.json(
         { error: 'Este evento no está disponible para registro' },
         { status: 400 }
@@ -77,12 +77,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Verificar límite de asistentes si existe
-    if (event.maxAttendees) {
+    if (event.maxCapacity) {
       const currentAttendees = await prisma.eventRegistration.count({
         where: { eventId }
       });
 
-      if (currentAttendees >= event.maxAttendees) {
+      if (currentAttendees >= event.maxCapacity) {
         console.error('🔍 [EVENT-REGISTER] Evento lleno:', eventId);
         return NextResponse.json(
           { error: 'Este evento ya no tiene cupos disponibles' },
@@ -121,10 +121,10 @@ export async function POST(request: NextRequest) {
         registration.user.email,
         registration.user.firstName,
         registration.event.title,
-        registration.event.date,
-        registration.event.time,
+        registration.event.startDate,
+        registration.event.startDate,
         registration.event.type,
-        registration.event.instructor,
+        'Instructor del evento',
         registration.event.description
       );
 
@@ -143,8 +143,8 @@ export async function POST(request: NextRequest) {
       registration: {
         id: registration.id,
         eventTitle: registration.event.title,
-        eventDate: registration.event.date,
-        eventTime: registration.event.time,
+        eventDate: registration.event.startDate,
+        eventTime: registration.event.startDate,
         registeredAt: registration.registeredAt
       }
     });

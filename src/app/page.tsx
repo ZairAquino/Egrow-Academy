@@ -11,6 +11,7 @@ import WhyChoose from '@/components/ui/WhyChoose';
 import Footer from '@/components/layout/Footer';
 import ClientOnly from '@/components/ClientOnly';
 import Navbar from '@/components/layout/Navbar';
+import { RecommendationsSection } from '@/components/ui/RecommendationsSection';
 
 import WelcomeModal from '@/components/ui/WelcomeModal';
 import DynamicSEO from '@/components/seo/DynamicSEO';
@@ -85,6 +86,15 @@ function HomeContent() {
         </div>
         
         <CompaniesMarquee />
+        
+        {/* Sección de Recomendaciones Personalizadas */}
+        <RecommendationsSection 
+          title="Recomendado para ti"
+          limit={6}
+          showReason={true}
+          className="bg-gray-50"
+        />
+        
         <FeaturedCourses />
         <WhyChoose />
         <Newsletter />
