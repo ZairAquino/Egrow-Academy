@@ -3,29 +3,18 @@
   filter: none;
 }
 
-/* Animaciones para el logo premium */
-@keyframes logoFloat {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
+/* Logo fijo sin animaciones */
 .logo-animation-wrapper {
-  animation: logoFloat 3s ease-in-out infinite;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* La animación continúa siempre, sin pausarse en hover */
+/* Sin efectos de hover */
 .logo-animation-wrapper:hover {
-  /* Sin cambios - la animación continúa */
+  /* Sin cambios */
 }
 
-/* Sin efectos de hover con escala y rotación */
 .logo-animation-wrapper:hover .hero-bottom-logo-image {
   /* Sin transformaciones */
 }

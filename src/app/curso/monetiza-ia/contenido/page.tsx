@@ -107,6 +107,7 @@ export default function ContenidoMonetizaIAPage() {
         duration: '22 min',
         type: 'video',
         description: 'Vender & Ayudar - Mensaje Problema → Ayuda → Oferta (copiar‑pegar)',
+        videoUrl: 'https://www.youtube.com/watch?v=V02uxR3TMYo',
         content: `
           <h2>M1.1 - Ayuda que Cierra</h2>
           <h3>Vender & Ayudar</h3>

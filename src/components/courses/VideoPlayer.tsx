@@ -35,10 +35,26 @@ export default function VideoPlayer({
     return url.includes('youtube.com') || url.includes('youtu.be');
   };
 
-  // Convertir URL de YouTube a embed
+  // Convertir URL de YouTube a embed con parámetros para mantener en la plataforma
   const getYouTubeEmbedUrl = (url: string) => {
     const videoId = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/)?.[1];
-    return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
+    if (videoId) {
+      // Parámetros para mantener el video dentro de la plataforma
+      const params = new URLSearchParams({
+        autoplay: '0',
+        modestbranding: '1',
+        rel: '0',
+        showinfo: '0',
+        controls: '1',
+        disablekb: '0',
+        fs: '1',
+        iv_load_policy: '3',
+        cc_load_policy: '0',
+        origin: window.location.origin
+      });
+      return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
+    }
+    return url;
   };
 
   // Configurar controles automáticos
@@ -154,34 +170,82 @@ export default function VideoPlayer({
     };
   }, []);
 
-  // Si es una URL de YouTube, mostrar iframe
+  // Si es una URL de YouTube, mostrar iframe integrado
   if (isYouTubeUrl(videoUrl)) {
     return (
-      <div className={`video-container ${className}`}>
-        <iframe
-          src={getYouTubeEmbedUrl(videoUrl)}
-          title={title || 'Video de YouTube'}
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        />
+      <div className={`video-container youtube-container ${className}`}>
+        <div className="video-wrapper">
+          <iframe
+            src={getYouTubeEmbedUrl(videoUrl)}
+            title={title || 'Video de YouTube'}
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+            className="youtube-iframe"
+          />
+          {title && (
+            <div className="video-title-overlay">
+              <h3 className="video-title">{title}</h3>
+            </div>
+          )}
+        </div>
         <style jsx>{`
           .video-container {
             position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
             margin: 2rem 0;
-            border-radius: 8px;
+            border-radius: 12px;
             overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            background: #000;
           }
           
-          .video-container iframe {
+          .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            width: 100%;
+          }
+          
+          .youtube-iframe {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            border-radius: 8px;
+            border-radius: 12px;
+          }
+          
+          .video-title-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%);
+            padding: 1rem;
+            z-index: 10;
+          }
+          
+          .video-title {
+            color: white;
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+          }
+          
+          @media (max-width: 768px) {
+            .video-container {
+              margin: 1rem 0;
+              border-radius: 8px;
+            }
+            
+            .youtube-iframe {
+              border-radius: 8px;
+            }
+            
+            .video-title {
+              font-size: 1rem;
+            }
           }
         `}</style>
       </div>

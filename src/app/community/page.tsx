@@ -406,12 +406,7 @@ export default function CommunityPage() {
                 </div>
               </div>
               
-              <div className="hero-buttons">
-                <a href="#features" className="btn btn-white">¿Qué Ofrecemos?</a>
-                <a href="#forum" className="btn btn-outline">Ver Foro</a>
-                <a href="#events" className="btn btn-outline">Ver Eventos</a>
-                <a href="#faq" className="btn btn-outline">FAQ</a>
-              </div>
+
             </div>
           </div>
         </section>
@@ -420,6 +415,18 @@ export default function CommunityPage() {
         <Suspense fallback={<LoadingSpinner />}>
           <CompaniesMarquee />
         </Suspense>
+
+        {/* Community Navigation Buttons */}
+        <section className="section">
+          <div className="container">
+            <div className="community-nav-buttons">
+              <a href="#features" className="btn btn-primary">¿Qué Ofrecemos?</a>
+              <a href="#forum" className="btn btn-primary">Ver Foro</a>
+              <a href="#events" className="btn btn-primary">Ver Eventos</a>
+              <a href="#faq" className="btn btn-primary">FAQ</a>
+            </div>
+          </div>
+        </section>
 
         {/* Community Features & Stats */}
         <section id="features" className="section">

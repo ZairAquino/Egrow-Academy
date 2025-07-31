@@ -42,59 +42,7 @@ export default function CursosGratuitosPage() {
       source: 'eGrow Academy',
       link: '/curso/monetiza-ia'
     },
-    // Otros Cursos
-    {
-      id: 'introduccion-llms',
-      title: 'Introducción a Large Language Models (LLMs)',
-      description: 'Aprende los fundamentos de los modelos de lenguaje grandes, desde GPT hasta Claude, y cómo implementarlos en aplicaciones reales.',
-      duration: '2 horas',
-      level: 'Principiante',
-      price: 'Gratis',
-      image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=250&fit=crop&crop=center',
-      tag: 'eGrow Academy',
-      instructor: 'Dr. Maria Rodriguez',
-      source: 'eGrow Academy',
-      link: '/curso/introduccion-llms'
-    },
-    {
-      id: 'fundamentos-ml',
-      title: 'Fundamentos de Machine Learning',
-      description: 'Aprende los conceptos básicos de Machine Learning, desde algoritmos supervisados hasta no supervisados, y cómo implementarlos en Python.',
-      duration: '2.5 horas',
-      level: 'Principiante',
-      price: 'Gratis',
-      image: 'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=400&h=250&fit=crop&crop=center',
-      tag: 'eGrow Academy',
-      instructor: 'Dr. Carlos Mendoza',
-      source: 'eGrow Academy',
-      link: '/curso/fundamentos-ml'
-    },
-    {
-      id: 'computer-vision',
-      title: 'Computer Vision con Python',
-      description: 'Aprende a procesar y analizar imágenes usando OpenCV, detectar objetos, reconocer rostros y crear aplicaciones de visión por computadora.',
-      duration: '3 horas',
-      level: 'Intermedio',
-      price: 'Gratis',
-      image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=250&fit=crop&crop=center',
-      tag: 'eGrow Academy',
-      instructor: 'Dra. Ana Torres',
-      source: 'eGrow Academy',
-      link: '/curso/computer-vision'
-    },
-    {
-      id: 'prompt-engineering',
-      title: 'Prompt Engineering para IA',
-      description: 'Domina el arte de crear prompts efectivos para modelos de IA como ChatGPT, Claude y Gemini. Aprende técnicas avanzadas para obtener mejores resultados.',
-      duration: '2.5 horas',
-      level: 'Principiante',
-      price: 'Gratis',
-      image: 'https://images.unsplash.com/photo-1686191128892-3b490635d7f8?w=400&h=250&fit=crop&crop=center',
-      tag: 'eGrow Academy',
-      instructor: 'Ing. Luis González',
-      source: 'eGrow Academy',
-      link: '/curso/prompt-engineering'
-    }
+
   ];
 
   return (

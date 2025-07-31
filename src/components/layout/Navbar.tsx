@@ -46,7 +46,7 @@ const NavbarContent: React.FC<NavbarProps> = ({ hideSidebar = false }) => {
            }}
          >
            <Image
-             src="https://3o0p1lzj4n.ufs.sh/f/P2bnXUoat3Wf9BfN8GgLgae8NyBbzTISPo645dK2W0tprVHq"
+             src="/images/eGrowAcademylogo.png"
              alt="eGrow Academy Logo"
              width={71}
              height={46}

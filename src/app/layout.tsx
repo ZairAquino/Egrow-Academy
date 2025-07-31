@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import "./critical.css";
 import "./globals.css";
 import "./premium-logo.css";
@@ -13,10 +13,10 @@ import PromotionBannerWrapper from "@/components/PromotionBannerWrapper";
 import ConversionTracker from "@/components/analytics/ConversionTracker";
 import { initializeGA4 } from "@/lib/analytics";
 
-const inter = Inter({ 
+const montserrat = Montserrat({ 
   subsets: ["latin"],
   display: 'swap',
-  variable: '--font-inter',
+  variable: '--font-montserrat',
   preload: true,
   fallback: ['system-ui', 'arial'],
   adjustFontFallback: true,
@@ -38,7 +38,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={inter.variable}>
+    <html lang="es" className={montserrat.variable}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -92,7 +92,7 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
         <link rel="dns-prefetch" href="//fonts.gstatic.com" />
       </head>
-      <body className={inter.className}>
+      <body className={montserrat.className}>
         <Providers>
           {children}
           

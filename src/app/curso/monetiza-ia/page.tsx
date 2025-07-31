@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Footer from '@/components/layout/Footer';
 import Navbar from '@/components/layout/Navbar';
+import VideoPlayer from '@/components/courses/VideoPlayer';
 
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -336,12 +337,11 @@ export default function MonetizaIAPage() {
                 
                 {/* Video solo para móvil - entre descripción y botón */}
                 <div className="mobile-video-preview">
-                  <div className="preview-video">
-                    <img src="/images/optimized/p1.webp" alt={courseData.title} />
-                    <div className="play-button" onClick={() => window.open('https://www.youtube.com/watch?v=hBuXs6NYesw', '_blank')}>
-                      <span>▶</span>
-                    </div>
-                  </div>
+                  <VideoPlayer
+                    videoUrl="https://www.youtube.com/watch?v=hBuXs6NYesw"
+                    title="Preview del Curso - Monetiza con IA"
+                    className="mobile-preview-video"
+                  />
                 </div>
                 
                 {/* Botón nuevo completamente desde cero */}
@@ -387,12 +387,11 @@ export default function MonetizaIAPage() {
               </div>
               
               <div className="course-preview">
-                <div className="preview-video">
-                  <img src="/images/optimized/p1.webp" alt={courseData.title} />
-                  <div className="play-button" onClick={() => window.open('https://www.youtube.com/watch?v=hBuXs6NYesw', '_blank')}>
-                    <span>▶</span>
-                  </div>
-                </div>
+                <VideoPlayer
+                  videoUrl="https://www.youtube.com/watch?v=hBuXs6NYesw"
+                  title="Preview del Curso - Monetiza con IA"
+                  className="desktop-preview-video"
+                />
                 
                 {isUserAuthenticated && (
                   <div className="progress-card">
@@ -777,10 +776,25 @@ export default function MonetizaIAPage() {
           margin-bottom: 1.5rem;
         }
 
-        /* Ocultar video móvil en desktop */
-        .mobile-video-preview {
-          display: none;
-        }
+                  /* Ocultar video móvil en desktop */
+          .mobile-video-preview {
+            display: none;
+          }
+          
+          /* Estilos para videos de preview */
+          .mobile-preview-video {
+            margin: 1.5rem 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+          }
+          
+          .desktop-preview-video {
+            margin: 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+          }
 
         .progress-section-new {
           display: flex;
@@ -1534,44 +1548,10 @@ export default function MonetizaIAPage() {
             margin: 1.5rem 0;
           }
 
-          .mobile-video-preview .preview-video {
-            position: relative;
-            border-radius: 12px;
+          .mobile-preview-video {
+            border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-          }
-
-          .mobile-video-preview .preview-video img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            display: block;
-          }
-
-          .mobile-video-preview .play-button {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 60px;
-            height: 60px;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-          }
-
-          .mobile-video-preview .play-button:hover {
-            background: white;
-            transform: translate(-50%, -50%) scale(1.1);
-          }
-
-          .mobile-video-preview .play-button span {
-            font-size: 1.5rem;
-            color: #333;
           }
 
           .content-layout {

@@ -11,16 +11,6 @@ const featuredCourses = [
     level: "Intermedio",
     link: "/curso/monetiza-ia",
     isFree: true
-  },
-  {
-    image: "https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=400&h=250&fit=crop",
-    title: "ChatGPT y LLMs: Guía Completa",
-    description: "Aprende a construir aplicaciones con ChatGPT, Claude y otros LLMs modernos.",
-    tag: "Curso Gratuito",
-    duration: "3 horas",
-    level: "Principiante",
-    link: "https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/",
-    isFree: true
   }
 ];
 
