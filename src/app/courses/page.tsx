@@ -3,12 +3,11 @@
 import { useState, useEffect, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import DynamicLogo from '@/components/ui/DynamicLogo';
-
+import { SkeletonGrid, SkeletonCourseCard } from '@/components/ui/SkeletonLoader';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import CourseCard from '@/components/courses/CourseCard';
 import Footer from '@/components/layout/Footer';
 import Navbar from '@/components/layout/Navbar';
-
 import { useAuth } from '@/contexts/AuthContext';
 
 // Lazy load components
@@ -35,11 +34,17 @@ interface Course {
 
 export default function CoursesPage() {
   const [selectedCategory, setSelectedCategory] = useState('todos');
+  const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuth();
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
+    // Simular carga de datos
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+    return () => clearTimeout(timer);
   }, []);
 
   const categories = [
@@ -163,31 +168,35 @@ export default function CoursesPage() {
               ))}
             </div>
 
-            {/* Grid de cursos */}
-            <div className="courses-grid">
-              {filteredCourses.map((course) => (
-                <CourseCard
-                  key={course.id}
-                  id={course.id}
-                  image={course.image}
-                  title={course.title}
-                  description={course.description}
-                  tag={course.tag}
-                  duration={course.duration}
-                  level={course.level}
-                  category={course.category}
-                  isFree={course.isFree}
-                  requiresAuth={course.requiresAuth}
-                  link={course.link}
-                  onCourseClick={(courseId) => {
-                    console.log('Curso clickeado:', courseId);
-                    // Aquí puedes agregar la lógica para manejar el clic del curso
-                  }}
-                />
-              ))}
-            </div>
+            {/* Grid de cursos con skeleton loading */}
+            {isLoading ? (
+              <SkeletonGrid items={6} className="courses-grid" />
+            ) : (
+              <div className="courses-grid">
+                {filteredCourses.map((course) => (
+                  <CourseCard
+                    key={course.id}
+                    id={course.id}
+                    image={course.image}
+                    title={course.title}
+                    description={course.description}
+                    tag={course.tag}
+                    duration={course.duration}
+                    level={course.level}
+                    category={course.category}
+                    isFree={course.isFree}
+                    requiresAuth={course.requiresAuth}
+                    link={course.link}
+                    onCourseClick={(courseId) => {
+                      console.log('Curso clickeado:', courseId);
+                      // Aquí puedes agregar la lógica para manejar el clic del curso
+                    }}
+                  />
+                ))}
+              </div>
+            )}
 
-            {filteredCourses.length === 0 && (
+            {!isLoading && filteredCourses.length === 0 && (
               <div className="no-courses">
                 <p>No se encontraron cursos en esta categoría.</p>
               </div>

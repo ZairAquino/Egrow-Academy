@@ -2,8 +2,10 @@
 
 import { useCourseAccess } from '@/hooks/useCourseAccess';
 import { useAnalytics } from '@/hooks/useAnalytics';
+import { useToast } from '@/contexts/ToastContext';
 import SubscriptionModal from '@/components/payments/SubscriptionModal';
 import OptimizedImage from '@/components/ui/OptimizedImage';
+import { motion } from 'framer-motion';
 
 interface CourseCardProps {
   id: string;
@@ -32,6 +34,7 @@ export default function CourseCard({
   } = useCourseAccess();
 
   const { trackCourseView, trackCTAClick } = useAnalytics();
+  const { showToast } = useToast();
 
   const course = { id, title, category, isFree, requiresAuth };
 
@@ -57,7 +60,10 @@ export default function CourseCard({
 
     if (onCourseClick) {
       if (handleCourseAccess(course)) {
+        showToast(`Accediendo a ${title}...`, 'info', 1500);
         onCourseClick(id);
+      } else {
+        showToast('Este curso requiere suscripción premium', 'warning', 3000);
       }
     }
   };
@@ -94,20 +100,29 @@ export default function CourseCard({
 
   if (link) {
     return (
-      <a href={link} className="course-card-new">
+      <motion.a 
+        href={link} 
+        className="course-card-new"
+        whileHover={{ y: -4, scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        transition={{ duration: 0.2 }}
+      >
         {CardContent}
-      </a>
+      </motion.a>
     );
   }
 
   return (
     <>
-      <div
+      <motion.div
         className="course-card-new cursor-pointer"
         onClick={handleClick}
+        whileHover={{ y: -4, scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        transition={{ duration: 0.2 }}
       >
         {CardContent}
-      </div>
+      </motion.div>
       <SubscriptionModal
         isOpen={showSubscriptionModal}
         onClose={closeSubscriptionModal}

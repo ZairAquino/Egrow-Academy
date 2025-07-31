@@ -4,15 +4,26 @@ import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import SubscriptionButton from '@/components/payments/SubscriptionButton';
 import DynamicLogo from '@/components/ui/DynamicLogo';
+import { InteractiveButton } from '@/components/ui/MicroInteractions';
+import { useToast } from '@/contexts/ToastContext';
 import { useEffect, useRef, useState } from 'react';
 
 export default function Hero() {
   const { user } = useAuth();
+  const { showToast } = useToast();
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  const handleExploreCourses = () => {
+    showToast('Explorando cursos disponibles...', 'info', 2000);
+  };
+
+  const handleLearnMore = () => {
+    showToast('Descubriendo más contenido...', 'info', 2000);
+  };
 
   return (
     <section className="hero">
@@ -37,6 +48,27 @@ export default function Hero() {
             Desarrolla habilidades irremplazables y consigue mejores oportunidades profesionales
           </p>
           
+          {/* Botones de acción con micro-interacciones */}
+          <div className="hero-actions">
+            <InteractiveButton
+              onClick={handleExploreCourses}
+              variant="primary"
+              size="lg"
+              className="hero-button primary"
+            >
+              Explorar Cursos
+            </InteractiveButton>
+            
+            <InteractiveButton
+              onClick={handleLearnMore}
+              variant="secondary"
+              size="lg"
+              className="hero-button secondary"
+            >
+              Saber Más
+            </InteractiveButton>
+          </div>
+          
           {/* Logo blanco debajo del texto */}
           <div className="hero-bottom-logo">
             <div className="logo-animation-wrapper">
@@ -48,8 +80,6 @@ export default function Hero() {
               />
             </div>
           </div>
-          
-          {/* Botones removidos - solo se mantiene el contenido informativo */}
         </div>
       </div>
 
@@ -113,17 +143,10 @@ export default function Hero() {
           gap: 16px;
           margin-top: 32px;
           flex-wrap: wrap;
+          justify-content: center;
         }
 
         .hero-button {
-          padding: 12px 24px;
-          border-radius: 8px;
-          font-weight: 600;
-          text-decoration: none;
-          transition: all 0.3s ease;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
           min-width: 160px;
         }
 
