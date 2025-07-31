@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import DynamicLogo from '@/components/ui/DynamicLogo';
 import { SkeletonGrid, SkeletonCourseCard } from '@/components/ui/SkeletonLoader';
+import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import CourseCard from '@/components/courses/CourseCard';
 import Footer from '@/components/layout/Footer';
@@ -153,6 +154,11 @@ export default function CoursesPage() {
         {/* Courses Section */}
         <section className="section">
           <div className="container">
+            {/* Breadcrumbs */}
+            <div className="mb-6">
+              <Breadcrumbs className="breadcrumbs-container" />
+            </div>
+
             {/* Filtros */}
             <div className="category-filters">
               {categories.map((category) => (
@@ -208,6 +214,12 @@ export default function CoursesPage() {
       <Footer />
       
       <style jsx>{`
+        .breadcrumbs-container {
+          padding: 16px 0;
+          border-bottom: 1px solid #e5e7eb;
+          margin-bottom: 24px;
+        }
+
         .hero-bottom-logo {
           display: flex;
           justify-content: center;

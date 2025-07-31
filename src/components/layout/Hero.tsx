@@ -4,26 +4,15 @@ import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import SubscriptionButton from '@/components/payments/SubscriptionButton';
 import DynamicLogo from '@/components/ui/DynamicLogo';
-import { InteractiveButton } from '@/components/ui/MicroInteractions';
-import { useToast } from '@/contexts/ToastContext';
 import { useEffect, useRef, useState } from 'react';
 
 export default function Hero() {
   const { user } = useAuth();
-  const { showToast } = useToast();
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
-
-  const handleExploreCourses = () => {
-    showToast('Explorando cursos disponibles...', 'info', 2000);
-  };
-
-  const handleLearnMore = () => {
-    showToast('Descubriendo más contenido...', 'info', 2000);
-  };
 
   return (
     <section className="hero">
@@ -47,27 +36,6 @@ export default function Hero() {
           <p className="hero-description">
             Desarrolla habilidades irremplazables y consigue mejores oportunidades profesionales
           </p>
-          
-          {/* Botones de acción con micro-interacciones */}
-          <div className="hero-actions">
-            <InteractiveButton
-              onClick={handleExploreCourses}
-              variant="primary"
-              size="lg"
-              className="hero-button primary"
-            >
-              Explorar Cursos
-            </InteractiveButton>
-            
-            <InteractiveButton
-              onClick={handleLearnMore}
-              variant="secondary"
-              size="lg"
-              className="hero-button secondary"
-            >
-              Saber Más
-            </InteractiveButton>
-          </div>
           
           {/* Logo blanco debajo del texto */}
           <div className="hero-bottom-logo">
@@ -138,54 +106,6 @@ export default function Hero() {
           text-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
         }
 
-        .hero-actions {
-          display: flex;
-          gap: 16px;
-          margin-top: 32px;
-          flex-wrap: wrap;
-          justify-content: center;
-        }
-
-        .hero-button {
-          min-width: 160px;
-        }
-
-        .hero-button.primary {
-          background: #3b82f6;
-          color: white;
-          border: 2px solid #3b82f6;
-        }
-
-        .hero-button.primary:hover {
-          background: #2563eb;
-          border-color: #2563eb;
-          transform: translateY(-2px);
-        }
-
-        .hero-button.secondary {
-          background: transparent;
-          color: #3b82f6;
-          border: 2px solid #3b82f6;
-        }
-
-        .hero-button.secondary:hover {
-          background: #3b82f6;
-          color: white;
-          transform: translateY(-2px);
-        }
-
-        .premium-badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          background: linear-gradient(135deg, #ffd700, #ffed4e);
-          color: #000;
-          padding: 8px 16px;
-          border-radius: 20px;
-          font-weight: 600;
-          margin-top: 16px;
-        }
-
         .hero-decoration {
           transition: all 0.3s ease;
         }
@@ -206,16 +126,6 @@ export default function Hero() {
 
           .logo-animation-wrapper:hover .hero-bottom-logo-image {
             transform: scale(1.05) rotate(3deg);
-          }
-
-          .hero-actions {
-            flex-direction: column;
-            align-items: center;
-          }
-
-          .hero-button {
-            width: 100%;
-            max-width: 280px;
           }
 
           .hero-decoration {
