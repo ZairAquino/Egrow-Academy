@@ -27,6 +27,7 @@ export default function MonetizaIAPage() {
   const [completedLessons, setCompletedLessons] = useState<number[]>([]);
   const [progressPercentage, setProgressPercentage] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [expandedLessons, setExpandedLessons] = useState<number[]>([]);
   // Estados del contador eliminados
   const { user, status } = useAuth();
   const router = useRouter();
@@ -44,6 +45,15 @@ export default function MonetizaIAPage() {
   
 
   // useEffect del contador eliminado
+
+  // Función para alternar la expansión de lecciones
+  const toggleLesson = (index: number) => {
+    setExpandedLessons(prev => 
+      prev.includes(index) 
+        ? prev.filter(i => i !== index)
+        : [...prev, index]
+    );
+  };
 
   // Función completamente nueva para redirección directa
   const goToCourseContent = () => {
@@ -315,8 +325,7 @@ export default function MonetizaIAPage() {
   
   return (
     <>
-      {/* Header separado con altura exacta del navbar */}
-      <header className="navbar-spacer h-14 md:h-16"></header>
+
       
       <Navbar />
       
@@ -572,23 +581,28 @@ export default function MonetizaIAPage() {
               </div>
               
               <div className="lessons-list">
-                <div className="lessons-grid">
+                <div className="lessons-horizontal">
                   {courseData.lessons.map((lesson, index) => (
-                    <div key={lesson.id} className={`lesson-card ${completedLessons.includes(index) ? 'completed' : ''}`}>
-                      <div className="lesson-header">
-                        <div className="lesson-number">{index + 1}</div>
-                        <div className="lesson-status">
+                    <div key={lesson.id} className={`lesson-item-horizontal ${completedLessons.includes(index) ? 'completed' : ''}`}>
+                      <div className="lesson-header-horizontal" onClick={() => toggleLesson(index)}>
+                        <div className="lesson-number-horizontal">{index + 1}</div>
+                        <div className="lesson-title-horizontal">{lesson.title}</div>
+                        <div className="lesson-status-horizontal">
                           {completedLessons.includes(index) ? '✓' : '○'}
                         </div>
-                      </div>
-                      <div className="lesson-content">
-                        <h4 className="lesson-title">{lesson.title}</h4>
-                        <p className="lesson-description">{lesson.description}</p>
-                        <div className="lesson-meta">
-                          <span className="lesson-type">{lesson.type}</span>
-                          <span className="lesson-duration">{lesson.duration}min</span>
+                        <div className="lesson-toggle">
+                          {expandedLessons.includes(index) ? '−' : '+'}
                         </div>
                       </div>
+                      {expandedLessons.includes(index) && (
+                        <div className="lesson-description-expanded">
+                          <p className="lesson-description-text">{lesson.description}</p>
+                          <div className="lesson-meta-horizontal">
+                            <span className="lesson-type-horizontal">{lesson.type}</span>
+                            <span className="lesson-duration-horizontal">{lesson.duration}min</span>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -700,10 +714,7 @@ export default function MonetizaIAPage() {
           gap: 1rem;
         }
 
-        .navbar-spacer {
-          width: 100%;
-          background: transparent;
-        }
+
 
         .hero-section {
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -1126,6 +1137,11 @@ export default function MonetizaIAPage() {
           gap: 1rem;
           max-width: 800px;
           margin: 0 auto;
+        }
+
+        /* Ocultar funcionalidad expandible en desktop */
+        .lessons-horizontal {
+          display: none;
         }
 
         .lesson-card {
@@ -1661,15 +1677,145 @@ export default function MonetizaIAPage() {
             font-size: 0.75rem;
           }
 
+          /* Mostrar funcionalidad expandible solo en móvil */
+          .lessons-horizontal {
+            display: flex !important;
+            flex-direction: column;
+            gap: 0.5rem;
+            max-width: 100%;
+            margin: 0 auto;
+          }
+
+          /* Ocultar grid en móvil */
+          .lessons-grid {
+            display: none;
+          }
+
+          .lesson-item-horizontal {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+          }
+
+          .lesson-item-horizontal:hover {
+            border-color: #22c55e;
+            box-shadow: 0 2px 8px rgba(34, 197, 94, 0.1);
+          }
+
+          .lesson-item-horizontal.completed {
+            background: #f0fdf4;
+            border-color: #22c55e;
+          }
+
+          .lesson-header-horizontal {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+          }
+
+          .lesson-header-horizontal:hover {
+            background-color: #f9fafb;
+          }
+
+          .lesson-number-horizontal {
+            width: 28px;
+            height: 28px;
+            background: #22c55e;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+          }
+
+          .lesson-title-horizontal {
+            flex: 1;
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 0.85rem;
+          }
+
+          .lesson-status-horizontal {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #22c55e;
+            flex-shrink: 0;
+          }
+
+          .lesson-toggle {
+            width: 20px;
+            height: 20px;
+            background: #f3f4f6;
+            color: #6b7280;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+          }
+
+          .lesson-toggle:hover {
+            background: #e5e7eb;
+            color: #374151;
+          }
+
+          .lesson-description-expanded {
+            padding: 0.75rem;
+            background: #f9fafb;
+            border-top: 1px solid #e5e7eb;
+            animation: slideDown 0.3s ease;
+          }
+
+          @keyframes slideDown {
+            from {
+              opacity: 0;
+              max-height: 0;
+            }
+            to {
+              opacity: 1;
+              max-height: 200px;
+            }
+          }
+
+          .lesson-description-text {
+            margin: 0 0 0.5rem 0;
+            color: #6b7280;
+            line-height: 1.4;
+            font-size: 0.8rem;
+          }
+
+          .lesson-meta-horizontal {
+            display: flex;
+            gap: 0.4rem;
+          }
+
+          .lesson-type-horizontal, .lesson-duration-horizontal {
+            font-size: 0.7rem;
+            color: #6b7280;
+            background: #f3f4f6;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-weight: 500;
+          }
+
           /* Ajustar hero section padding en móvil */
           .hero-section {
             padding: 0.75rem 0;
           }
 
-          /* Ajustar navbar spacer en móvil */
-          .navbar-spacer {
-            height: 3.5rem; /* 56px - altura exacta del navbar móvil */
-          }
+
 
           .course-hero {
             gap: 0.75rem;

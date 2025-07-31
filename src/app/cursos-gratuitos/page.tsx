@@ -83,12 +83,6 @@ export default function CursosGratuitosPage() {
                   />
                 </div>
               </div>
-              
-              
-              <div className="free-badge">
-                <span className="badge-icon">🆓</span>
-                <span className="badge-text">100% Gratuito</span>
-              </div>
             </div>
           </div>
         </section>
@@ -265,6 +259,12 @@ export default function CursosGratuitosPage() {
             max-width: 76px;
             max-height: 57px;
           }
+          
+          .hero-bottom-logo {
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+          }
+          
         }
 
         @media (max-width: 480px) {
@@ -272,6 +272,12 @@ export default function CursosGratuitosPage() {
             max-width: 66px;
             max-height: 48px;
           }
+          
+          .hero-bottom-logo {
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+          }
+          
         }
 
         /* Estilos para el botón CTA */

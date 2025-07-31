@@ -23,14 +23,7 @@ export default function Hero() {
             src="/images/background.png"
             alt="Header background"
             className="hero-background"
-          />
-          
-          {/* Imagen v-11 1.png en la esquina inferior derecha de background.png */}
-          <img
-            src="/images/v-11 1.png"
-            alt="Hero decoration"
-            className="hero-decoration"
-          />
+          />      
         </>
       )}
       
@@ -61,17 +54,6 @@ export default function Hero() {
       </div>
 
       <style jsx>{`
-        .hero-decoration {
-          position: absolute;
-          width: 240px;
-          height: 285px;
-          right: calc(50% - 620px + 20px);
-          bottom: calc(50% - 230px + 20px);
-          z-index: 0;
-          opacity: 0.9;
-          object-fit: contain;
-        }
-
         .hero-bottom-logo {
           display: flex;
           justify-content: center;

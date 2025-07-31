@@ -347,8 +347,7 @@ export default function DesarrolloWebFullStackPage() {
 
   return (
     <>
-      {/* Header separado con altura exacta del navbar */}
-      <header className="navbar-spacer h-14 md:h-16"></header>
+
       
       <Navbar />
       
@@ -1427,10 +1426,7 @@ export default function DesarrolloWebFullStackPage() {
           font-size: 0.9rem;
         }
 
-        .navbar-spacer {
-          width: 100%;
-          background: transparent;
-        }
+
 
         /* Ocultar video móvil en desktop */
         .mobile-video-preview {
@@ -1639,10 +1635,7 @@ export default function DesarrolloWebFullStackPage() {
             margin-top: 1.5rem;
           }
 
-          /* Ajustar navbar spacer en móvil */
-          .navbar-spacer {
-            height: 3.5rem; /* 56px - altura exacta del navbar móvil */
-          }
+
 
           /* Mostrar video móvil entre descripción y botón */
           .mobile-video-preview {
