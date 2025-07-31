@@ -109,61 +109,55 @@ export default function Sidebar({ isOpen, onToggle, hideToggle = false }: Sideba
         </div>
 
         <div className="sidebar-menu">
-          {menuItems.map((item, index) => (
-            <div key={item.id}>
-              {item.hasDropdown ? (
-                <div className={`menu-item dropdown-sidebar ${activeDropdown === item.id ? 'active' : ''}`}>
-                  <button 
-                    onClick={() => toggleDropdown(item.id)}
-                    className={`menu-link ${selectedIndex === index ? 'selected' : ''}`}
-                    style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer' }}
-                    aria-expanded={activeDropdown === item.id}
-                    aria-controls={`${item.id}-submenu`}
-                    tabIndex={0}
-                  >
-                    <span className="menu-icon" aria-hidden="true">{item.icon}</span>
-                    <span className="menu-text">{item.label}</span>
-                    <span className="dropdown-arrow" aria-hidden="true">▼</span>
-                  </button>
-                  <div className="submenu" id={`${item.id}-submenu`} role="region" aria-label={`Submenú de ${item.label}`}>
-                    <Link href="/cursos-gratuitos" className="submenu-link" onClick={handleLinkClick}>Cursos Gratuitos</Link>
-                    <Link href="/courses" className="submenu-link" onClick={handleLinkClick}>Todos los Cursos 🔒</Link>
-                  </div>
-                </div>
-              ) : (
-                <Link 
-                  href={item.href} 
-                  className={`menu-link ${selectedIndex === index ? 'selected' : ''}`} 
-                  onClick={handleLinkClick}
-                  target={item.external ? '_blank' : undefined}
-                  rel={item.external ? 'noopener noreferrer' : undefined}
-                  tabIndex={0}
-                >
-                  <span className="menu-icon" aria-hidden="true">{item.icon}</span>
-                  <span className="menu-text">{item.label}</span>
-                </Link>
-              )}
+          <Link href="/" className="menu-link" onClick={handleLinkClick}>
+            <span className="menu-icon" aria-hidden="true">🏠</span>
+            <span className="menu-text">Inicio</span>
+          </Link>
+
+          <div className={`menu-item dropdown-sidebar ${activeDropdown === 'courses' ? 'active' : ''}`}>
+            <button 
+              onClick={() => toggleDropdown('courses')}
+              className="menu-link"
+              style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer' }}
+              aria-expanded={activeDropdown === 'courses'}
+              aria-controls="courses-submenu"
+            >
+              <span className="menu-icon" aria-hidden="true">📚</span>
+              <span className="menu-text">Cursos</span>
+              <span className="dropdown-arrow" aria-hidden="true">▼</span>
+            </button>
+            <div className="submenu" id="courses-submenu" role="region" aria-label="Submenú de cursos">
+              <Link href="/cursos-gratuitos" className="submenu-link" onClick={handleLinkClick}>Cursos Gratuitos</Link>
+              <Link href="/courses" className="submenu-link" onClick={handleLinkClick}>Todos los Cursos 🔒</Link>
             </div>
-          ))}
+          </div>
+
+          <a href="https://egrow-theta.vercel.app/ai-news" target="_blank" rel="noopener noreferrer" className="menu-link ai-news-btn" onClick={handleLinkClick}>
+            <span className="menu-icon" aria-hidden="true">🤖</span>
+            <span className="menu-text">AI-News</span>
+          </a>
+
+          <Link href="/community" className="menu-link" onClick={handleLinkClick}>
+            <span className="menu-icon" aria-hidden="true">👥</span>
+            <span className="menu-text">Comunidad</span>
+          </Link>
+
+          <Link href="/resources" className="menu-link" onClick={handleLinkClick}>
+            <span className="menu-icon" aria-hidden="true">📖</span>
+            <span className="menu-text">Recursos</span>
+          </Link>
+
+          <Link href="/contacto" className="menu-link" onClick={handleLinkClick}>
+            <span className="menu-icon" aria-hidden="true">✉️</span>
+            <span className="menu-text">Contacto</span>
+          </Link>
+
+          <a href="https://egrow.lat/ai-experts" target="_blank" rel="noopener noreferrer" className="menu-link" onClick={handleLinkClick}>
+            <span className="menu-icon" aria-hidden="true">🏢</span>
+            <span className="menu-text">AI Experts©</span>
+          </a>
         </div>
       </nav>
-
-      <style jsx>{`
-        .menu-link.selected {
-          background-color: rgba(59, 130, 246, 0.1);
-          border-left: 3px solid #3b82f6;
-        }
-
-        .menu-link:focus {
-          outline: 2px solid #3b82f6;
-          outline-offset: -2px;
-        }
-
-        .submenu-link:focus {
-          outline: 2px solid #3b82f6;
-          outline-offset: -2px;
-        }
-      `}</style>
     </>
   );
 } 
