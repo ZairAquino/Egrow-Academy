@@ -24,7 +24,6 @@ export default function CertificatePage() {
   const { user, status } = useAuth();
   const params = useParams();
   const courseId = params.courseId as string;
-  const [isClient, setIsClient] = useState(false);
   
   
   const [certificate, setCertificate] = useState<Certificate | null>(null);
@@ -63,9 +62,6 @@ export default function CertificatePage() {
     loadCertificate();
   }, [user, status, courseId]);
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   // Redirigir si no está autenticado
   if (status === 'unauthenticated') {
@@ -90,27 +86,11 @@ export default function CertificatePage() {
       <main className="main-content pt-16">
         {/* Hero Section */}
         <section className="hero gradient-bg">
-          {/* Video de fondo - solo renderizar en el cliente */}
-          {isClient && (
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                zIndex: -0.5
-              }}
-            >
-              <source src="/videos/background.webm" type="video/webm" />
-              Tu navegador no soporta el elemento video.
-            </video>
-          )}
+          <img
+            src="/images/background.png"
+            alt="Header background"
+            className="hero-background"
+          />
           
           <div className="container" style={{ position: 'relative', zIndex: 10 }}>
             <div className="hero-content">
@@ -539,6 +519,16 @@ export default function CertificatePage() {
             width: 100%;
             max-width: 300px;
           }
+        }
+
+        .hero-background {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          z-index: -1;
         }
       `}</style>
     </>

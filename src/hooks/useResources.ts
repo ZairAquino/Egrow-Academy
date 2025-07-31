@@ -14,13 +14,13 @@ export interface Resource {
   fileUrl?: string;
   requiresAuth: boolean;
   isFree: boolean;
-  rating: number;
+  rating: number | string;
   downloadsCount: number;
   status: string;
   createdAt: string;
   updatedAt: string;
   topics: ResourceTopic[];
-  _count: {
+  _count?: {
     accessLogs: number;
   };
 }

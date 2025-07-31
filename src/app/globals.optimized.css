@@ -1742,10 +1742,15 @@ button, a, input, select, textarea {
 }
 
 .circle-1 {
-  width: 120px;
-  height: 120px;
-  top: -60px;
-  right: -60px;
+  width: 873px;
+  height: 434px;
+  max-width: 1024px;
+  max-height: 509.068px;
+  aspect-ratio: 175/87;
+  position: absolute;
+  right: 75px;
+  bottom: 0;
+  background: lightgray url(<path-to-image>) -76px -37.247px / 117.297% 117.165% no-repeat;
 }
 
 .circle-2 {

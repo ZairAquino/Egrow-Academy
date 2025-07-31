@@ -21,7 +21,7 @@ const NavbarContent: React.FC<NavbarProps> = ({ hideSidebar = false }) => {
 
   return (
     <>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               <nav className="w-full bg-white/80 backdrop-blur-sm border-b border-gray-200/80 fixed top-0 z-50 flex items-center justify-between px-4 py-1 md:py-2 shadow-sm h-14 md:h-auto">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               <nav className="w-full bg-white/80 backdrop-blur-sm border-b border-gray-200/80 fixed top-0 z-50 flex items-center justify-between px-4 py-1 md:py-2 shadow-sm h-14 md:h-auto relative">
              {/* Botón de sidebar - solo mostrar si no está oculto */}
              <div className="flex items-center">
                {!hideSidebar && (
@@ -37,10 +37,10 @@ const NavbarContent: React.FC<NavbarProps> = ({ hideSidebar = false }) => {
                )}
              </div>
 
-                             {/* Logo - Configuración separada para móvil y desktop */}
+                             {/* Logo - Centrado absolutamente */}
          <Link 
            href="/" 
-           className="navbar-logo flex items-center ml-4 w-auto h-auto md:absolute md:right-1/2 md:transform md:translate-x-1/2 md:ml-0 md:w-[95px] md:h-[95px]"
+           className="navbar-logo absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center w-auto h-auto"
            style={{
              maxWidth: 'var(--width-693_5, 693.5px)',
            }}
@@ -50,7 +50,7 @@ const NavbarContent: React.FC<NavbarProps> = ({ hideSidebar = false }) => {
              alt="eGrow Academy Logo"
              width={71}
              height={46}
-             className="w-auto h-9 md:w-full md:h-full object-contain"
+             className="w-auto h-9 object-contain"
              priority
            />
          </Link>
@@ -76,7 +76,7 @@ const NavbarContent: React.FC<NavbarProps> = ({ hideSidebar = false }) => {
 const Navbar: React.FC<NavbarProps> = (props) => {
   return (
     <ClientOnly fallback={
-                                                               <nav className="w-full bg-white/80 backdrop-blur-sm border-b border-gray-200/80 fixed top-0 z-50 flex items-center justify-between px-4 py-1 md:py-2 shadow-sm h-14 md:h-auto">
+                                                               <nav className="w-full bg-white/80 backdrop-blur-sm border-b border-gray-200/80 fixed top-0 z-50 flex items-center justify-between px-4 py-1 md:py-2 shadow-sm h-14 md:h-auto relative">
         <div className="flex items-center">
           {!props.hideSidebar && (
             <div className="p-2 rounded-md">
@@ -84,7 +84,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
             </div>
           )}
         </div>
-        <div className="flex-1 flex justify-center">
+        <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
           <div className="h-8 w-32 bg-gray-200 rounded"></div>
         </div>
         <div className="flex items-center space-x-3">

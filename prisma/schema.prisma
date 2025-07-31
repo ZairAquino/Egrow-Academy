@@ -324,10 +324,10 @@ model Resource {
   type             ResourceType
   author           String?
   fileUrl          String?
-  fileSize         Int?
-  downloadCount    Int                @default(0)
-  viewCount        Int                @default(0)
+  requiresAuth     Boolean            @default(true)
+  isFree           Boolean            @default(false)
   rating           Decimal            @default(0)
+  downloadsCount   Int                @default(0)
   status           ResourceStatus     @default(DRAFT)
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
@@ -340,12 +340,14 @@ model Resource {
 }
 
 model ResourceTopic {
-  id         String   @id @default(cuid())
-  name       String
-  resourceId String
-  resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  order       Int      @default(0)
+  resourceId  String
+  resource    Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
 
-  @@unique([resourceId, name])
+  @@unique([resourceId, title])
   @@map("resource_topics")
 }
 

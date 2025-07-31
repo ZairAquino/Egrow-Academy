@@ -110,33 +110,20 @@ export default function CoursesPage() {
       <main className="main-content pt-16">
         {/* Hero Section */}
         <section className="hero gradient-bg">
-          {/* Video de fondo - solo renderizar en el cliente */}
+          {/* Imagen de fondo - solo renderizar en el cliente */}
           {isClient && (
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                zIndex: -0.5
-              }}
-            >
-              <source src="/videos/background.webm" type="video/webm" />
-              Tu navegador no soporta el elemento video.
-            </video>
+            <img
+              src="/images/background.png"
+              alt="Header background"
+              className="hero-background"
+            />
           )}
           
           <div className="container" style={{ position: 'relative', zIndex: 10 }}>
             <div className="hero-content">
               <h1 className="hero-title">
-                Todos los Cursos
-                <span className="block">de Inteligencia Artificial</span>
+                Todos los cursos de
+                <span className="block">Inteligencia Artificial</span>
               </h1>
               <p className="hero-description">
                 Cada curso diseñado para un objetivo específico. Desde introducción hasta especialización, 

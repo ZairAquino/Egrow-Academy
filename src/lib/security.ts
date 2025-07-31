@@ -20,7 +20,7 @@ export function getClientIP(request: NextRequest): string {
   return forwarded?.split(',')[0] || 
          realIP || 
          cfConnectingIP || 
-         request.ip || 
+         request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown" || 
          'unknown'
 }
 

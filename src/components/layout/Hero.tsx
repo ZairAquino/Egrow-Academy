@@ -8,74 +8,40 @@ import { useEffect, useRef, useState } from 'react';
 
 export default function Hero() {
   const { user } = useAuth();
-  const videoRef = useRef<HTMLVideoElement>(null);
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
-    
-    // Optimizar la carga del video
-    if (videoRef.current) {
-      videoRef.current.load();
-      console.log('Video cargando...');
-      
-      // Verificar que el video se cargue correctamente
-      videoRef.current.addEventListener('loadeddata', () => {
-        console.log('Video cargado exitosamente');
-      });
-      
-      videoRef.current.addEventListener('error', (e) => {
-        console.error('Error al cargar el video:', e);
-      });
-    }
   }, []);
 
   return (
     <section className="hero">
-      {/* Video de fondo optimizado para carga rápida */}
+      {/* Imagen de fondo del header */}
       {isClient && (
-        <video
-          ref={videoRef}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            zIndex: -1
-          }}
-        >
-          <source src="/videos/background.webm" type="video/webm" />
-          <source src="/videos/background.mp4" type="video/mp4" />
-          {/* Fallback para navegadores que no soporten video */}
-          <div style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            zIndex: -1
-          }} />
-        </video>
+        <>
+          <img
+            src="/images/background.png"
+            alt="Header background"
+            className="hero-background"
+          />
+          
+          {/* Imagen v-11 1.png en la esquina inferior derecha de background.png */}
+          <img
+            src="/images/v-11 1.png"
+            alt="Hero decoration"
+            className="hero-decoration"
+          />
+        </>
       )}
       
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>
         <div className="hero-content">
           <h1 className="hero-title">
-            Aprende habilidades
-            <span className="block">irremplazables</span>
+         Domina la inteligencia
+         <span className="block">artificial desde cero </span>
           </h1>
           <p className="hero-description">
-            Domina el aprendizaje automático e inteligencia artificial con
-            cursos gratuitos y recursos de alta calidad. Comienza tu viaje
-            en IA hoy mismo.
+            Desarrolla habilidades irremplazables y consigue mejores oportunidades profesionales
           </p>
           
           {/* Logo blanco debajo del texto */}
@@ -95,6 +61,17 @@ export default function Hero() {
       </div>
 
       <style jsx>{`
+        .hero-decoration {
+          position: absolute;
+          width: 240px;
+          height: 285px;
+          right: calc(50% - 620px + 20px);
+          bottom: calc(50% - 230px + 20px);
+          z-index: 0;
+          opacity: 0.9;
+          object-fit: contain;
+        }
+
         .hero-bottom-logo {
           display: flex;
           justify-content: center;
@@ -124,6 +101,15 @@ export default function Hero() {
           }
         }
 
+        @keyframes logoFloatMobile {
+          0%, 100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-5px);
+          }
+        }
+
         .logo-animation-wrapper {
           animation: logoFloat 3s ease-in-out infinite;
           display: flex;
@@ -133,6 +119,11 @@ export default function Hero() {
 
         .logo-animation-wrapper:hover {
           animation-play-state: paused;
+        }
+
+        .hero-subtitle {
+          font-size: 118%;
+          text-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
         }
 
         .hero-actions {
@@ -190,10 +181,26 @@ export default function Hero() {
           margin-top: 16px;
         }
 
+        .hero-decoration {
+          transition: all 0.3s ease;
+        }
+
         @media (max-width: 768px) {
+          .hero-bottom-logo {
+            margin-top: 24px;
+          }
+
           .hero-bottom-logo-image {
             max-width: 76px;
             max-height: 57px;
+          }
+
+          .logo-animation-wrapper {
+            animation: logoFloatMobile 4s ease-in-out infinite;
+          }
+
+          .logo-animation-wrapper:hover .hero-bottom-logo-image {
+            transform: scale(1.05) rotate(3deg);
           }
 
           .hero-actions {
@@ -205,12 +212,48 @@ export default function Hero() {
             width: 100%;
             max-width: 280px;
           }
+
+          .hero-decoration {
+            width: 180px !important;
+            height: 214px !important;
+            right: calc(50% - 384px + 15px) !important;
+            bottom: calc(50% - 192px + 15px) !important;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .hero-decoration {
+            width: 140px !important;
+            height: 166px !important;
+            right: 10px !important;
+            bottom: 10px !important;
+          }
         }
 
         @media (max-width: 480px) {
+          .hero-bottom-logo {
+            margin-top: 20px;
+          }
+
           .hero-bottom-logo-image {
             max-width: 66px;
             max-height: 48px;
+          }
+
+          .hero-decoration {
+            width: 100px !important;
+            height: 119px !important;
+            right: calc(50% - 240px + 10px) !important;
+            bottom: calc(50% - 120px + 10px) !important;
+          }
+        }
+
+        @media (max-width: 375px) {
+          .hero-decoration {
+            width: 80px !important;
+            height: 95px !important;
+            right: calc(50% - 187px + 5px) !important;
+            bottom: calc(50% - 93px + 5px) !important;
           }
         }
       `}</style>

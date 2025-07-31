@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -54,7 +53,7 @@ html {
 body {
     background: #ffffff;
     color: var(--foreground);
-    font-family: var(--font-montserrat), 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     line-height: 1.6;
     margin: 0;
     padding: 0;
@@ -65,6 +64,184 @@ body {
     font-size: 1rem;
     min-width: 320px;
     width: 100%;
+}
+
+/* Typography System - Montserrat */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0 0 1rem 0;
+    color: var(--foreground);
+}
+
+/* Headlines */
+.headline-1, h1 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+
+.headline-2, h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+}
+
+.headline-3, h3 {
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.headline-4, h4 {
+    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.headline-5, h5 {
+    font-size: clamp(1.125rem, 2vw, 1.5rem);
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.headline-6, h6 {
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+/* Subtitles */
+.subtitle-1 {
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--gray-700);
+}
+
+.subtitle-2 {
+    font-size: 1.125rem;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--gray-600);
+}
+
+/* Body Text */
+.body-1, p {
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.6;
+    margin: 0 0 1rem 0;
+}
+
+.body-2 {
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.6;
+}
+
+.body-large {
+    font-size: 1.125rem;
+    font-weight: 400;
+    line-height: 1.7;
+}
+
+/* Caption and Small Text */
+.caption {
+    font-size: 0.75rem;
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--gray-500);
+}
+
+.small-text {
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--gray-600);
+}
+
+/* Quotes */
+.quote, blockquote {
+    font-size: 1.25rem;
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.6;
+    margin: 2rem 0;
+    padding: 1.5rem 2rem;
+    border-left: 4px solid var(--primary-blue);
+    background: var(--gray-50);
+    color: var(--gray-700);
+    position: relative;
+}
+
+.quote::before {
+    content: '"';
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--primary-blue);
+    position: absolute;
+    top: 0;
+    left: 1rem;
+    line-height: 1;
+}
+
+/* Lead Text */
+.lead {
+    font-size: 1.25rem;
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--gray-600);
+    margin-bottom: 1.5rem;
+}
+
+/* Text Utilities */
+.text-bold {
+    font-weight: 700;
+}
+
+.text-semibold {
+    font-weight: 600;
+}
+
+.text-medium {
+    font-weight: 500;
+}
+
+.text-light {
+    font-weight: 300;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
+/* Responsive Typography */
+@media (max-width: 768px) {
+    .headline-1, h1 {
+        font-size: clamp(2rem, 8vw, 2.5rem);
+    }
+    
+    .headline-2, h2 {
+        font-size: clamp(1.75rem, 6vw, 2rem);
+    }
+    
+    .quote, blockquote {
+        font-size: 1.125rem;
+        padding: 1rem 1.5rem;
+        margin: 1.5rem 0;
+    }
 }
 
 /* Touch-friendly improvements */
@@ -1862,8 +2039,8 @@ button, a, input, select, textarea {
 
 /* Hero Section */
 .hero {
-  padding: 80px 0;
-  padding-top: 80px;
+  padding: 0;
+  padding-bottom: 80px;
   color: white;
   margin-top: 0;
   position: relative;
@@ -1880,7 +2057,7 @@ button, a, input, select, textarea {
 
 @media (min-width: 768px) {
   .hero {
-    padding-top: 120px;
+    padding-top: 0;
   }
 }
 
@@ -2153,7 +2330,10 @@ button, a, input, select, textarea {
   transition: all 0.3s ease;
   font-size: 14px;
   text-decoration: none;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  z-index: 20;
 }
 
 
@@ -2205,7 +2385,60 @@ button, a, input, select, textarea {
 .navbar-logo {
   display: flex;
   align-items: center;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+}
+
+/* Navbar container styles */
+.navbar-container {
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+}
+
+/* Ensure the logo stays centered on all screen sizes */
+@media (max-width: 768px) {
+  .navbar-logo {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  /* Adjust navbar elements for mobile */
+  .navbar-subscribe-btn {
+    padding: 8px 16px;
+    font-size: 12px;
+    min-height: 36px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-logo img {
+    max-height: 32px;
+    width: auto;
+  }
+  
+  .navbar-subscribe-btn {
+    padding: 6px 12px;
+    font-size: 11px;
+    min-height: 32px;
+  }
+}
+
+/* Additional navbar improvements */
+nav {
+  position: relative;
+}
+
+nav .flex.items-center.space-x-1 {
+  z-index: 15;
 }
 
 /* Section Styles */
@@ -2804,12 +3037,6 @@ button, a, input, select, textarea {
 
 @media (max-width: 767px) {
   /* Navbar móvil */
-  .navbar-subscribe-btn {
-    padding: 8px 16px;
-    font-size: 12px;
-    min-height: 36px;
-  }
-  
   .navbar-logo img {
     height: 24px !important;
   }
@@ -2821,10 +3048,10 @@ button, a, input, select, textarea {
   
   /* Hero ajustado para móviles */
   .hero {
-    padding: 4rem 0 2rem 0;
+    padding: 0 0 2rem 0;
     min-height: 50vh;
     max-height: 60vh;
-    margin-top: 60px;
+    margin-top: 0;
   }
   
   .hero-title {
@@ -2945,12 +3172,6 @@ button, a, input, select, textarea {
   /* SOLO Móviles pequeños - botones más compactos en grid 2x2 */
   @media (max-width: 480px) {
     /* Navbar más compacta en móviles pequeños */
-    .navbar-subscribe-btn {
-      padding: 6px 12px;
-      font-size: 11px;
-      min-height: 32px;
-    }
-    
     .navbar-logo img {
       height: 20px !important;
     }
@@ -2962,8 +3183,8 @@ button, a, input, select, textarea {
     
     /* Hero más compacto */
     .hero {
-      padding: 3rem 0 1.5rem 0;
-      margin-top: 50px;
+      padding: 0 0 1.5rem 0;
+      margin-top: 0;
     }
     
     .hero-title {
@@ -6545,7 +6766,7 @@ input:checked + .toggle-slider:before {
       -webkit-transform: translate3d(0, 0, 0);
       transform: translate3d(0, 0, 0);
       min-height: 80vh !important;
-      padding: 3rem 0 3.5rem 0 !important;
+      padding: 0 0 3.5rem 0 !important;
       display: flex !important;
       align-items: center !important;
     }
@@ -6875,3 +7096,46 @@ input:checked + .toggle-slider:before {
   }
 }
 
+
+
+/* Custom hero background image styles */
+.hero-background {
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 320px !important;
+  min-height: 200px !important;
+  max-width: 1200px !important;
+  max-height: 600px !important;
+  aspect-ratio: 175/87 !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  z-index: -1 !important;
+}
+
+/* Responsive adjustments for hero background */
+@media (max-width: 768px) {
+  .hero-background {
+    max-width: 768px !important;
+    max-height: 384px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-background {
+    max-width: 480px !important;
+    max-height: 240px !important;
+    min-height: 180px !important;
+  }
+}
+
+@media (max-width: 375px) {
+  .hero-background {
+    max-width: 375px !important;
+    max-height: 187px !important;
+    min-height: 150px !important;
+  }
+}
