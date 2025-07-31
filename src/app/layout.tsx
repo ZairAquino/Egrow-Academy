@@ -47,6 +47,9 @@ export default function RootLayout({
         <meta name="theme-color" content="#2563eb" />
         <meta name="google-site-verification" content="ppV50-xAiHZYc7B8SSMk9lJapqLgxMPvv0wDv" />
         
+        {/* Favicon */}
+        <link rel="icon" type="image/x-icon" href="/logofav.ico" />
+        
         {/* Open Graph Meta Tags - Página Principal */}
         <meta property="og:title" content={openGraphConfigs.home.title} />
         <meta property="og:description" content={openGraphConfigs.home.description} />
