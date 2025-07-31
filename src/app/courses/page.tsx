@@ -5,6 +5,8 @@ import dynamic from 'next/dynamic';
 import DynamicLogo from '@/components/ui/DynamicLogo';
 import { SkeletonGrid, SkeletonCourseCard } from '@/components/ui/SkeletonLoader';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
+import { AdvancedSearch } from '@/components/ui/AdvancedSearch';
+import { useSearchEngine } from '@/hooks/useSearchEngine';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import CourseCard from '@/components/courses/CourseCard';
 import Footer from '@/components/layout/Footer';
@@ -36,8 +38,25 @@ interface Course {
 export default function CoursesPage() {
   const [selectedCategory, setSelectedCategory] = useState('todos');
   const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
   const { user } = useAuth();
   const [isClient, setIsClient] = useState(false);
+
+  // Motor de búsqueda
+  const {
+    query,
+    setQuery,
+    filters,
+    results: searchResults,
+    isSearching,
+    performSearch,
+    generateSuggestions
+  } = useSearchEngine({
+    enableVoiceSearch: true,
+    enableSuggestions: true,
+    enableFilters: true,
+    maxResults: 20
+  });
 
   useEffect(() => {
     setIsClient(true);
@@ -109,6 +128,22 @@ export default function CoursesPage() {
 
   const filteredCourses = getFilteredCourses();
 
+  // Manejar búsqueda
+  const handleSearch = (query: string, searchFilters: any) => {
+    setSearchQuery(query);
+    performSearch(query, searchFilters);
+  };
+
+  // Manejar clic en sugerencia
+  const handleSuggestionClick = (suggestion: string) => {
+    setQuery(suggestion);
+    performSearch(suggestion, filters);
+  };
+
+  // Determinar qué cursos mostrar
+  const displayCourses = searchQuery.trim() ? searchResults : filteredCourses;
+  const isSearchingOrLoading = isSearching || isLoading;
+
   return (
     <>
       <Navbar />
@@ -159,7 +194,18 @@ export default function CoursesPage() {
               <Breadcrumbs className="breadcrumbs-container" />
             </div>
 
-            {/* Filtros */}
+            {/* Búsqueda avanzada */}
+            <div className="mb-8">
+              <AdvancedSearch
+                onSearch={handleSearch}
+                onSuggestionClick={handleSuggestionClick}
+                placeholder="Buscar cursos, recursos, contenido..."
+                className="max-w-2xl mx-auto"
+                showFilters={true}
+              />
+            </div>
+
+            {/* Filtros de categoría */}
             <div className="category-filters">
               {categories.map((category) => (
                 <button
@@ -174,37 +220,52 @@ export default function CoursesPage() {
               ))}
             </div>
 
-            {/* Grid de cursos con skeleton loading */}
-            {isLoading ? (
+            {/* Resultados de búsqueda o grid de cursos */}
+            {isSearchingOrLoading ? (
               <SkeletonGrid items={6} className="courses-grid" />
             ) : (
               <div className="courses-grid">
-                {filteredCourses.map((course) => (
-                  <CourseCard
-                    key={course.id}
-                    id={course.id}
-                    image={course.image}
-                    title={course.title}
-                    description={course.description}
-                    tag={course.tag}
-                    duration={course.duration}
-                    level={course.level}
-                    category={course.category}
-                    isFree={course.isFree}
-                    requiresAuth={course.requiresAuth}
-                    link={course.link}
-                    onCourseClick={(courseId) => {
-                      console.log('Curso clickeado:', courseId);
-                      // Aquí puedes agregar la lógica para manejar el clic del curso
-                    }}
-                  />
-                ))}
+                {displayCourses.length > 0 ? (
+                  displayCourses.map((course) => (
+                    <CourseCard
+                      key={course.id}
+                      id={course.id}
+                      image={course.image || ''}
+                      title={course.title}
+                      description={course.description}
+                      tag={course.tag || ''}
+                      duration={course.duration || ''}
+                      level={course.level || ''}
+                      category={course.category}
+                      isFree={course.isFree || false}
+                      requiresAuth={course.requiresAuth || false}
+                      link={course.link}
+                      onCourseClick={(courseId) => {
+                        console.log('Curso clickeado:', courseId);
+                        // Aquí puedes agregar la lógica para manejar el clic del curso
+                      }}
+                    />
+                  ))
+                ) : (
+                  <div className="no-courses">
+                    <p>
+                      {searchQuery.trim() 
+                        ? `No se encontraron resultados para "${searchQuery}"`
+                        : 'No se encontraron cursos en esta categoría.'
+                      }
+                    </p>
+                  </div>
+                )}
               </div>
             )}
 
-            {!isLoading && filteredCourses.length === 0 && (
-              <div className="no-courses">
-                <p>No se encontraron cursos en esta categoría.</p>
+            {/* Información de búsqueda */}
+            {searchQuery.trim() && !isSearchingOrLoading && (
+              <div className="mt-6 text-center text-gray-600">
+                <p>
+                  Mostrando {displayCourses.length} resultado{displayCourses.length !== 1 ? 's' : ''} 
+                  para "{searchQuery}"
+                </p>
               </div>
             )}
           </div>
