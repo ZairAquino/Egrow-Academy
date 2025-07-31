@@ -26,6 +26,14 @@ export async function POST(request: NextRequest) {
         await handleCheckoutSessionCompleted(event.data.object as Stripe.Checkout.Session);
         break;
 
+      case 'payment_intent.succeeded':
+        await handlePaymentIntentSucceeded(event.data.object as Stripe.PaymentIntent);
+        break;
+
+      case 'payment_intent.payment_failed':
+        await handlePaymentIntentFailed(event.data.object as Stripe.PaymentIntent);
+        break;
+
       case 'customer.subscription.created':
         await handleSubscriptionCreated(event.data.object as Stripe.Subscription);
         break;
@@ -119,6 +127,72 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
     console.log(`✅ Usuario ${userId} actualizado a PREMIUM con plan ${planId}`);
   } catch (error) {
     console.error('Error manejando checkout session completed:', error);
+  }
+}
+
+async function handlePaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent) {
+  try {
+    const userId = paymentIntent.metadata?.userId;
+    const courseId = paymentIntent.metadata?.courseId;
+    const subscriptionId = paymentIntent.metadata?.subscriptionId;
+
+    if (!userId) {
+      console.error('Metadata faltante en payment_intent.succeeded:', paymentIntent.id);
+      return;
+    }
+
+    // Verificar si el pago ya existe en la base de datos
+    const existingPayment = await prisma.payment.findUnique({
+      where: { stripePaymentId: paymentIntent.id }
+    });
+
+    if (existingPayment) {
+      console.log(`Pago ${paymentIntent.id} ya existe en la base de datos`);
+      return;
+    }
+
+    // Registrar el pago individual en la tabla Payment
+    await prisma.payment.create({
+      data: {
+        stripePaymentId: paymentIntent.id,
+        amount: paymentIntent.amount,
+        currency: paymentIntent.currency,
+        status: 'SUCCEEDED',
+        paymentMethod: paymentIntent.payment_method_types?.[0] || 'card',
+        description: paymentIntent.metadata?.description || 'Pago individual',
+        metadata: paymentIntent.metadata,
+        userId: userId,
+        courseId: courseId || null,
+        subscriptionId: subscriptionId || null,
+      },
+    });
+
+    console.log(`✅ Pago individual exitoso registrado para usuario ${userId}: ${paymentIntent.id}`);
+  } catch (error) {
+    console.error('Error manejando payment_intent.succeeded:', error);
+  }
+}
+
+async function handlePaymentIntentFailed(paymentIntent: Stripe.PaymentIntent) {
+  try {
+    const userId = paymentIntent.metadata?.userId;
+
+    if (!userId) {
+      console.error('Metadata faltante en payment_intent.payment_failed:', paymentIntent.id);
+      return;
+    }
+
+    // Actualizar el estado del pago a FAILED
+    await prisma.payment.updateMany({
+      where: { stripePaymentId: paymentIntent.id },
+      data: {
+        status: 'FAILED',
+      },
+    });
+
+    console.log(`❌ Pago individual fallido registrado para usuario ${userId}: ${paymentIntent.id}`);
+  } catch (error) {
+    console.error('Error manejando payment_intent.payment_failed:', error);
   }
 }
 

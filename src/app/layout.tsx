@@ -13,7 +13,7 @@ import PromotionBannerWrapper from "@/components/PromotionBannerWrapper";
 import ConversionTracker from "@/components/analytics/ConversionTracker";
 import { initializeGA4 } from "@/lib/analytics";
 import { NotificationSystem } from '@/components/ui/NotificationSystem';
-import { useBehaviorTracking } from '@/hooks/useBehaviorTracking';
+import BehaviorTrackingWrapper from '@/components/BehaviorTrackingWrapper';
 
 const montserrat = Montserrat({ 
   subsets: ["latin"],
@@ -130,8 +130,3 @@ export default function RootLayout({
   );
 }
 
-// Componente wrapper para tracking de comportamiento
-function BehaviorTrackingWrapper({ children }: { children: React.ReactNode }) {
-  useBehaviorTracking();
-  return <>{children}</>;
-}

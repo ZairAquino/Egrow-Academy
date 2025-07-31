@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs'
 import { SafeUser } from '@/types/auth'
 import { NextRequest } from 'next/server'
 import { cookies } from 'next/headers'
-import prisma from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 
 // Función para hashear contraseñas
 export async function hashPassword(password: string): Promise<string> {
