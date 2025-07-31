@@ -28,6 +28,7 @@ interface AdvancedSearchProps {
   placeholder?: string;
   className?: string;
   showFilters?: boolean;
+  searchType?: 'all' | 'courses' | 'resources' | 'community';
 }
 
 export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
@@ -35,7 +36,8 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
   onSuggestionClick,
   placeholder = 'Buscar cursos, recursos...',
   className = '',
-  showFilters = true
+  showFilters = true,
+  searchType = 'all'
 }) => {
   const [query, setQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
@@ -49,16 +51,30 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
     price: []
   });
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
-  const [popularSearches] = useState([
-    'Inteligencia Artificial',
-    'Machine Learning',
-    'Desarrollo Web',
-    'Python',
-    'React',
-    'Deep Learning',
-    'Data Science',
-    'ChatGPT'
-  ]);
+  const [popularSearches] = useState(() => {
+    if (searchType === 'courses') {
+      return [
+        'Monetiza con IA',
+        'Desarrollo Web Full Stack',
+        'Inteligencia Artificial',
+        'Machine Learning',
+        'React',
+        'Python',
+        'JavaScript',
+        'Node.js'
+      ];
+    }
+    return [
+      'Inteligencia Artificial',
+      'Machine Learning',
+      'Desarrollo Web',
+      'Python',
+      'React',
+      'Deep Learning',
+      'Data Science',
+      'ChatGPT'
+    ];
+  });
 
   const { isMobile } = useViewport();
   const searchRef = useRef<HTMLDivElement>(null);
@@ -71,14 +87,23 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
       return;
     }
 
-    const allSuggestions = [
-      ...popularSearches,
-      ...recentSearches,
-      'Curso de IA',
-      'Tutorial React',
-      'Recursos Python',
-      'Comunidad ML'
-    ];
+    const allSuggestions = searchType === 'courses' 
+      ? [
+          ...popularSearches,
+          ...recentSearches,
+          'Curso de IA',
+          'Tutorial React',
+          'Desarrollo Web',
+          'Monetización'
+        ]
+      : [
+          ...popularSearches,
+          ...recentSearches,
+          'Curso de IA',
+          'Tutorial React',
+          'Recursos Python',
+          'Comunidad ML'
+        ];
 
     const filtered = allSuggestions
       .filter(suggestion => 
@@ -87,7 +112,7 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
       .slice(0, 5);
 
     setSuggestions(filtered);
-  }, [popularSearches, recentSearches]);
+  }, [popularSearches, recentSearches, searchType]);
 
   // Manejar cambios en la consulta
   const handleQueryChange = useCallback((value: string) => {

@@ -34,6 +34,7 @@ interface SearchEngineOptions {
   enableSuggestions?: boolean;
   enableFilters?: boolean;
   maxResults?: number;
+  searchType?: 'all' | 'courses' | 'resources' | 'community';
 }
 
 export const useSearchEngine = (options: SearchEngineOptions = {}) => {
@@ -41,7 +42,8 @@ export const useSearchEngine = (options: SearchEngineOptions = {}) => {
     enableVoiceSearch = true,
     enableSuggestions = true,
     enableFilters = true,
-    maxResults = 50
+    maxResults = 50,
+    searchType = 'all'
   } = options;
 
   const [query, setQuery] = useState('');
@@ -136,12 +138,31 @@ export const useSearchEngine = (options: SearchEngineOptions = {}) => {
     setIsSearching(true);
     
     try {
-      // Buscar en el endpoint real
-      const response = await fetch(`/api/search?q=${encodeURIComponent(searchQuery)}`);
+      // Buscar en el endpoint real con el tipo de búsqueda
+      const searchParams = new URLSearchParams({
+        q: searchQuery,
+        type: searchType
+      });
+      
+      const response = await fetch(`/api/search?${searchParams.toString()}`);
       
       if (response.ok) {
         const data = await response.json();
-        const searchResults = data.results || [];
+        let searchResults = data.results || [];
+        
+        // Filtrar por tipo si es necesario
+        if (searchType !== 'all') {
+          // Mapear tipos: 'courses' -> 'course', 'resources' -> 'resource', etc.
+          const typeMapping: Record<string, string> = {
+            'courses': 'course',
+            'resources': 'resource', 
+            'community': 'community'
+          };
+          
+          const targetType = typeMapping[searchType] || searchType;
+          searchResults = searchResults.filter((result: SearchResult) => result.type === targetType);
+        }
+        
         setResults(searchResults);
 
         // Guardar en historial
@@ -155,7 +176,8 @@ export const useSearchEngine = (options: SearchEngineOptions = {}) => {
         trackEvent('search_performed', {
           query: searchQuery,
           results_count: searchResults.length,
-          filters_applied: Object.values(searchFilters).flat().length
+          filters_applied: Object.values(searchFilters).flat().length,
+          search_type: searchType
         });
       } else {
         console.error('Error en búsqueda:', response.status);
@@ -168,7 +190,7 @@ export const useSearchEngine = (options: SearchEngineOptions = {}) => {
     } finally {
       setIsSearching(false);
     }
-  }, [searchHistory, filters, trackEvent]);
+  }, [searchHistory, filters, trackEvent, searchType]);
 
   // Búsqueda por voz
   const startVoiceSearch = useCallback(() => {

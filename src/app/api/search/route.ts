@@ -5,16 +5,17 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const query = searchParams.get('q');
+    const searchType = searchParams.get('type') || 'all';
 
     if (!query || query.trim() === '') {
       return NextResponse.json({ results: [] });
     }
 
-    console.log('Búsqueda global iniciada para:', query);
+    console.log('Búsqueda iniciada para:', query, 'tipo:', searchType);
     const results = [];
 
-    // 1. Páginas y secciones estáticas de la plataforma
-    const staticPages = [
+    // 1. Páginas y secciones estáticas de la plataforma (solo si no es búsqueda específica de cursos)
+    const staticPages = searchType === 'courses' ? [] : [
       // === PÁGINAS PRINCIPALES ===
       {
         id: 'home',
@@ -310,24 +311,7 @@ export async function GET(request: NextRequest) {
         link: '/facturacion'
       },
 
-      // === CURSOS ESPECÍFICOS ===
-      {
-        id: 'monetiza-ia',
-        title: 'Monetiza con IA',
-        description: 'Aprende a monetizar usando inteligencia artificial',
-        type: 'page' as const,
-        category: 'Monetización',
-        tags: ['monetización', 'ia', 'inteligencia artificial', 'dinero', 'negocio', 'ganar'],
-        relevance: query.toLowerCase().includes('monetiza') || query.toLowerCase().includes('monetización') ? 0.95 : 0.6,
-        level: '',
-        duration: '',
-        price: 'Premium',
-        image: '/images/monetiza-ia.jpg',
-        tag: 'Página',
-        isFree: false,
-        requiresAuth: true,
-        link: '/curso/monetiza-ia'
-      },
+
 
       // === CERTIFICADOS ===
       {
@@ -404,166 +388,286 @@ export async function GET(request: NextRequest) {
       }
     ];
 
-    // Filtrar páginas estáticas según la búsqueda
-    staticPages.forEach(page => {
-      const queryLower = query.toLowerCase();
-      const titleMatch = page.title.toLowerCase().includes(queryLower);
-      const descMatch = page.description.toLowerCase().includes(queryLower);
-      const tagsMatch = page.tags.some(tag => tag.toLowerCase().includes(queryLower));
-      
-      // Búsqueda más flexible - también buscar palabras parciales
-      const queryWords = queryLower.split(' ').filter(word => word.length > 2);
-      const partialMatch = queryWords.some(word => 
-        page.title.toLowerCase().includes(word) ||
-        page.description.toLowerCase().includes(word) ||
-        page.tags.some(tag => tag.toLowerCase().includes(word))
-      );
-      
-      if (titleMatch || descMatch || tagsMatch || partialMatch) {
-        results.push(page);
+    // Filtrar páginas estáticas según la búsqueda (solo si no es búsqueda específica de cursos)
+    if (searchType !== 'courses') {
+      staticPages.forEach(page => {
+        const queryLower = query.toLowerCase();
+        const titleMatch = page.title.toLowerCase().includes(queryLower);
+        const descMatch = page.description.toLowerCase().includes(queryLower);
+        const tagsMatch = page.tags.some(tag => tag.toLowerCase().includes(queryLower));
+        
+        // Búsqueda más flexible - también buscar palabras parciales
+        const queryWords = queryLower.split(' ').filter(word => word.length > 2);
+        const partialMatch = queryWords.some(word => 
+          page.title.toLowerCase().includes(word) ||
+          page.description.toLowerCase().includes(word) ||
+          page.tags.some(tag => tag.toLowerCase().includes(word))
+        );
+        
+        if (titleMatch || descMatch || tagsMatch || partialMatch) {
+          results.push(page);
+        }
+      });
+    }
+
+    // 2. Buscar en cursos de la base de datos (solo si es búsqueda de cursos o general)
+    if (searchType === 'courses' || searchType === 'all') {
+      try {
+        // Dividir la consulta en palabras individuales para búsqueda más flexible
+        let processedQuery = query.toLowerCase().trim();
+        
+        // Normalizar términos comunes para mejorar coincidencias
+        const normalizations: Record<string, string> = {
+          'fullstack': 'full stack',
+          'full-stack': 'full stack',
+          'nodejs': 'node.js',
+          'node.js': 'node',
+          'reactjs': 'react',
+          'javascript': 'js',
+          'inteligencia artificial': 'ia',
+          'machine learning': 'ml',
+          'desarrollo web': 'web'
+        };
+        
+        // Aplicar normalizaciones
+        Object.entries(normalizations).forEach(([key, value]) => {
+          if (processedQuery.includes(key)) {
+            processedQuery = processedQuery.replace(new RegExp(key, 'gi'), value);
+          }
+        });
+        
+        const queryWords = processedQuery.split(/\s+/).filter(word => word.length > 0);
+        
+        // Crear condiciones OR para cada palabra en título y descripción
+        const searchConditions = [];
+        
+        // Búsqueda exacta completa (mayor relevancia) - usar tanto query original como procesada
+        searchConditions.push({
+          title: {
+            contains: query,
+            mode: 'insensitive'
+          }
+        });
+        
+        searchConditions.push({
+          description: {
+            contains: query,
+            mode: 'insensitive'
+          }
+        });
+        
+        // También buscar con query procesada si es diferente
+        if (processedQuery !== query.toLowerCase()) {
+          searchConditions.push({
+            title: {
+              contains: processedQuery,
+              mode: 'insensitive'
+            }
+          });
+          
+          searchConditions.push({
+            description: {
+              contains: processedQuery,
+              mode: 'insensitive'
+            }
+          });
+        }
+        
+        // Búsqueda por palabras individuales (solo palabras significativas)
+        const significantWords = queryWords.filter(word => 
+          word.length > 3 && // Palabras de más de 3 caracteres
+          !['para', 'con', 'las', 'los', 'una', 'uno', 'del', 'que', 'como', 'por', 'sin', 'sobre'].includes(word) // Excluir palabras comunes
+        );
+        
+        significantWords.forEach(word => {
+          searchConditions.push({
+            title: {
+              contains: word,
+              mode: 'insensitive'
+            }
+          });
+          
+          searchConditions.push({
+            description: {
+              contains: word,
+              mode: 'insensitive'
+            }
+          });
+        });
+
+        const courses = await prisma.course.findMany({
+          where: {
+            AND: [
+              {
+                status: 'PUBLISHED' // Solo cursos publicados
+              },
+              {
+                OR: searchConditions
+              }
+            ]
+          },
+          take: 20 // Aumentar límite para mejores resultados
+        });
+
+        courses.forEach(course => {
+          // Calcular relevancia basada en coincidencias
+          let relevance = 0.5; // Relevancia base
+          
+          const titleLower = course.title.toLowerCase();
+          const descLower = (course.description || '').toLowerCase();
+          const queryLower = query.toLowerCase();
+          
+          // Coincidencia exacta en título (alta relevancia)
+          if (titleLower.includes(queryLower)) {
+            relevance += 0.4;
+          }
+          
+          // Coincidencia exacta en descripción
+          if (descLower.includes(queryLower)) {
+            relevance += 0.2;
+          }
+          
+          // Coincidencias por palabras significativas solamente
+          significantWords.forEach(word => {
+            if (titleLower.includes(word)) {
+              relevance += 0.15;
+            }
+            if (descLower.includes(word)) {
+              relevance += 0.1;
+            }
+          });
+          
+          // Bonus si el título comienza con la palabra buscada
+          if (titleLower.startsWith(queryLower)) {
+            relevance += 0.3;
+          }
+          
+          results.push({
+            id: course.id,
+            title: course.title,
+            description: course.description || '',
+            type: 'course' as const,
+            category: course.category,
+            tags: ['curso', 'educación', course.category.toLowerCase()],
+            relevance: Math.min(relevance, 1.0), // Máximo 1.0
+            level: course.difficulty || '',
+            duration: course.durationHours ? `${course.durationHours} horas` : '',
+            price: course.isFree ? 'Gratis' : 'Premium',
+            image: course.imageUrl || '/images/courses/default.jpg',
+            tag: course.isFree ? 'Gratis' : 'Premium',
+            isFree: course.isFree || false,
+            requiresAuth: course.requiresAuth || true,
+            link: `/curso/${course.slug}`
+          });
+        });
+      } catch (error) {
+        console.error('Error buscando cursos:', error);
       }
-    });
-
-    // 2. Buscar en cursos de la base de datos
-    try {
-      const courses = await prisma.course.findMany({
-        where: {
-          OR: [
-            {
-              title: {
-                contains: query,
-                mode: 'insensitive'
-              }
-            },
-            {
-              description: {
-                contains: query,
-                mode: 'insensitive'
-              }
-            }
-          ]
-        },
-        take: 10
-      });
-
-      courses.forEach(course => {
-        results.push({
-          id: course.id,
-          title: course.title,
-          description: course.description || '',
-          type: 'course' as const,
-          category: 'Cursos',
-          tags: ['curso', 'educación'],
-          relevance: 0.9,
-          level: course.difficulty || '',
-          duration: course.durationHours ? `${course.durationHours} horas` : '',
-          price: course.isFree ? 'Gratis' : 'Premium',
-          image: course.imageUrl || '/images/courses/default.jpg',
-          tag: course.status === 'PUBLISHED' ? 'Disponible' : '',
-          isFree: course.isFree || false,
-          requiresAuth: course.requiresAuth || true,
-          link: `/curso/${course.slug}`
-        });
-      });
-    } catch (error) {
-      console.error('Error buscando cursos:', error);
     }
 
-    // 3. Buscar en recursos
-    try {
-      const resources = await prisma.resource.findMany({
-        where: {
-          OR: [
-            {
-              title: {
-                contains: query,
-                mode: 'insensitive'
+    // 3. Buscar en recursos (solo si es búsqueda de recursos o general)
+    if (searchType === 'resources' || searchType === 'all') {
+      try {
+        const resources = await prisma.resource.findMany({
+          where: {
+            OR: [
+              {
+                title: {
+                  contains: query,
+                  mode: 'insensitive'
+                }
+              },
+              {
+                description: {
+                  contains: query,
+                  mode: 'insensitive'
+                }
               }
-            },
-            {
-              description: {
-                contains: query,
-                mode: 'insensitive'
-              }
-            }
-          ]
-        },
-        take: 10
-      });
-
-      resources.forEach(resource => {
-        results.push({
-          id: resource.id,
-          title: resource.title,
-          description: resource.description || '',
-          type: 'resource' as const,
-          category: 'Recursos',
-          tags: ['recurso', 'material'],
-          relevance: 0.8,
-          level: resource.difficulty || '',
-          duration: '',
-          price: resource.isFree ? 'Gratis' : 'Premium',
-          image: resource.imageUrl || '/images/resources/default.jpg',
-          tag: resource.status === 'PUBLISHED' ? 'Disponible' : '',
-          isFree: resource.isFree || false,
-          requiresAuth: resource.requiresAuth || true,
-          link: `/resources/${resource.slug}`
+            ]
+          },
+          take: 10
         });
-      });
-    } catch (error) {
-      console.error('Error buscando recursos:', error);
+
+        resources.forEach(resource => {
+          results.push({
+            id: resource.id,
+            title: resource.title,
+            description: resource.description || '',
+            type: 'resource' as const,
+            category: 'Recursos',
+            tags: ['recurso', 'material'],
+            relevance: 0.8,
+            level: resource.difficulty || '',
+            duration: '',
+            price: resource.isFree ? 'Gratis' : 'Premium',
+            image: resource.imageUrl || '/images/resources/default.jpg',
+            tag: resource.status === 'PUBLISHED' ? 'Disponible' : '',
+            isFree: resource.isFree || false,
+            requiresAuth: resource.requiresAuth || true,
+            link: `/resources/${resource.slug}`
+          });
+        });
+      } catch (error) {
+        console.error('Error buscando recursos:', error);
+      }
     }
 
-    // 4. Buscar en posts de la comunidad
-    try {
-      const communityPosts = await prisma.communityPost.findMany({
-        where: {
-          OR: [
-            {
-              title: {
-                contains: query,
-                mode: 'insensitive'
+    // 4. Buscar en posts de la comunidad (solo si es búsqueda de comunidad o general)
+    if (searchType === 'community' || searchType === 'all') {
+      try {
+        const communityPosts = await prisma.communityPost.findMany({
+          where: {
+            OR: [
+              {
+                title: {
+                  contains: query,
+                  mode: 'insensitive'
+                }
+              },
+              {
+                content: {
+                  contains: query,
+                  mode: 'insensitive'
+                }
               }
-            },
-            {
-              content: {
-                contains: query,
-                mode: 'insensitive'
-              }
-            }
-          ]
-        },
-        take: 10
-      });
-
-      communityPosts.forEach(post => {
-        results.push({
-          id: post.id,
-          title: post.title,
-          description: post.content.substring(0, 150) + '...',
-          type: 'community' as const,
-          category: 'Comunidad',
-          tags: ['foro', 'discusión', 'comunidad'],
-          relevance: 0.7,
-          level: '',
-          duration: '',
-          price: 'Gratis',
-          image: '/images/community/default.jpg',
-          tag: 'Post',
-          isFree: true,
-          requiresAuth: false,
-          link: `/community/post/${post.id}`
+            ]
+          },
+          take: 10
         });
-      });
-    } catch (error) {
-      console.error('Error buscando posts de comunidad:', error);
+
+        communityPosts.forEach(post => {
+          results.push({
+            id: post.id,
+            title: post.title,
+            description: post.content.substring(0, 150) + '...',
+            type: 'community' as const,
+            category: 'Comunidad',
+            tags: ['foro', 'discusión', 'comunidad'],
+            relevance: 0.7,
+            level: '',
+            duration: '',
+            price: 'Gratis',
+            image: '/images/community/default.jpg',
+            tag: 'Post',
+            isFree: true,
+            requiresAuth: false,
+            link: `/community/post/${post.id}`
+          });
+        });
+      } catch (error) {
+        console.error('Error buscando posts de comunidad:', error);
+      }
     }
 
-    // Ordenar por relevancia
-    results.sort((a, b) => b.relevance - a.relevance);
+    // Ordenar por relevancia y eliminar duplicados
+    const uniqueResults = results.filter((result, index, self) => 
+      index === self.findIndex(r => r.id === result.id)
+    );
+    
+    uniqueResults.sort((a, b) => b.relevance - a.relevance);
 
-    console.log(`Búsqueda completada. ${results.length} resultados encontrados.`);
-    return NextResponse.json({ results: results.slice(0, 20) });
+    console.log(`Búsqueda completada. ${uniqueResults.length} resultados únicos encontrados.`);
+    return NextResponse.json({ results: uniqueResults.slice(0, 20) });
 
   } catch (error) {
     console.error('Error en búsqueda global:', error);

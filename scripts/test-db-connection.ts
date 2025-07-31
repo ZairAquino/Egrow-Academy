@@ -1,61 +1,67 @@
 import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+  datasources: {
+    db: {
+      url: 'postgresql://neondb_owner:npg_up9eQTmJ0Arw@ep-holy-heart-aeupskea-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require'
+    }
+  }
+});
 
 async function testConnection() {
   try {
-    console.log('🔍 Probando conexión a la base de datos...');
+    console.log('🔄 Probando conexión a la base de datos...');
     
-    // Verificar conexión
+    // Conectar a la base de datos
     await prisma.$connect();
-    console.log('✅ Conexión exitosa a la base de datos');
+    console.log('✅ Conexión exitosa a PostgreSQL');
     
-    // Listar todas las tablas
-    const tables = await prisma.$queryRaw`
-      SELECT table_name 
-      FROM information_schema.tables 
-      WHERE table_schema = 'public'
-      ORDER BY table_name
-    `;
+    // Verificar si la tabla courses existe
+    const courses = await prisma.course.findMany({
+      take: 1
+    });
     
-    console.log('📋 Tablas disponibles en la base de datos:');
-    console.log(tables);
+    console.log(`✅ Tabla courses encontrada. Cursos en la base de datos: ${courses.length}`);
     
-    // Verificar si existe la tabla events
-    const eventsTable = await prisma.$queryRaw`
-      SELECT table_name 
-      FROM information_schema.tables 
-      WHERE table_schema = 'public' AND table_name = 'events'
-    `;
+    // Verificar el schema de la tabla
+    const courseCount = await prisma.course.count();
+    console.log(`📊 Total de cursos en la base de datos: ${courseCount}`);
     
-    if (eventsTable && Array.isArray(eventsTable) && eventsTable.length > 0) {
-      console.log('✅ La tabla "events" existe');
-      
-      // Verificar estructura de la tabla events
-      const columns = await prisma.$queryRaw`
-        SELECT column_name, data_type 
-        FROM information_schema.columns 
-        WHERE table_schema = 'public' AND table_name = 'events'
-        ORDER BY ordinal_position
-      `;
-      
-      console.log('📊 Estructura de la tabla events:');
-      console.log(columns);
-      
-      // Intentar obtener datos
-      const events = await prisma.$queryRaw`SELECT * FROM events LIMIT 3`;
-      console.log('📅 Datos de eventos:');
-      console.log(events);
-      
-    } else {
-      console.log('❌ La tabla "events" NO existe');
+    if (courseCount > 0) {
+      const sampleCourse = await prisma.course.findFirst();
+      console.log('📋 Ejemplo de curso:', {
+        id: sampleCourse?.id,
+        title: sampleCourse?.title,
+        slug: sampleCourse?.slug,
+        status: sampleCourse?.status,
+        category: sampleCourse?.category
+      });
     }
     
+    console.log('✅ Prueba de conexión completada exitosamente');
+    
   } catch (error) {
-    console.error('❌ Error:', error);
+    console.error('❌ Error en la conexión:', error);
+    
+    if (error instanceof Error) {
+      console.error('Detalles del error:', {
+        message: error.message,
+        name: error.name,
+        stack: error.stack
+      });
+    }
   } finally {
     await prisma.$disconnect();
+    console.log('🔌 Conexión cerrada');
   }
 }
 
-testConnection(); 
+testConnection()
+  .then(() => {
+    console.log('✅ Script completado');
+    process.exit(0);
+  })
+  .catch((error) => {
+    console.error('❌ Error en el script:', error);
+    process.exit(1);
+  }); 

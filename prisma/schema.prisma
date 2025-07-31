@@ -374,8 +374,8 @@ model Event {
   id          String    @id @default(cuid())
   title       String
   description String?
-  startDate   DateTime
-  endDate     DateTime
+  startDate   DateTime?
+  endDate     DateTime?
   location    String?
   type        EventType
   maxCapacity Int?
@@ -529,6 +529,13 @@ enum ResourceCategory {
   CHECKLIST
   WORKSHOP
   WEBINAR
+  MANUAL
+  TUTORIAL
+  PAPER
+  HERRAMIENTA
+  DATASET
+  PODCAST
+  LIBRO
 }
 
 enum ResourceType {
@@ -558,6 +565,8 @@ enum EventType {
   COURSE_LAUNCH
   Q_A
   NETWORKING
+  LANZAMIENTO
+  MASTERCLASS
 }
 
 enum RatingType {

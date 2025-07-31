@@ -13,6 +13,49 @@
 
 ---
 
+### **2025-07-31 - Mejoras del Sistema de Búsqueda y Correcciones**
+
+#### ✅ **Problemas Resueltos**
+1. **Error 500 en endpoint /api/courses**
+   - **Problema:** Motor de Prisma desconectado por llamadas manuales a `$connect()` y `$disconnect()`
+   - **Solución:** Eliminado manejo manual de conexiones, Prisma maneja automáticamente
+   - **Resultado:** Endpoint funcionando correctamente, devuelve cursos con categorías actualizadas
+
+2. **Categorías de cursos incorrectas**
+   - **Problema:** Cursos asignados a `HABILIDADES_IRREMPLAZABLES` en lugar de categorías específicas
+   - **Solución:** Script de migración que actualizó:
+     - "Monetiza con la IA" → `IA_PARA_EMPRENDER`
+     - "Desarrollo Web Full Stack" → `DESARROLLO_WEB`
+   - **Resultado:** Filtros por categoría funcionando correctamente
+
+3. **Búsqueda devolviendo resultados incorrectos**
+   - **Problema 1:** API incluía palabras comunes ("con", "la", "para") causando coincidencias falsas
+   - **Solución 1:** Filtrado de palabras significativas (>3 caracteres) con lista de exclusión
+   - **Problema 2:** Discrepancia entre tipos `'course'` (API) vs `'courses'` (frontend)
+   - **Solución 2:** Mapeo de tipos en useSearchEngine (`courses` → `course`)
+   - **Resultado:** Búsqueda precisa por palabras parciales funcionando
+
+#### ✅ **Funcionalidades Mejoradas**
+1. **Motor de Búsqueda Inteligente**
+   - **Búsqueda por palabras parciales:** "monetiza" encuentra "Monetiza con la IA"
+   - **Normalización de términos:** "fullstack" → "full stack", "nodejs" → "node"
+   - **Sistema de relevancia:** Prioriza coincidencias exactas en título
+   - **Filtrado inteligente:** Excluye palabras comunes y se enfoca en términos significativos
+
+2. **Categorización de Cursos**
+   - **Base de datos actualizada:** Cursos correctamente categorizados
+   - **Frontend sincronizado:** Contadores de categorías actualizados
+   - **Filtros funcionando:** "IA para Emprender" y "Desarrollo Web" muestran cursos correctos
+
+#### 🔧 **Archivos Modificados**
+- `src/app/api/courses/route.ts` - Eliminada gestión manual de conexiones Prisma
+- `src/app/api/search/route.ts` - Mejorada lógica de búsqueda y filtrado
+- `src/hooks/useSearchEngine.ts` - Añadido mapeo de tipos y limpieza de logs
+- `src/components/CoursesContent.tsx` - Corregida destructuring y limpieza de logs
+- Base de datos - Categorías de cursos actualizadas
+
+---
+
 ### **2025-01-30 - Integración Google Analytics 4**
 
 #### ✅ **Nuevas Funcionalidades Implementadas**

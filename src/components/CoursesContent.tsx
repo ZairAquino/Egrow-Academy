@@ -60,12 +60,12 @@ export default function CoursesContent() {
 
   // Motor de búsqueda
   const { 
-    searchResults,
-    searchSuggestions,
+    results: searchResults,
+    generateSuggestions,
     isSearching,
     performSearch,
     clearSearch 
-  } = useSearchEngine();
+  } = useSearchEngine({ searchType: 'courses' });
 
   useEffect(() => {
     setIsClient(true);
@@ -76,38 +76,90 @@ export default function CoursesContent() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Cursos reales de la base de datos
-  const courses: Course[] = [
-    {
-      id: 'monetiza-ia',
-      title: 'Monetiza con la IA',
-      description: 'Descubre cómo generar ingresos utilizando inteligencia artificial. Aprende estrategias prácticas para monetizar herramientas de IA y crear fuentes de ingresos pasivos.',
-      category: 'IA_PARA_EMPRENDER',
-      duration: '3 horas',
-      level: 'Intermedio',
-      price: 'Gratis',
-      image: '/images/optimized/v-5.webp',
-      tag: 'Gratis',
-      isFree: true,
-      requiresAuth: false,
-      link: '/curso/monetiza-ia'
-    },
-    {
-      id: 'desarrollo-web-fullstack',
-      title: 'Desarrollo Web Full Stack con React y Node.js',
-      description: 'Aprende a crear aplicaciones web completas desde cero. Domina React, Node.js, Express, MongoDB y despliegue en la nube.',
-      category: 'DESARROLLO_WEB',
-      duration: '25 horas',
-      level: 'Intermedio',
-      price: 'Premium',
-      image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=250&fit=crop&crop=center',
-      tag: 'Premium',
-      isFree: false,
-      requiresAuth: true,
-      priceId: 'price_web_dev_fullstack',
-      link: '/curso/desarrollo-web-fullstack'
-    }
-  ];
+  // Estado para cursos de la base de datos
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [coursesLoading, setCoursesLoading] = useState(true);
+
+  // Obtener cursos de la base de datos
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        console.log('🔄 Intentando obtener cursos de la base de datos...');
+        const response = await fetch('/api/courses');
+        
+        if (response.ok) {
+          const data = await response.json();
+          console.log('✅ Cursos obtenidos exitosamente:', data.courses?.length || 0);
+          
+          const formattedCourses: Course[] = (data.courses || []).map((course: any) => ({
+            id: course.id,
+            title: course.title,
+            description: course.description || '',
+            category: course.category || 'OTRO',
+            duration: course.durationHours ? `${course.durationHours} horas` : 'N/A',
+            level: course.difficulty || 'N/A',
+            price: course.isFree ? 'Gratis' : 'Premium',
+            image: course.imageUrl || '/images/courses/default.jpg',
+            tag: course.isFree ? 'Gratis' : 'Premium',
+            isFree: course.isFree || false,
+            requiresAuth: course.requiresAuth || true,
+            link: `/curso/${course.slug}`
+          }));
+          
+          if (formattedCourses.length > 0) {
+            setCourses(formattedCourses);
+          } else {
+            console.log('⚠️ No se encontraron cursos en la base de datos, usando fallback');
+            setCourses(getFallbackCourses());
+          }
+        } else {
+          const errorData = await response.json().catch(() => ({}));
+          console.error('❌ Error fetching courses:', response.status, errorData);
+          setCourses(getFallbackCourses());
+        }
+      } catch (error) {
+        console.error('❌ Error fetching courses:', error);
+        setCourses(getFallbackCourses());
+      } finally {
+        setCoursesLoading(false);
+      }
+    };
+
+    // Función para obtener cursos de fallback
+    const getFallbackCourses = (): Course[] => [
+      {
+        id: 'monetiza-ia',
+        title: 'Monetiza con la IA',
+        description: 'Descubre cómo generar ingresos utilizando inteligencia artificial. Aprende estrategias prácticas para monetizar herramientas de IA y crear fuentes de ingresos pasivos.',
+        category: 'IA_PARA_EMPRENDER',
+        duration: '3 horas',
+        level: 'Intermedio',
+        price: 'Gratis',
+        image: '/images/optimized/v-5.webp',
+        tag: 'Gratis',
+        isFree: true,
+        requiresAuth: false,
+        link: '/curso/monetiza-ia'
+      },
+      {
+        id: 'desarrollo-web-fullstack',
+        title: 'Desarrollo Web Full Stack con React y Node.js',
+        description: 'Aprende a crear aplicaciones web completas desde cero. Domina React, Node.js, Express, MongoDB y despliegue en la nube.',
+        category: 'DESARROLLO_WEB',
+        duration: '25 horas',
+        level: 'Intermedio',
+        price: 'Premium',
+        image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=250&fit=crop&crop=center',
+        tag: 'Premium',
+        isFree: false,
+        requiresAuth: true,
+        priceId: 'price_web_dev_fullstack',
+        link: '/curso/desarrollo-web-fullstack'
+      }
+    ];
+
+    fetchCourses();
+  }, []);
 
   // Función simple de filtrado
   const getFilteredCourses = () => {
@@ -135,7 +187,7 @@ export default function CoursesContent() {
   const handleSearch = (query: string, filters?: any) => {
     setSearchQuery(query);
     if (query.trim()) {
-      performSearch(query, courses);
+      performSearch(query);
     } else {
       clearSearch();
     }
@@ -241,6 +293,8 @@ export default function CoursesContent() {
               onSearch={handleSearch}
               onSuggestionClick={handleSearch}
               showFilters={false}
+              searchType="courses"
+              placeholder="Busca por nombre de curso"
             />
           </div>
 
@@ -348,7 +402,7 @@ export default function CoursesContent() {
           )}
 
           {/* Courses Grid */}
-          {isLoading ? (
+          {isLoading || coursesLoading ? (
             <SkeletonGrid>
               {[...Array(6)].map((_, i) => (
                 <SkeletonCourseCard key={i} />
