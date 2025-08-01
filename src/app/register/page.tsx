@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import RegisterForm from '@/components/auth/RegisterForm';
+import MultiStepRegisterForm from '@/components/auth/MultiStepRegisterForm';
 
 import Link from 'next/link';
 import Image from 'next/image';
@@ -55,7 +55,7 @@ export default function RegisterPage() {
           </div>
 
           {/* Form */}
-          <RegisterForm />
+          <MultiStepRegisterForm />
         </div>
         
         {/* Marquesina de empresas */}
