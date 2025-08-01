@@ -51,16 +51,16 @@ export default function ResourcesPage() {
       url: '/resources/guia-prompts-chatgpt'
     },
     {
-      title: 'Glosario de IA',
-      description: 'Diccionario completo de términos y conceptos de inteligencia artificial',
-      category: 'Referencia',
-      url: 'https://www.ibm.com/topics/artificial-intelligence'
+      title: 'Ebook: Diseñadores vs IA',
+      description: 'Estrategias para que diseñadores colaboren exitosamente con IA y mantengan relevancia en el mercado',
+      category: 'Ebook',
+      url: '/resources/ebook-disenadores-vs-ia'
     },
     {
-      title: 'Cheat Sheets',
-      description: 'Hojas de referencia rápidas para Python, NumPy, Pandas y más',
-      category: 'Referencia',
-      url: 'https://github.com/FavioVazquez/ds-cheatsheets'
+      title: 'Prompts para diseños y anuncios básicos',
+      description: 'Más de 200 prompts profesionales para crear diseños y anuncios con IA generativa',
+      category: 'Manual',
+      url: '/resources/prompts-disenos-anuncios-basicos'
     }
   ];
 
