@@ -401,7 +401,7 @@ function Counter() {
     }
   };
 
-  const handleMarkLessonComplete = async (lessonId: number) => {
+  const handleMarkLessonComplete = async (lessonId: string) => {
     // Si el curso ya está completado, no permitir marcar lecciones como completadas
     if (isCourseCompleted()) {
       alert('Este curso ya está completado. Estás en modo de revisión.');
@@ -497,7 +497,7 @@ function Counter() {
     }
   };
 
-  const isLessonCompleted = (lessonId: number) => {
+  const isLessonCompleted = (lessonId: string) => {
     return progress.completedLessons.includes(lessonId);
   };
 
@@ -513,7 +513,7 @@ function Counter() {
     return progress.status === 'COMPLETED' || progress.progressPercentage === 100;
   };
 
-  const getLessonStatus = (lessonIndex: number, lessonId: number) => {
+  const getLessonStatus = (lessonIndex: number, lessonId: string) => {
     if (isLessonCompleted(lessonId)) {
       // Si el curso está completado, mostrar estado de revisión
       if (isCourseCompleted()) {

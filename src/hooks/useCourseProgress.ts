@@ -17,7 +17,7 @@ interface LessonProgress {
 
 interface CourseProgress {
   currentLesson: number;
-  completedLessons: number[];
+  completedLessons: string[];
   progressPercentage: number;
   status: 'NOT_STARTED' | 'IN_PROGRESS' | 'COMPLETED' | 'PAUSED' | 'ABANDONED';
   totalTimeSpent: number;
@@ -49,6 +49,7 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
   });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
   const progressRef = useRef(progress);
   
   // Actualizar la referencia cuando cambia el progreso
@@ -62,15 +63,17 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
       return;
     }
 
-    // Asegurar que el progreso tenga valores válidos por defecto
-    setProgress(prev => ({
-      ...prev,
-      currentLesson: 0,
-      completedLessons: [],
-      progressPercentage: 0,
-      status: 'NOT_STARTED',
-      totalLessons: 18
-    }));
+    // Solo resetear valores por defecto si es la primera carga
+    if (!hasLoadedOnce) {
+      setProgress(prev => ({
+        ...prev,
+        currentLesson: 0,
+        completedLessons: [],
+        progressPercentage: 0,
+        status: 'NOT_STARTED',
+        totalLessons: courseId === 'asistentes-virtuales-ia' ? 21 : 18
+      }));
+    }
 
     try {
       // Obtener token del localStorage solo en el cliente
@@ -87,14 +90,16 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
         const data = await response.json();
         
         // Asegurar que currentLesson no exceda el número de lecciones disponibles
-        const maxLessonIndex = 17; // 18 lecciones (índices 0-17)
+        const totalLessons = courseId === 'asistentes-virtuales-ia' ? 21 : 18;
+        const maxLessonIndex = totalLessons - 1;
         const safeCurrentLesson = Math.min(data.currentLesson || 0, maxLessonIndex);
         
         setProgress({
           ...data,
           currentLesson: safeCurrentLesson,
-          totalLessons: 18
+          totalLessons: totalLessons
         });
+        setHasLoadedOnce(true);
       } else {
         // Fallback a localStorage si la API falla (solo en cliente)
         if (typeof window !== 'undefined') {
@@ -105,16 +110,19 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
             const data = JSON.parse(savedProgress);
             
             // Asegurar que currentLesson no exceda el número de lecciones disponibles
-            const maxLessonIndex = 17; // 18 lecciones (índices 0-17)
+            const totalLessons = courseId === 'asistentes-virtuales-ia' ? 21 : 18;
+            const maxLessonIndex = totalLessons - 1;
             const safeCurrentLesson = Math.min(data.currentLesson || 0, maxLessonIndex);
             
             setProgress({
               ...data,
               currentLesson: safeCurrentLesson,
-              totalLessons: 18
+              totalLessons: totalLessons
             });
+            setHasLoadedOnce(true);
           } else {
             // Si no hay progreso guardado, usar valores por defecto
+            const totalLessonsDefault = courseId === 'asistentes-virtuales-ia' ? 21 : 18;
             const defaultProgress: CourseProgress = {
               currentLesson: 0,
               completedLessons: [],
@@ -127,9 +135,10 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
               startedAt: new Date().toISOString(),
               lastAccessed: new Date().toISOString(),
               lessonProgress: [],
-              totalLessons: 18
+              totalLessons: totalLessonsDefault
             };
             setProgress(defaultProgress);
+            setHasLoadedOnce(true);
           }
         }
       }
@@ -139,11 +148,11 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
     } finally {
       setIsLoading(false);
     }
-  }, [courseId, isEnrolled]);
+  }, [courseId, isEnrolled, hasLoadedOnce]);
 
   const saveProgress = useCallback(async (
     currentLesson?: number, 
-    completedLessons?: number[], 
+    completedLessons?: string[], 
     lessonNumber?: number,
     lessonTitle?: string,
     action?: 'access' | 'complete',
@@ -213,7 +222,7 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
     }
   }, [courseId, isEnrolled]);
 
-  const markLessonComplete = useCallback((lessonId: number) => {
+  const markLessonComplete = useCallback((lessonId: string) => {
     setProgress(prev => {
       const newCompletedLessons = prev.completedLessons.includes(lessonId) 
         ? prev.completedLessons 
@@ -241,8 +250,10 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
   const progressPercentage = progress.progressPercentage;
 
   useEffect(() => {
-    loadProgress();
-  }, [courseId, isEnrolled]); // Removido loadProgress de las dependencias
+    if (!hasLoadedOnce && isEnrolled) {
+      loadProgress();
+    }
+  }, [courseId, isEnrolled, hasLoadedOnce, loadProgress]);
 
   return {
     progress,

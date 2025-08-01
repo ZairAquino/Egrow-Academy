@@ -24,7 +24,7 @@ export default function AsistentesVirtualesIAPage() {
   
   
   const [currentLesson, setCurrentLesson] = useState(0);
-  const [completedLessons, setCompletedLessons] = useState<number[]>([]);
+  const [completedLessons, setCompletedLessons] = useState<string[]>([]);
   const [progressPercentage, setProgressPercentage] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [expandedLessons, setExpandedLessons] = useState<number[]>([]);
@@ -93,14 +93,14 @@ export default function AsistentesVirtualesIAPage() {
     id: 'asistentes-virtuales-ia',
     title: 'Asistentes virtuales con IA',
     description: 'Descubre cómo crear y configurar asistentes virtuales inteligentes para automatizar tareas y mejorar la productividad en tu organización. Domina Google Gemini, ChatGPT y otras herramientas de IA.',
-    duration: '4 horas',
+    duration: '4h 40min',
     level: 'Intermedio',
     difficulty: 'Intermedio',
     category: 'Asistentes Virtuales',
     price: 'Gratis',
     language: 'Español',
     image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=250&fit=crop&crop=center',
-    lessonsCount: 5,
+    lessonsCount: 21,
     instructor: {
       name: 'eGrow Academy',
       title: 'Especialista en Inteligencia Artificial - eGrow Academy',
@@ -138,15 +138,17 @@ export default function AsistentesVirtualesIAPage() {
         description: 'Comprende los fundamentos de los asistentes virtuales con IA y desarrolla una estrategia empresarial sólida para su implementación',
         duration: 45,
         type: 'Video',
-        videoUrl: 'https://www.youtube.com/watch?v=example1'
+        videoUrl: 'https://www.youtube.com/watch?v=example1',
+        lessonsCount: 4
       },
       {
         id: 2,
         title: 'MÓDULO 2: Preparación y Documentación Empresarial',
         description: 'Prepara toda la documentación necesaria y establece los procesos empresariales para integrar asistentes virtuales',
-        duration: 50,
+        duration: 60,
         type: 'Lab',
-        videoUrl: 'https://www.youtube.com/watch?v=example2'
+        videoUrl: 'https://www.youtube.com/watch?v=example2',
+        lessonsCount: 3
       },
       {
         id: 3,
@@ -154,7 +156,8 @@ export default function AsistentesVirtualesIAPage() {
         description: 'Aprende a crear y configurar asistentes virtuales potentes utilizando Google Gemini desde cero',
         duration: 55,
         type: 'Lab',
-        videoUrl: 'https://www.youtube.com/watch?v=example3'
+        videoUrl: 'https://www.youtube.com/watch?v=example3',
+        lessonsCount: 4
       },
       {
         id: 4,
@@ -162,15 +165,17 @@ export default function AsistentesVirtualesIAPage() {
         description: 'Desarrolla asistentes personalizados con ChatGPT y configura GPTs especializados para tu empresa',
         duration: 60,
         type: 'Lab',
-        videoUrl: 'https://www.youtube.com/watch?v=example4'
+        videoUrl: 'https://www.youtube.com/watch?v=example4',
+        lessonsCount: 4
       },
       {
         id: 5,
         title: 'MÓDULO 5: Optimización, Pruebas y Mantenimiento Continuo',
         description: 'Optimiza el rendimiento de tus asistentes, implementa pruebas exhaustivas y establece un plan de mantenimiento',
-        duration: 50,
+        duration: 60,
         type: 'Project',
-        videoUrl: 'https://www.youtube.com/watch?v=example5'
+        videoUrl: 'https://www.youtube.com/watch?v=example5',
+        lessonsCount: 6
       }
     ]
   };
@@ -182,33 +187,35 @@ export default function AsistentesVirtualesIAPage() {
 
   // Efectos para manejar el progreso del usuario
   useEffect(() => {
-    console.log('🔍 [DEBUG] useEffect [user] ejecutado');
-    console.log('🔍 [DEBUG] Estado del usuario:', { user: !!user, userId: user?.id });
+    console.log('🔍 [DEBUG] useEffect [user, status] ejecutado');
+    console.log('🔍 [DEBUG] Estado del usuario:', { user: !!user, userId: user?.id, status });
     
-    if (user) {
-      console.log('🔍 [DEBUG] Usuario detectado, cargando progreso');
+    if (user && status === 'authenticated') {
+      console.log('🔍 [DEBUG] Usuario autenticado detectado, cargando progreso');
       loadUserProgress();
-    } else {
-      console.log('🔍 [DEBUG] No hay usuario, estableciendo isLoading = false');
+    } else if (status === 'unauthenticated' || (!user && status !== 'loading')) {
+      console.log('🔍 [DEBUG] Usuario no autenticado, estableciendo isLoading = false');
       setIsLoading(false);
+    } else {
+      console.log('🔍 [DEBUG] Estado de autenticación en progreso...');
     }
-  }, [user]);
+  }, [user, status]);
 
   useEffect(() => {
     const handleFocus = () => {
-      if (user) {
+      if (user && status === 'authenticated') {
         loadUserProgress();
       }
     };
 
     const handleVisibilityChange = () => {
-      if (!document.hidden && user) {
+      if (!document.hidden && user && status === 'authenticated') {
         loadUserProgress();
       }
     };
 
     const handlePopState = () => {
-      if (user) {
+      if (user && status === 'authenticated') {
         loadUserProgress();
       }
     };
@@ -222,14 +229,15 @@ export default function AsistentesVirtualesIAPage() {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('popstate', handlePopState);
     };
-  }, [user]);
+  }, [user, status]);
 
   const loadUserProgress = async () => {
     console.log('🔍 [DEBUG] loadUserProgress iniciado');
-    console.log('🔍 [DEBUG] Usuario:', { user: !!user, userId: user?.id });
+    console.log('🔍 [DEBUG] Usuario:', { user: !!user, userId: user?.id, status });
     
-    if (!user) {
-      console.log('🔍 [DEBUG] No hay usuario, saliendo de loadUserProgress');
+    if (!user || status !== 'authenticated') {
+      console.log('🔍 [DEBUG] Usuario no autenticado, saliendo de loadUserProgress');
+      setIsLoading(false);
       return;
     }
 
@@ -248,17 +256,35 @@ export default function AsistentesVirtualesIAPage() {
       if (response.ok) {
         const data = await response.json();
         console.log('🔍 [DEBUG] Datos de progreso recibidos:', data);
-        setCurrentLesson(data.currentLesson || 0);
-        setCompletedLessons(data.completedLessons || []);
-        setProgressPercentage(data.progressPercentage || 0);
+        console.log('🔍 [DEBUG] Actualizando estados locales...');
+        
+        const newCurrentLesson = data.currentLesson || 0;
+        const newCompletedLessons = data.completedLessons || [];
+        const newProgressPercentage = data.progressPercentage || 0;
+        
+        setCurrentLesson(newCurrentLesson);
+        setCompletedLessons(newCompletedLessons);
+        setProgressPercentage(newProgressPercentage);
+        
+        console.log('🔍 [DEBUG] Estados actualizados:', {
+          currentLesson: newCurrentLesson,
+          completedLessonsLength: newCompletedLessons.length,
+          progressPercentage: newProgressPercentage
+        });
+        
+        // Verificar si debería mostrar "Continuar"
+        const shouldShowContinue = newCompletedLessons.length > 0;
+        console.log('🔍 [DEBUG] Debería mostrar "Continuar":', shouldShowContinue);
+        
       } else if (response.status === 404) {
         console.log('🔍 [DEBUG] Usuario no inscrito (404), estableciendo valores por defecto');
-        // Usuario no inscrito, mantener valores por defecto
         setCurrentLesson(0);
         setCompletedLessons([]);
         setProgressPercentage(0);
       } else {
         console.log('🔍 [DEBUG] Error en respuesta de progreso:', response.status);
+        const errorText = await response.text();
+        console.log('🔍 [DEBUG] Error details:', errorText);
       }
     } catch (error) {
       console.error('❌ Error al cargar el progreso:', error);
@@ -270,16 +296,50 @@ export default function AsistentesVirtualesIAPage() {
 
   const getRemainingTime = () => {
     if (completedLessons.length === 0) {
-      return `${totalDuration}min`;
+      return `${Math.floor(totalDuration / 60)}h ${totalDuration % 60}min`;
     }
     
-    const remainingLessons = courseData.lessons.length - completedLessons.length;
-    const averageTimePerLesson = totalDuration / courseData.lessons.length;
+    const remainingLessons = courseData.lessonsCount - completedLessons.length;
+    const averageTimePerLesson = totalDuration / courseData.lessonsCount;
     const totalRemainingTime = remainingLessons * averageTimePerLesson;
     
     const hours = Math.floor(totalRemainingTime / 60);
     const minutes = Math.round(totalRemainingTime % 60);
     return `${hours}h ${minutes}min`;
+  };
+
+  // Mapeo de las lecciones por módulo para determinar si un módulo está completado
+  const getModuleLessons = (moduleId: number): string[] => {
+    const lessonsByModule: Record<number, string[]> = {
+      1: ['cmdsziu3w0001e5ao9kf1iqnh', 'cmdsziu8p0003e5aof9isqghh', 'cmdsziub30005e5aose3jmlkc', 'cmdsziudi0007e5aod3itk745'],
+      2: ['cmdsziufw0009e5aol87339z2', 'cmdsziuia000be5aoonmaky6k', 'cmdsziuko000de5aog4u9lxz5'],
+      3: ['cmdsziun2000fe5ao1jtbran3', 'cmdsziuph000he5aourkr5t1i', 'cmdsziurw000je5ao9omf2odc', 'cmdsziuu9000le5aobg7je8p6'],
+      4: ['cmdsziuwo000ne5aolwpkgsl1', 'cmdsziuz2000pe5aoco6iiuje', 'cmdsziv1h000re5ao0a2w1mkf', 'cmdsziv3v000te5aoo22nck44'],
+      5: ['cmdsziv69000ve5ao5tog460x', 'cmdsziv8o000xe5aoxqhkk651', 'cmdszivb2000ze5ao3eccaj4f', 'cmdszivdg0011e5aorowmnx4l', 'cmdszivfv0013e5aowzs8cmd9', 'cmdszivi90015e5aog2xc0rl2']
+    };
+    return lessonsByModule[moduleId] || [];
+  };
+
+  const isModuleCompleted = (moduleId: number): boolean => {
+    const moduleLessons = getModuleLessons(moduleId);
+    return moduleLessons.every(lessonId => completedLessons.includes(lessonId));
+  };
+
+  // Calcular módulos completados (hay 5 módulos en total)
+  const getCompletedModulesCount = (): number => {
+    let completedCount = 0;
+    for (let moduleId = 1; moduleId <= 5; moduleId++) {
+      if (isModuleCompleted(moduleId)) {
+        completedCount++;
+      }
+    }
+    return completedCount;
+  };
+
+  // Calcular porcentaje de progreso basado en módulos (5 módulos total)
+  const getModuleProgressPercentage = (): number => {
+    const completedModules = getCompletedModulesCount();
+    return Math.round((completedModules / 5) * 100);
   };
 
   console.log('🔍 [DEBUG] Renderizando componente, isLoading:', isLoading, 'authStatus:', status);
@@ -299,6 +359,16 @@ export default function AsistentesVirtualesIAPage() {
   const isUserAuthenticated = user && status === 'authenticated';
 
   console.log('🔍 [DEBUG] Renderizando JSX principal');
+  console.log('🔍 [DEBUG] Estados finales antes del render:', {
+    user: !!user,
+    status,
+    isUserAuthenticated,
+    completedLessonsLength: completedLessons.length,
+    currentLesson,
+    progressPercentage,
+    isLoading
+  });
+  console.log('🔍 [DEBUG] Condición del botón (isUserAuthenticated && completedLessons.length > 0):', isUserAuthenticated && completedLessons.length > 0);
   
   return (
     <>
@@ -324,8 +394,8 @@ export default function AsistentesVirtualesIAPage() {
                 {/* Video solo para móvil - entre descripción y botón */}
                 <div className="mobile-video-preview">
                   <VideoPlayer
-                    videoUrl="https://www.youtube.com/watch?v=example-preview"
-                    title="Preview del Curso - Asistentes virtuales con IA"
+                    videoUrl="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                    title="Never Gonna Give You Up - Rick Astley"
                     className="mobile-preview-video"
                   />
                 </div>
@@ -336,8 +406,11 @@ export default function AsistentesVirtualesIAPage() {
                     <div className="progress-section-new">
                       <div className="progress-info-new">
                         <p className="progress-text-new">
-                          📚 <strong>Progreso actual:</strong> Lección {currentLesson + 1} de {courseData.lessons.length}
+                          📚 <strong>Progreso actual:</strong> Lección {currentLesson + 1} de {courseData.lessonsCount}
                         </p>
+                        <div className="progress-bar-new">
+                          <div className="progress-fill-new" style={{ width: `${Math.round(progressPercentage)}%` }}></div>
+                        </div>
                         <p className="progress-detail-new">
                           {completedLessons.length} lecciones completadas • {Math.round(progressPercentage)}% del curso
                         </p>
@@ -371,38 +444,17 @@ export default function AsistentesVirtualesIAPage() {
                   </div>
                 </div>
               </div>
-              
-              <div className="course-preview">
-                <VideoPlayer
-                  videoUrl="https://www.youtube.com/watch?v=example-preview"
-                  title="Preview del Curso - Asistentes virtuales con IA"
-                  className="desktop-preview-video"
+            </div>
+            
+            <div className="new-video-player">
+              <div className="new-desktop-video">
+                <iframe
+                  src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0&modestbranding=1&rel=0&showinfo=0&controls=1"
+                  title="Never Gonna Give You Up - Rick Astley"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
                 />
-                
-                {isUserAuthenticated && (
-                  <div className="progress-card">
-                    <h3>Tu Progreso</h3>
-                    <div className="progress-bar">
-                      <div className="progress-fill" style={{ width: `${progressPercentage}%` }}></div>
-                    </div>
-                    <div className="progress-details">
-                      <p className="progress-text">
-                        {completedLessons.length}/{courseData.lessons.length} lecciones completadas
-                      </p>
-                      <p className="progress-remaining">
-                        {courseData.lessons.length - completedLessons.length} módulos restantes • {getRemainingTime()}
-                      </p>
-                    </div>
-                    {completedLessons.length > 0 && (
-                      <div 
-                        className="course-action-button course-action-resume"
-                        onClick={goToCourseContent}
-                      >
-                        🔄 Continuar donde lo dejaste
-                      </div>
-                    )}
-                  </div>
-                )}
               </div>
             </div>
           </div>
@@ -419,7 +471,7 @@ export default function AsistentesVirtualesIAPage() {
                   <h2>Contenido del Curso</h2>
                   <div className="curriculum-stats">
                     <div className="stat-item">
-                      <span className="stat-number">{courseData.lessons.length}</span>
+                      <span className="stat-number">{courseData.lessonsCount}</span>
                       <span className="stat-label">Lecciones</span>
                     </div>
                     <div className="stat-item">
@@ -435,11 +487,11 @@ export default function AsistentesVirtualesIAPage() {
                   <div className="lessons-list">
                     <div className="lessons-grid">
                       {courseData.lessons.map((lesson, index) => (
-                        <div key={lesson.id} className={`lesson-card ${completedLessons.includes(index) ? 'completed' : ''}`}>
+                        <div key={lesson.id} className={`lesson-card ${isModuleCompleted(lesson.id) ? 'completed' : ''}`}>
                           <div className="lesson-header">
                             <div className="lesson-number">{index + 1}</div>
                             <div className="lesson-status">
-                              {completedLessons.includes(index) ? '✓' : '○'}
+                              {isModuleCompleted(lesson.id) ? '✓' : '○'}
                             </div>
                           </div>
                           <div className="lesson-content">
@@ -543,7 +595,7 @@ export default function AsistentesVirtualesIAPage() {
               <h2>Contenido del Curso</h2>
               <div className="curriculum-stats">
                 <div className="stat-item">
-                  <span className="stat-number">{courseData.lessons.length}</span>
+                  <span className="stat-number">{courseData.lessonsCount}</span>
                   <span className="stat-label">Lecciones</span>
                 </div>
                 <div className="stat-item">
@@ -559,12 +611,12 @@ export default function AsistentesVirtualesIAPage() {
               <div className="lessons-list">
                 <div className="lessons-horizontal">
                   {courseData.lessons.map((lesson, index) => (
-                    <div key={lesson.id} className={`lesson-item-horizontal ${completedLessons.includes(index) ? 'completed' : ''}`}>
+                    <div key={lesson.id} className={`lesson-item-horizontal ${isModuleCompleted(lesson.id) ? 'completed' : ''}`}>
                       <div className="lesson-header-horizontal" onClick={() => toggleLesson(index)}>
                         <div className="lesson-number-horizontal">{index + 1}</div>
                         <div className="lesson-title-horizontal">{lesson.title}</div>
                         <div className="lesson-status-horizontal">
-                          {completedLessons.includes(index) ? '✓' : '○'}
+                          {isModuleCompleted(lesson.id) ? '✓' : '○'}
                         </div>
                         <div className="lesson-toggle">
                           {expandedLessons.includes(index) ? '−' : '+'}
@@ -706,6 +758,7 @@ export default function AsistentesVirtualesIAPage() {
           max-width: 1200px;
           margin: 0 auto;
           padding: 0 1rem;
+          position: relative;
         }
 
         .course-badges {
@@ -775,12 +828,7 @@ export default function AsistentesVirtualesIAPage() {
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
           }
           
-          .desktop-preview-video {
-            margin: 0;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-          }
+
 
         .progress-section-new {
           display: flex;
@@ -805,6 +853,22 @@ export default function AsistentesVirtualesIAPage() {
           margin: 0;
           font-size: 0.9rem;
           opacity: 0.8;
+        }
+
+        .progress-bar-new {
+          width: 100%;
+          height: 6px;
+          background: rgba(255, 255, 255, 0.2);
+          border-radius: 3px;
+          overflow: hidden;
+          margin: 0.5rem 0;
+        }
+
+        .progress-fill-new {
+          height: 100%;
+          background: linear-gradient(135deg, #22c55e, #16a34a);
+          transition: width 0.3s ease;
+          border-radius: 3px;
         }
 
         .start-section-new {
@@ -894,10 +958,61 @@ export default function AsistentesVirtualesIAPage() {
           border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
-        .course-preview {
-          display: flex;
-          flex-direction: column;
-          gap: 1rem;
+        .new-video-player {
+          position: absolute;
+          top: 250px;
+          right: 400px;
+          z-index: 100;
+          animation: float 3s ease-in-out infinite;
+        }
+
+        .new-desktop-video {
+          width: 450px;
+          height: 300px;
+          border-radius: 12px;
+          overflow: hidden;
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+          border: 3px solid rgba(255, 255, 255, 0.2);
+          background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+          backdrop-filter: blur(10px);
+          position: relative;
+        }
+
+        .new-desktop-video::before {
+          content: '';
+          position: absolute;
+          top: -2px;
+          left: -2px;
+          right: -2px;
+          bottom: -2px;
+          background: linear-gradient(45deg, #667eea, #764ba2, #f093fb, #f5576c);
+          border-radius: 14px;
+          z-index: -1;
+          animation: borderGlow 2s ease-in-out infinite alternate;
+        }
+
+        .new-desktop-video iframe {
+          width: 100%;
+          height: 100%;
+          border-radius: 12px;
+        }
+
+        @keyframes float {
+          0%, 100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
+        }
+
+        @keyframes borderGlow {
+          0% {
+            opacity: 0.7;
+          }
+          100% {
+            opacity: 1;
+          }
         }
 
         .preview-video {

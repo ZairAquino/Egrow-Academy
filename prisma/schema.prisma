@@ -162,7 +162,7 @@ model CourseProgress {
   id                 String               @id @default(cuid())
   enrollmentId       String               @unique
   currentLesson      Int                  @default(0)
-  completedLessons   Int[]                @default([])
+  completedLessons   String[]             @default([])
   progressPercentage Decimal              @default(0)
   lastAccessed       DateTime             @default(now())
   startedAt          DateTime             @default(now())
