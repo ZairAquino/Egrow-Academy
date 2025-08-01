@@ -38,9 +38,23 @@ export default function CursosGratuitosPage() {
       price: 'Gratis',
       image: '/images/optimized/v-5.webp',
       tag: 'eGrow Academy',
-      instructor: 'Dr. Juan Pérez',
+      instructor: 'Zair Adolfo Aquino Rodriguez',
       source: 'eGrow Academy',
       link: '/curso/monetiza-ia'
+    },
+    // Curso - Asistentes virtuales con IA
+    {
+      id: 'asistentes-virtuales-ia',
+      title: 'Asistentes virtuales con IA',
+      description: 'Descubre cómo crear y configurar asistentes virtuales inteligentes para automatizar tareas y mejorar la productividad en tu organización.',
+      duration: '4 horas',
+      level: 'Intermedio',
+      price: 'Gratis',
+      image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=250&fit=crop&crop=center',
+      tag: 'eGrow Academy',
+      instructor: 'eGrow Academy',
+      source: 'eGrow Academy',
+      link: '/curso/asistentes-virtuales-ia'
     },
 
   ];

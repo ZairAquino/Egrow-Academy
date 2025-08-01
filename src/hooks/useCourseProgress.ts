@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 interface LessonProgress {
   id: string;
@@ -45,10 +45,16 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
     startedAt: '2024-01-01T00:00:00.000Z',
     lastAccessed: '2024-01-01T00:00:00.000Z',
     lessonProgress: [],
-    totalLessons: 5
+    totalLessons: 18
   });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const progressRef = useRef(progress);
+  
+  // Actualizar la referencia cuando cambia el progreso
+  useEffect(() => {
+    progressRef.current = progress;
+  }, [progress]);
 
   const loadProgress = useCallback(async () => {
     if (!isEnrolled) {
@@ -63,7 +69,7 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
       completedLessons: [],
       progressPercentage: 0,
       status: 'NOT_STARTED',
-      totalLessons: 5
+      totalLessons: 18
     }));
 
     try {
@@ -81,13 +87,13 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
         const data = await response.json();
         
         // Asegurar que currentLesson no exceda el número de lecciones disponibles
-        const maxLessonIndex = 4; // 5 lecciones (índices 0-4)
+        const maxLessonIndex = 17; // 18 lecciones (índices 0-17)
         const safeCurrentLesson = Math.min(data.currentLesson || 0, maxLessonIndex);
         
         setProgress({
           ...data,
           currentLesson: safeCurrentLesson,
-          totalLessons: 5
+          totalLessons: 18
         });
       } else {
         // Fallback a localStorage si la API falla (solo en cliente)
@@ -99,13 +105,13 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
             const data = JSON.parse(savedProgress);
             
             // Asegurar que currentLesson no exceda el número de lecciones disponibles
-            const maxLessonIndex = 4; // 5 lecciones (índices 0-4)
+            const maxLessonIndex = 17; // 18 lecciones (índices 0-17)
             const safeCurrentLesson = Math.min(data.currentLesson || 0, maxLessonIndex);
             
             setProgress({
               ...data,
               currentLesson: safeCurrentLesson,
-              totalLessons: 5
+              totalLessons: 18
             });
           } else {
             // Si no hay progreso guardado, usar valores por defecto
@@ -121,7 +127,7 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
               startedAt: new Date().toISOString(),
               lastAccessed: new Date().toISOString(),
               lessonProgress: [],
-              totalLessons: 10
+              totalLessons: 18
             };
             setProgress(defaultProgress);
           }
@@ -147,7 +153,7 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
 
     try {
       // Usar el estado actual si no se proporcionan parámetros
-      const currentProgress = progress;
+      const currentProgress = progressRef.current;
       const lessonToSave = currentLesson ?? currentProgress.currentLesson;
       const lessonsToSave = completedLessons ?? currentProgress.completedLessons;
       
@@ -205,7 +211,7 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
       console.error('Error guardando progreso:', error);
       setError('Error al guardar el progreso');
     }
-  }, [courseId, isEnrolled, progress]);
+  }, [courseId, isEnrolled]);
 
   const markLessonComplete = useCallback((lessonId: number) => {
     setProgress(prev => {

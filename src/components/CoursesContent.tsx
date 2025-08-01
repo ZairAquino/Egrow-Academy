@@ -38,8 +38,8 @@ interface Course {
 
 // Categorías disponibles
 const categories = [
-  { id: 'all', name: 'Todos los Cursos', icon: '📚', count: 2 },
-  { id: 'IA_PARA_EMPRENDER', name: 'IA para Emprender', icon: '🚀', count: 1 },
+  { id: 'all', name: 'Todos los Cursos', icon: '📚', count: 3 },
+  { id: 'IA_PARA_EMPRENDER', name: 'IA para Emprender', icon: '🚀', count: 2 },
   { id: 'DESARROLLO_WEB', name: 'Desarrollo Web', icon: '💻', count: 1 },
   { id: 'MARKETING_DIGITAL', name: 'Marketing Digital', icon: '📈', count: 0 },
   { id: 'PRODUCTIVIDAD', name: 'Productividad', icon: '⚡', count: 0 },
@@ -140,6 +140,20 @@ export default function CoursesContent() {
         isFree: true,
         requiresAuth: false,
         link: '/curso/monetiza-ia'
+      },
+      {
+        id: 'asistentes-virtuales-ia',
+        title: 'Asistentes virtuales con IA',
+        description: 'Descubre cómo crear y configurar asistentes virtuales inteligentes para automatizar tareas y mejorar la productividad en tu organización.',
+        category: 'IA_PARA_EMPRENDER',
+        duration: '4 horas',
+        level: 'Intermedio',
+        price: 'Gratis',
+        image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=250&fit=crop&crop=center',
+        tag: 'Gratis',
+        isFree: true,
+        requiresAuth: false,
+        link: '/curso/asistentes-virtuales-ia'
       },
       {
         id: 'desarrollo-web-fullstack',
