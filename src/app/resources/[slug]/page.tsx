@@ -524,6 +524,54 @@ export default function ResourcePage() {
                         🔍 Abrir GPT Evaluación
                       </button>
                     )}
+                    
+                    {slug === 'prompts-disenos-anuncios-basicos' && (
+                      <button 
+                        onClick={() => window.open('https://3o0p1lzj4n.ufs.sh/f/P2bnXUoat3WfXpo2g4PweiEC2LfM7rRWI9jh3XxcOmd5FqaU', '_blank')}
+                        style={{
+                          width: '100%',
+                          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                          color: 'white',
+                          padding: '1rem',
+                          borderRadius: '0.75rem',
+                          fontSize: '1rem',
+                          fontWeight: 'bold',
+                          border: 'none',
+                          cursor: 'pointer',
+                          marginBottom: '1rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '0.5rem'
+                        }}
+                      >
+                        📄 Ver Prompts
+                      </button>
+                    )}
+                    
+                    {slug === 'ebook-disenadores-vs-ia' && (
+                      <button 
+                        onClick={() => window.open('https://3o0p1lzj4n.ufs.sh/f/P2bnXUoat3Wf3UBAVBmMmxDjlZNJ8Lw2dfBuWHpOr96TbCFt', '_blank')}
+                        style={{
+                          width: '100%',
+                          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                          color: 'white',
+                          padding: '1rem',
+                          borderRadius: '0.75rem',
+                          fontSize: '1rem',
+                          fontWeight: 'bold',
+                          border: 'none',
+                          cursor: 'pointer',
+                          marginBottom: '1rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '0.5rem'
+                        }}
+                      >
+                        📖 Descargar Ebook
+                      </button>
+                    )}
                   </div>
 
                 </div>
