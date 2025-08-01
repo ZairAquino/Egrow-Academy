@@ -231,6 +231,42 @@ export default function AsistentesVirtualesIAPage() {
     };
   }, [user, status]);
 
+  // YouTube API para controlar animación del video
+  useEffect(() => {
+    // Cargar YouTube API
+    const loadYouTubeAPI = () => {
+      if (typeof window !== 'undefined' && !(window as any).YT) {
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        if (firstScriptTag && firstScriptTag.parentNode) {
+          firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        }
+      }
+    };
+
+    // Función global para YouTube API
+    (window as any).onYouTubeIframeAPIReady = () => {
+      const player = new (window as any).YT.Player('youtube-iframe', {
+        events: {
+          'onStateChange': (event: any) => {
+            const videoPlayer = document.getElementById('video-player');
+            if (videoPlayer) {
+              if (event.data === (window as any).YT.PlayerState.PLAYING) {
+                videoPlayer.classList.add('playing');
+              } else if (event.data === (window as any).YT.PlayerState.PAUSED || 
+                         event.data === (window as any).YT.PlayerState.ENDED) {
+                videoPlayer.classList.remove('playing');
+              }
+            }
+          }
+        }
+      });
+    };
+
+    loadYouTubeAPI();
+  }, []);
+
   const loadUserProgress = async () => {
     console.log('🔍 [DEBUG] loadUserProgress iniciado');
     console.log('🔍 [DEBUG] Usuario:', { user: !!user, userId: user?.id, status });
@@ -446,14 +482,15 @@ export default function AsistentesVirtualesIAPage() {
               </div>
             </div>
             
-            <div className="new-video-player">
+            <div className="new-video-player" id="video-player">
               <div className="new-desktop-video">
                 <iframe
-                  src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0&modestbranding=1&rel=0&showinfo=0&controls=1"
+                  src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0&modestbranding=1&rel=0&showinfo=0&controls=1&enablejsapi=1"
                   title="Never Gonna Give You Up - Rick Astley"
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen
+                  id="youtube-iframe"
                 />
               </div>
             </div>
@@ -964,6 +1001,10 @@ export default function AsistentesVirtualesIAPage() {
           right: 400px;
           z-index: 100;
           animation: float 3s ease-in-out infinite;
+        }
+
+        .new-video-player.playing {
+          animation: none;
         }
 
         .new-desktop-video {
