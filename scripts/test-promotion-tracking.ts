@@ -110,7 +110,7 @@ async function testPromotionTracking() {
       
       const ctr = impressions > 0 ? (clicks / impressions) * 100 : 0;
       const conversionRate = clicks > 0 ? (conversions / clicks) * 100 : 0;
-      const estimatedRevenue = conversions * 6.99;
+      const estimatedRevenue = conversions * 12.49;
 
       console.log(`\n📊 ${promotion.title}:`);
       console.log(`  - Impresiones: ${impressions}`);

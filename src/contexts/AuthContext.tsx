@@ -23,6 +23,7 @@ interface AuthContextType {
   status: 'loading' | 'authenticated' | 'unauthenticated'
   token: string | null
   isAuthenticated: boolean
+  login: (email: string, password: string) => Promise<void>
   logout: () => Promise<void>
   refreshUser: () => Promise<void>
 }
@@ -100,6 +101,34 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
+  // Función de login
+  const login = async (email: string, password: string) => {
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ email, password }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok && data.user) {
+        setUser(data.user)
+        setStatus('authenticated')
+        setToken(data.token)
+        console.log('✅ [AuthContext] Login exitoso:', data.user.email)
+      } else {
+        throw new Error(data.error || 'Error en el login')
+      }
+    } catch (error) {
+      console.error('Error during login:', error)
+      throw error
+    }
+  }
+
   // Función de logout
   const logout = async () => {
     try {
@@ -152,6 +181,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     status,
     token,
     isAuthenticated: status === 'authenticated',
+    login,
     logout,
     refreshUser
   }

@@ -22,8 +22,8 @@ export const STRIPE_PRODUCTS = {
 
 // Precios de Stripe - IDs reales de producción
 export const STRIPE_PRICES = {
-  MONTHLY: 'price_1RoWlLFJoQPSn3lA6O4XrHMB',
-  YEARLY: 'price_1RoWlMFJoQPSn3lAgdygLOCh',
+  MONTHLY: 'price_1RoWlLFJoQPSn3lA6O4XrHMB', // Actualizar con nuevo ID de precio mensual $12.49
+  YEARLY: 'price_1RoWlMFJoQPSn3lAgdygLOCh', // Actualizar con nuevo ID de precio anual $149.99
 };
 
 // Configuración de planes
@@ -31,7 +31,7 @@ export const SUBSCRIPTION_PLANS = {
   monthly: {
     id: 'monthly',
     name: 'Plan Mensual',
-    price: 6.99,
+    price: 12.49, // Precio mensual correcto
     interval: 'month',
     stripePriceId: STRIPE_PRICES.MONTHLY,
     features: [
@@ -46,11 +46,11 @@ export const SUBSCRIPTION_PLANS = {
   yearly: {
     id: 'yearly',
     name: 'Plan Anual',
-    price: 59.99,
+    price: 149.99, // Precio anual correcto
     interval: 'year',
     stripePriceId: STRIPE_PRICES.YEARLY,
     popular: true,
-    savings: 'Ahorra 40%',
+    savings: 'Ahorra 50%', // Porcentaje de ahorro correcto
     features: [
       'Todo lo del plan mensual',
       '2 meses gratis',

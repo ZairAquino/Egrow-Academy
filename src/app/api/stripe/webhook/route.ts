@@ -111,8 +111,7 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
         });
 
         // Determinar revenue basado en el plan
-        const planId = session.metadata?.planId;
-        const revenue = planId === 'yearly' ? 59.99 : 6.99;
+        const revenue = planId === 'yearly' ? 149.99 : 12.49;
 
         console.log(`🎯 Conversión registrada: Usuario ${userId} se suscribió desde promoción ${promotionId} - Revenue: $${revenue}`);
 

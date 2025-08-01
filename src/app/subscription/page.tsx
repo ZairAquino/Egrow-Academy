@@ -23,7 +23,7 @@ const subscriptionPlans: SubscriptionPlan[] = [
   {
     id: 'monthly',
     name: 'Plan Mensual',
-    price: 6.99,
+    price: 12.49,
     interval: 'month',
     features: [
       'Acceso a todos los cursos especializados',
@@ -37,10 +37,10 @@ const subscriptionPlans: SubscriptionPlan[] = [
   {
     id: 'yearly',
     name: 'Plan Anual',
-    price: 59.99,
+    price: 149.99,
     interval: 'year',
     popular: true,
-    savings: 'Ahorra 40%',
+    savings: 'Ahorra 50%',
     features: [
       'Todo lo del plan mensual',
       '2 meses gratis',

@@ -45,29 +45,29 @@ async function initStripeProducts() {
     // Crear precios para las suscripciones
     console.log('💰 Creando precios de suscripción...');
 
-    // Precio mensual ($6.99/mes)
+    // Precio mensual ($12.49/mes)
     const monthlyPrice = await createStripePrice({
       productId: monthlyProduct.id,
-      unitAmount: 699, // $6.99 en centavos
+      unitAmount: 1249, // $12.49 en centavos
       currency: 'usd',
       type: 'recurring',
       interval: 'month',
       intervalCount: 1
     });
 
-    console.log(`✅ Precio mensual creado: ${monthlyPrice.id} - $6.99/mes`);
+    console.log(`✅ Precio mensual creado: ${monthlyPrice.id} - $12.49/mes`);
 
-    // Precio anual ($59.99/año)
+    // Precio anual ($149.99/año)
     const yearlyPrice = await createStripePrice({
       productId: yearlyProduct.id,
-      unitAmount: 5999, // $59.99 en centavos
+      unitAmount: 14999, // $149.99 en centavos
       currency: 'usd',
       type: 'recurring',
       interval: 'year',
       intervalCount: 1
     });
 
-    console.log(`✅ Precio anual creado: ${yearlyPrice.id} - $59.99/año\n`);
+    console.log(`✅ Precio anual creado: ${yearlyPrice.id} - $149.99/año\n`);
 
     // Crear productos para cursos individuales
     console.log('📚 Creando productos para cursos individuales...');
@@ -169,8 +169,8 @@ async function initStripeProducts() {
     console.log('📋 Resumen de productos creados:');
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     console.log('📦 SUSCRIPCIONES:');
-    console.log(`   • Plan Mensual: ${monthlyProduct.id} - $6.99/mes`);
-    console.log(`   • Plan Anual: ${yearlyProduct.id} - $59.99/año`);
+    console.log(`   • Plan Mensual: ${monthlyProduct.id} - $12.49/mes`);
+    console.log(`   • Plan Anual: ${yearlyProduct.id} - $149.99/año`);
     console.log('');
     console.log('📚 CURSOS INDIVIDUALES:');
     console.log(`   • Desarrollo Web Full Stack: ${webDevProduct.id} - $99.99`);

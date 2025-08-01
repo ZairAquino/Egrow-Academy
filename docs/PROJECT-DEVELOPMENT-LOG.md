@@ -241,7 +241,7 @@
 - **Endpoints:** Todos los endpoints de tracking funcionando
 
 #### 📊 **Métricas de ROI Disponibles**
-- **Revenue Estimado:** $6.99 por conversión mensual, $59.99 anual
+- **Revenue Estimado:** $12.49 por conversión mensual, $149.99 anual
 - **Revenue per Impression:** Valor generado por impresión
 - **Revenue per Click:** Valor generado por click
 - **Conversion Rate:** % de usuarios que se suscriben
@@ -1163,7 +1163,7 @@ src/
    - **Comandos:** `npm run init-stripe` y `npm run test-stripe`
 
 2. **Productos Configurados**
-   - **Suscripciones:** Plan mensual ($6.99) y anual ($59.99)
+   - **Suscripciones:** Plan mensual ($12.49) y anual ($149.99)
    - **Cursos individuales:** Desarrollo Web ($99.99), ML ($79.99), CV ($89.99), Monetización ($69.99)
    - **Metadatos:** Configurados para integración con base de datos
 

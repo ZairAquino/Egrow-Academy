@@ -476,6 +476,54 @@ export default function ResourcePage() {
                         </button>
                       </>
                     )}
+                    
+                    {slug === 'carrusel-de-imagenes' && (
+                      <button 
+                        onClick={() => window.open('https://chatgpt.com/g/g-68892296e5508191b7a874e5fc36bbbe-carrusel-de-imagenes', '_blank')}
+                        style={{
+                          width: '100%',
+                          background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                          color: 'white',
+                          padding: '1rem',
+                          borderRadius: '0.75rem',
+                          fontSize: '1rem',
+                          fontWeight: 'bold',
+                          border: 'none',
+                          cursor: 'pointer',
+                          marginBottom: '1rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '0.5rem'
+                        }}
+                      >
+                        🎨 Abrir GPT Carrusel
+                      </button>
+                    )}
+                    
+                    {slug === 'gpt-evaluar-mejorar-disenos' && (
+                      <button 
+                        onClick={() => window.open('https://chatgpt.com/g/g-688d1b0d55708191a4f5f2a273cd23a9-visuo-asesor-de-diseno', '_blank')}
+                        style={{
+                          width: '100%',
+                          background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                          color: 'white',
+                          padding: '1rem',
+                          borderRadius: '0.75rem',
+                          fontSize: '1rem',
+                          fontWeight: 'bold',
+                          border: 'none',
+                          cursor: 'pointer',
+                          marginBottom: '1rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '0.5rem'
+                        }}
+                      >
+                        🔍 Abrir GPT Evaluación
+                      </button>
+                    )}
                   </div>
 
                 </div>

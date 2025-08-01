@@ -39,9 +39,9 @@ export async function GET(request: NextRequest) {
       const conversionRate = clicks > 0 ? (conversions / clicks) * 100 : 0;
       const overallConversionRate = impressions > 0 ? (conversions / impressions) * 100 : 0;
 
-      // Calcular ingresos estimados (asumiendo $6.99 por suscripción mensual)
-      const estimatedRevenue = conversions * 6.99;
-      const estimatedYearlyRevenue = conversions * 59.99; // Plan anual
+      // Calcular ingresos estimados (asumiendo $12.49 por suscripción mensual)
+      const estimatedRevenue = conversions * 12.49;
+      const estimatedYearlyRevenue = conversions * 149.99; // Plan anual
 
       // Calcular costo por adquisición (CPA) si se tiene información de costos
       const estimatedCPA = clicks > 0 ? 0 : 0; // Se puede agregar lógica de costos

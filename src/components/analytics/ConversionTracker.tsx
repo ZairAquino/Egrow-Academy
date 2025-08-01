@@ -16,7 +16,7 @@ function ConversionTrackerContent() {
 
     if (isConversionPage && promotionId) {
       // Determinar revenue basado en el plan
-      const revenue = planType === 'yearly' ? 59.99 : 6.99;
+      const revenue = planType === 'yearly' ? 149.99 : 12.49;
 
       // Obtener información de la promoción desde localStorage o API
       const promotionData = localStorage.getItem(`promotion_${promotionId}`);
