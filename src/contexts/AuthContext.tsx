@@ -121,7 +121,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
         setToken(data.token)
         console.log('✅ [AuthContext] Login exitoso:', data.user.email)
       } else {
-        throw new Error(data.error || 'Error en el login')
+        // Manejar caso específico de cuenta no verificada
+        if (data.requiresVerification) {
+          const error = new Error(data.error || 'Cuenta no verificada')
+          error.requiresVerification = true
+          error.email = email
+          throw error
+        } else {
+          throw new Error(data.error || 'Error en el login')
+        }
       }
     } catch (error) {
       console.error('Error during login:', error)

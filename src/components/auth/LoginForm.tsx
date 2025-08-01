@@ -12,6 +12,10 @@ export default function LoginForm() {
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [showVerification, setShowVerification] = useState(false)
+  const [verificationEmail, setVerificationEmail] = useState('')
+  const [verificationCode, setVerificationCode] = useState('')
+  const [resendLoading, setResendLoading] = useState(false)
   const router = useRouter()
   const { login } = useAuth()
   const { showToast } = useToast()
@@ -27,9 +31,17 @@ export default function LoginForm() {
       router.push('/my-courses')
       router.refresh()
     } catch (error: any) {
-      const errorMessage = error.message || 'Error de conexión'
-      setError(errorMessage)
-      showToast(errorMessage, 'error')
+      // Manejar caso específico de cuenta no verificada
+      if (error.requiresVerification) {
+        setVerificationEmail(error.email || formData.email)
+        setShowVerification(true)
+        setError('')
+        showToast('Tu cuenta necesita verificación. Revisa tu email o solicita un nuevo código.', 'warning')
+      } else {
+        const errorMessage = error.message || 'Error de conexión'
+        setError(errorMessage)
+        showToast(errorMessage, 'error')
+      }
       console.error('Login error:', error)
     } finally {
       setLoading(false)
@@ -42,6 +54,65 @@ export default function LoginForm() {
       [e.target.name]: e.target.value
     })
     if (error) setError('')
+  }
+
+  const handleResendCode = async () => {
+    setResendLoading(true)
+    try {
+      const response = await fetch('/api/auth/resend-verification', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: verificationEmail }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        showToast('Nuevo código de verificación enviado a tu email', 'success')
+      } else {
+        showToast(data.error || 'Error al reenviar código', 'error')
+      }
+    } catch (error) {
+      showToast('Error de conexión', 'error')
+    } finally {
+      setResendLoading(false)
+    }
+  }
+
+  const handleVerifyCode = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+    
+    try {
+      const response = await fetch('/api/auth/verify-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ 
+          email: verificationEmail, 
+          code: verificationCode 
+        }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok && data.user) {
+        showToast('¡Cuenta verificada exitosamente!', 'success')
+        // La API ya establece la cookie de autenticación
+        router.push('/my-courses')
+        router.refresh()
+      } else {
+        showToast(data.error || 'Código de verificación inválido', 'error')
+      }
+    } catch (error) {
+      showToast('Error de conexión', 'error')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -66,18 +137,22 @@ export default function LoginForm() {
             color: '#1f2937',
             marginBottom: '0.5rem'
           }}>
-            Iniciar Sesión
+            {showVerification ? 'Verificar Cuenta' : 'Iniciar Sesión'}
           </h2>
           <p style={{
             color: '#6b7280',
             fontSize: '0.875rem'
           }}>
-            Accede a tu cuenta de eGrow Academy
+            {showVerification 
+              ? `Ingresa el código de verificación enviado a ${verificationEmail}`
+              : 'Accede a tu cuenta de eGrow Academy'
+            }
           </p>
         </div>
 
         {/* Formulario */}
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        {!showVerification ? (
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
           {/* Email */}
           <div>
             <label htmlFor="email" style={{
@@ -264,6 +339,155 @@ export default function LoginForm() {
             </a>
           </div>
         </form>
+        ) : (
+          /* Formulario de Verificación */
+          <form onSubmit={handleVerifyCode} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            {/* Código de Verificación */}
+            <div>
+              <label htmlFor="verificationCode" style={{
+                display: 'block',
+                fontSize: '0.875rem',
+                fontWeight: '600',
+                color: '#374151',
+                marginBottom: '0.5rem'
+              }}>
+                Código de Verificación
+              </label>
+              <input
+                type="text"
+                name="verificationCode"
+                id="verificationCode"
+                value={verificationCode}
+                onChange={(e) => setVerificationCode(e.target.value)}
+                required
+                maxLength={6}
+                style={{
+                  width: '100%',
+                  padding: '0.75rem 1rem',
+                  border: '2px solid #d1d5db',
+                  borderRadius: '8px',
+                  fontSize: '1.25rem',
+                  textAlign: 'center',
+                  letterSpacing: '0.5rem',
+                  transition: 'border-color 0.3s ease',
+                  outline: 'none'
+                }}
+                placeholder="000000"
+              />
+            </div>
+
+            {/* Botón Verificar */}
+            <button
+              type="submit"
+              disabled={loading || verificationCode.length !== 6}
+              style={{
+                width: '100%',
+                padding: '0.875rem 1.5rem',
+                backgroundColor: '#3b82f6',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                fontSize: '1rem',
+                fontWeight: '600',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                transition: 'all 0.3s ease',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.5rem',
+                minHeight: '48px',
+                opacity: loading || verificationCode.length !== 6 ? 0.6 : 1
+              }}
+            >
+              {loading ? (
+                <>
+                  <div style={{
+                    width: '16px',
+                    height: '16px',
+                    border: '2px solid transparent',
+                    borderTop: '2px solid white',
+                    borderRadius: '50%',
+                    animation: 'spin 1s linear infinite'
+                  }}></div>
+                  Verificando...
+                </>
+              ) : (
+                <>
+                  <span>✅</span>
+                  Verificar Cuenta
+                </>
+              )}
+            </button>
+
+            {/* Botón Reenviar Código */}
+            <button
+              type="button"
+              onClick={handleResendCode}
+              disabled={resendLoading}
+              style={{
+                width: '100%',
+                padding: '0.875rem 1.5rem',
+                backgroundColor: 'white',
+                color: '#6b7280',
+                border: '2px solid #d1d5db',
+                borderRadius: '8px',
+                fontSize: '0.875rem',
+                fontWeight: '600',
+                cursor: resendLoading ? 'not-allowed' : 'pointer',
+                transition: 'all 0.3s ease',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.5rem',
+                minHeight: '42px',
+                opacity: resendLoading ? 0.6 : 1
+              }}
+            >
+              {resendLoading ? (
+                <>
+                  <div style={{
+                    width: '14px',
+                    height: '14px',
+                    border: '2px solid transparent',
+                    borderTop: '2px solid #6b7280',
+                    borderRadius: '50%',
+                    animation: 'spin 1s linear infinite'
+                  }}></div>
+                  Enviando...
+                </>
+              ) : (
+                <>
+                  <span>📧</span>
+                  Reenviar Código
+                </>
+              )}
+            </button>
+
+            {/* Botón Volver */}
+            <button
+              type="button"
+              onClick={() => {
+                setShowVerification(false)
+                setVerificationCode('')
+                setError('')
+              }}
+              style={{
+                width: '100%',
+                padding: '0.75rem 1.5rem',
+                backgroundColor: 'transparent',
+                color: '#6b7280',
+                border: 'none',
+                borderRadius: '8px',
+                fontSize: '0.875rem',
+                fontWeight: '500',
+                cursor: 'pointer',
+                transition: 'color 0.3s ease'
+              }}
+            >
+              ← Volver al login
+            </button>
+          </form>
+        )}
       </div>
     </div>
   )
