@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
 import { validateEmail } from '@/lib/email-validation'
 import StepIndicator from './StepIndicator'
@@ -684,7 +685,7 @@ export default function MultiStepRegisterForm() {
                         )}
                       </div>
                     )}
-                  </div>
+                    </div>
 
                     <div>
                       <label htmlFor="confirmPassword" style={labelStyle} className="register-form-label">Confirmar contraseña</label>
@@ -733,6 +734,7 @@ export default function MultiStepRegisterForm() {
                         )}
                       </div>
                     )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -815,6 +817,7 @@ export default function MultiStepRegisterForm() {
                       <option value="Portugal">Portugal</option>
                       <option value="Otro">Otro</option>
                     </select>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -865,6 +868,7 @@ export default function MultiStepRegisterForm() {
                   <p style={{ color: '#059669', fontSize: '0.875rem', margin: 0, fontWeight: '600' }}>
                     ✅ Revisa tu bandeja de entrada y spam para encontrar el código
                   </p>
+                </div>
                 </div>
               </div>
             </div>
@@ -1056,7 +1060,7 @@ export default function MultiStepRegisterForm() {
           
           {/* Botón Volver al inicio */}
           <div style={{ textAlign: 'center', marginTop: '1rem' }}>
-            <a href="/" style={{
+            <Link href="/" style={{
               color: '#667eea',
               textDecoration: 'none',
               fontSize: '0.9rem',
@@ -1074,7 +1078,7 @@ export default function MultiStepRegisterForm() {
             }}
             >
               ← Volver al inicio
-            </a>
+            </Link>
           </div>
         </div>
       )}
