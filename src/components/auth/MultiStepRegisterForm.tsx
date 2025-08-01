@@ -311,6 +311,83 @@ export default function MultiStepRegisterForm() {
       position: 'relative' as const,
       overflow: 'hidden'
     }
+    
+    // Agregar estilos responsivos
+    const mobileStyle = `
+      @media (max-width: 768px) {
+        .register-form-container {
+          height: 350px !important;
+          padding: 1.5rem !important;
+        }
+        .register-step-title {
+          font-size: 1.75rem !important;
+          margin-bottom: 1.5rem !important;
+        }
+        .register-step-subtitle {
+          font-size: 0.875rem !important;
+          margin-bottom: 1rem !important;
+        }
+        .register-form-label {
+          font-size: 0.875rem !important;
+          margin-bottom: 0.5rem !important;
+        }
+        .register-form-input {
+          padding: 0.75rem 1rem !important;
+          font-size: 0.875rem !important;
+        }
+        .register-name-grid {
+          gap: 1rem !important;
+        }
+        .register-step-content {
+          gap: 1rem !important;
+        }
+        .register-nav-button {
+          padding: 0.75rem 1.5rem !important;
+          font-size: 0.875rem !important;
+        }
+        .password-validation {
+          font-size: 0.6875rem !important;
+          gap: 0.125rem !important;
+        }
+      }
+      @media (max-width: 480px) {
+        .register-form-container {
+          height: 320px !important;
+          padding: 1rem !important;
+        }
+        .register-step-title {
+          font-size: 1.5rem !important;
+          margin-bottom: 1rem !important;
+          line-height: 1.1 !important;
+        }
+        .register-step-subtitle {
+          font-size: 0.8125rem !important;
+          margin-bottom: 0.75rem !important;
+        }
+        .register-form-label {
+          font-size: 0.8125rem !important;
+          margin-bottom: 0.375rem !important;
+        }
+        .register-form-input {
+          padding: 0.625rem 0.875rem !important;
+          font-size: 0.8125rem !important;
+        }
+        .register-name-grid {
+          grid-template-columns: 1fr !important;
+          gap: 0.75rem !important;
+        }
+        .register-step-content {
+          gap: 0.75rem !important;
+        }
+        .register-nav-button {
+          padding: 0.625rem 1.25rem !important;
+          font-size: 0.8125rem !important;
+        }
+        .password-validation {
+          font-size: 0.625rem !important;
+        }
+      }
+    `
 
     const overlayStyle = {
       position: 'absolute' as const,
@@ -423,79 +500,87 @@ export default function MultiStepRegisterForm() {
     switch (currentStep) {
       case 1:
         return (
-          <div style={containerStyle}>
-            <div style={overlayStyle}></div>
-            <div style={contentStyle}>
-              <div style={headerStyle}>
-                <h2 style={titleStyle}>👤 Información Personal</h2>
-                <p style={subtitleStyle}>Comencemos con tu nombre completo</p>
-              </div>
+          <>
+            <style dangerouslySetInnerHTML={{ __html: mobileStyle }} />
+            <div style={containerStyle} className="register-form-container">
+              <div style={overlayStyle}></div>
+              <div style={contentStyle}>
+                <div style={headerStyle}>
+                  <h2 style={titleStyle} className="register-step-title">👤 Información Personal</h2>
+                  <p style={subtitleStyle} className="register-step-subtitle">Comencemos con tu nombre completo</p>
+                </div>
 
-              <div style={formStyle}>
-                <div style={{ ...inputGroupStyle, gridTemplateColumns: '1fr 1fr' }}>
-                  <div>
-                    <label htmlFor="firstName" style={labelStyle}>Nombre</label>
-                    <input
-                      type="text"
-                      name="firstName"
-                      id="firstName"
-                      required
-                      value={formData.firstName}
-                      onChange={handleChange}
-                      placeholder="Tu nombre"
-                      style={modernInputStyle}
-                      onFocus={handleFocus}
-                      onBlur={handleBlur}
-                    />
-                  </div>
+                <div style={formStyle} className="register-step-content">
+                  <div style={{ ...inputGroupStyle, gridTemplateColumns: '1fr 1fr' }} className="register-name-grid">
+                    <div>
+                      <label htmlFor="firstName" style={labelStyle} className="register-form-label">Nombre</label>
+                      <input
+                        type="text"
+                        name="firstName"
+                        id="firstName"
+                        required
+                        value={formData.firstName}
+                        onChange={handleChange}
+                        placeholder="Tu nombre"
+                        style={modernInputStyle}
+                        className="register-form-input"
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
+                      />
+                    </div>
 
-                  <div>
-                    <label htmlFor="lastName" style={labelStyle}>Apellido</label>
-                    <input
-                      type="text"
-                      name="lastName"
-                      id="lastName"
-                      required
-                      value={formData.lastName}
-                      onChange={handleChange}
-                      placeholder="Tu apellido"
-                      style={modernInputStyle}
-                      onFocus={handleFocus}
-                      onBlur={handleBlur}
-                    />
+                    <div>
+                      <label htmlFor="lastName" style={labelStyle} className="register-form-label">Apellido</label>
+                      <input
+                        type="text"
+                        name="lastName"
+                        id="lastName"
+                        required
+                        value={formData.lastName}
+                        onChange={handleChange}
+                        placeholder="Tu apellido"
+                        style={modernInputStyle}
+                        className="register-form-input"
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          </>
         )
 
       case 2:
         return (
-          <div style={containerStyle}>
-            <div style={overlayStyle}></div>
-            <div style={contentStyle}>
-              <div style={headerStyle}>
-                <h2 style={titleStyle}>📧 Correo Electrónico</h2>
-                <p style={subtitleStyle}>Ingresa tu correo para crear tu cuenta</p>
-              </div>
+          <>
+            <style dangerouslySetInnerHTML={{ __html: mobileStyle }} />
+            <div style={containerStyle} className="register-form-container">
+              <div style={overlayStyle}></div>
+              <div style={contentStyle}>
+                <div style={headerStyle}>
+                  <h2 style={titleStyle} className="register-step-title">📧 Correo Electrónico</h2>
+                  <p style={subtitleStyle} className="register-step-subtitle">Ingresa tu correo para crear tu cuenta</p>
+                </div>
 
-              <div style={formStyle}>
-                <div style={inputGroupStyle}>
-                  <div>
-                    <label htmlFor="email" style={labelStyle}>Correo electrónico</label>
-                    <input
-                      type="email"
-                      name="email"
-                      id="email"
-                      required
-                      value={formData.email}
-                      onChange={handleChange}
-                      placeholder="tu@email.com"
-                      style={modernInputStyle}
-                      onFocus={handleFocus}
-                      onBlur={handleBlur}
-                    />
+                <div style={formStyle} className="register-step-content">
+                  <div style={inputGroupStyle}>
+                    <div>
+                      <label htmlFor="email" style={labelStyle} className="register-form-label">Correo electrónico</label>
+                      <input
+                        type="email"
+                        name="email"
+                        id="email"
+                        required
+                        value={formData.email}
+                        onChange={handleChange}
+                        placeholder="tu@email.com"
+                        style={modernInputStyle}
+                        className="register-form-input"
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
+                      />
                     {formData.email && (
                       <div style={{
                         marginTop: '0.75rem',
@@ -534,50 +619,53 @@ export default function MultiStepRegisterForm() {
                 </div>
               </div>
             </div>
-          </div>
+          </>
         )
 
       case 3:
         return (
-          <div style={containerStyle}>
-            <div style={overlayStyle}></div>
-            <div style={contentStyle}>
-              <div style={headerStyle}>
-                <h2 style={titleStyle}>🔒 Contraseña Segura</h2>
-                <p style={subtitleStyle}>Crea una contraseña segura para tu cuenta</p>
-              </div>
+          <>
+            <style dangerouslySetInnerHTML={{ __html: mobileStyle }} />
+            <div style={containerStyle} className="register-form-container">
+              <div style={overlayStyle}></div>
+              <div style={contentStyle}>
+                <div style={headerStyle}>
+                  <h2 style={titleStyle} className="register-step-title">🔒 Contraseña Segura</h2>
+                  <p style={subtitleStyle} className="register-step-subtitle">Crea una contraseña segura para tu cuenta</p>
+                </div>
 
-              <div style={formStyle}>
-                <div style={{ ...inputGroupStyle, gap: '0.75rem' }}>
-                  <div>
-                    <label htmlFor="password" style={labelStyle}>Contraseña</label>
-                    <input
-                      type="password"
-                      name="password"
-                      id="password"
-                      required
-                      minLength={6}
-                      value={formData.password}
-                      onChange={handleChange}
-                      placeholder="Mínimo 6 caracteres"
-                      style={{ 
-                        ...modernInputStyle, 
-                        padding: '0.75rem 1rem',
-                        borderColor: formData.password ? (passwordValid ? '#059669' : '#dc2626') : '#e5e7eb' 
-                      }}
-                      onFocus={handleFocus}
-                      onBlur={handleBlur}
-                    />
-                    {formData.password && (
-                      <div style={{
-                        marginTop: '0.25rem',
-                        fontSize: '0.75rem',
-                        color: passwordValid ? '#059669' : '#dc2626',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.25rem',
-                        fontWeight: '600'
-                      }}>
+                <div style={formStyle} className="register-step-content">
+                  <div style={{ ...inputGroupStyle, gap: '0.75rem' }}>
+                    <div>
+                      <label htmlFor="password" style={labelStyle} className="register-form-label">Contraseña</label>
+                      <input
+                        type="password"
+                        name="password"
+                        id="password"
+                        required
+                        minLength={6}
+                        value={formData.password}
+                        onChange={handleChange}
+                        placeholder="Mínimo 6 caracteres"
+                        style={{ 
+                          ...modernInputStyle, 
+                          padding: '0.75rem 1rem',
+                          borderColor: formData.password ? (passwordValid ? '#059669' : '#dc2626') : '#e5e7eb' 
+                        }}
+                        className="register-form-input"
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
+                      />
+                      {formData.password && (
+                        <div style={{
+                          marginTop: '0.25rem',
+                          fontSize: '0.75rem',
+                          color: passwordValid ? '#059669' : '#dc2626',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.25rem',
+                          fontWeight: '600'
+                        }} className="password-validation">
                         {passwordValid ? (
                           <>
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="#059669">
@@ -597,35 +685,36 @@ export default function MultiStepRegisterForm() {
                     )}
                   </div>
 
-                  <div>
-                    <label htmlFor="confirmPassword" style={labelStyle}>Confirmar contraseña</label>
-                    <input
-                      type="password"
-                      name="confirmPassword"
-                      id="confirmPassword"
-                      required
-                      minLength={6}
-                      value={formData.confirmPassword}
-                      onChange={handleChange}
-                      placeholder="Repite tu contraseña"
-                      style={{ 
-                        ...modernInputStyle, 
-                        padding: '0.75rem 1rem',
-                        borderColor: formData.confirmPassword ? (passwordsMatch ? '#059669' : '#dc2626') : '#e5e7eb' 
-                      }}
-                      onFocus={handleFocus}
-                      onBlur={handleBlur}
-                    />
-                    {formData.confirmPassword && (
-                      <div style={{
-                        marginTop: '0.25rem',
-                        fontSize: '0.75rem',
-                        color: passwordsMatch ? '#059669' : '#dc2626',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.25rem',
-                        fontWeight: '600'
-                      }}>
+                    <div>
+                      <label htmlFor="confirmPassword" style={labelStyle} className="register-form-label">Confirmar contraseña</label>
+                      <input
+                        type="password"
+                        name="confirmPassword"
+                        id="confirmPassword"
+                        required
+                        minLength={6}
+                        value={formData.confirmPassword}
+                        onChange={handleChange}
+                        placeholder="Repite tu contraseña"
+                        style={{ 
+                          ...modernInputStyle, 
+                          padding: '0.75rem 1rem',
+                          borderColor: formData.confirmPassword ? (passwordsMatch ? '#059669' : '#dc2626') : '#e5e7eb' 
+                        }}
+                        className="register-form-input"
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
+                      />
+                      {formData.confirmPassword && (
+                        <div style={{
+                          marginTop: '0.25rem',
+                          fontSize: '0.75rem',
+                          color: passwordsMatch ? '#059669' : '#dc2626',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.25rem',
+                          fontWeight: '600'
+                        }} className="password-validation">
                         {passwordsMatch ? (
                           <>
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="#059669">
@@ -647,49 +736,53 @@ export default function MultiStepRegisterForm() {
                 </div>
               </div>
             </div>
-          </div>
+          </>
         )
 
       case 4:
         return (
-          <div style={containerStyle}>
-            <div style={overlayStyle}></div>
-            <div style={contentStyle}>
-              <div style={headerStyle}>
-                <h2 style={titleStyle}>🏷️ Perfil de Usuario</h2>
-                <p style={subtitleStyle}>Personaliza tu perfil en la plataforma</p>
-              </div>
+          <>
+            <style dangerouslySetInnerHTML={{ __html: mobileStyle }} />
+            <div style={containerStyle} className="register-form-container">
+              <div style={overlayStyle}></div>
+              <div style={contentStyle}>
+                <div style={headerStyle}>
+                  <h2 style={titleStyle} className="register-step-title">🏷️ Perfil de Usuario</h2>
+                  <p style={subtitleStyle} className="register-step-subtitle">Personaliza tu perfil en la plataforma</p>
+                </div>
 
-              <div style={formStyle}>
-                <div style={inputGroupStyle}>
-                  <div>
-                    <label htmlFor="username" style={labelStyle}>Nombre de usuario</label>
-                    <input
-                      type="text"
-                      name="username"
-                      id="username"
-                      required
-                      value={formData.username}
-                      onChange={handleChange}
-                      placeholder="usuario123"
-                      style={modernInputStyle}
-                      onFocus={handleFocus}
-                      onBlur={handleBlur}
-                    />
-                  </div>
+                <div style={formStyle} className="register-step-content">
+                  <div style={inputGroupStyle}>
+                    <div>
+                      <label htmlFor="username" style={labelStyle} className="register-form-label">Nombre de usuario</label>
+                      <input
+                        type="text"
+                        name="username"
+                        id="username"
+                        required
+                        value={formData.username}
+                        onChange={handleChange}
+                        placeholder="usuario123"
+                        style={modernInputStyle}
+                        className="register-form-input"
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
+                      />
+                    </div>
 
-                  <div>
-                    <label htmlFor="country" style={labelStyle}>País</label>
-                    <select
-                      name="country"
-                      id="country"
-                      required
-                      value={formData.country}
-                      onChange={handleChange}
-                      style={modernInputStyle}
-                      onFocus={handleFocus}
-                      onBlur={handleBlur}
-                    >
+                    <div>
+                      <label htmlFor="country" style={labelStyle} className="register-form-label">País</label>
+                      <select
+                        name="country"
+                        id="country"
+                        required
+                        value={formData.country}
+                        onChange={handleChange}
+                        style={modernInputStyle}
+                        className="register-form-input"
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
+                      >
                       <option value="">Selecciona tu país</option>
                       <option value="Argentina">Argentina</option>
                       <option value="Bolivia">Bolivia</option>
@@ -725,38 +818,41 @@ export default function MultiStepRegisterForm() {
                 </div>
               </div>
             </div>
-          </div>
+          </>
         )
 
       case 5:
         return (
-          <div style={containerStyle}>
-            <div style={overlayStyle}></div>
-            <div style={contentStyle}>
-              <div style={headerStyle}>
-                <h2 style={titleStyle}>📧 Verificación de Email</h2>
-                <p style={subtitleStyle}>Hemos enviado un código a <strong>{formData.email}</strong></p>
-              </div>
-
-              <div style={formStyle}>
-                <div style={inputGroupStyle}>
-                  <div>
-                    <label htmlFor="verificationCode" style={labelStyle}>Código de verificación</label>
-                    <input
-                      type="text"
-                      name="verificationCode"
-                      id="verificationCode"
-                      required
-                      value={formData.verificationCode}
-                      onChange={handleChange}
-                      placeholder="Ingresa el código de 6 dígitos"
-                      style={modernInputStyle}
-                      onFocus={handleFocus}
-                      onBlur={handleBlur}
-                      maxLength={6}
-                    />
-                  </div>
+          <>
+            <style dangerouslySetInnerHTML={{ __html: mobileStyle }} />
+            <div style={containerStyle} className="register-form-container">
+              <div style={overlayStyle}></div>
+              <div style={contentStyle}>
+                <div style={headerStyle}>
+                  <h2 style={titleStyle} className="register-step-title">📧 Verificación de Email</h2>
+                  <p style={subtitleStyle} className="register-step-subtitle">Hemos enviado un código a <strong>{formData.email}</strong></p>
                 </div>
+
+                <div style={formStyle} className="register-step-content">
+                  <div style={inputGroupStyle}>
+                    <div>
+                      <label htmlFor="verificationCode" style={labelStyle} className="register-form-label">Código de verificación</label>
+                      <input
+                        type="text"
+                        name="verificationCode"
+                        id="verificationCode"
+                        required
+                        value={formData.verificationCode}
+                        onChange={handleChange}
+                        placeholder="Ingresa el código de 6 dígitos"
+                        style={modernInputStyle}
+                        className="register-form-input"
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
+                        maxLength={6}
+                      />
+                    </div>
+                  </div>
 
                 <div style={{
                   background: 'rgba(16, 185, 129, 0.1)',
@@ -771,7 +867,7 @@ export default function MultiStepRegisterForm() {
                 </div>
               </div>
             </div>
-          </div>
+          </>
         )
 
       case 6:
@@ -890,6 +986,7 @@ export default function MultiStepRegisterForm() {
                   e.currentTarget.style.color = '#667eea'
                   e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
                 }}
+                className="register-nav-button"
               >
                 ← Anterior
               </button>
@@ -932,6 +1029,7 @@ export default function MultiStepRegisterForm() {
                   (currentStep === 3 && (!passwordValid || !passwordsMatch)) ||
                   (currentStep === 5 && !formData.verificationCode.trim()) ? 'none' : '0 10px 25px -5px rgba(102, 126, 234, 0.4)'
               }}
+              className="register-nav-button"
             >
               {loading ? (
                 <>

@@ -8,6 +8,7 @@ import { useResource } from '@/hooks/useResources';
 
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Footer from '@/components/layout/Footer';
+import Navbar from '@/components/layout/Navbar';
 
 export default function ResourcePage() {
   const params = useParams();
@@ -101,11 +102,11 @@ export default function ResourcePage() {
 
   return (
     <>
-      
+      <Navbar />
       
       <main className="main-content pt-16">
         {/* Hero Section */}
-        <section style={{
+        <section className="hero-section" style={{
           background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
           minHeight: '60vh',
           display: 'flex',
@@ -116,9 +117,42 @@ export default function ResourcePage() {
         }}>
           <div className="container mx-auto px-4">
             <div className="text-center max-w-4xl mx-auto">
+              {/* Botón Volver */}
+              <div className="flex justify-start mb-4">
+                <button
+                  onClick={() => router.push('/resources')}
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.2)',
+                    backdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                    color: 'white',
+                    padding: '0.5rem 1rem',
+                    borderRadius: '25px',
+                    fontSize: '0.875rem',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem'
+                  }}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.3)';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
+                    e.currentTarget.style.transform = 'translateY(0px)';
+                  }}
+                >
+                  <span>←</span>
+                  Volver a Recursos
+                </button>
+              </div>
+              
               {/* Category Badge */}
               <div className="flex items-center justify-center gap-3 mb-6">
-                <div style={{
+                <div className="category-badge" style={{
                   background: 'rgba(255, 255, 255, 0.2)',
                   backdropFilter: 'blur(10px)',
                   padding: '0.75rem 1.5rem',
@@ -130,7 +164,7 @@ export default function ResourcePage() {
                   <span style={{ marginRight: '0.5rem' }}>{getCategoryIcon(resource.category)}</span>
                   {resource.category}
                 </div>
-                <div style={{
+                <div className="type-badge" style={{
                   background: 'rgba(255, 255, 255, 0.1)',
                   padding: '0.5rem 1rem',
                   borderRadius: '25px',
@@ -183,23 +217,147 @@ export default function ResourcePage() {
                   animation-play-state: paused;
                 }
 
+                /* Estilos móviles más compactos para páginas de recursos individuales */
                 @media (max-width: 768px) {
+                  /* Textos del hero para tablet */
+                  .resource-hero-title {
+                    font-size: 2.5rem !important;
+                    margin-bottom: 1.5rem !important;
+                    padding: 0 1rem !important;
+                  }
+                  
+                  .resource-hero-description {
+                    font-size: 1rem !important;
+                    margin-bottom: 1.5rem !important;
+                    padding: 0 1.5rem !important;
+                  }
                   .hero-bottom-logo-image {
-                    max-width: 76px !important;
-                    max-height: 57px !important;
+                    max-width: 60px !important;
+                    max-height: 45px !important;
+                  }
+                  
+                  /* Hero más compacto */
+                  .hero-section {
+                    min-height: 50vh !important;
+                    padding: 20px 0 !important;
+                  }
+                  
+                  /* Content section más compacto */
+                  .content-section {
+                    padding: 2rem 0 !important;
+                  }
+                  
+                  /* Ajustar grid layout */
+                  .content-grid {
+                    grid-template-columns: 1fr !important;
+                    gap: 1.5rem !important;
+                  }
+                  
+                  /* Sidebar más compacto */
+                  .sidebar-card {
+                    padding: 1rem !important;
+                    margin-bottom: 1rem !important;
+                  }
+                  
+                  /* Content card más compacto */
+                  .content-card {
+                    padding: 1.5rem !important;
+                  }
+                  
+                  /* Botones más compactos */
+                  .resource-button {
+                    padding: 0.75rem !important;
+                    font-size: 0.875rem !important;
                   }
                 }
 
                 @media (max-width: 480px) {
                   .hero-bottom-logo-image {
-                    max-width: 66px !important;
-                    max-height: 48px !important;
+                    max-width: 50px !important;
+                    max-height: 38px !important;
+                  }
+                  
+                  .hero-section {
+                    min-height: 45vh !important;
+                    padding: 15px 0 !important;
+                  }
+                  
+                  .content-section {
+                    padding: 1.5rem 0 !important;
+                  }
+                  
+                  .sidebar-card {
+                    padding: 0.75rem !important;
+                  }
+                  
+                  .content-card {
+                    padding: 1rem !important;
+                  }
+                  
+                  .resource-button {
+                    padding: 0.625rem !important;
+                    font-size: 0.8rem !important;
+                  }
+                  
+                  /* Textos del hero más compactos */
+                  .resource-hero-title {
+                    font-size: 2rem !important;
+                    margin-bottom: 1rem !important;
+                    line-height: 1.1 !important;
+                    padding: 0 0.5rem !important;
+                  }
+                  
+                  .resource-hero-description {
+                    font-size: 0.9rem !important;
+                    margin-bottom: 1rem !important;
+                    line-height: 1.4 !important;
+                    padding: 0 1rem !important;
+                    max-width: 100% !important;
+                  }
+                  
+                  /* Badges más compactos */
+                  .category-badge {
+                    padding: 0.375rem 0.75rem !important;
+                    font-size: 0.75rem !important;
+                  }
+                  
+                  .type-badge {
+                    padding: 0.25rem 0.5rem !important;
+                    font-size: 0.7rem !important;
+                  }
+                  
+                  /* Contenido principal más compacto */
+                  .content-card h2 {
+                    font-size: 1.5rem !important;
+                    margin-bottom: 1rem !important;
+                  }
+                  
+                  .content-card p {
+                    font-size: 0.9rem !important;
+                    line-height: 1.5 !important;
+                    margin-bottom: 1rem !important;
+                  }
+                  
+                  .content-card h3 {
+                    font-size: 1.125rem !important;
+                    margin-bottom: 0.5rem !important;
+                  }
+                  
+                  /* Sidebar más compacto */
+                  .sidebar-card h3 {
+                    font-size: 1rem !important;
+                    margin-bottom: 0.5rem !important;
+                  }
+                  
+                  .sidebar-card p {
+                    font-size: 0.8rem !important;
+                    line-height: 1.4 !important;
                   }
                 }
               `}</style>
               
               {/* Main Title */}
-              <h1 style={{
+              <h1 className="resource-hero-title" style={{
                 fontSize: '3.5rem',
                 fontWeight: '900',
                 marginBottom: '2rem',
@@ -210,7 +368,7 @@ export default function ResourcePage() {
               </h1>
               
               {/* Description */}
-              <p style={{
+              <p className="resource-hero-description" style={{
                 fontSize: '1.25rem',
                 marginBottom: '2rem',
                 maxWidth: '800px',
@@ -291,14 +449,14 @@ export default function ResourcePage() {
         </section>
 
         {/* Content Section */}
-        <section style={{ padding: '4rem 0', background: '#f8fafc' }}>
+        <section className="content-section" style={{ padding: '4rem 0', background: '#f8fafc' }}>
           <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <div className="content-grid grid grid-cols-1 lg:grid-cols-4 gap-8">
               {/* Main Content */}
               <div className="lg:col-span-3">
 
                 {/* Description Content */}
-                <div style={{
+                <div className="content-card" style={{
                   background: 'white',
                   borderRadius: '1.5rem',
                   padding: '2rem',
@@ -353,7 +511,7 @@ export default function ResourcePage() {
               <div className="lg:col-span-1">
                 <div style={{ position: 'sticky', top: '1.5rem' }}>
                   {/* Action Card */}
-                  <div style={{
+                  <div className="sidebar-card" style={{
                     background: 'white',
                     borderRadius: '1.5rem',
                     padding: '1.5rem',
@@ -383,6 +541,7 @@ export default function ResourcePage() {
                     {slug === 'guia-prompts-chatgpt' && (
                       <button 
                         onClick={() => window.open('https://3o0p1lzj4n.ufs.sh/f/P2bnXUoat3WfkxKajlFauwDyGejd5FRObK2AmQgXJHscf1C3', '_blank')}
+                        className="resource-button"
                         style={{
                           width: '100%',
                           background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
@@ -409,6 +568,7 @@ export default function ResourcePage() {
                         {/* Botón Abrir GPT */}
                         <button 
                           onClick={() => window.open('https://chatgpt.com/g/g-687e84aba36c8191a44042cc330db2f1-contexto-empresarial', '_blank')}
+                          className="resource-button"
                           style={{
                             width: '100%',
                             background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
@@ -432,6 +592,7 @@ export default function ResourcePage() {
                         {/* Primer Botón Ver Manual */}
                         <button 
                           onClick={() => window.open('https://3o0p1lzj4n.ufs.sh/f/P2bnXUoat3WfKlWlJIDzfaJcA3E27kdtD5jXC6Lu018IpyVe', '_blank')}
+                          className="resource-button"
                           style={{
                             width: '100%',
                             background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
@@ -455,6 +616,7 @@ export default function ResourcePage() {
                         {/* Segundo Botón Ver Manual */}
                         <button 
                           onClick={() => window.open('https://3o0p1lzj4n.ufs.sh/f/P2bnXUoat3Wf6fHDJnsjvKzHarFPOpGctT89wmD4R2huQJ3X', '_blank')}
+                          className="resource-button"
                           style={{
                             width: '100%',
                             background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
@@ -480,6 +642,7 @@ export default function ResourcePage() {
                     {slug === 'carrusel-de-imagenes' && (
                       <button 
                         onClick={() => window.open('https://chatgpt.com/g/g-68892296e5508191b7a874e5fc36bbbe-carrusel-de-imagenes', '_blank')}
+                        className="resource-button"
                         style={{
                           width: '100%',
                           background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
@@ -504,6 +667,7 @@ export default function ResourcePage() {
                     {slug === 'gpt-evaluar-mejorar-disenos' && (
                       <button 
                         onClick={() => window.open('https://chatgpt.com/g/g-688d1b0d55708191a4f5f2a273cd23a9-visuo-asesor-de-diseno', '_blank')}
+                        className="resource-button"
                         style={{
                           width: '100%',
                           background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
@@ -528,6 +692,7 @@ export default function ResourcePage() {
                     {slug === 'prompts-disenos-anuncios-basicos' && (
                       <button 
                         onClick={() => window.open('https://3o0p1lzj4n.ufs.sh/f/P2bnXUoat3WfXpo2g4PweiEC2LfM7rRWI9jh3XxcOmd5FqaU', '_blank')}
+                        className="resource-button"
                         style={{
                           width: '100%',
                           background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
@@ -552,6 +717,7 @@ export default function ResourcePage() {
                     {slug === 'ebook-disenadores-vs-ia' && (
                       <button 
                         onClick={() => window.open('https://3o0p1lzj4n.ufs.sh/f/P2bnXUoat3Wf3UBAVBmMmxDjlZNJ8Lw2dfBuWHpOr96TbCFt', '_blank')}
+                        className="resource-button"
                         style={{
                           width: '100%',
                           background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',

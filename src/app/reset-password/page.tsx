@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import Navbar from '@/components/layout/Navbar';
 
 function ResetPasswordContent() {
   const [password, setPassword] = useState('');
@@ -87,6 +88,7 @@ function ResetPasswordContent() {
   if (!tokenValid) {
     return (
       <>
+        <Navbar />
         <main className="main-content pt-16">
           <div style={{
             minHeight: '100vh',
@@ -130,6 +132,7 @@ function ResetPasswordContent() {
 
   return (
     <>
+      <Navbar />
       <main className="main-content pt-16">
         <div style={{
           minHeight: '100vh',

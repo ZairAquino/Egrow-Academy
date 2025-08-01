@@ -242,17 +242,145 @@ export default function ResourcesPage() {
           }
         }
 
+        /* Estilos móviles más compactos */
         @media (max-width: 768px) {
           .hero-bottom-logo-image {
-            max-width: 76px;
-            max-height: 57px;
+            max-width: 60px;
+            max-height: 45px;
+          }
+          
+          /* Hero más compacto */
+          .hero {
+            min-height: 50vh !important;
+            padding: 20px 0 40px 0 !important;
+          }
+          
+          .hero-content {
+            padding: 0 1rem;
+          }
+          
+          .hero-title {
+            font-size: 28px !important;
+            line-height: 1.2 !important;
+            margin-bottom: 1rem !important;
+          }
+          
+          .hero-description {
+            font-size: 16px !important;
+            line-height: 1.4 !important;
+            margin-bottom: 1.5rem !important;
+            padding: 0 1rem;
+          }
+          
+          /* Secciones más compactas */
+          .section {
+            padding: 1.5rem 0 !important;
+          }
+          
+          .section-header {
+            margin-bottom: 2rem !important;
+          }
+          
+          .section-title {
+            font-size: 1.75rem !important;
+            margin-bottom: 0.75rem !important;
+          }
+          
+          .section-description {
+            font-size: 1rem !important;
+            line-height: 1.5 !important;
+          }
+          
+          /* Featured cards más compactas */
+          .featured-grid {
+            gap: 1rem !important;
+            margin-top: 1rem !important;
+          }
+          
+          .featured-card {
+            padding: 1.25rem !important;
+            border-radius: 12px !important;
+          }
+          
+          .featured-card h3 {
+            font-size: 1.25rem !important;
+            margin-bottom: 0.75rem !important;
+            line-height: 1.3 !important;
+          }
+          
+          .featured-card p {
+            font-size: 0.9rem !important;
+            line-height: 1.4 !important;
+            margin-bottom: 1.25rem !important;
+          }
+          
+          .featured-badge {
+            padding: 0.375rem 0.75rem !important;
+            font-size: 0.75rem !important;
+            margin-bottom: 0.75rem !important;
+          }
+          
+          /* Botones más compactos */
+          .featured-card .btn {
+            padding: 0.625rem 1rem !important;
+            font-size: 0.875rem !important;
+          }
+          
+          /* Filtros de categoría más compactos */
+          .category-filters {
+            gap: 0.5rem !important;
+            margin-bottom: 1.5rem !important;
+          }
+          
+          .category-filter {
+            padding: 0.5rem 0.75rem !important;
+            font-size: 0.8rem !important;
+          }
+          
+          /* Grid de cursos más compacto */
+          .courses-grid {
+            gap: 1rem !important;
           }
         }
 
         @media (max-width: 480px) {
           .hero-bottom-logo-image {
-            max-width: 66px;
-            max-height: 48px;
+            max-width: 50px;
+            max-height: 38px;
+          }
+          
+          .hero {
+            min-height: 45vh !important;
+            padding: 15px 0 30px 0 !important;
+          }
+          
+          .hero-title {
+            font-size: 24px !important;
+          }
+          
+          .hero-description {
+            font-size: 14px !important;
+            padding: 0 0.5rem;
+          }
+          
+          .section {
+            padding: 1rem 0 !important;
+          }
+          
+          .section-title {
+            font-size: 1.5rem !important;
+          }
+          
+          .featured-card {
+            padding: 1rem !important;
+          }
+          
+          .featured-card h3 {
+            font-size: 1.125rem !important;
+          }
+          
+          .featured-card p {
+            font-size: 0.85rem !important;
           }
         }
 

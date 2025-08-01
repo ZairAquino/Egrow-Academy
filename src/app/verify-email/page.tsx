@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import Image from 'next/image'
+import Navbar from '@/components/layout/Navbar'
 
 function VerifyEmailContent() {
   const router = useRouter()
@@ -362,8 +363,11 @@ function LoadingFallback() {
 
 export default function VerifyEmailPage() {
   return (
-    <Suspense fallback={<LoadingFallback />}>
-      <VerifyEmailContent />
-    </Suspense>
+    <>
+      <Navbar />
+      <Suspense fallback={<LoadingFallback />}>
+        <VerifyEmailContent />
+      </Suspense>
+    </>
   )
 } 

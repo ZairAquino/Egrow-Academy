@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import Navbar from '@/components/layout/Navbar';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
@@ -53,6 +54,7 @@ export default function ForgotPasswordPage() {
 
   return (
     <>
+      <Navbar />
       <main className="main-content pt-16">
         <div style={{
           minHeight: '100vh',
