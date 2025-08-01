@@ -14,6 +14,7 @@ export default function ContenidoAsistentesVirtualesIAPage() {
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isCheckingEnrollment, setIsCheckingEnrollment] = useState(true);
+  const [expandedModules, setExpandedModules] = useState<Set<number>>(new Set());
   const { user } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
@@ -35,7 +36,7 @@ export default function ContenidoAsistentesVirtualesIAPage() {
     lessons: [
       // MÓDULO 1 - Sublecciones
       {
-        id: 1.1,
+        id: 'cmdsziu3w0001e5ao9kf1iqnh',
         moduleId: 1,
         title: '1.1 Introducción a los Asistentes Virtuales con IA',
         duration: '12 min',
@@ -63,7 +64,7 @@ export default function ContenidoAsistentesVirtualesIAPage() {
         `
       },
       {
-        id: 1.2,
+        id: 'cmdsziu8p0003e5aof9isqghh',
         moduleId: 1,
         title: '1.2 Beneficios Empresariales Clave',
         duration: '10 min',
@@ -106,7 +107,7 @@ export default function ContenidoAsistentesVirtualesIAPage() {
         `
       },
       {
-        id: 1.3,
+        id: 'cmdsziub30005e5aose3jmlkc',
         moduleId: 1,
         title: '1.3 Comparación: Google Gemini vs ChatGPT',
         duration: '15 min',
@@ -161,7 +162,7 @@ export default function ContenidoAsistentesVirtualesIAPage() {
         `
       },
       {
-        id: 1.4,
+        id: 'cmdsziudi0007e5aod3itk745',
         moduleId: 1,
         title: '1.4 Planificación Estratégica',
         duration: '8 min',
@@ -198,7 +199,7 @@ export default function ContenidoAsistentesVirtualesIAPage() {
       
       // MÓDULO 2 - Sublecciones
       {
-        id: 2.1,
+        id: 'cmdsziufw0009e5aol87339z2',
         moduleId: 2,
         title: '2.1 Creación del Perfil Empresarial',
         duration: '20 min',
@@ -259,7 +260,7 @@ export default function ContenidoAsistentesVirtualesIAPage() {
         `
       },
       {
-        id: 2.2,
+        id: 'cmdsziuia000be5aoonmaky6k',
         moduleId: 2,
         title: '2.2 Documentación de Soporte',
         duration: '25 min',
@@ -323,7 +324,7 @@ export default function ContenidoAsistentesVirtualesIAPage() {
         `
       },
       {
-        id: 2.3,
+        id: 'cmdsziuko000de5aog4u9lxz5',
         moduleId: 2,
         title: '2.3 Optimización de Contenido para IA',
         duration: '15 min',
@@ -405,7 +406,7 @@ export default function ContenidoAsistentesVirtualesIAPage() {
       
       // MÓDULO 3 - Sublecciones
       {
-        id: 3.1,
+        id: 'cmdsziun2000fe5ao1jtbran3',
         moduleId: 3,
         title: '3.1 Configuración Inicial de GEM',
         duration: '15 min',
@@ -447,7 +448,7 @@ export default function ContenidoAsistentesVirtualesIAPage() {
         `
       },
       {
-        id: 3.2,
+        id: 'cmdsziuph000he5aourkr5t1i',
         moduleId: 3,
         title: '3.2 Instrucciones Avanzadas para GEM',
         duration: '20 min',
@@ -536,7 +537,7 @@ export default function ContenidoAsistentesVirtualesIAPage() {
         `
       },
       {
-        id: 3.3,
+        id: 'cmdsziurw000je5ao9omf2odc',
         moduleId: 3,
         title: '3.3 Configuración de Herramientas y Conocimiento',
         duration: '10 min',
@@ -582,7 +583,7 @@ export default function ContenidoAsistentesVirtualesIAPage() {
         `
       },
       {
-        id: 3.4,
+        id: 'cmdsziuu9000le5aobg7je8p6',
         moduleId: 3,
         title: '3.4 Ejemplos de Conversación Inicial',
         duration: '10 min',
@@ -639,7 +640,7 @@ export default function ContenidoAsistentesVirtualesIAPage() {
       
       // MÓDULO 4 - Sublecciones
       {
-        id: 4.1,
+        id: 'cmdsziuwo000ne5aolwpkgsl1',
         moduleId: 4,
         title: '4.1 Configuración de GPT Personalizado',
         duration: '15 min',
@@ -681,7 +682,7 @@ export default function ContenidoAsistentesVirtualesIAPage() {
         `
       },
       {
-        id: 4.2,
+        id: 'cmdsziuz2000pe5aoco6iiuje',
         moduleId: 4,
         title: '4.2 Instrucciones Maestras para GPT',
         duration: '25 min',
@@ -774,7 +775,7 @@ export default function ContenidoAsistentesVirtualesIAPage() {
         `
       },
       {
-        id: 4.3,
+        id: 'cmdsziv1h000re5ao0a2w1mkf',
         moduleId: 4,
         title: '4.3 Configuración Avanzada de Capacidades',
         duration: '10 min',
@@ -819,7 +820,7 @@ export default function ContenidoAsistentesVirtualesIAPage() {
         `
       },
       {
-        id: 4.4,
+        id: 'cmdsziv3v000te5aoo22nck44',
         moduleId: 4,
         title: '4.4 Optimización de Base de Conocimiento',
         duration: '10 min',
@@ -880,7 +881,7 @@ export default function ContenidoAsistentesVirtualesIAPage() {
       
       // MÓDULO 5 - Sublecciones
       {
-        id: 5.1,
+        id: 'cmdsziv69000ve5ao5tog460x',
         moduleId: 5,
         title: '5.1 Protocolo de Pruebas Integrales',
         duration: '15 min',
@@ -970,7 +971,7 @@ export default function ContenidoAsistentesVirtualesIAPage() {
         `
       },
       {
-        id: 5.2,
+        id: 'cmdsziv8o000xe5aoxqhkk651',
         moduleId: 5,
         title: '5.2 Métricas de Rendimiento y KPIs',
         duration: '10 min',
@@ -1021,7 +1022,7 @@ export default function ContenidoAsistentesVirtualesIAPage() {
         `
       },
       {
-        id: 5.3,
+        id: 'cmdszivb2000ze5ao3eccaj4f',
         moduleId: 5,
         title: '5.3 Estrategias de Optimización Continua',
         duration: '10 min',
@@ -1072,7 +1073,7 @@ export default function ContenidoAsistentesVirtualesIAPage() {
         `
       },
       {
-        id: 5.4,
+        id: 'cmdszivdg0011e5aorowmnx4l',
         moduleId: 5,
         title: '5.4 Mantenimiento y Actualizaciones',
         duration: '8 min',
@@ -1123,7 +1124,7 @@ export default function ContenidoAsistentesVirtualesIAPage() {
         `
       },
       {
-        id: 5.5,
+        id: 'cmdszivfv0013e5aowzs8cmd9',
         moduleId: 5,
         title: '5.5 Resolución de Problemas Comunes',
         duration: '7 min',
@@ -1174,7 +1175,7 @@ export default function ContenidoAsistentesVirtualesIAPage() {
         `
       },
       {
-        id: 5.6,
+        id: 'cmdszivi90015e5aog2xc0rl2',
         moduleId: 5,
         title: '5.6 Escalabilidad y Crecimiento',
         duration: '10 min',
@@ -1241,6 +1242,90 @@ export default function ContenidoAsistentesVirtualesIAPage() {
       router.push('/login?redirect=/curso/asistentes-virtuales-ia/contenido');
     }
   }, [user]);
+
+  // Expandir automáticamente el módulo actual
+  useEffect(() => {
+    if (progress.currentLesson !== undefined && courseData.lessons[progress.currentLesson]) {
+      const currentModuleId = courseData.lessons[progress.currentLesson].moduleId;
+      setExpandedModules(prev => new Set(prev).add(currentModuleId));
+    }
+  }, [progress.currentLesson]);
+
+  // Función para alternar expansión de módulos
+  const toggleModuleExpansion = (moduleId: number) => {
+    setExpandedModules(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(moduleId)) {
+        newSet.delete(moduleId);
+      } else {
+        newSet.add(moduleId);
+      }
+      return newSet;
+    });
+  };
+
+  // Guardar progreso automáticamente al salir de la página
+  useEffect(() => {
+    const handleBeforeUnload = async (event: BeforeUnloadEvent) => {
+      // Guardar progreso antes de salir
+      const currentLesson = courseData.lessons[progress.currentLesson];
+      if (currentLesson && isEnrolled) {
+        // Usar sendBeacon para envío garantizado
+        const token = localStorage.getItem('authToken');
+        const progressData = {
+          courseId: 'asistentes-virtuales-ia',
+          currentLesson: progress.currentLesson,
+          completedLessons: progress.completedLessons,
+          lessonNumber: currentLesson.id,
+          lessonTitle: currentLesson.title,
+          action: 'access',
+          timeSpent: 1
+        };
+
+        // Usar fetch con keepalive para garantizar el envío
+        try {
+          fetch('/api/courses/progress', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              ...(token && { 'Authorization': `Bearer ${token}` })
+            },
+            body: JSON.stringify(progressData),
+            keepalive: true // Esto garantiza que se complete incluso si la página se cierra
+          });
+        } catch (error) {
+          console.error('Error guardando progreso al salir:', error);
+        }
+      }
+    };
+
+    const handleVisibilityChange = async () => {
+      if (document.visibilityState === 'hidden' && isEnrolled) {
+        // Guardar progreso cuando la pestaña se oculta
+        const currentLesson = courseData.lessons[progress.currentLesson];
+        if (currentLesson) {
+          await saveProgress(
+            progress.currentLesson,
+            progress.completedLessons,
+            currentLesson.id,
+            currentLesson.title,
+            'access',
+            1
+          );
+        }
+      }
+    };
+
+    // Agregar listeners
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // Limpiar listeners
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [progress.currentLesson, progress.completedLessons, isEnrolled, saveProgress]);
 
   const checkEnrollment = async () => {
     try {
@@ -1326,7 +1411,7 @@ export default function ContenidoAsistentesVirtualesIAPage() {
   const debouncedSaveProgress = (
     currentLesson: number,
     completedLessons: number[],
-    lessonId: number,
+    lessonId: string,
     lessonTitle: string,
     action: 'access' | 'complete',
     timeSpent: number
@@ -1344,26 +1429,32 @@ export default function ContenidoAsistentesVirtualesIAPage() {
     // Evitar cambiar a la misma lección
     if (newLessonIndex === progress.currentLesson) return;
     
-    const currentLesson = courseData.lessons[progress.currentLesson];
-    
-    // Guardar progreso con debounce
-    debouncedSaveProgress(
-      progress.currentLesson,
-      progress.completedLessons,
-      currentLesson?.id,
-      currentLesson?.title,
-      'access',
-      1
-    );
+    const newLesson = courseData.lessons[newLessonIndex];
     
     // Cambiar a la nueva lección inmediatamente
     setCurrentLesson(newLessonIndex);
+    
+    // Luego guardar progreso con la nueva lección
+    debouncedSaveProgress(
+      newLessonIndex,
+      progress.completedLessons,
+      newLesson?.id,
+      newLesson?.title,
+      'access',
+      1
+    );
   };
 
   const handleReturnToCourse = async () => {
     setIsSaving(true);
     try {
       const currentLesson = courseData.lessons[progress.currentLesson];
+      console.log('💾 Guardando progreso antes de salir...', {
+        currentLesson: progress.currentLesson,
+        completedLessons: progress.completedLessons.length,
+        lessonId: currentLesson?.id
+      });
+      
       await saveProgress(
         progress.currentLesson,
         progress.completedLessons,
@@ -1372,52 +1463,62 @@ export default function ContenidoAsistentesVirtualesIAPage() {
         'access',
         1
       );
+      
+      console.log('✅ Progreso guardado exitosamente');
+      
+      // Esperar un poco más para asegurar que la operación se complete
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
       router.push('/curso/asistentes-virtuales-ia');
     } catch (error) {
-      console.error('Error guardando progreso:', error);
+      console.error('❌ Error guardando progreso:', error);
       setIsSaving(false);
+      // Aún así permitir la navegación
+      router.push('/curso/asistentes-virtuales-ia');
     }
   };
 
   const handlePreviousLesson = () => {
     if (progress.currentLesson > 0) {
-      const currentLesson = courseData.lessons[progress.currentLesson];
+      const newLessonIndex = progress.currentLesson - 1;
+      const newLesson = courseData.lessons[newLessonIndex];
       
-      // Guardar progreso con debounce
+      // Cambiar la lección primero
+      setCurrentLesson(newLessonIndex);
+      
+      // Luego guardar progreso con la nueva lección
       debouncedSaveProgress(
-        progress.currentLesson,
+        newLessonIndex,
         progress.completedLessons,
-        currentLesson?.id,
-        currentLesson?.title,
+        newLesson?.id,
+        newLesson?.title,
         'access',
         1
       );
-      
-      const newLessonIndex = progress.currentLesson - 1;
-      setCurrentLesson(newLessonIndex);
     }
   };
 
   const handleNextLesson = () => {
     if (progress.currentLesson < courseData.lessons.length - 1) {
-      const currentLesson = courseData.lessons[progress.currentLesson];
+      const newLessonIndex = progress.currentLesson + 1;
+      const newLesson = courseData.lessons[newLessonIndex];
       
-      // Guardar progreso con debounce
+      // Cambiar la lección primero
+      setCurrentLesson(newLessonIndex);
+      
+      // Luego guardar progreso con la nueva lección
       debouncedSaveProgress(
-        progress.currentLesson,
+        newLessonIndex,
         progress.completedLessons,
-        currentLesson?.id,
-        currentLesson?.title,
+        newLesson?.id,
+        newLesson?.title,
         'access',
         1
       );
-      
-      const newLessonIndex = progress.currentLesson + 1;
-      setCurrentLesson(newLessonIndex);
     }
   };
 
-  const handleMarkLessonComplete = async (lessonId: number) => {
+  const handleMarkLessonComplete = async (lessonId: string) => {
     // Si el curso ya está completado, no permitir marcar lecciones como completadas
     if (isCourseCompleted()) {
       alert('Este curso ya está completado. Estás en modo de revisión.');
@@ -1468,6 +1569,20 @@ export default function ContenidoAsistentesVirtualesIAPage() {
     return moduleLessons.every(lesson => progress.completedLessons.includes(lesson.id));
   };
 
+  // Función para verificar si se pueden completar todas las lecciones anteriores del módulo
+  const canCompleteModuleWithPrerequisites = (moduleId: number) => {
+    const moduleLessons = courseData.lessons.filter(lesson => lesson.moduleId === moduleId);
+    const currentLesson = courseData.lessons[progress.currentLesson];
+    
+    // Obtener todas las lecciones del módulo excepto la actual (que es la última)
+    const previousLessons = moduleLessons.filter(lesson => lesson.id !== currentLesson.id);
+    
+    // Verificar que todas las lecciones anteriores estén completadas
+    const allPreviousCompleted = previousLessons.every(lesson => progress.completedLessons.includes(lesson.id));
+    
+    return allPreviousCompleted;
+  };
+
   // Función para obtener el progreso de un módulo
   const getModuleProgress = (moduleId: number) => {
     const moduleLessons = courseData.lessons.filter(lesson => lesson.moduleId === moduleId);
@@ -1477,6 +1592,94 @@ export default function ContenidoAsistentesVirtualesIAPage() {
       total: moduleLessons.length,
       percentage: (completedInModule.length / moduleLessons.length) * 100
     };
+  };
+
+  // Últimas lecciones de cada módulo
+  const LAST_LESSONS_BY_MODULE: Record<number, string> = {
+    1: 'cmdsziudi0007e5aod3itk745', // 1.4 Planificación Estratégica
+    2: 'cmdsziuko000de5aog4u9lxz5', // 2.3 Optimización de Contenido para IA
+    3: 'cmdsziuu9000le5aobg7je8p6', // 3.4 Ejemplos de Conversación Inicial
+    4: 'cmdsziv3v000te5aoo22nck44', // 4.4 Optimización de Base de Conocimiento
+    5: 'cmdszivi90015e5aog2xc0rl2'  // 5.6 Escalabilidad y Crecimiento
+  };
+
+  // Función para verificar si es la última lección del módulo
+  const isLastLessonOfModule = (lessonId: string, moduleId: number): boolean => {
+    return LAST_LESSONS_BY_MODULE[moduleId] === lessonId;
+  };
+
+  // Función para completar un módulo completo
+  const handleCompleteModule = async (moduleId: number) => {
+    if (!isEnrolled) return;
+
+    // Si el curso ya está completado, no permitir completar módulos
+    if (isCourseCompleted()) {
+      alert('Este curso ya está completado. Estás en modo de revisión.');
+      return;
+    }
+
+    // Verificar que se puedan completar todas las lecciones anteriores del módulo
+    if (!canCompleteModuleWithPrerequisites(moduleId)) {
+      alert('Debes completar todas las lecciones anteriores del módulo antes de poder completarlo.');
+      return;
+    }
+    
+    // Obtener todas las lecciones del módulo
+    const moduleLessons = courseData.lessons.filter(lesson => lesson.moduleId === moduleId);
+    
+    // Crear array con todas las lecciones completadas (existentes + todas las del módulo)
+    const allModuleLessonIds = moduleLessons.map(lesson => lesson.id);
+    const newCompletedLessons = [
+      ...progress.completedLessons.filter(id => !allModuleLessonIds.includes(id)), // Lecciones de otros módulos
+      ...allModuleLessonIds // Todas las lecciones de este módulo
+    ];
+
+    // Actualizar el estado local con todas las lecciones del módulo
+    allModuleLessonIds.forEach(lessonId => {
+      if (!progress.completedLessons.includes(lessonId)) {
+        markLessonComplete(lessonId);
+      }
+    });
+
+    // Guardar progreso con todas las lecciones del módulo completadas
+    const currentLessonIndex = progress.currentLesson;
+    const currentLesson = courseData.lessons[currentLessonIndex];
+
+    await saveProgress(
+      currentLessonIndex,
+      newCompletedLessons,
+      currentLesson.id,
+      `Módulo ${moduleId} Completado`,
+      'complete',
+      10 // Tiempo adicional por completar módulo
+    );
+
+    // Mostrar mensaje de éxito
+    const moduleTitle = getModuleTitle(moduleId);
+    alert(`¡Felicitaciones! Has completado el ${moduleTitle} 🎉`);
+
+    // Si no es el último módulo, avanzar a la primera lección del siguiente módulo
+    if (moduleId < 5) {
+      const nextModuleLessons = courseData.lessons.filter(lesson => lesson.moduleId === moduleId + 1);
+      if (nextModuleLessons.length > 0) {
+        const nextLessonIndex = courseData.lessons.findIndex(lesson => lesson.id === nextModuleLessons[0].id);
+        if (nextLessonIndex !== -1) {
+          setCurrentLesson(nextLessonIndex);
+        }
+      }
+    }
+  };
+
+  // Función auxiliar para obtener el título del módulo
+  const getModuleTitle = (moduleId: number): string => {
+    switch (moduleId) {
+      case 1: return 'Módulo 1: Fundamentos y Planificación Estratégica';
+      case 2: return 'Módulo 2: Preparación y Documentación Empresarial';
+      case 3: return 'Módulo 3: Creación de Asistente con Google Gemini';
+      case 4: return 'Módulo 4: Creación de Asistente con ChatGPT';
+      case 5: return 'Módulo 5: Optimización, Pruebas y Mantenimiento Continuo';
+      default: return `Módulo ${moduleId}`;
+    }
   };
 
   const handleCompleteCourse = async () => {
@@ -1530,7 +1733,7 @@ export default function ContenidoAsistentesVirtualesIAPage() {
     }
   };
 
-  const isLessonCompleted = (lessonId: number) => {
+  const isLessonCompleted = (lessonId: string) => {
     return progress.completedLessons.includes(lessonId);
   };
 
@@ -1546,7 +1749,7 @@ export default function ContenidoAsistentesVirtualesIAPage() {
     return progress.status === 'COMPLETED' || progress.progressPercentage === 100;
   };
 
-  const getLessonStatus = (lessonIndex: number, lessonId: number) => {
+  const getLessonStatus = (lessonIndex: number, lessonId: string) => {
     if (isLessonCompleted(lessonId)) {
       // Si el curso está completado, mostrar estado de revisión
       if (isCourseCompleted()) {
@@ -1678,29 +1881,49 @@ export default function ContenidoAsistentesVirtualesIAPage() {
                         </button>
                       )}
                       
-                      {/* Botón para completar lección individual */}
-                      {!progress.completedLessons.includes(courseData.lessons[progress.currentLesson].id) && (
-                        <button 
-                          className="btn btn-primary"
-                          onClick={handleCompleteCurrentLesson}
-                        >
-                          ✅ Completar Lección
-                        </button>
-                      )}
-                      
-                      {/* Botón para completar módulo (solo en la última lección del módulo) */}
+                      {/* Lógica de botones basada en si es la última lección del módulo */}
                       {(() => {
                         const currentLesson = courseData.lessons[progress.currentLesson];
                         const currentModuleId = currentLesson.moduleId;
+                        const isLastLesson = isLastLessonOfModule(currentLesson.id, currentModuleId);
+                        const isCurrentLessonCompleted = progress.completedLessons.includes(currentLesson.id);
+                        const isModuleAlreadyCompleted = isModuleCompleted(currentModuleId);
                         
-                        return canCompleteModule(currentModuleId) && (
-                          <button 
-                            className="btn btn-success"
-                            onClick={() => handleMarkLessonComplete(courseData.lessons[progress.currentLesson].id)}
-                          >
-                            🏆 Completar Módulo {currentModuleId}
-                          </button>
-                        );
+                        if (isModuleAlreadyCompleted) {
+                          // Módulo ya completado - no mostrar botones de completar
+                          return null;
+                        }
+                        
+                        if (isLastLesson) {
+                          // Última lección del módulo - solo mostrar botón "Completar Módulo"
+                          const canComplete = canCompleteModuleWithPrerequisites(currentModuleId);
+                          return (
+                            <button 
+                              className={`btn btn-large ${canComplete ? 'btn-success' : 'btn-secondary'}`}
+                              onClick={() => handleCompleteModule(currentModuleId)}
+                              disabled={!canComplete}
+                              style={{ 
+                                fontSize: '1.1em', 
+                                padding: '12px 24px',
+                                opacity: canComplete ? 1 : 0.6,
+                                cursor: canComplete ? 'pointer' : 'not-allowed'
+                              }}
+                              title={canComplete ? 'Completar módulo' : 'Completa todas las lecciones anteriores del módulo primero'}
+                            >
+                              🏆 Completar {getModuleTitle(currentModuleId).split(':')[0]}
+                            </button>
+                          );
+                        } else {
+                          // Lección regular - mostrar botón "Completar Lección" si no está completada
+                          return !isCurrentLessonCompleted && (
+                            <button 
+                              className="btn btn-primary"
+                              onClick={handleCompleteCurrentLesson}
+                            >
+                              ✅ Completar Lección
+                            </button>
+                          );
+                        }
                       })()}
                     </div>
                   </div>
@@ -1738,12 +1961,19 @@ export default function ContenidoAsistentesVirtualesIAPage() {
                       
                       return (
                         <div key={moduleId} className="module-group">
-                          <div className={`module-header ${isModuleComplete ? 'completed' : ''}`}>
+                          <div 
+                            className={`module-header ${isModuleComplete ? 'completed' : ''} ${expandedModules.has(moduleId) ? 'expanded' : ''}`}
+                            onClick={() => toggleModuleExpansion(moduleId)}
+                            style={{ cursor: 'pointer' }}
+                          >
                             <div className="module-title">
                               <span className="module-icon">
                                 {isModuleComplete ? '✅' : '📚'}
                               </span>
                               <span>MÓDULO {moduleId}</span>
+                              <span className="expand-icon">
+                                {expandedModules.has(moduleId) ? '▼' : '▶'}
+                              </span>
                             </div>
                             <div className="module-progress">
                               <span className="progress-text">
@@ -1758,8 +1988,9 @@ export default function ContenidoAsistentesVirtualesIAPage() {
                             </div>
                           </div>
                           
-                          <div className="module-lessons">
-                            {moduleLessons.map((lesson, index) => {
+                          {expandedModules.has(moduleId) && (
+                            <div className="module-lessons">
+                              {moduleLessons.map((lesson, index) => {
                               const globalIndex = courseData.lessons.findIndex(l => l.id === lesson.id);
                               return (
                                 <div 
@@ -1785,7 +2016,8 @@ export default function ContenidoAsistentesVirtualesIAPage() {
                                 </div>
                               );
                             })}
-                          </div>
+                            </div>
+                          )}
                         </div>
                       );
                     })}
@@ -2197,6 +2429,12 @@ export default function ContenidoAsistentesVirtualesIAPage() {
           border-radius: 8px;
           margin-bottom: 0.75rem;
           border: 1px solid #e5e7eb;
+          transition: all 0.2s ease;
+        }
+
+        .module-header:hover {
+          background: #f9fafb;
+          border-color: #3b82f6;
         }
 
         .module-header.completed {
@@ -2215,6 +2453,17 @@ export default function ContenidoAsistentesVirtualesIAPage() {
 
         .module-icon {
           font-size: 1rem;
+        }
+
+        .expand-icon {
+          font-size: 0.8rem;
+          color: #6b7280;
+          transition: transform 0.2s ease;
+          margin-left: auto;
+        }
+
+        .module-header.expanded .expand-icon {
+          transform: rotate(0deg);
         }
 
         .module-progress {
@@ -2243,6 +2492,8 @@ export default function ContenidoAsistentesVirtualesIAPage() {
           flex-direction: column;
           gap: 0.5rem;
           padding-left: 0.5rem;
+          animation: slideDown 0.3s ease-out;
+          overflow: hidden;
         }
 
         .lesson-item {
@@ -2451,6 +2702,17 @@ export default function ContenidoAsistentesVirtualesIAPage() {
           .btn-exit-course {
             width: 100%;
             justify-content: center;
+          }
+        }
+
+        @keyframes slideDown {
+          from {
+            max-height: 0;
+            opacity: 0;
+          }
+          to {
+            max-height: 1000px;
+            opacity: 1;
           }
         }
       `}</style>
