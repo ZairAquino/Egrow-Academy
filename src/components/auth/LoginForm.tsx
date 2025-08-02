@@ -17,7 +17,7 @@ export default function LoginForm() {
   const [verificationCode, setVerificationCode] = useState('')
   const [resendLoading, setResendLoading] = useState(false)
   const router = useRouter()
-  const { login } = useAuth()
+  const { login, refreshUser } = useAuth()
   const { showToast } = useToast()
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -102,7 +102,11 @@ export default function LoginForm() {
 
       if (response.ok && data.user) {
         showToast('¡Cuenta verificada exitosamente!', 'success')
-        // La API ya establece la cookie de autenticación
+        
+        // Actualizar el contexto de autenticación después de la verificación
+        await refreshUser()
+        
+        // Redirigir después de actualizar el contexto
         router.push('/my-courses')
         router.refresh()
       } else {

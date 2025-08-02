@@ -65,7 +65,7 @@ function VerifyEmailContent() {
       
       // Redirigir después de un breve delay
       setTimeout(() => {
-        router.push('/courses')
+        router.push('/my-courses')
         router.refresh()
       }, 2000)
     } catch (err) {
