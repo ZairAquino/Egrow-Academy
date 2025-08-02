@@ -14,8 +14,14 @@ import {
  * Se debe incluir en el layout principal para funcionar en toda la aplicación
  */
 export default function StreakSynchronizer() {
-  const { stats, triggerRefresh } = useStreaks();
+  const { stats, refetch } = useStreaks();
   const previousStatsRef = useRef(stats);
+  const refetchRef = useRef(refetch);
+  
+  // Actualizar la ref cuando cambie refetch
+  useEffect(() => {
+    refetchRef.current = refetch;
+  }, [refetch]);
 
   useEffect(() => {
     const previousStats = previousStatsRef.current;
@@ -73,57 +79,35 @@ export default function StreakSynchronizer() {
     previousStatsRef.current = stats;
   }, [stats]);
 
-  // Interceptar llamadas a la API de progreso para disparar actualizaciones
+  // Configurar interceptor global para detectar lecciones completadas
   useEffect(() => {
-    const originalFetch = window.fetch;
-    
-    window.fetch = async function(...args) {
-      const result = await originalFetch.apply(this, args);
-      
-      // Interceptar llamadas a la API de progreso
-      const url = args[0] as string;
-      if (typeof url === 'string' && url.includes('/api/courses/progress')) {
-        const method = args[1]?.method;
-        
-        if (method === 'POST') {
-          try {
-            const requestBody = args[1]?.body;
-            if (typeof requestBody === 'string') {
-              const data = JSON.parse(requestBody);
-              
-              // Si se completó una lección
-              if (data.action === 'complete') {
-                console.log('🏆 [STREAKS] Lección completada detectada, actualizando rachas...');
-                
-                // Disparar actualización después de un breve delay
-                setTimeout(() => {
-                  triggerRefresh();
-                  
-                  // También disparar evento para otros componentes
-                  window.dispatchEvent(new CustomEvent('lessonCompleted', {
-                    detail: {
-                      courseId: data.courseId,
-                      lessonNumber: data.lessonNumber,
-                      lessonTitle: data.lessonTitle
-                    }
-                  }));
-                }, 800);
-              }
-            }
-          } catch (error) {
-            console.error('Error processing lesson completion:', error);
-          }
+    // Función global para notificar completación de lecciones
+    const globalLessonCompletedHandler = () => {
+      console.log('🏆 [STREAKS] Lección completada detectada, actualizando rachas...');
+      setTimeout(() => {
+        if (refetchRef.current) {
+          refetchRef.current();
         }
-      }
-      
-      return result;
+      }, 1000);
     };
 
-    // Cleanup
-    return () => {
-      window.fetch = originalFetch;
+    // Hacer la función accesible globalmente
+    (window as any).notifyLessonCompleted = globalLessonCompletedHandler;
+
+    // Escuchar cambios en localStorage (signal de lección completada)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'lessonCompleted') {
+        globalLessonCompletedHandler();
+      }
     };
-  }, [triggerRefresh]);
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      delete (window as any).notifyLessonCompleted;
+    };
+  }, []);
 
   // Escuchar eventos personalizados de lección completada
   useEffect(() => {
@@ -132,7 +116,7 @@ export default function StreakSynchronizer() {
       
       // Refrescar estadísticas
       setTimeout(() => {
-        triggerRefresh();
+        refetch();
       }, 1000);
     };
 
@@ -141,7 +125,7 @@ export default function StreakSynchronizer() {
     return () => {
       window.removeEventListener('lessonCompleted', handleLessonCompleted as EventListener);
     };
-  }, [triggerRefresh]);
+  }, [refetch]);
 
   // Este componente no renderiza nada visible
   return null;

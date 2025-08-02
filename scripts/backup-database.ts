@@ -4,6 +4,11 @@ import { exec } from 'child_process'
 import { promisify } from 'util'
 import * as fs from 'fs'
 import * as path from 'path'
+import * as dotenv from 'dotenv'
+import { BACKUP_CONFIG, getBackupPath, generateBackupFilename, ensureBackupDirectories } from './backup-config'
+
+// Cargar variables de entorno
+dotenv.config()
 
 const execAsync = promisify(exec)
 

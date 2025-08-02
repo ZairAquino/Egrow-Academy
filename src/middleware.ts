@@ -1,8 +1,15 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { checkMaintenanceMode } from './middleware/maintenance';
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // Verificar modo mantenimiento
+  const maintenanceResponse = checkMaintenanceMode(request);
+  if (maintenanceResponse) {
+    return maintenanceResponse;
+  }
 
   // Solo aplicar headers básicos sin restricciones
   const response = NextResponse.next();

@@ -409,7 +409,7 @@ export async function POST(request: NextRequest) {
       data: { progressPercentage: newProgressPercentage }
     });
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
       progress: {
         currentLesson: updatedProgress.currentLesson,
@@ -417,8 +417,17 @@ export async function POST(request: NextRequest) {
         progressPercentage: Number(updatedProgress.progressPercentage),
         status: updatedProgress.status,
         totalTimeSpent: updatedProgress.totalTimeSpent
-      }
+      },
+      // Agregar flag para indicar que se completó una lección
+      lessonCompleted: action === 'complete'
     });
+
+    // Agregar header para que el cliente sepa que debe actualizar rachas
+    if (action === 'complete') {
+      response.headers.set('X-Lesson-Completed', 'true');
+    }
+
+    return response;
 
   } catch (error) {
     console.error('Error saving course progress:', error);

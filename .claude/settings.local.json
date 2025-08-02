@@ -57,7 +57,14 @@
       "Bash(psql:*)",
       "Bash(del test-db-connection.js create-test-user.js)",
       "Bash(dir \"C:\\Users\\think\\Egrow-Academy\\src\\components\\auth\")",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(dir:*)",
+      "Bash(pg_ctl:*)",
+      "Bash(scripts/fix-prisma-client:*)",
+      "Bash(.scriptsfix-prisma-client.bat)",
+      "Bash(timeout 10 npm run dev)",
+      "Bash(xcopy:*)",
+      "Bash(robocopy:*)"
     ],
     "deny": []
   }

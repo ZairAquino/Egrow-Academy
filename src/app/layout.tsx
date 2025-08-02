@@ -16,7 +16,7 @@ import { NotificationSystem } from '@/components/ui/NotificationSystem';
 import BehaviorTrackingWrapper from '@/components/BehaviorTrackingWrapper';
 import StreakNotifications from '@/components/notifications/StreakNotifications';
 import StreakSynchronizer from '@/components/streaks/StreakSynchronizer';
-import { initializeTestNotifications } from '@/lib/test-notifications';
+import StreakSystemInitializer from '@/components/streaks/StreakSystemInitializer';
 
 const montserrat = Montserrat({ 
   subsets: ["latin"],
@@ -111,7 +111,8 @@ export default function RootLayout({
           {/* Sistema de notificaciones de rachas */}
           <StreakNotifications />
           
-          {/* Sincronizador automático de rachas */}
+          {/* Sistema completo de rachas */}
+          <StreakSystemInitializer />
           <StreakSynchronizer />
           
           {/* Funciones de prueba para desarrollo */}
@@ -120,8 +121,9 @@ export default function RootLayout({
               __html: `
                 if (typeof window !== 'undefined') {
                   window.addEventListener('load', () => {
-                    console.log('🎯 Modo desarrollo: Funciones de prueba de notificaciones disponibles');
-                    console.log('Usa testStreakNotifications.testAll() para probar todas las notificaciones');
+                    console.log('🎯 Modo desarrollo: Funciones de prueba disponibles');
+                    console.log('• testStreakNotifications.testAll() - Probar notificaciones');
+                    console.log('• triggerLessonCompleted() - Simular lección completada');
                   });
                 }
               `
