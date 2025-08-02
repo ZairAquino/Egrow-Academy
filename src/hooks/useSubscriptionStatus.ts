@@ -70,6 +70,12 @@ export function useSubscriptionStatus() {
   useEffect(() => {
     if (isAuthenticated && !hasChecked) {
       checkSubscriptionStatus();
+    } else if (!isAuthenticated) {
+      // Si no está autenticado, establecer isLoading en false inmediatamente
+      setSubscriptionStatus(prev => ({
+        ...prev,
+        isLoading: false
+      }));
     }
   }, [isAuthenticated, hasChecked]); // Removemos checkSubscriptionStatus
 

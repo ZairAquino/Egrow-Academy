@@ -71,7 +71,7 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
         completedLessons: [],
         progressPercentage: 0,
         status: 'NOT_STARTED',
-        totalLessons: courseId === 'asistentes-virtuales-ia' ? 21 : 18
+        totalLessons: courseId === 'asistentes-virtuales-ia' ? 21 : courseId === 'vibe-coding-claude-cursor' ? 17 : courseId === 'videos-profesionales-ia' ? 11 : 18
       }));
     }
 
@@ -90,7 +90,7 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
         const data = await response.json();
         
         // Asegurar que currentLesson no exceda el número de lecciones disponibles
-        const totalLessons = courseId === 'asistentes-virtuales-ia' ? 21 : 18;
+        const totalLessons = courseId === 'asistentes-virtuales-ia' ? 21 : courseId === 'vibe-coding-claude-cursor' ? 17 : courseId === 'videos-profesionales-ia' ? 11 : 18;
         const maxLessonIndex = totalLessons - 1;
         const safeCurrentLesson = Math.min(data.currentLesson || 0, maxLessonIndex);
         
@@ -110,7 +110,7 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
             const data = JSON.parse(savedProgress);
             
             // Asegurar que currentLesson no exceda el número de lecciones disponibles
-            const totalLessons = courseId === 'asistentes-virtuales-ia' ? 21 : 18;
+            const totalLessons = courseId === 'asistentes-virtuales-ia' ? 21 : courseId === 'vibe-coding-claude-cursor' ? 17 : courseId === 'videos-profesionales-ia' ? 11 : 18;
             const maxLessonIndex = totalLessons - 1;
             const safeCurrentLesson = Math.min(data.currentLesson || 0, maxLessonIndex);
             
@@ -122,7 +122,7 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
             setHasLoadedOnce(true);
           } else {
             // Si no hay progreso guardado, usar valores por defecto
-            const totalLessonsDefault = courseId === 'asistentes-virtuales-ia' ? 21 : 18;
+            const totalLessonsDefault = courseId === 'asistentes-virtuales-ia' ? 21 : courseId === 'vibe-coding-claude-cursor' ? 17 : courseId === 'videos-profesionales-ia' ? 11 : 18;
             const defaultProgress: CourseProgress = {
               currentLesson: 0,
               completedLessons: [],
@@ -199,7 +199,9 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
           const progressData: CourseProgress = {
             currentLesson: lessonToSave,
             completedLessons: lessonsToSave,
-            progressPercentage: Math.round((lessonsToSave.length / currentProgress.totalLessons) * 100),
+            progressPercentage: isNaN(currentProgress.totalLessons) || currentProgress.totalLessons === 0 
+              ? 0 
+              : Math.round((lessonsToSave.length / currentProgress.totalLessons) * 100),
             status: lessonsToSave.length === 0 ? 'NOT_STARTED' : 
                     lessonsToSave.length === currentProgress.totalLessons ? 'COMPLETED' : 'IN_PROGRESS',
             totalTimeSpent: currentProgress.totalTimeSpent,
@@ -231,7 +233,9 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
       return {
         ...prev,
         completedLessons: newCompletedLessons,
-        progressPercentage: Math.round((newCompletedLessons.length / prev.totalLessons) * 100),
+        progressPercentage: isNaN(prev.totalLessons) || prev.totalLessons === 0 
+          ? 0 
+          : Math.round((newCompletedLessons.length / prev.totalLessons) * 100),
         status: newCompletedLessons.length === 0 ? 'NOT_STARTED' : 
                 newCompletedLessons.length === prev.totalLessons ? 'COMPLETED' : 'IN_PROGRESS'
       };
@@ -247,11 +251,23 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
     });
   }, []);
 
-  const progressPercentage = progress.progressPercentage;
+  const progressPercentage = (() => {
+    const value = progress.progressPercentage;
+    if (typeof value === 'number' && !isNaN(value)) {
+      return value;
+    }
+    return 0;
+  })();
 
   useEffect(() => {
-    if (!hasLoadedOnce && isEnrolled) {
-      loadProgress();
+    if (!hasLoadedOnce) {
+      if (isEnrolled) {
+        loadProgress();
+      } else {
+        // Si no está inscrito, establecer isLoading en false inmediatamente
+        setIsLoading(false);
+        setHasLoadedOnce(true);
+      }
     }
   }, [courseId, isEnrolled, hasLoadedOnce, loadProgress]);
 
