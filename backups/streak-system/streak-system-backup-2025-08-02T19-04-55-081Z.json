@@ -1,0 +1,99 @@
+{
+  "metadata": {
+    "backupDate": "2025-08-02T19:04:55.080Z",
+    "description": "Backup completo del sistema de rachas semanales - Egrow Academy",
+    "version": "1.0.0",
+    "tables": [
+      "user_streaks",
+      "user_weekly_history",
+      "user_streak_badges",
+      "user_points_history",
+      "streak_recovery_history",
+      "weekly_lesson_completions"
+    ]
+  },
+  "data": {
+    "userStreaks": [
+      {
+        "id": "1bfc686b-55ff-403d-91ea-051399ce68c1",
+        "userId": "cmdnk5t1o000iky04vj1v5m7d",
+        "currentWeekLessons": 5,
+        "weekStartDate": "2025-07-28T00:00:00.000Z",
+        "currentStreak": 1,
+        "longestStreak": 1,
+        "totalPoints": 5,
+        "lifetimePointsEarned": 5,
+        "pointsSpentOnRecovery": 0,
+        "lastLessonCompletedAt": "2025-08-02T19:03:48.201Z",
+        "isCurrentWeekComplete": true,
+        "lastRecoveryUsed": null,
+        "recoveryCount": 0,
+        "createdAt": "2025-08-02T19:03:04.572Z",
+        "updatedAt": "2025-08-02T19:03:48.201Z"
+      }
+    ],
+    "userWeeklyHistory": [],
+    "userStreakBadges": [
+      {
+        "id": "c5354416-d573-4d4b-9e03-62abb96fdf44",
+        "userId": "cmdnk5t1o000iky04vj1v5m7d",
+        "badgeLevel": "PRINCIPIANTE",
+        "earnedAt": "2025-08-02T19:03:48.665Z",
+        "streakWhenEarned": 1,
+        "isActive": true
+      }
+    ],
+    "userPointsHistory": [
+      {
+        "id": "3d8a1195-dd9d-4151-9168-b5506c063c39",
+        "userId": "cmdnk5t1o000iky04vj1v5m7d",
+        "pointsEarned": 5,
+        "transactionType": "WEEKLY_GOAL",
+        "reason": "Lecciones completadas: 5, Cursos: 2",
+        "weekStart": "2025-07-28T00:00:00.000Z",
+        "lessonsCompleted": 5,
+        "coursesUsed": 2,
+        "metadata": null,
+        "createdAt": "2025-08-02T19:03:48.358Z"
+      }
+    ],
+    "streakRecoveryHistory": [],
+    "weeklyLessonCompletions": [
+      {
+        "id": "7fc30e1c-4a99-4a48-bc45-a1e90ea1b60d",
+        "userId": "cmdnk5t1o000iky04vj1v5m7d",
+        "weekStart": "2025-07-28T00:00:00.000Z",
+        "courseId": "cmddav1bv0001e5ko3o5dt2cv",
+        "lessonsCompletedInWeek": 4,
+        "lastLessonAt": "2025-08-02T19:03:06.349Z",
+        "createdAt": "2025-08-02T19:03:03.961Z",
+        "updatedAt": "2025-08-02T19:03:06.349Z"
+      },
+      {
+        "id": "bfaefc1c-792e-4514-964a-7637d7f83bd3",
+        "userId": "cmdnk5t1o000iky04vj1v5m7d",
+        "weekStart": "2025-07-28T00:00:00.000Z",
+        "courseId": "cmdf4hcn50000e5isc57n04xy",
+        "lessonsCompletedInWeek": 1,
+        "lastLessonAt": "2025-08-02T19:03:46.994Z",
+        "createdAt": "2025-08-02T19:03:47.560Z",
+        "updatedAt": "2025-08-02T19:03:47.560Z"
+      }
+    ]
+  },
+  "schema": {
+    "enums": [
+      "StreakBadgeLevel: PRINCIPIANTE, ESTUDIANTE, DEDICADO, EN_LLAMAS, IMPARABLE, MAESTRO, LEYENDA",
+      "PointTransactionType: WEEKLY_GOAL, BONUS_LESSONS, DIVERSITY_BONUS, STREAK_BONUS, RECOVERY_SPENT, ADMIN_ADJUSTMENT"
+    ],
+    "relationships": [
+      "UserStreak -> User (userId)",
+      "UserWeeklyHistory -> User (userId)",
+      "UserStreakBadge -> User (userId)",
+      "UserPointsHistory -> User (userId)",
+      "StreakRecoveryHistory -> User (userId)",
+      "WeeklyLessonCompletion -> User (userId)",
+      "WeeklyLessonCompletion -> Course (courseId)"
+    ]
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "metadata": {
+    "backupDate": "2025-08-02T19:04:55.082Z",
+    "description": "Configuración y archivos del sistema de rachas",
+    "type": "configuration"
+  },
+  "files": {
+    "src/lib/streaks.ts": "Lógica principal del sistema de rachas",
+    "src/components/streaks/StreakDisplay.tsx": "Componente visual de rachas",
+    "src/hooks/useStreaks.ts": "Hook React para rachas",
+    "src/app/api/streaks/route.ts": "API endpoint de rachas",
+    "scripts/test-streaks-system.ts": "Script de pruebas del sistema",
+    "scripts/test-streaks-integration.ts": "Script de pruebas de integración",
+    "docs/SISTEMA-RACHAS-EXTENSIONES-FUTURAS.md": "Documentación de extensiones"
+  },
+  "integration": {
+    "modifiedFiles": [
+      "src/app/api/courses/progress/route.ts - líneas 394-403",
+      "src/components/auth/UserProfile.tsx - líneas 189-190",
+      "src/app/globals.css - estilos de rachas líneas 2814-2983",
+      "prisma/schema.prisma - 6 nuevos modelos y 2 enums"
+    ]
+  },
+  "features": {
+    "weeklyGoal": "5 lecciones por semana (lunes-domingo)",
+    "pointsSystem": "5 puntos base + bonificaciones",
+    "badgeLevels": "7 niveles (PRINCIPIANTE a LEYENDA)",
+    "recoverySystem": "Usar puntos para recuperar rachas perdidas",
+    "tracking": "Progreso automático al completar lecciones"
+  }
+}
