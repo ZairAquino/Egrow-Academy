@@ -115,7 +115,7 @@ export async function sendVerificationEmail(
             
             <p style="color: #6b7280; line-height: 1.6;">
               Ingresa este código en la página de verificación para activar tu cuenta. 
-              Este código expira en 10 minutos por seguridad.
+              Este código expira en 1 hora por seguridad.
             </p>
             
             <div style="background: #fef3c7; border: 1px solid #f59e0b; border-radius: 8px; padding: 15px; margin: 20px 0;">

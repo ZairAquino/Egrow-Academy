@@ -141,7 +141,7 @@ export async function POST(request: NextRequest) {
 
     // Generar código de verificación
     const verificationCode = generateVerificationCode()
-    const verificationCodeExpires = new Date(Date.now() + 10 * 60 * 1000) // 10 minutos
+    const verificationCodeExpires = new Date(Date.now() + 60 * 60 * 1000) // 1 hora
     
     console.log('✅ [REGISTER] Código de verificación generado:', verificationCode)
 

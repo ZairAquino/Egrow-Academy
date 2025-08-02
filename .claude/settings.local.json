@@ -55,7 +55,9 @@
       "Bash(npm run:*)",
       "Bash(timeout 5 npm run dev)",
       "Bash(psql:*)",
-      "Bash(del test-db-connection.js create-test-user.js)"
+      "Bash(del test-db-connection.js create-test-user.js)",
+      "Bash(dir \"C:\\Users\\think\\Egrow-Academy\\src\\components\\auth\")",
+      "Bash(git checkout:*)"
     ],
     "deny": []
   }
