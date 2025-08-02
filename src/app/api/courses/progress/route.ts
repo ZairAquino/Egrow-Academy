@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyToken } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { recordLessonCompletion } from '@/lib/streaks';
 
 // GET - Obtener progreso del usuario en un curso
 export async function GET(request: NextRequest) {
@@ -389,6 +390,17 @@ export async function POST(request: NextRequest) {
           completionAttempts: action === 'complete' ? 1 : 0
         }
       });
+
+      // 🏆 NUEVO: Registrar lección completada en el sistema de rachas
+      if (action === 'complete') {
+        try {
+          console.log(`🏆 [RACHAS] Registrando lección completada: ${lessonTitle} por usuario ${userId}`);
+          await recordLessonCompletion(userId, actualCourseId, lessonNumber, lessonTitle);
+        } catch (streakError) {
+          // No fallar toda la operación si hay error en rachas
+          console.error('⚠️ [RACHAS] Error registrando lección en sistema de rachas:', streakError);
+        }
+      }
     }
 
     // ✅ OPTIMIZADO: Actualizar el porcentaje de progreso en la inscripción

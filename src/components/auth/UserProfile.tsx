@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUserStats } from '@/hooks/useUserStats';
 import GlassAvatar from '@/components/ui/GlassAvatar';
+import StreakDisplay from '@/components/streaks/StreakDisplay';
 
 interface UserProfileProps {
   className?: string;
@@ -184,6 +185,9 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
               </span>
             </div>
           </div>
+
+          {/* Mostrar racha del usuario */}
+          <StreakDisplay compact={true} />
 
           <div className="profile-actions">
             <Link href="/profile" className="action-btn">

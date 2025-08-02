@@ -44,6 +44,14 @@ model User {
   subscriptions           Subscription[]
   userBehaviors           UserBehavior[]
   userPreferences         UserPreference?
+  
+  // Relaciones del sistema de rachas
+  streaks                 UserStreak[]
+  weeklyHistory           UserWeeklyHistory[]
+  streakBadges            UserStreakBadge[]
+  pointsHistory           UserPointsHistory[]
+  recoveryHistory         StreakRecoveryHistory[]
+  weeklyLessonCompletions WeeklyLessonCompletion[]
 
   @@index([membershipLevel])
   @@index([email, membershipLevel])
@@ -91,6 +99,9 @@ model Course {
   lessons          Lesson[]
   payments         Payment[]
   ratings          Rating[]
+  
+  // Relaciones del sistema de rachas
+  weeklyLessonCompletions WeeklyLessonCompletion[]
 
   @@index([status, createdAt])
   @@index([instructorId])
@@ -706,4 +717,137 @@ enum InteractionAction {
   CLICK
   CLOSE
   CONVERSION
+}
+
+enum StreakBadgeLevel {
+  PRINCIPIANTE
+  ESTUDIANTE
+  DEDICADO
+  EN_LLAMAS
+  IMPARABLE
+  MAESTRO
+  LEYENDA
+}
+
+enum PointTransactionType {
+  WEEKLY_GOAL
+  BONUS_LESSONS
+  DIVERSITY_BONUS
+  STREAK_BONUS
+  RECOVERY_SPENT
+  ADMIN_ADJUSTMENT
+}
+
+// ==========================================
+// SISTEMA DE RACHAS Y GAMIFICACIÓN
+// ==========================================
+
+model UserStreak {
+  id                     String    @id @default(uuid())
+  userId                 String
+  currentWeekLessons     Int       @default(0)
+  weekStartDate          DateTime  @db.Date
+  currentStreak          Int       @default(0)
+  longestStreak          Int       @default(0)
+  totalPoints            Int       @default(0)
+  lifetimePointsEarned   Int       @default(0)
+  pointsSpentOnRecovery  Int       @default(0)
+  lastLessonCompletedAt  DateTime?
+  isCurrentWeekComplete  Boolean   @default(false)
+  lastRecoveryUsed       DateTime?
+  recoveryCount          Int       @default(0)
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+
+  // Relaciones
+  user                   User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, weekStartDate], name: "user_streaks_unique_user_week")
+  @@map("user_streaks")
+}
+
+model UserWeeklyHistory {
+  id                String   @id @default(uuid())
+  userId            String
+  weekStart         DateTime @db.Date
+  weekEnd           DateTime @db.Date
+  lessonsCompleted  Int      @default(0)
+  coursesUsed       Int      @default(0)
+  goalMet           Boolean  @default(false)
+  pointsEarned      Int      @default(0)
+  streakCountAtEnd  Int      @default(0)
+  createdAt         DateTime @default(now())
+
+  // Relaciones
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, weekStart], name: "user_weekly_history_unique_user_week")
+  @@map("user_weekly_history")
+}
+
+model UserStreakBadge {
+  id               String           @id @default(uuid())
+  userId           String
+  badgeLevel       StreakBadgeLevel
+  earnedAt         DateTime         @default(now())
+  streakWhenEarned Int
+  isActive         Boolean          @default(true)
+
+  // Relaciones
+  user             User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, badgeLevel], name: "user_streak_badges_unique_user_badge")
+  @@map("user_streak_badges")
+}
+
+model UserPointsHistory {
+  id               String              @id @default(uuid())
+  userId           String
+  pointsEarned     Int
+  transactionType  PointTransactionType
+  reason           String?
+  weekStart        DateTime?           @db.Date
+  lessonsCompleted Int?
+  coursesUsed      Int?
+  metadata         Json?
+  createdAt        DateTime            @default(now())
+
+  // Relaciones
+  user             User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_points_history")
+}
+
+model StreakRecoveryHistory {
+  id                 String           @id @default(uuid())
+  userId             String
+  pointsSpent        Int
+  badgeLevel         StreakBadgeLevel
+  recoveryReason     String?
+  originalStreakLost Int
+  weekMissed         DateTime         @db.Date
+  recoveredAt        DateTime         @default(now())
+
+  // Relaciones
+  user               User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("streak_recovery_history")
+}
+
+model WeeklyLessonCompletion {
+  id                    String   @id @default(uuid())
+  userId                String
+  weekStart             DateTime @db.Date
+  courseId              String
+  lessonsCompletedInWeek Int     @default(0)
+  lastLessonAt          DateTime?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  // Relaciones
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course                Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, weekStart, courseId], name: "weekly_lesson_completions_unique")
+  @@map("weekly_lesson_completions")
 }
