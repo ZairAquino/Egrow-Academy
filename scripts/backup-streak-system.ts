@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as dotenv from 'dotenv';
+import { BACKUP_CONFIG, getBackupPath, generateBackupFilename, ensureBackupDirectories } from './backup-config';
 
 // Cargar variables de entorno
 dotenv.config();
@@ -127,16 +128,13 @@ async function backupStreakSystem() {
       }
     };
 
-    // 4. Crear directorio de backups si no existe
-    const backupsDir = path.join(process.cwd(), 'backups', 'streak-system');
-    if (!fs.existsSync(backupsDir)) {
-      fs.mkdirSync(backupsDir, { recursive: true });
-      console.log('📁 Directorio de backups creado:', backupsDir);
-    }
+    // 4. Usar directorio estándar de backups
+    await ensureBackupDirectories();
+    const backupsDir = getBackupPath(BACKUP_CONFIG.SUBDIRS.STREAK_SYSTEM);
+    console.log('📁 Usando directorio estándar de backups:', backupsDir);
 
-    // 5. Generar nombre del archivo
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const filename = `streak-system-backup-${timestamp}.json`;
+    // 5. Generar nombre del archivo usando configuración estándar
+    const filename = generateBackupFilename(BACKUP_CONFIG.FILENAME_PATTERNS.STREAK_SYSTEM) + '.json';
     const filepath = path.join(backupsDir, filename);
 
     // 6. Guardar backup
@@ -189,7 +187,7 @@ async function backupStreakSystem() {
       }
     };
 
-    const configFilename = `streak-system-config-${timestamp}.json`;
+    const configFilename = generateBackupFilename('streak-system-config-{timestamp}') + '.json';
     const configFilepath = path.join(backupsDir, configFilename);
     fs.writeFileSync(configFilepath, JSON.stringify(configBackup, null, 2), 'utf-8');
     

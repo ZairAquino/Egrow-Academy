@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import { BACKUP_CONFIG, getBackupPath, generateBackupFilename, ensureBackupDirectories } from './backup-config';
 
 interface FileBackup {
   metadata: {
@@ -91,15 +92,12 @@ async function backupStreakFiles() {
       }
     }
 
-    // Crear directorio de backups si no existe
-    const backupsDir = path.join(process.cwd(), 'backups', 'streak-system');
-    if (!fs.existsSync(backupsDir)) {
-      fs.mkdirSync(backupsDir, { recursive: true });
-    }
+    // Usar directorio estándar de backups
+    await ensureBackupDirectories();
+    const backupsDir = getBackupPath(BACKUP_CONFIG.SUBDIRS.STREAK_SYSTEM);
 
-    // Guardar backup de archivos
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const filename = `streak-files-backup-${timestamp}.json`;
+    // Guardar backup de archivos usando configuración estándar
+    const filename = generateBackupFilename('streak-files-backup-{timestamp}') + '.json';
     const filepath = path.join(backupsDir, filename);
 
     fs.writeFileSync(filepath, JSON.stringify(backup, null, 2), 'utf-8');
@@ -158,7 +156,7 @@ async function backupStreakFiles() {
         })
       };
 
-      const schemaFilename = `streak-schema-backup-${timestamp}.json`;
+      const schemaFilename = generateBackupFilename('streak-schema-backup-{timestamp}') + '.json';
       const schemaFilepath = path.join(backupsDir, schemaFilename);
       fs.writeFileSync(schemaFilepath, JSON.stringify(schemaBackup, null, 2), 'utf-8');
       
