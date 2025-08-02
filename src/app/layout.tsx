@@ -14,6 +14,9 @@ import ConversionTracker from "@/components/analytics/ConversionTracker";
 import { initializeGA4 } from "@/lib/analytics";
 import { NotificationSystem } from '@/components/ui/NotificationSystem';
 import BehaviorTrackingWrapper from '@/components/BehaviorTrackingWrapper';
+import StreakNotifications from '@/components/notifications/StreakNotifications';
+import StreakSynchronizer from '@/components/streaks/StreakSynchronizer';
+import { initializeTestNotifications } from '@/lib/test-notifications';
 
 const montserrat = Montserrat({ 
   subsets: ["latin"],
@@ -104,6 +107,26 @@ export default function RootLayout({
               {children}
             </BehaviorTrackingWrapper>
           </NotificationSystem>
+          
+          {/* Sistema de notificaciones de rachas */}
+          <StreakNotifications />
+          
+          {/* Sincronizador automático de rachas */}
+          <StreakSynchronizer />
+          
+          {/* Funciones de prueba para desarrollo */}
+          {process.env.NODE_ENV === 'development' && (
+            <script dangerouslySetInnerHTML={{
+              __html: `
+                if (typeof window !== 'undefined') {
+                  window.addEventListener('load', () => {
+                    console.log('🎯 Modo desarrollo: Funciones de prueba de notificaciones disponibles');
+                    console.log('Usa testStreakNotifications.testAll() para probar todas las notificaciones');
+                  });
+                }
+              `
+            }} />
+          )}
           
           {/* Google Analytics 4 */}
           {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (

@@ -28,6 +28,7 @@ export const useStreaks = () => {
   const [stats, setStats] = useState<StreakStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [lastRefresh, setLastRefresh] = useState(Date.now());
 
   const fetchStats = async () => {
     try {
@@ -47,6 +48,7 @@ export const useStreaks = () => {
       if (response.ok) {
         const result = await response.json();
         setStats(result.data);
+        setLastRefresh(Date.now());
       } else if (response.status === 401) {
         // Usuario no autenticado, no es un error crítico
         setStats(null);
@@ -65,11 +67,36 @@ export const useStreaks = () => {
     fetchStats();
   }, []);
 
+  // Auto-refresh cuando se detectan cambios en el localStorage (señal de lección completada)
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'lessonCompleted') {
+        // Esperar un poco para que se procese en el backend
+        setTimeout(() => {
+          fetchStats();
+        }, 1000);
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
+  // Función para marcar que se completó una lección (trigger manual)
+  const triggerRefresh = () => {
+    localStorage.setItem('lessonCompleted', Date.now().toString());
+    setTimeout(() => {
+      fetchStats();
+    }, 500);
+  };
+
   return {
     stats,
     loading,
     error,
-    refetch: fetchStats
+    lastRefresh,
+    refetch: fetchStats,
+    triggerRefresh
   };
 };
 
