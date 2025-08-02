@@ -2804,8 +2804,6 @@ nav .flex.items-center.space-x-1 {
   position: absolute;
   top: 1rem;
   right: 1rem;
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
   padding: 0.5rem 1rem;
   border-radius: 20px;
   font-size: 0.75rem;

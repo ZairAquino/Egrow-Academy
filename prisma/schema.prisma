@@ -647,6 +647,8 @@ enum ResourceCategory {
   WHITEPAPER
   CHECKLIST
   WORKSHOP
+  ULTIMO_WEBINAR
+  EN_VIVO
 }
 
 enum ResourceType {

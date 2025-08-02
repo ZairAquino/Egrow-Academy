@@ -26,14 +26,9 @@ export default function ResourceCard({ resource }: ResourceCardProps) {
 
   const getCategoryColor = (category: string) => {
     const colors: { [key: string]: string } = {
-      WEBINAR: 'bg-blue-100 text-blue-800',
-      MANUAL: 'bg-green-100 text-green-800',
-      TUTORIAL: 'bg-purple-100 text-purple-800',
-      PAPER: 'bg-orange-100 text-orange-800',
-      HERRAMIENTA: 'bg-red-100 text-red-800',
-      DATASET: 'bg-indigo-100 text-indigo-800',
-      PODCAST: 'bg-pink-100 text-pink-800',
-      LIBRO: 'bg-yellow-100 text-yellow-800'
+      // Nuevas categorías con colores especiales
+      ULTIMO_WEBINAR: 'bg-blue-500 text-white shadow-lg',
+      EN_VIVO: 'bg-red-500 text-white shadow-lg animate-pulse'
     };
     return colors[category] || 'bg-gray-100 text-gray-800';
   };
@@ -62,9 +57,9 @@ export default function ResourceCard({ resource }: ResourceCardProps) {
           src={resource.imageUrl || 'https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=400&h=250&fit=crop&crop=center'} 
           alt={resource.title}
         />
-        <span className="course-type-badge">
-          {resource.category}
-        </span>
+        <div className={`course-type-badge ${getCategoryColor(resource.category)}`}>
+          {resource.category.replace('_', ' ')}
+        </div>
       </div>
       
       <div className="course-content-new">

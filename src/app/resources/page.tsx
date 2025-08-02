@@ -34,7 +34,9 @@ export default function ResourcesPage() {
     { id: 'HERRAMIENTA', name: 'Herramientas' },
     { id: 'DATASET', name: 'Datasets' },
     { id: 'PODCAST', name: 'Podcasts' },
-    { id: 'LIBRO', name: 'Libros' }
+    { id: 'LIBRO', name: 'Libros' },
+    { id: 'ULTIMO_WEBINAR', name: 'Último Webinar' },
+    { id: 'EN_VIVO', name: 'En Vivo' }
   ];
 
   const { resources, loading, error, pagination, loadMore } = useResources(selectedCategory);
