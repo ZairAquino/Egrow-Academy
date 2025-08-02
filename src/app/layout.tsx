@@ -124,6 +124,7 @@ export default function RootLayout({
                     console.log('🎯 Modo desarrollo: Funciones de prueba disponibles');
                     console.log('• testStreakNotifications.testAll() - Probar notificaciones');
                     console.log('• triggerLessonCompleted() - Simular lección completada');
+                    console.log('• testButtonDetector() - Probar detector de botones');
                   });
                 }
               `
