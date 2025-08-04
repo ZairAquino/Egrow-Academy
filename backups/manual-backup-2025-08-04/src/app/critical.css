@@ -1,0 +1,149 @@
+/* CSS Crítico - eGrow Academy */
+/* Solo estilos esenciales para el renderizado inicial */
+
+/* Reset crítico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* Variables críticas */
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --primary-blue: #2563eb;
+  --primary-blue-hover: #1d4ed8;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-900: #111827;
+}
+
+/* Base crítico */
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-montserrat), 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+  font-size: 1rem;
+  min-width: 320px;
+  width: 100%;
+}
+
+/* Layout crítico */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.main-content {
+  min-height: 100vh;
+  padding-top: 0;
+}
+
+/* Hero crítico */
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: 80px 0;
+  text-align: center;
+  color: white;
+}
+
+.hero-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.hero-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+}
+
+.hero-title .block {
+  display: block;
+}
+
+.hero-description {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+  line-height: 1.6;
+}
+
+/* Logo crítico */
+.hero-bottom-logo {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+.hero-bottom-logo-image {
+  height: auto;
+  max-height: 71px;
+  width: auto;
+  max-width: 95px;
+  opacity: 0.9;
+  transition: all 0.3s ease;
+}
+
+/* Responsive crítico */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2rem;
+  }
+  
+  .hero-description {
+    font-size: 1.1rem;
+  }
+  
+  .hero-bottom-logo-image {
+    max-width: 76px;
+    max-height: 57px;
+  }
+  
+  .container {
+    padding: 0 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 1.75rem;
+  }
+  
+  .hero-description {
+    font-size: 1rem;
+  }
+  
+  .hero-bottom-logo-image {
+    max-width: 66px;
+    max-height: 48px;
+  }
+} 
