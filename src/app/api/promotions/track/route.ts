@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,46 +21,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verificar que la promoción existe
-    const promotion = await prisma.promotion.findUnique({
-      where: { id: promotionId },
+    // Por ahora, solo loguear la interacción sin usar base de datos
+    console.log('Promotion interaction:', {
+      promotionId,
+      userId,
+      action,
+      sessionId,
+      pageUrl,
+      referrer,
+      userAgent,
     });
-
-    if (!promotion) {
-      return NextResponse.json(
-        { success: false, error: 'Promoción no encontrada' },
-        { status: 404 }
-      );
-    }
-
-    // Crear la interacción
-    const interaction = await prisma.promotionInteraction.create({
-      data: {
-        promotionId,
-        userId: userId || null,
-        action,
-        sessionId: sessionId || null,
-        pageUrl: pageUrl || null,
-        referrer: referrer || null,
-        userAgent: userAgent || null,
-      },
-    });
-
-    // Si es una impresión, incrementar el contador
-    if (action === 'IMPRESSION') {
-      await prisma.promotion.update({
-        where: { id: promotionId },
-        data: {
-          currentImpressions: {
-            increment: 1,
-          },
-        },
-      });
-    }
 
     return NextResponse.json({
       success: true,
-      interaction,
+      message: 'Interaction logged successfully',
     });
   } catch (error) {
     console.error('Error tracking promotion interaction:', error);
