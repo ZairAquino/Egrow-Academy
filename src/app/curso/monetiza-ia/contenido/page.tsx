@@ -1417,6 +1417,107 @@ Estrategias para aumentar RPH:
             width: 100%;
             justify-content: center;
           }
+
+          /* Corregir elementos de código */
+          .lesson-content pre {
+            max-width: 100% !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            scrollbar-width: thin !important;
+            scrollbar-color: #cbd5e1 #f1f5f9 !important;
+            background: #f8fafc !important;
+            border-radius: 8px !important;
+            padding: 0.75rem !important;
+            margin: 1rem 0 !important;
+            border: 1px solid #e2e8f0 !important;
+            white-space: pre-wrap !important;
+            word-wrap: break-word !important;
+            font-size: 0.7rem !important;
+          }
+
+          /* Scrollbar para bloques de código */
+          .lesson-content pre::-webkit-scrollbar {
+            height: 6px !important;
+          }
+
+          .lesson-content pre::-webkit-scrollbar-track {
+            background: #f1f5f9 !important;
+            border-radius: 3px !important;
+          }
+
+          .lesson-content pre::-webkit-scrollbar-thumb {
+            background: #cbd5e1 !important;
+            border-radius: 3px !important;
+          }
+
+          .lesson-content pre::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8 !important;
+          }
+
+          /* Indicador para bloques de código */
+          .lesson-content pre::after {
+            content: "← Desliza para ver código completo →" !important;
+            display: block !important;
+            text-align: center !important;
+            font-size: 0.65rem !important;
+            color: #64748b !important;
+            margin-top: 0.5rem !important;
+            font-style: italic !important;
+          }
+
+          .lesson-content code {
+            max-width: 100% !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+            font-size: 0.7rem !important;
+          }
+
+          /* Corregir listas */
+          .lesson-content ul,
+          .lesson-content ol {
+            max-width: 100% !important;
+            padding-left: 1rem !important;
+          }
+
+          .lesson-content li {
+            max-width: 100% !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+          }
+
+          /* Corregir elementos inline */
+          .lesson-content span,
+          .lesson-content strong,
+          .lesson-content em {
+            max-width: 100% !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+          }
+
+          /* Corregir elementos con estilos inline */
+          .lesson-content div[style*="width"] {
+            max-width: 100% !important;
+            width: auto !important;
+          }
+
+          .lesson-content div[style*="min-width"] {
+            min-width: auto !important;
+          }
+
+          /* Asegurar que todos los elementos se mantengan dentro de los límites */
+          .lesson-content * {
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+          }
+
+          /* Contenedor principal de la lección */
+          .lesson-container {
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow-x: hidden !important;
+            padding: 0 0.5rem !important;
+            box-sizing: border-box !important;
+          }
         }
       `}</style>
     </>

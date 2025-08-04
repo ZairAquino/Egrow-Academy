@@ -121,8 +121,9 @@ export default function ContenidoVideosProfesionalesIAPage() {
             <p style="margin: 0; color: #475569; line-height: 1.6;">Para elegir la plataforma adecuada para tu asistente virtual, es importante conocer las diferencias entre las dos opciones principales del mercado.</p>
           </div>
           
-          <div style="overflow-x: auto; margin: 2rem 0;">
-            <table style="width: 100%; border-collapse: collapse; border: 1px solid #e2e8f0; margin: 1rem 0; background: white; border-radius: 8px; overflow: hidden;">
+          <div style="overflow-x: auto; margin: 2rem 0; -webkit-overflow-scrolling: touch; scrollbar-width: thin; scrollbar-color: #cbd5e1 #f1f5f9;">
+            <div style="min-width: 600px; display: inline-block;">
+              <table style="width: 100%; border-collapse: collapse; border: 1px solid #e2e8f0; margin: 1rem 0; background: white; border-radius: 8px; overflow: hidden;">
               <thead style="background: #f8fafc;">
                 <tr>
                   <th style="border: 1px solid #e2e8f0; padding: 12px; text-align: left; font-weight: 600; color: #1e293b;">Característica</th>
@@ -158,6 +159,7 @@ export default function ContenidoVideosProfesionalesIAPage() {
                 </tr>
               </tbody>
             </table>
+            </div>
           </div>
         `
       },
@@ -2486,7 +2488,7 @@ export default function ContenidoVideosProfesionalesIAPage() {
           display: flex;
           flex-direction: column;
           gap: 0.5rem;
-          padding-left: 0.5rem;
+          padding: 0.5rem;
           animation: slideDown 0.3s ease-out;
           overflow: hidden;
         }
@@ -2688,6 +2690,415 @@ export default function ContenidoVideosProfesionalesIAPage() {
           .btn-exit-course {
             width: 100%;
             justify-content: center;
+          }
+
+          /* Corregir el tamaño del lesson-number en móviles */
+          .lesson-number {
+            width: 24px !important;
+            height: 24px !important;
+            font-size: 0.75rem !important;
+          }
+
+          .lesson-item.active .lesson-number {
+            width: 24px !important;
+            height: 24px !important;
+          }
+
+          .lesson-item.completed .lesson-number {
+            width: 24px !important;
+            height: 24px !important;
+          }
+
+          /* Asegurar que el contenido se mantenga centrado en móviles */
+          .module-lessons {
+            padding: 0.5rem !important;
+            margin: 0 !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+          }
+
+          .lesson-item {
+            width: 100% !important;
+            box-sizing: border-box !important;
+            margin: 0 !important;
+          }
+
+          .lessons-list {
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow-x: hidden !important;
+          }
+
+          .module-group {
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow-x: hidden !important;
+          }
+
+          /* Corregir tablas en móviles */
+          .lesson-content table {
+            width: 100% !important;
+            max-width: 100% !important;
+            font-size: 0.75rem !important;
+            border-collapse: collapse !important;
+          }
+
+          .lesson-content table th,
+          .lesson-content table td {
+            padding: 0.5rem !important;
+            font-size: 0.7rem !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+          }
+
+          .lesson-content table th {
+            font-size: 0.7rem !important;
+            font-weight: 600 !important;
+          }
+
+          /* Contenedor de tabla con scroll horizontal */
+          .lesson-content div[style*="overflow-x: auto"] {
+            max-width: 100% !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            scrollbar-width: thin !important;
+            scrollbar-color: #cbd5e1 #f1f5f9 !important;
+            border-radius: 8px !important;
+            background: #f8fafc !important;
+            padding: 0.5rem !important;
+            margin: 1rem 0 !important;
+          }
+
+          /* Estilos para el scrollbar en webkit */
+          .lesson-content div[style*="overflow-x: auto"]::-webkit-scrollbar {
+            height: 6px !important;
+          }
+
+          .lesson-content div[style*="overflow-x: auto"]::-webkit-scrollbar-track {
+            background: #f1f5f9 !important;
+            border-radius: 3px !important;
+          }
+
+          .lesson-content div[style*="overflow-x: auto"]::-webkit-scrollbar-thumb {
+            background: #cbd5e1 !important;
+            border-radius: 3px !important;
+          }
+
+          .lesson-content div[style*="overflow-x: auto"]::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8 !important;
+          }
+
+          /* Indicador visual de scroll */
+          .lesson-content div[style*="overflow-x: auto"]::after {
+            content: "← Desliza para ver más →" !important;
+            display: block !important;
+            text-align: center !important;
+            font-size: 0.7rem !important;
+            color: #64748b !important;
+            margin-top: 0.5rem !important;
+            font-style: italic !important;
+          }
+
+          /* SOLUCIÓN UNIVERSAL PARA ELEMENTOS QUE NO CABEN EN MÓVILES */
+
+          /* 1. Bloques de código con scroll horizontal */
+          .lesson-content pre {
+            max-width: 100% !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            scrollbar-width: thin !important;
+            scrollbar-color: #cbd5e1 #f1f5f9 !important;
+            background: #f8fafc !important;
+            border-radius: 8px !important;
+            padding: 0.75rem !important;
+            margin: 1rem 0 !important;
+            border: 1px solid #e2e8f0 !important;
+            white-space: pre-wrap !important;
+            word-wrap: break-word !important;
+            font-size: 0.7rem !important;
+          }
+
+          /* Scrollbar para bloques de código */
+          .lesson-content pre::-webkit-scrollbar {
+            height: 6px !important;
+          }
+
+          .lesson-content pre::-webkit-scrollbar-track {
+            background: #f1f5f9 !important;
+            border-radius: 3px !important;
+          }
+
+          .lesson-content pre::-webkit-scrollbar-thumb {
+            background: #cbd5e1 !important;
+            border-radius: 3px !important;
+          }
+
+          .lesson-content pre::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8 !important;
+          }
+
+          /* Indicador para bloques de código */
+          .lesson-content pre::after {
+            content: "← Desliza para ver código completo →" !important;
+            display: block !important;
+            text-align: center !important;
+            font-size: 0.65rem !important;
+            color: #64748b !important;
+            margin-top: 0.5rem !important;
+            font-style: italic !important;
+          }
+
+          /* 2. Código inline con scroll */
+          .lesson-content code {
+            max-width: 100% !important;
+            overflow-x: auto !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+            font-size: 0.7rem !important;
+            background: #f1f5f9 !important;
+            padding: 0.2rem 0.4rem !important;
+            border-radius: 4px !important;
+            display: inline-block !important;
+          }
+
+          /* 3. Elementos con ancho fijo que pueden desbordar */
+          .lesson-content div[style*="width"] {
+            max-width: 100% !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            scrollbar-width: thin !important;
+            scrollbar-color: #cbd5e1 #f1f5f9 !important;
+          }
+
+          .lesson-content div[style*="min-width"] {
+            max-width: 100% !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            scrollbar-width: thin !important;
+            scrollbar-color: #cbd5e1 #f1f5f9 !important;
+          }
+
+          /* 4. Contenedores de listas largas */
+          .lesson-content ul,
+          .lesson-content ol {
+            max-width: 100% !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            scrollbar-width: thin !important;
+            scrollbar-color: #cbd5e1 #f1f5f9 !important;
+            padding-left: 1rem !important;
+          }
+
+          /* 5. Elementos con texto largo sin espacios */
+          .lesson-content p,
+          .lesson-content div,
+          .lesson-content span,
+          .lesson-content strong,
+          .lesson-content em {
+            max-width: 100% !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+          }
+
+          /* 6. Contenedores de imágenes o elementos multimedia */
+          .lesson-content img,
+          .lesson-content video,
+          .lesson-content iframe {
+            max-width: 100% !important;
+            height: auto !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+          }
+
+          /* 7. Elementos con URLs largas o nombres de archivo extensos */
+          .lesson-content a {
+            max-width: 100% !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            display: inline-block !important;
+          }
+
+          /* 8. Contenedores de formularios o inputs */
+          .lesson-content input,
+          .lesson-content textarea,
+          .lesson-content select {
+            max-width: 100% !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+          }
+
+          /* 9. Elementos con contenido JSON o XML */
+          .lesson-content div[style*="font-family: monospace"],
+          .lesson-content div[style*="font-family: 'Courier New'"] {
+            max-width: 100% !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            scrollbar-width: thin !important;
+            scrollbar-color: #cbd5e1 #f1f5f9 !important;
+            background: #f8fafc !important;
+            border-radius: 8px !important;
+            padding: 0.75rem !important;
+            margin: 1rem 0 !important;
+            border: 1px solid #e2e8f0 !important;
+          }
+
+          /* 10. Contenedores de datos estructurados */
+          .lesson-content div[style*="display: grid"],
+          .lesson-content div[style*="display: flex"] {
+            max-width: 100% !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            scrollbar-width: thin !important;
+            scrollbar-color: #cbd5e1 #f1f5f9 !important;
+          }
+
+          /* 11. Elementos que se renderizan dinámicamente con contenido ancho */
+          .lesson-content div[style*="grid-template-columns"],
+          .lesson-content div[style*="minmax"],
+          .lesson-content div[style*="repeat"] {
+            max-width: 100% !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            scrollbar-width: thin !important;
+            scrollbar-color: #cbd5e1 #f1f5f9 !important;
+            background: #f8fafc !important;
+            border-radius: 8px !important;
+            padding: 0.5rem !important;
+            margin: 1rem 0 !important;
+          }
+
+          /* 12. Contenedores con contenido que puede desbordar */
+          .lesson-content div[style*="border"] {
+            max-width: 100% !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            scrollbar-width: thin !important;
+            scrollbar-color: #cbd5e1 #f1f5f9 !important;
+          }
+
+          /* 13. Elementos con gap que pueden causar desbordamiento */
+          .lesson-content div[style*="gap"] {
+            max-width: 100% !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            scrollbar-width: thin !important;
+            scrollbar-color: #cbd5e1 #f1f5f9 !important;
+          }
+
+          /* Scrollbar universal para todos los elementos con overflow-x */
+          .lesson-content *[style*="overflow-x: auto"]::-webkit-scrollbar {
+            height: 6px !important;
+          }
+
+          .lesson-content *[style*="overflow-x: auto"]::-webkit-scrollbar-track {
+            background: #f1f5f9 !important;
+            border-radius: 3px !important;
+          }
+
+          .lesson-content *[style*="overflow-x: auto"]::-webkit-scrollbar-thumb {
+            background: #cbd5e1 !important;
+            border-radius: 3px !important;
+          }
+
+          .lesson-content *[style*="overflow-x: auto"]::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8 !important;
+          }
+
+          /* Indicador universal para elementos con scroll */
+          .lesson-content *[style*="overflow-x: auto"]:not(pre):not(div[style*="overflow-x: auto"]):after {
+            content: "← Desliza para ver más contenido →" !important;
+            display: block !important;
+            text-align: center !important;
+            font-size: 0.65rem !important;
+            color: #64748b !important;
+            margin-top: 0.5rem !important;
+            font-style: italic !important;
+          }
+
+          /* Asegurar que el contenido de las lecciones no se desborde */
+          .lesson-content {
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow-x: hidden !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+          }
+
+          .lesson-content h2,
+          .lesson-content h3,
+          .lesson-content h4,
+          .lesson-content p,
+          .lesson-content div {
+            max-width: 100% !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+          }
+
+          /* Corregir elementos de código */
+          .lesson-content pre {
+            max-width: 100% !important;
+            overflow-x: auto !important;
+            font-size: 0.7rem !important;
+            white-space: pre-wrap !important;
+            word-wrap: break-word !important;
+          }
+
+          .lesson-content code {
+            max-width: 100% !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+            font-size: 0.7rem !important;
+          }
+
+          /* Corregir listas */
+          .lesson-content ul,
+          .lesson-content ol {
+            max-width: 100% !important;
+            padding-left: 1rem !important;
+          }
+
+          .lesson-content li {
+            max-width: 100% !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+          }
+
+          /* Corregir elementos inline */
+          .lesson-content span,
+          .lesson-content strong,
+          .lesson-content em {
+            max-width: 100% !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+          }
+
+          /* Corregir elementos con estilos inline */
+          .lesson-content div[style*="width"] {
+            max-width: 100% !important;
+            width: auto !important;
+          }
+
+          .lesson-content div[style*="min-width"] {
+            min-width: auto !important;
+          }
+
+          /* Asegurar que todos los elementos se mantengan dentro de los límites */
+          .lesson-content * {
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+          }
+
+          /* Contenedor principal de la lección */
+          .lesson-container {
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow-x: hidden !important;
+            padding: 0 0.5rem !important;
+            box-sizing: border-box !important;
           }
         }
 

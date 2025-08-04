@@ -1131,25 +1131,501 @@ export default function ContenidoVibeCodingClaudeCursorPage() {
           .content-layout {
             grid-template-columns: 1fr;
             gap: 1rem;
+            padding: 0 0.5rem;
           }
 
           .course-title {
             font-size: 1.8rem;
+            line-height: 1.3;
           }
 
           .header-main {
             flex-direction: column;
             gap: 1rem;
+            align-items: stretch;
+          }
+
+          .course-header {
+            padding: 1.5rem 0;
+          }
+
+          .course-header-content {
+            padding: 0 0.5rem;
+          }
+
+          .course-breadcrumb {
+            margin-bottom: 1.5rem;
+            font-size: 0.8rem;
+          }
+
+          .breadcrumb-container {
+            gap: 0.25rem;
+            flex-wrap: wrap;
+          }
+
+          .breadcrumb-item {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+          }
+
+          .btn-exit-course {
+            width: 100%;
+            justify-content: center;
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
+          }
+
+          .current-lesson {
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+          }
+
+          .lesson-header h2 {
+            font-size: 1.5rem;
+            line-height: 1.3;
+          }
+
+          .lesson-meta {
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: flex-start;
           }
 
           .lesson-buttons {
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.75rem;
           }
 
           .btn {
             width: 100%;
             justify-content: center;
+            padding: 0.875rem 1rem;
+            font-size: 0.9rem;
+          }
+
+          .lessons-navigation {
+            padding: 1rem;
+            position: static;
+            margin-top: 1rem;
+          }
+
+          .navigation-header h3 {
+            font-size: 1.25rem;
+          }
+
+          .progress-text {
+            font-size: 0.75rem;
+          }
+
+          .module-group {
+            padding: 0.75rem;
+          }
+
+          .module-header {
+
+          /* Corregir el tamaño del lesson-number en móviles */
+          .lesson-number {
+            width: 24px !important;
+            height: 24px !important;
+            font-size: 0.75rem !important;
+          }
+
+          .lesson-item.active .lesson-number {
+            width: 24px !important;
+            height: 24px !important;
+          }
+
+          .lesson-item.completed .lesson-number {
+            width: 24px !important;
+            height: 24px !important;
+          }
+
+          /* Asegurar que el contenido se mantenga centrado en móviles */
+          .module-lessons {
+            padding: 0.5rem !important;
+            margin: 0 !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+          }
+
+          .lesson-item {
+            width: 100% !important;
+            box-sizing: border-box !important;
+            margin: 0 !important;
+          }
+
+          .lessons-list {
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow-x: hidden !important;
+          }
+
+          .module-group {
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow-x: hidden !important;
+          }
+
+          /* Corregir tablas en móviles */
+          .lesson-content table {
+            width: 100% !important;
+            max-width: 100% !important;
+            font-size: 0.75rem !important;
+            border-collapse: collapse !important;
+          }
+
+          .lesson-content table th,
+          .lesson-content table td {
+            padding: 0.5rem !important;
+            font-size: 0.7rem !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+          }
+
+          .lesson-content table th {
+            font-size: 0.7rem !important;
+            font-weight: 600 !important;
+          }
+
+          /* Contenedor de tabla con scroll horizontal */
+          .lesson-content div[style*="overflow-x: auto"] {
+            max-width: 100% !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+          }
+
+          /* Asegurar que el contenido de las lecciones no se desborde */
+          .lesson-content {
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow-x: hidden !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+          }
+
+          .lesson-content h2,
+          .lesson-content h3,
+          .lesson-content h4,
+          .lesson-content p,
+          .lesson-content div {
+            max-width: 100% !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+          }
+
+          /* Corregir elementos de código */
+          .lesson-content pre {
+            max-width: 100% !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            scrollbar-width: thin !important;
+            scrollbar-color: #cbd5e1 #f1f5f9 !important;
+            background: #f8fafc !important;
+            border-radius: 8px !important;
+            padding: 0.75rem !important;
+            margin: 1rem 0 !important;
+            border: 1px solid #e2e8f0 !important;
+            white-space: pre-wrap !important;
+            word-wrap: break-word !important;
+            font-size: 0.7rem !important;
+          }
+
+          /* Scrollbar para bloques de código */
+          .lesson-content pre::-webkit-scrollbar {
+            height: 6px !important;
+          }
+
+          .lesson-content pre::-webkit-scrollbar-track {
+            background: #f1f5f9 !important;
+            border-radius: 3px !important;
+          }
+
+          .lesson-content pre::-webkit-scrollbar-thumb {
+            background: #cbd5e1 !important;
+            border-radius: 3px !important;
+          }
+
+          .lesson-content pre::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8 !important;
+          }
+
+          /* Indicador para bloques de código */
+          .lesson-content pre::after {
+            content: "← Desliza para ver código completo →" !important;
+            display: block !important;
+            text-align: center !important;
+            font-size: 0.65rem !important;
+            color: #64748b !important;
+            margin-top: 0.5rem !important;
+            font-style: italic !important;
+          }
+
+          .lesson-content code {
+            max-width: 100% !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+            font-size: 0.7rem !important;
+          }
+
+          /* Corregir listas */
+          .lesson-content ul,
+          .lesson-content ol {
+            max-width: 100% !important;
+            padding-left: 1rem !important;
+          }
+
+          .lesson-content li {
+            max-width: 100% !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+          }
+
+          /* Corregir elementos inline */
+          .lesson-content span,
+          .lesson-content strong,
+          .lesson-content em {
+            max-width: 100% !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+          }
+
+          /* Corregir elementos con estilos inline */
+          .lesson-content div[style*="width"] {
+            max-width: 100% !important;
+            width: auto !important;
+          }
+
+          .lesson-content div[style*="min-width"] {
+            min-width: auto !important;
+          }
+
+          /* Asegurar que todos los elementos se mantengan dentro de los límites */
+          .lesson-content * {
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+          }
+
+          /* Contenedor principal de la lección */
+          .lesson-container {
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow-x: hidden !important;
+            padding: 0 0.5rem !important;
+            box-sizing: border-box !important;
+          }
+            padding: 0.75rem;
+          }
+
+          .module-title {
+            font-size: 0.9rem;
+          }
+
+          .lesson-item {
+            padding: 0.75rem;
+            gap: 0.5rem;
+          }
+
+          .lesson-content h4 {
+            font-size: 0.85rem;
+            line-height: 1.4;
+          }
+
+          .lesson-content .lesson-meta {
+            flex-direction: row;
+            gap: 0.5rem;
+            font-size: 0.7rem;
+          }
+
+          .lesson-number {
+            width: 20px;
+            height: 20px;
+            font-size: 0.7rem;
+          }
+
+          .course-completed-message {
+            padding: 1.5rem;
+          }
+
+          .completion-text {
+            font-size: 1.25rem;
+          }
+
+          .completion-info {
+            font-size: 0.9rem;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .course-header {
+            padding: 1rem 0;
+          }
+
+          .course-title {
+            font-size: 1.5rem;
+          }
+
+          .course-header-content {
+            padding: 0 0.25rem;
+          }
+
+          .breadcrumb-container {
+            gap: 0.125rem;
+          }
+
+          .breadcrumb-item {
+            padding: 0.125rem 0.25rem;
+            font-size: 0.7rem;
+          }
+
+          .breadcrumb-separator {
+            margin: 0 0.125rem;
+            font-size: 0.7rem;
+          }
+
+          .current-lesson {
+            padding: 1rem;
+          }
+
+          .lesson-header h2 {
+            font-size: 1.25rem;
+          }
+
+          .lesson-content {
+            font-size: 0.9rem;
+          }
+
+          .lesson-content h2 {
+            font-size: 1.5rem;
+          }
+
+          .lesson-content h3 {
+            font-size: 1.25rem;
+          }
+
+          .lessons-navigation {
+            padding: 0.75rem;
+          }
+
+          .navigation-header h3 {
+            font-size: 1.125rem;
+          }
+
+          .module-group {
+            padding: 0.5rem;
+          }
+
+          .module-header {
+            padding: 0.5rem;
+          }
+
+          .module-title {
+            font-size: 0.85rem;
+          }
+
+          .lesson-item {
+            padding: 0.5rem;
+          }
+
+          .lesson-content h4 {
+            font-size: 0.8rem;
+          }
+
+          .lesson-content .lesson-meta {
+            font-size: 0.65rem;
+          }
+
+          .lesson-number {
+            width: 18px;
+            height: 18px;
+            font-size: 0.65rem;
+          }
+
+          .course-completed-message {
+            padding: 1rem;
+          }
+
+          .completion-text {
+            font-size: 1.125rem;
+          }
+
+          .completion-info {
+            font-size: 0.85rem;
+          }
+        }
+
+        @media (max-width: 375px) {
+          .course-title {
+            font-size: 1.25rem;
+          }
+
+          .current-lesson {
+            padding: 0.75rem;
+          }
+
+          .lesson-header h2 {
+            font-size: 1.125rem;
+          }
+
+          .lesson-content {
+            font-size: 0.85rem;
+          }
+
+          .lesson-content h2 {
+            font-size: 1.25rem;
+          }
+
+          .lesson-content h3 {
+            font-size: 1.125rem;
+          }
+
+          .lessons-navigation {
+            padding: 0.5rem;
+          }
+
+          .navigation-header h3 {
+            font-size: 1rem;
+          }
+
+          .module-group {
+            padding: 0.375rem;
+          }
+
+          .module-header {
+            padding: 0.375rem;
+          }
+
+          .module-title {
+            font-size: 0.8rem;
+          }
+
+          .lesson-item {
+            padding: 0.375rem;
+          }
+
+          .lesson-content h4 {
+            font-size: 0.75rem;
+          }
+
+          .lesson-content .lesson-meta {
+            font-size: 0.6rem;
+          }
+
+          .lesson-number {
+            width: 16px;
+            height: 16px;
+            font-size: 0.6rem;
+          }
+
+          .course-completed-message {
+            padding: 0.75rem;
+          }
+
+          .completion-text {
+            font-size: 1rem;
+          }
+
+          .completion-info {
+            font-size: 0.8rem;
           }
         }
       `}</style>

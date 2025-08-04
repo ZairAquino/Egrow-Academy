@@ -409,6 +409,163 @@ export default function VideoPlayer({
           cursor: pointer;
           border: none;
         }
+
+        @media (max-width: 768px) {
+          .video-container {
+            aspect-ratio: 16/9;
+            max-height: 50vh;
+          }
+          
+          .video-container iframe {
+            height: 100%;
+            min-height: 200px;
+          }
+          
+          .video-container video {
+            height: 100%;
+            min-height: 200px;
+          }
+          
+          .absolute.top-4.left-4 {
+            top: 0.5rem;
+            left: 0.5rem;
+            font-size: 0.875rem;
+          }
+          
+          .absolute.bottom-16.left-4.right-4 {
+            bottom: 3rem;
+            left: 0.5rem;
+            right: 0.5rem;
+          }
+          
+          .absolute.bottom-4.left-4.right-4 {
+            bottom: 0.5rem;
+            left: 0.5rem;
+            right: 0.5rem;
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: stretch;
+          }
+          
+          .flex.items-center.space-x-4 {
+            justify-content: space-between;
+            width: 100%;
+          }
+          
+          .flex.items-center.space-x-2 {
+            gap: 0.25rem;
+          }
+          
+          .text-white.text-sm {
+            font-size: 0.75rem;
+          }
+          
+          .w-16 {
+            width: 3rem;
+          }
+          
+          .w-8.h-8 {
+            width: 1.5rem;
+            height: 1.5rem;
+          }
+          
+          .w-4.h-4 {
+            width: 1rem;
+            height: 1rem;
+          }
+          
+          .p-4 {
+            padding: 0.75rem;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .video-container {
+            max-height: 40vh;
+          }
+          
+          .video-container iframe,
+          .video-container video {
+            min-height: 150px;
+          }
+          
+          .absolute.top-4.left-4 {
+            font-size: 0.75rem;
+            top: 0.25rem;
+            left: 0.25rem;
+          }
+          
+          .absolute.bottom-16.left-4.right-4 {
+            bottom: 2.5rem;
+            left: 0.25rem;
+            right: 0.25rem;
+          }
+          
+          .absolute.bottom-4.left-4.right-4 {
+            bottom: 0.25rem;
+            left: 0.25rem;
+            right: 0.25rem;
+          }
+          
+          .text-white.text-sm {
+            font-size: 0.7rem;
+          }
+          
+          .w-16 {
+            width: 2.5rem;
+          }
+          
+          .w-8.h-8 {
+            width: 1.25rem;
+            height: 1.25rem;
+          }
+          
+          .w-4.h-4 {
+            width: 0.875rem;
+            height: 0.875rem;
+          }
+          
+          .p-4 {
+            padding: 0.5rem;
+          }
+        }
+
+        @media (max-width: 375px) {
+          .video-container {
+            max-height: 35vh;
+          }
+          
+          .video-container iframe,
+          .video-container video {
+            min-height: 120px;
+          }
+          
+          .absolute.top-4.left-4 {
+            font-size: 0.7rem;
+          }
+          
+          .text-white.text-sm {
+            font-size: 0.65rem;
+          }
+          
+          .w-16 {
+            width: 2rem;
+          }
+          
+          .w-8.h-8 {
+            width: 1rem;
+            height: 1rem;
+          }
+          
+          .w-4.h-4 {
+            width: 0.75rem;
+            height: 0.75rem;
+          }
+          
+          .p-4 {
+            padding: 0.375rem;
+          }
+        }
       `}</style>
     </div>
   );

@@ -23,6 +23,7 @@ export default function VideosProfesionalesIAPage() {
   const [progressPercentage, setProgressPercentage] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [expandedLessons, setExpandedLessons] = useState<number[]>([]);
+  const [expandedModules, setExpandedModules] = useState<Set<number>>(new Set());
   const { user, status } = useAuth();
   const { hasPremiumAccess, isLoading: subscriptionLoading } = useSubscriptionStatus();
   const router = useRouter();
@@ -35,8 +36,19 @@ export default function VideosProfesionalesIAPage() {
     );
   };
 
+  const toggleModuleExpansion = (moduleId: number) => {
+    setExpandedModules(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(moduleId)) {
+        newSet.delete(moduleId);
+      } else {
+        newSet.add(moduleId);
+      }
+      return newSet;
+    });
+  };
+
   const goToCourseContent = () => {
-    // No permitir clic si los hooks están cargando
     if (status === 'loading' || subscriptionLoading) {
       return;
     }
@@ -49,7 +61,6 @@ export default function VideosProfesionalesIAPage() {
       return;
     }
     
-    // Si el usuario está autenticado pero no tiene acceso premium, redirigir a suscripción
     if (!hasPremiumAccess) {
       if (typeof window !== 'undefined') {
         window.location.href = '/subscription';
@@ -190,7 +201,6 @@ export default function VideosProfesionalesIAPage() {
   };
 
   const isModuleCompleted = (moduleId: number): boolean => {
-    // Simulación de verificación de módulos completados
     return completedLessons.length >= moduleId * 4;
   };
 
@@ -298,21 +308,49 @@ export default function VideosProfesionalesIAPage() {
                   <div className="lessons-list">
                     <div className="lessons-grid">
                       {courseData.lessons.map((lesson, index) => (
-                        <div key={lesson.id} className={`lesson-card ${isModuleCompleted(lesson.id) ? 'completed' : ''}`}>
-                          <div className="lesson-header">
-                            <div className="lesson-number">{index + 1}</div>
-                            <div className="lesson-status">
-                              {isModuleCompleted(lesson.id) ? '✓' : '○'}
+                        <div key={lesson.id} className="module-group">
+                          <div 
+                            className={`module-header ${isModuleCompleted(lesson.id) ? 'completed' : ''}`}
+                            onClick={() => toggleModuleExpansion(lesson.id)}
+                            style={{ cursor: 'pointer' }}
+                          >
+                            <div className="module-number">{index + 1}</div>
+                            <div className="module-title">{lesson.title}</div>
+                            <div className="module-expand-icon">
+                              {expandedModules.has(lesson.id) ? '-' : '+'}
                             </div>
                           </div>
-                          <div className="lesson-content">
-                            <h4 className="lesson-title">{lesson.title}</h4>
-                            <p className="lesson-description">{lesson.description}</p>
-                            <div className="lesson-meta">
-                              <span className="lesson-type">{lesson.type}</span>
-                              <span className="lesson-duration">{lesson.duration}min</span>
+                          
+                          {expandedModules.has(lesson.id) && (
+                            <div className="module-content">
+                              <div className="module-description">
+                                <p>{lesson.description}</p>
+                              </div>
+                              <div className="module-lessons">
+                                <div className="module-lesson-item">
+                                  <div className="lesson-meta">
+                                    <span className="lesson-type">Teoría</span>
+                                    <span className="lesson-duration">15min</span>
+                                  </div>
+                                  <p>Introducción al módulo y conceptos fundamentales</p>
+                                </div>
+                                <div className="module-lesson-item">
+                                  <div className="lesson-meta">
+                                    <span className="lesson-type">Práctica</span>
+                                    <span className="lesson-duration">20min</span>
+                                  </div>
+                                  <p>Ejercicios prácticos y casos de uso</p>
+                                </div>
+                                <div className="module-lesson-item">
+                                  <div className="lesson-meta">
+                                    <span className="lesson-type">Proyecto</span>
+                                    <span className="lesson-duration">10min</span>
+                                  </div>
+                                  <p>Proyecto final del módulo</p>
+                                </div>
+                              </div>
                             </div>
-                          </div>
+                          )}
                         </div>
                       ))}
                     </div>
@@ -639,44 +677,42 @@ export default function VideosProfesionalesIAPage() {
           margin: 0 auto;
         }
 
-        .lesson-card {
+        .module-group {
           background: white;
           border: 1px solid #e5e7eb;
           border-radius: 8px;
-          padding: 1rem;
+          overflow: hidden;
           transition: all 0.3s ease;
-          display: flex;
-          flex-direction: row;
-          gap: 1rem;
-          align-items: flex-start;
-          width: 100%;
-          min-height: 140px;
-          box-sizing: border-box;
         }
 
-        .lesson-card:hover {
+        .module-group:hover {
           border-color: #f59e0b;
           box-shadow: 0 2px 8px rgba(245, 158, 11, 0.1);
-          transform: translateY(-2px);
         }
 
-        .lesson-card.completed {
+        .module-group.completed {
           background: #fffbeb;
           border-color: #f59e0b;
         }
 
-        .lesson-card.completed:hover {
-          background: #fef3c7;
-        }
-
-        .lesson-header {
+        .module-header {
           display: flex;
-          justify-content: space-between;
           align-items: center;
-          flex-shrink: 0;
+          gap: 1rem;
+          padding: 1rem;
+          background: white;
+          transition: all 0.3s ease;
         }
 
-        .lesson-number {
+        .module-header:hover {
+          background: #f9fafb;
+        }
+
+        .module-header.completed {
+          background: #fffbeb;
+        }
+
+        .module-number {
           width: 32px;
           height: 32px;
           background: #f59e0b;
@@ -687,40 +723,65 @@ export default function VideosProfesionalesIAPage() {
           justify-content: center;
           font-weight: 600;
           font-size: 0.9rem;
+          flex-shrink: 0;
         }
 
-        .lesson-status {
-          font-size: 1.2rem;
-          font-weight: 700;
-          color: #f59e0b;
-        }
-
-        .lesson-content {
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
+        .module-title {
           flex: 1;
-        }
-
-        .lesson-title {
-          margin: 0;
-          font-size: 0.9rem;
+          font-size: 1rem;
           font-weight: 600;
           color: #1f2937;
           line-height: 1.3;
         }
 
-        .lesson-description {
-          margin: 0;
-          font-size: 0.75rem;
+        .module-expand-icon {
+          font-size: 1.2rem;
           color: #6b7280;
-          line-height: 1.4;
+          transition: transform 0.3s ease;
+        }
+
+        .module-content {
+          border-top: 1px solid #e5e7eb;
+          background: #f9fafb;
+        }
+
+        .module-description {
+          padding: 1rem;
+          border-bottom: 1px solid #e5e7eb;
+        }
+
+        .module-description p {
+          margin: 0;
+          font-size: 0.9rem;
+          color: #4b5563;
+          line-height: 1.5;
+        }
+
+        .module-lessons {
+          padding: 0;
+        }
+
+        .module-lesson-item {
+          padding: 1rem;
+          border-bottom: 1px solid #e5e7eb;
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+
+        .module-lesson-item:last-child {
+          border-bottom: none;
+        }
+
+        .module-lesson-item p {
+          margin: 0;
+          font-size: 0.9rem;
+          color: #374151;
         }
 
         .lesson-meta {
           display: flex;
           gap: 0.5rem;
-          margin-top: 0.5rem;
         }
 
         .lesson-type, .lesson-duration {
@@ -886,10 +947,6 @@ export default function VideosProfesionalesIAPage() {
             justify-items: center;
           }
 
-          .desktop-content {
-            display: none;
-          }
-
           .content-sidebar {
             display: none;
           }
@@ -912,6 +969,20 @@ export default function VideosProfesionalesIAPage() {
             border-radius: 8px;
           }
 
+          .course-content {
+            padding: 2rem 0;
+          }
+
+          .curriculum-section, .learning-objectives, .tools-section {
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+          }
+
+          .curriculum-section h2, .learning-objectives h2, .tools-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+          }
+
           .curriculum-stats {
             flex-direction: column;
             gap: 1rem;
@@ -922,61 +993,172 @@ export default function VideosProfesionalesIAPage() {
           }
 
           .lessons-grid {
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: 1fr;
             gap: 0.75rem;
-            justify-items: stretch;
-            align-items: stretch;
             width: 100%;
             max-width: 100%;
           }
 
-          .lesson-card {
+          .module-group {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-bottom: 0.75rem !important;
+          }
+
+          .module-header {
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            padding: 0.75rem !important;
+          }
+
+          .module-number {
+            width: 28px !important;
+            height: 28px !important;
+            font-size: 0.8rem !important;
+          }
+
+          .module-title {
+            font-size: 0.9rem !important;
+            line-height: 1.2 !important;
+          }
+
+          .module-expand-icon {
+            font-size: 1rem !important;
+          }
+
+          .module-content {
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            overflow-x: hidden !important;
+          }
+
+          .module-description {
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            padding: 0.75rem !important;
+          }
+
+          .module-description p {
+            max-width: 100% !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+            font-size: 0.8rem !important;
+          }
+
+          .module-lessons {
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            overflow-x: hidden !important;
+          }
+
+          .module-lesson-item {
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+            padding: 0.75rem !important;
+          }
+
+          .module-lesson-item p {
+            max-width: 100% !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+            font-size: 0.8rem !important;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .course-hero {
+            padding: 0 0.5rem;
+          }
+
+          .course-title-large {
+            font-size: 1.25rem;
+          }
+
+          .course-description {
+            font-size: 0.8rem;
+          }
+
+          .course-action-button {
+            font-size: 0.8rem;
+            padding: 0.6rem 1rem;
+          }
+
+          .course-content {
+            padding: 1.5rem 0;
+          }
+
+          .curriculum-section, .learning-objectives, .tools-section {
+            padding: 1rem;
+            margin-bottom: 1rem;
+          }
+
+          .curriculum-section h2, .learning-objectives h2, .tools-section h2 {
+            font-size: 1.25rem;
+          }
+
+          .module-header {
+            padding: 0.5rem !important;
+          }
+
+          .module-number {
+            width: 24px !important;
+            height: 24px !important;
+            font-size: 0.7rem !important;
+          }
+
+          .module-title {
+            font-size: 0.8rem !important;
+            line-height: 1.2 !important;
+          }
+
+          .module-expand-icon {
+            font-size: 0.9rem !important;
+          }
+
+          .module-description {
+            padding: 0.5rem !important;
+          }
+
+          .module-description p {
+            font-size: 0.7rem !important;
+          }
+
+          .module-lesson-item {
+            padding: 0.5rem !important;
+          }
+
+          .module-lesson-item p {
+            font-size: 0.7rem !important;
+          }
+        }
+
+        @media (max-width: 375px) {
+          .course-title-large {
+            font-size: 1.125rem;
+          }
+
+          .course-description {
+            font-size: 0.75rem;
+          }
+
+          .course-action-button {
+            font-size: 0.75rem;
+            padding: 0.5rem 0.875rem;
+          }
+
+          .curriculum-section, .learning-objectives, .tools-section {
             padding: 0.75rem;
-            gap: 0.5rem;
-            width: 100%;
-            height: 300px;
-            box-sizing: border-box;
-            flex-direction: column;
-            overflow: hidden;
-            display: flex;
           }
 
-          .lesson-number {
-            width: 28px;
-            height: 28px;
-            font-size: 0.8rem;
-          }
-
-          .lesson-status {
-            font-size: 1rem;
-          }
-
-          .lesson-title {
-            font-size: 0.8rem;
-            line-height: 1.2;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-          }
-
-          .lesson-description {
-            font-size: 0.7rem;
-            line-height: 1.3;
-            overflow: hidden;
-            display: -webkit-box;
-            -webkit-line-clamp: 5;
-            -webkit-box-orient: vertical;
-            text-overflow: ellipsis;
-          }
-
-          .lesson-meta {
-            gap: 0.4rem;
-            margin-top: 0.4rem;
-          }
-
-          .lesson-type, .lesson-duration {
-            font-size: 0.6rem;
-            padding: 0.15rem 0.3rem;
+          .curriculum-section h2, .learning-objectives h2, .tools-section h2 {
+            font-size: 1.125rem;
           }
         }
       `}</style>
