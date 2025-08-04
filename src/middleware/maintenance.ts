@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import * as fs from 'fs'
-import * as path from 'path'
 
 interface MaintenanceConfig {
   enabled: boolean
@@ -12,28 +10,19 @@ interface MaintenanceConfig {
 }
 
 export function checkMaintenanceMode(request: NextRequest): NextResponse | null {
-  // Solo en producción
-  if (process.env.NODE_ENV !== 'production') {
+  // Verificar si modo mantenimiento está activo via variable de entorno
+  if (!process.env.MAINTENANCE_MODE) {
     return null
   }
 
-  const flagPath = path.join(process.cwd(), '.maintenance-flag')
-  const configPath = path.join(process.cwd(), '.maintenance.json')
-
-  // Verificar si modo mantenimiento está activo
-  if (!fs.existsSync(flagPath)) {
-    return null
-  }
-
-  // Leer configuración
-  let config: MaintenanceConfig = { enabled: true }
-  if (fs.existsSync(configPath)) {
-    try {
-      const configContent = fs.readFileSync(configPath, 'utf-8')
-      config = JSON.parse(configContent)
-    } catch (error) {
-      console.error('Error leyendo configuración de mantenimiento:', error)
-    }
+  // Leer configuración desde variables de entorno
+  let config: MaintenanceConfig = { 
+    enabled: process.env.MAINTENANCE_MODE === 'true',
+    startTime: process.env.MAINTENANCE_START_TIME,
+    estimatedDuration: process.env.MAINTENANCE_DURATION,
+    reason: process.env.MAINTENANCE_REASON,
+    allowedIPs: process.env.MAINTENANCE_ALLOWED_IPS?.split(','),
+    bypassKey: process.env.MAINTENANCE_BYPASS_KEY
   }
 
   // Verificar bypass key en query params
@@ -74,22 +63,16 @@ export function checkMaintenanceMode(request: NextRequest): NextResponse | null 
 }
 
 export function getMaintenanceInfo(): MaintenanceConfig | null {
-  const flagPath = path.join(process.cwd(), '.maintenance-flag')
-  const configPath = path.join(process.cwd(), '.maintenance.json')
-
-  if (!fs.existsSync(flagPath)) {
+  if (!process.env.MAINTENANCE_MODE || process.env.MAINTENANCE_MODE !== 'true') {
     return null
   }
 
-  if (!fs.existsSync(configPath)) {
-    return { enabled: true }
-  }
-
-  try {
-    const configContent = fs.readFileSync(configPath, 'utf-8')
-    return JSON.parse(configContent)
-  } catch (error) {
-    console.error('Error leyendo configuración de mantenimiento:', error)
-    return { enabled: true }
+  return {
+    enabled: true,
+    startTime: process.env.MAINTENANCE_START_TIME,
+    estimatedDuration: process.env.MAINTENANCE_DURATION,
+    reason: process.env.MAINTENANCE_REASON,
+    allowedIPs: process.env.MAINTENANCE_ALLOWED_IPS?.split(','),
+    bypassKey: process.env.MAINTENANCE_BYPASS_KEY
   }
 }
