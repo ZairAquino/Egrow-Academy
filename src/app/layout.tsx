@@ -12,8 +12,10 @@ import Analytics from "@/components/seo/Analytics";
 import PromotionBannerWrapper from "@/components/PromotionBannerWrapper";
 import ConversionTracker from "@/components/analytics/ConversionTracker";
 import { initializeGA4 } from "@/lib/analytics";
+import { initializeSocialTracking } from "@/lib/social-tracking";
 import { NotificationSystem } from '@/components/ui/NotificationSystem';
 import BehaviorTrackingWrapper from '@/components/BehaviorTrackingWrapper';
+import SocialTrackingWrapper from '@/components/social/SocialTrackingWrapper';
 import StreakNotifications from '@/components/notifications/StreakNotifications';
 import StreakSynchronizer from '@/components/streaks/StreakSynchronizer';
 import StreakSystemInitializer from '@/components/streaks/StreakSystemInitializer';
@@ -104,7 +106,9 @@ export default function RootLayout({
         <Providers>
           <NotificationSystem>
             <BehaviorTrackingWrapper>
-              {children}
+              <SocialTrackingWrapper>
+                {children}
+              </SocialTrackingWrapper>
             </BehaviorTrackingWrapper>
           </NotificationSystem>
           

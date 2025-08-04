@@ -69,7 +69,9 @@
       "Bash(rg:*)",
       "Bash(del \"C:\\Users\\think\\Egrow-Academy\\temp-lessons.txt\")",
       "Bash(del temp-check.ts)",
-      "Bash(del check-resource-categories.js check-raw-categories.js)"
+      "Bash(del check-resource-categories.js check-raw-categories.js)",
+      "Bash(del test-db-connection.js)",
+      "Bash(del test-streaks-production.js)"
     ],
     "deny": []
   }
