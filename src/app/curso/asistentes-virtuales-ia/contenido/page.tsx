@@ -1738,11 +1738,8 @@ export default function ContenidoAsistentesVirtualesIAPage() {
   };
 
   const isLessonAccessible = (lessonIndex: number) => {
-    // Si está inscrito, puede acceder a todas las lecciones libremente
-    if (isEnrolled) return true;
-    
-    // Si no está inscrito, solo puede acceder a la primera lección
-    return lessonIndex === 0;
+    // Permitir navegación libre: todas las lecciones son siempre accesibles
+    return true;
   };
 
   const isCourseCompleted = () => {

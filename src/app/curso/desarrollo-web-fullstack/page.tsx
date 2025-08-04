@@ -113,7 +113,7 @@ export default function DesarrolloWebFullStackPage() {
     category: 'Desarrollo Web',
     price: 'Premium',
     language: 'Español',
-    image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&h=400&fit=crop&crop=center',
+    image: '/images/16.png',
     instructor: {
       name: 'Carlos Mendoza',
       title: 'Full Stack Developer - eGrow Academy',

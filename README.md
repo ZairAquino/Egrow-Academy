@@ -31,7 +31,8 @@ Egrow-Academy/
 │   ├── api/                 # Documentación de APIs
 │   ├── features/            # Documentación de características
 │   ├── readme/              # Documentación técnica
-│   └── CLEANUP-LOG.md       # Registro de limpieza
+│   ├── CLEANUP-LOG.md       # Registro de limpieza
+│   └── CLEANUP-REPORT.md    # Reporte de limpieza (2025-08-02)
 ├── node_modules/            # Dependencias
 ├── prisma/                  # Base de datos
 │   ├── migrations/          # Migraciones de BD
@@ -363,6 +364,40 @@ TTL: Automatic
 ```
 
 ### **3. Verificar el CNAME existente:**
+## 🧹 Mantenimiento y Limpieza
+
+### Última Limpieza: 2 de Agosto de 2025
+
+**Archivos eliminados:**
+- Scripts de test con credenciales expuestas (CRÍTICO)
+- Archivos de debug temporal  
+- Tests obsoletos no utilizados
+- Logs temporales
+
+**Ver reporte completo:** [CLEANUP-REPORT.md](./CLEANUP-REPORT.md)
+
+### Scripts de Mantenimiento
+```bash
+# Backup completo del sistema
+npm run tsx scripts/backup-database.ts
+
+# Verificar estado del sistema
+npm run tsx scripts/verify-payment-system.ts
+
+# Verificar configuración de Stripe
+npm run tsx scripts/verify-stripe-config.ts
+```
+
+### Recomendaciones de Mantenimiento
+1. **Limpieza mensual** de archivos temporales y logs
+2. **Backup semanal** de base de datos
+3. **Revisión trimestral** de scripts no utilizados
+4. **Auditoría semestral** de seguridad
+
+---
+
+## 🌐 Configuración de Dominio
+
 - **Mantén** el CNAME que ya tienes:
   - Tipo: "CNAME Record"
   - Host: "www"

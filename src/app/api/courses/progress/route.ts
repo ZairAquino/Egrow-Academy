@@ -173,7 +173,15 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(response);
 
   } catch (error) {
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('❌ [API-GET] Error loading course progress:', error);
+    console.error('❌ [API-GET] Error details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined
+    });
+    return NextResponse.json({ 
+      error: 'Internal server error',
+      details: process.env.NODE_ENV === 'development' ? error instanceof Error ? error.message : 'Unknown error' : undefined
+    }, { status: 500 });
   }
 }
 
@@ -357,49 +365,68 @@ export async function POST(request: NextRequest) {
 
     // Si se proporciona información de lección específica, actualizar o crear
     if (lessonNumber !== undefined && lessonTitle) {
-      // ✅ OPTIMIZADO: Upsert para lessonProgress
-      await prisma.lessonProgress.upsert({
-        where: {
-          courseProgressId_lessonNumber: {
-            courseProgressId: progress.id,
-            lessonNumber: lessonNumber
-          }
-        },
-        update: {
-          isCompleted: action === 'complete' ? true : undefined,
-          completedAt: action === 'complete' ? new Date() : undefined,
-          timeSpent: {
-            increment: timeSpent || 0
-          },
-          lastAccessed: new Date(),
-          accessCount: {
-            increment: 1
-          },
-          completionAttempts: action === 'complete' ? {
-            increment: 1
-          } : undefined
-        },
-        create: {
-          courseProgressId: progress.id,
-          lessonNumber: lessonNumber,
-          lessonTitle: lessonTitle,
-          isCompleted: action === 'complete',
-          completedAt: action === 'complete' ? new Date() : null,
-          timeSpent: timeSpent || 0,
-          accessCount: 1,
-          completionAttempts: action === 'complete' ? 1 : 0
-        }
-      });
+      console.log(`📝 [API] Procesando lección: ${lessonNumber} - ${lessonTitle}`);
 
-      // 🏆 NUEVO: Registrar lección completada en el sistema de rachas
-      if (action === 'complete') {
-        try {
-          console.log(`🏆 [RACHAS] Registrando lección completada: ${lessonTitle} por usuario ${userId}`);
-          await recordLessonCompletion(userId, actualCourseId, lessonNumber, lessonTitle);
-        } catch (streakError) {
-          // No fallar toda la operación si hay error en rachas
-          console.error('⚠️ [RACHAS] Error registrando lección en sistema de rachas:', streakError);
+      // Determinar si lessonNumber es un ID (string) o un número
+      const isLessonId = typeof lessonNumber === 'string' && lessonNumber.length > 10;
+      
+      if (isLessonId) {
+        // Es un ID real de la base de datos, usar un número basado en el índice
+        // Para el sistema de racha, usamos el índice + 1 como número de lección
+        const lessonIndex = progress.currentLesson;
+        const lessonNumberForStreak = lessonIndex + 1;
+        
+        console.log(`🆔 [API] ID de lección detectado: ${lessonNumber}, usando número: ${lessonNumberForStreak}`);
+        
+        // Para el sistema de racha, usar el número de lección
+        console.log(`🆔 [API] ID de lección detectado: ${lessonNumber}, usando número: ${lessonNumberForStreak}`);
+      } else {
+        // Es un número tradicional, usar directamente
+        const lessonNumberInt = typeof lessonNumber === 'number' ? lessonNumber : parseInt(lessonNumber);
+        
+        if (isNaN(lessonNumberInt)) {
+          console.error('❌ [API] lessonNumber inválido:', lessonNumber);
+          return NextResponse.json({ 
+            error: 'Invalid lesson number',
+            details: `lessonNumber debe ser un número válido, recibido: ${lessonNumber}`
+          }, { status: 400 });
         }
+
+        console.log(`📝 [API] Número de lección tradicional: ${lessonNumberInt}`);
+
+        // ✅ OPTIMIZADO: Upsert para lessonProgress
+        await prisma.lessonProgress.upsert({
+          where: {
+            courseProgressId_lessonNumber: {
+              courseProgressId: progress.id,
+              lessonNumber: lessonNumberInt
+            }
+          },
+          update: {
+            isCompleted: action === 'complete' ? true : undefined,
+            completedAt: action === 'complete' ? new Date() : undefined,
+            timeSpent: {
+              increment: timeSpent || 0
+            },
+            lastAccessed: new Date(),
+            accessCount: {
+              increment: 1
+            },
+            completionAttempts: action === 'complete' ? {
+              increment: 1
+            } : undefined
+          },
+          create: {
+            courseProgressId: progress.id,
+            lessonNumber: lessonNumberInt,
+            lessonTitle: lessonTitle,
+            isCompleted: action === 'complete',
+            completedAt: action === 'complete' ? new Date() : null,
+            timeSpent: timeSpent || 0,
+            accessCount: 1,
+            completionAttempts: action === 'complete' ? 1 : 0
+          }
+        });
       }
     }
 
@@ -409,6 +436,7 @@ export async function POST(request: NextRequest) {
       data: { progressPercentage: newProgressPercentage }
     });
 
+    // Crear la respuesta
     const response = NextResponse.json({
       success: true,
       progress: {
@@ -422,6 +450,54 @@ export async function POST(request: NextRequest) {
       lessonCompleted: action === 'complete'
     });
 
+    // 🏆 NUEVO: Registrar lección completada en el sistema de rachas
+    if (action === 'complete') {
+      try {
+        // Determinar el número de lección para el sistema de racha
+        let lessonNumberForStreak: number;
+        
+        if (typeof lessonNumber === 'string' && lessonNumber.length > 10) {
+          // Es un ID real, usar el índice actual + 1
+          lessonNumberForStreak = progress.currentLesson + 1;
+        } else {
+          // Es un número tradicional
+          lessonNumberForStreak = typeof lessonNumber === 'number' ? lessonNumber : parseInt(lessonNumber);
+        }
+        
+        console.log(`🏆 [RACHAS] Registrando lección completada: ${lessonTitle} por usuario ${userId}`);
+        console.log(`🏆 [RACHAS] Parámetros: userId=${userId}, courseId=${actualCourseId}, lessonNumber=${lessonNumberForStreak}, lessonTitle=${lessonTitle}`);
+        
+        // Verificar que todos los parámetros necesarios estén presentes
+        if (!userId || !actualCourseId || !lessonNumberForStreak || !lessonTitle) {
+          console.error('⚠️ [RACHAS] Parámetros faltantes:', { userId, actualCourseId, lessonNumber: lessonNumberForStreak, lessonTitle });
+          throw new Error('Parámetros faltantes para registrar lección');
+        }
+        
+        const streakResult = await recordLessonCompletion(userId, actualCourseId, lessonNumberForStreak, lessonTitle);
+        console.log(`✅ [RACHAS] Lección registrada exitosamente:`, streakResult);
+        
+        // Agregar información de racha a la respuesta
+        response.headers.set('X-Streak-Updated', 'true');
+        response.headers.set('X-Week-Progress', streakResult.weekProgress);
+        response.headers.set('X-Goal-Met', streakResult.goalMet.toString());
+        
+      } catch (streakError) {
+        // No fallar toda la operación si hay error en rachas
+        console.error('⚠️ [RACHAS] Error registrando lección en sistema de rachas:', streakError);
+        console.error('⚠️ [RACHAS] Error details:', {
+          message: streakError instanceof Error ? streakError.message : 'Unknown error',
+          stack: streakError instanceof Error ? streakError.stack : undefined,
+          userId,
+          courseId: actualCourseId,
+          lessonNumber,
+          lessonTitle
+        });
+        
+        // Agregar header para indicar error en rachas
+        response.headers.set('X-Streak-Error', 'true');
+      }
+    }
+
     // Agregar header para que el cliente sepa que debe actualizar rachas
     if (action === 'complete') {
       response.headers.set('X-Lesson-Completed', 'true');
@@ -430,7 +506,14 @@ export async function POST(request: NextRequest) {
     return response;
 
   } catch (error) {
-    console.error('Error saving course progress:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('❌ [API] Error saving course progress:', error);
+    console.error('❌ [API] Error details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined
+    });
+    return NextResponse.json({ 
+      error: 'Internal server error',
+      details: process.env.NODE_ENV === 'development' ? error instanceof Error ? error.message : 'Unknown error' : undefined
+    }, { status: 500 });
   }
 } 

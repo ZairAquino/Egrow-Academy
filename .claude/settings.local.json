@@ -64,7 +64,12 @@
       "Bash(.scriptsfix-prisma-client.bat)",
       "Bash(timeout 10 npm run dev)",
       "Bash(xcopy:*)",
-      "Bash(robocopy:*)"
+      "Bash(robocopy:*)",
+      "Bash(del scriptsupdate-course-lesson-count.ts)",
+      "Bash(rg:*)",
+      "Bash(del \"C:\\Users\\think\\Egrow-Academy\\temp-lessons.txt\")",
+      "Bash(del temp-check.ts)",
+      "Bash(del check-resource-categories.js check-raw-categories.js)"
     ],
     "deny": []
   }

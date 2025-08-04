@@ -18,6 +18,30 @@ export default function VideoPlayer({
   onComplete,
   className = ''
 }: VideoPlayerProps) {
+  // Validar que videoUrl sea válido
+  if (!videoUrl || typeof videoUrl !== 'string') {
+    return (
+      <div className={`video-container error-container ${className}`}>
+        <div className="error-message">
+          <p>Error: URL de video no válida</p>
+        </div>
+        <style jsx>{`
+          .error-container {
+            padding: 2rem;
+            background: #f3f4f6;
+            border-radius: 12px;
+            text-align: center;
+            color: #6b7280;
+          }
+          .error-message p {
+            margin: 0;
+            font-size: 1rem;
+          }
+        `}</style>
+      </div>
+    );
+  }
+
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -32,6 +56,7 @@ export default function VideoPlayer({
 
   // Detectar si es una URL de YouTube
   const isYouTubeUrl = (url: string) => {
+    if (!url || typeof url !== 'string') return false;
     return url.includes('youtube.com') || url.includes('youtu.be');
   };
 

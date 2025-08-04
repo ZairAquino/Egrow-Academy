@@ -38,10 +38,10 @@ interface Course {
 
 // Categorías disponibles
 const categories = [
-  { id: 'all', name: 'Todos los Cursos', icon: '📚', count: 3 },
+  { id: 'all', name: 'Todos los Cursos', icon: '📚', count: 4 },
   { id: 'IA_PARA_EMPRENDER', name: 'IA para Emprender', icon: '🚀', count: 2 },
-  { id: 'DESARROLLO_WEB', name: 'Desarrollo Web', icon: '💻', count: 1 },
-  { id: 'MARKETING_DIGITAL', name: 'Marketing Digital', icon: '📈', count: 0 },
+  { id: 'DESARROLLO_WEB', name: 'Desarrollo Web', icon: '💻', count: 2 },
+  { id: 'MARKETING_DIGITAL', name: 'Marketing Digital', icon: '📈', count: 1 },
   { id: 'PRODUCTIVIDAD', name: 'Productividad', icon: '⚡', count: 0 },
   { id: 'FINANZAS_PERSONALES', name: 'Finanzas Personales', icon: '💰', count: 0 },
   { id: 'LIDERAZGO', name: 'Liderazgo', icon: '👑', count: 0 },
@@ -149,7 +149,7 @@ export default function CoursesContent() {
         duration: '4 horas',
         level: 'Intermedio',
         price: 'Gratis',
-        image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=250&fit=crop&crop=center',
+        image: '/images/18.png',
         tag: 'Gratis',
         isFree: true,
         requiresAuth: false,
@@ -163,12 +163,42 @@ export default function CoursesContent() {
         duration: '25 horas',
         level: 'Intermedio',
         price: 'Premium',
-        image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=250&fit=crop&crop=center',
+        image: '/images/16.png',
         tag: 'Premium',
         isFree: false,
         requiresAuth: true,
         priceId: 'price_web_dev_fullstack',
         link: '/curso/desarrollo-web-fullstack'
+      },
+      {
+        id: 'vibe-coding-claude-cursor',
+        title: 'Vibe coding con Claude code y Cursor',
+        description: 'Domina el desarrollo de código con inteligencia artificial. Aprende a usar Claude Code y Cursor para acelerar tu productividad como desarrollador y crear código más eficiente.',
+        category: 'DESARROLLO_WEB',
+        duration: '20 horas',
+        level: 'Intermedio',
+        price: 'Premium',
+        image: '/images/17.png',
+        tag: 'Premium',
+        isFree: false,
+        requiresAuth: true,
+        priceId: 'price_vibe_coding_claude',
+        link: '/curso/vibe-coding-claude-cursor'
+      },
+      {
+        id: 'videos-profesionales-ia',
+        title: 'Aprende a crear videos profesionales con IA',
+        description: 'Domina las herramientas de IA para crear contenido audiovisual profesional. Aprende a generar videos, editar con inteligencia artificial y optimizar para diferentes plataformas.',
+        category: 'MARKETING_DIGITAL',
+        duration: '18 horas',
+        level: 'Intermedio',
+        price: 'Premium',
+        image: '/images/15.png',
+        tag: 'Premium',
+        isFree: false,
+        requiresAuth: true,
+        priceId: 'price_videos_profesionales_ia',
+        link: '/curso/videos-profesionales-ia'
       }
     ];
 

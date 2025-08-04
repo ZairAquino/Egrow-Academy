@@ -7,17 +7,16 @@ const nextConfig: NextConfig = {
   // Optimizaciones para desarrollo más rápido
   experimental: {
     optimizePackageImports: ['@next/font'],
-  },
-  
-  // Configuración de Turbopack (estable)
-  turbopack: {
-    rules: {
-      '*.svg': {
-        loaders: ['@svgr/webpack'],
-        as: '*.js',
+    turbo: {
+      rules: {
+        '*.svg': {
+          loaders: ['@svgr/webpack'],
+          as: '*.js',
+        },
       },
     },
   },
+  
   
   // Configuración de imágenes optimizada
   images: {

@@ -630,11 +630,8 @@ Estrategias para aumentar RPH:
   };
 
   const isLessonAccessible = (lessonIndex: number) => {
-    // Si está inscrito, puede acceder a todas las lecciones
-    if (isEnrolled) return true;
-    
-    // Si no está inscrito, solo puede acceder a la primera lección
-    return lessonIndex === 0;
+    // Permitir navegación libre: todas las lecciones son siempre accesibles
+    return true;
   };
 
   const isCourseCompleted = () => {
@@ -650,10 +647,8 @@ Estrategias para aumentar RPH:
       return '✅';
     } else if (lessonIndex === progress.currentLesson) {
       return '▶️';
-    } else if (isLessonAccessible(lessonIndex)) {
-      return '📖';
     } else {
-      return '🔒';
+      return '📖';
     }
   };
 

@@ -19,18 +19,21 @@ interface CourseCardProps {
   isFree: boolean;
   requiresAuth: boolean;
   link?: string;
+  priceId?: string;
+  isAuthenticated?: boolean;
   onCourseClick?: (courseId: string) => void;
 }
 
 export default function CourseCard({
-  id, image, title, description, tag, duration, level, category, isFree, requiresAuth, link, onCourseClick
+  id, image, title, description, tag, duration, level, category, isFree, requiresAuth, link, priceId, isAuthenticated, onCourseClick
 }: CourseCardProps) {
   const {
     handleCourseAccess,
     showSubscriptionModal,
     closeSubscriptionModal,
     getAccessMessage,
-    getAccessBadgeColor
+    getAccessBadgeColor,
+    canAccessCourse
   } = useCourseAccess();
 
   const { trackCourseView, trackCTAClick } = useAnalytics();
@@ -92,7 +95,7 @@ export default function CourseCard({
           {description}
         </p>
         <div className="course-link">
-          Ver Curso →
+          Iniciar curso →
         </div>
       </div>
     </>

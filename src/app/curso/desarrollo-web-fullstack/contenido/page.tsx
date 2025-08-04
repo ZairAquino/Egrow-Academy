@@ -502,11 +502,8 @@ function Counter() {
   };
 
   const isLessonAccessible = (lessonIndex: number) => {
-    // Si está inscrito, puede acceder a todas las lecciones
-    if (isEnrolled) return true;
-    
-    // Si no está inscrito, solo puede acceder a la primera lección
-    return lessonIndex === 0;
+    // Permitir navegación libre: todas las lecciones son siempre accesibles
+    return true;
   };
 
   const isCourseCompleted = () => {
@@ -522,10 +519,8 @@ function Counter() {
       return '✅';
     } else if (lessonIndex === currentLessonIndex) {
       return '▶️';
-    } else if (isLessonAccessible(lessonIndex)) {
-      return '📖';
     } else {
-      return '🔒';
+      return '📖';
     }
   };
 
@@ -710,7 +705,7 @@ function Counter() {
                     {courseData.lessons.map((lesson, index) => (
                       <div 
                         key={lesson.id} 
-                        className={`lesson-item ${index === currentLessonIndex ? 'active' : ''} ${isLessonCompleted(lesson.id) ? 'completed' : ''} ${!isLessonAccessible(index) ? 'locked' : ''}`}
+                        className={`lesson-item ${index === currentLessonIndex ? 'active' : ''} ${isLessonCompleted(lesson.id) ? 'completed' : ''}`}
                         onClick={() => {
                           if (isLessonAccessible(index)) {
                             handleManualLessonChange(index);
@@ -1057,10 +1052,6 @@ function Counter() {
           border-color: #0ea5e9;
         }
 
-        .lesson-item.locked {
-          opacity: 0.5;
-          cursor: not-allowed;
-        }
 
         .lesson-number {
           width: 32px;

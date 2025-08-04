@@ -1,262 +1,263 @@
 'use client';
 
-import { useStreaks, getBadgeEmoji, getStreakEmoji } from '@/hooks/useStreaks';
+import { useState, useEffect } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 
-interface StreakDisplayProps {
-  compact?: boolean;
+interface StreakStats {
+  currentWeekLessons: number;
+  weekProgress: string;
+  currentStreak: number;
+  longestStreak: number;
+  totalPoints: number;
+  goalMet: boolean;
+  badges: Array<{
+    id: string;
+    badgeLevel: string;
+    earnedAt: string;
+    streakWhenEarned: number;
+  }>;
+  currentBadge: {
+    id: string;
+    badgeLevel: string;
+    earnedAt: string;
+    streakWhenEarned: number;
+  } | null;
+  recoveryCost: number;
+  canRecover: boolean;
 }
 
-export default function StreakDisplay({ compact = false }: StreakDisplayProps) {
-  const { stats, loading, error } = useStreaks();
+export default function StreakDisplay() {
+  const { isAuthenticated } = useAuth();
+  const [stats, setStats] = useState<StreakStats | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
 
-  // No mostrar nada si hay error o no hay datos
-  if (error || loading || !stats) {
+  const fetchStreakStats = async () => {
+    if (!isAuthenticated) return;
+    
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const token = localStorage.getItem('authToken');
+      const response = await fetch('/api/streaks', {
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` })
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setStats(data.data);
+        setLastUpdate(new Date());
+        console.log('✅ [STREAKS] Estadísticas actualizadas:', data.data);
+      } else {
+        console.error('❌ [STREAKS] Error fetching stats:', response.status);
+        setError('Error al cargar estadísticas');
+      }
+    } catch (err) {
+      console.error('❌ [STREAKS] Error:', err);
+      setError('Error de conexión');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Cargar estadísticas al montar el componente
+  useEffect(() => {
+    fetchStreakStats();
+  }, [isAuthenticated]);
+
+  // Auto-refresh cada 30 segundos
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    
+    const interval = setInterval(() => {
+      fetchStreakStats();
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, [isAuthenticated]);
+
+  // Escuchar eventos de lección completada
+  useEffect(() => {
+    const handleLessonCompleted = () => {
+      console.log('🏆 [STREAKS] Lección completada detectada, actualizando...');
+      setTimeout(() => {
+        fetchStreakStats();
+      }, 2000); // Esperar 2 segundos para que se procese en el backend
+    };
+
+    // Múltiples métodos para detectar lección completada
+    window.addEventListener('lessonCompleted', handleLessonCompleted);
+    
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'lessonCompleted') {
+        handleLessonCompleted();
+      }
+    };
+    window.addEventListener('storage', handleStorageChange);
+
+    // Función global para trigger manual
+    (window as any).refreshStreaks = fetchStreakStats;
+
+    return () => {
+      window.removeEventListener('lessonCompleted', handleLessonCompleted);
+      window.removeEventListener('storage', handleStorageChange);
+      delete (window as any).refreshStreaks;
+    };
+  }, []);
+
+  if (!isAuthenticated) {
     return null;
   }
 
-  if (compact) {
-    // Versión compacta para el dropdown
+  if (loading && !stats) {
     return (
-      <div className="streak-display-compact">
-        <div className="streak-progress">
-          <div className="streak-header">
-            <span className="streak-emoji">{getStreakEmoji(stats.currentStreak)}</span>
-            <span className="streak-text">Lecciones: {stats.weekProgress}</span>
-          </div>
-          {stats.currentStreak > 0 && (
-            <div className="streak-info">
-              <span className="streak-count">Racha: {stats.currentStreak} semana{stats.currentStreak !== 1 ? 's' : ''}</span>
-              {stats.currentBadge && (
-                <span className="streak-badge">
-                  {getBadgeEmoji(stats.currentBadge.badgeLevel)}
-                </span>
-              )}
-            </div>
-          )}
-        </div>
-        
-        {stats.totalPoints > 0 && (
-          <div className="streak-points">
-            <span className="points-text">💎 {stats.totalPoints} puntos</span>
-          </div>
-        )}
-        
-        {/* Barra de progreso visual */}
-        <div className="progress-bar">
-          <div 
-            className={`progress-fill ${stats.goalMet ? 'completed' : ''}`}
-            style={{ 
-              width: `${Math.min((stats.currentWeekLessons / 5) * 100, 100)}%` 
-            }}
-          />
-        </div>
+      <div className="streak-display-loading">
+        <div className="animate-pulse bg-gray-200 h-4 w-32 rounded"></div>
       </div>
     );
   }
 
-  // Versión expandida (para usar en otras partes si es necesario)
-  return (
-    <div className="streak-display-full">
-      <div className="streak-header">
-        <h3>📊 Tu Progreso Semanal</h3>
+  if (error) {
+    return (
+      <div className="streak-display-error">
+        <button 
+          onClick={fetchStreakStats}
+          className="text-red-500 hover:text-red-700 text-sm"
+        >
+          Error: {error} - Reintentar
+        </button>
       </div>
-      
-      <div className="streak-stats">
-        <div className="stat-main">
-          <span className="stat-emoji">{getStreakEmoji(stats.currentStreak)}</span>
-          <div className="stat-content">
-            <div className="stat-primary">Lecciones: {stats.weekProgress}</div>
-            {stats.currentStreak > 0 && (
-              <div className="stat-secondary">
-                Racha: {stats.currentStreak} semana{stats.currentStreak !== 1 ? 's' : ''}
-              </div>
-            )}
-          </div>
+    );
+  }
+
+  if (!stats) {
+    return (
+      <div className="streak-display-empty">
+        <div className="text-gray-500 text-sm">Cargando rachas...</div>
+      </div>
+    );
+  }
+
+  const getStreakEmoji = (streak: number): string => {
+    if (streak >= 52) return '🚀'; // 1 año
+    if (streak >= 24) return '👑'; // 6 meses
+    if (streak >= 12) return '⚡'; // 3 meses
+    if (streak >= 8) return '🔥';  // 2 meses
+    if (streak >= 4) return '🎯';  // 1 mes
+    if (streak >= 2) return '📚';  // 2 semanas
+    if (streak >= 1) return '🌱';  // 1 semana
+    return '💤'; // Sin racha
+  };
+
+  const getBadgeEmoji = (level: string): string => {
+    const emojiMap: { [key: string]: string } = {
+      PRINCIPIANTE: '🌱',
+      ESTUDIANTE: '📚',
+      DEDICADO: '🎯',
+      EN_LLAMAS: '🔥',
+      IMPARABLE: '⚡',
+      MAESTRO: '👑',
+      LEYENDA: '🚀'
+    };
+    return emojiMap[level] || '🏆';
+  };
+
+  return (
+    <div className="streak-display bg-white rounded-lg shadow-md p-4 border border-gray-200">
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="text-lg font-semibold text-gray-800 flex items-center">
+          <span className="mr-2">🏆</span>
+          Sistema de Rachas
+        </h3>
+        <button 
+          onClick={fetchStreakStats}
+          className="text-blue-500 hover:text-blue-700 text-sm"
+          title="Actualizar"
+        >
+          🔄
+        </button>
+      </div>
+
+      {/* Progreso Semanal */}
+      <div className="mb-4">
+        <div className="flex justify-between items-center mb-2">
+          <span className="text-sm font-medium text-gray-700">Progreso Semanal</span>
+          <span className="text-sm text-gray-500">{stats.weekProgress}</span>
         </div>
-        
-        {stats.currentBadge && (
-          <div className="badge-display">
-            <span className="badge-emoji">{getBadgeEmoji(stats.currentBadge.badgeLevel)}</span>
-            <span className="badge-name">{stats.currentBadge.badgeLevel}</span>
+        <div className="w-full bg-gray-200 rounded-full h-2">
+          <div 
+            className={`h-2 rounded-full transition-all duration-300 ${
+              stats.goalMet ? 'bg-green-500' : 'bg-blue-500'
+            }`}
+            style={{ width: `${Math.min((stats.currentWeekLessons / 5) * 100, 100)}%` }}
+          ></div>
+        </div>
+        <div className="flex justify-between text-xs text-gray-500 mt-1">
+          <span>0</span>
+          <span>5 lecciones</span>
+        </div>
+      </div>
+
+      {/* Racha Actual */}
+      <div className="mb-4">
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-medium text-gray-700">Racha Actual</span>
+          <span className="text-lg font-bold text-blue-600 flex items-center">
+            {getStreakEmoji(stats.currentStreak)} {stats.currentStreak} {stats.currentStreak === 1 ? 'semana' : 'semanas'}
+          </span>
+        </div>
+        {stats.currentStreak > 0 && (
+          <div className="text-xs text-green-600 mt-1">
+            ¡Excelente! Mantén tu racha
           </div>
         )}
       </div>
-      
-      {stats.totalPoints > 0 && (
-        <div className="points-display">
-          💎 {stats.totalPoints} puntos disponibles
+
+      {/* Badge Actual */}
+      {stats.currentBadge && (
+        <div className="mb-4 p-3 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg border border-yellow-200">
+          <div className="flex items-center">
+            <span className="text-2xl mr-2">{getBadgeEmoji(stats.currentBadge.badgeLevel)}</span>
+            <div>
+              <div className="font-medium text-gray-800">{stats.currentBadge.badgeLevel}</div>
+              <div className="text-xs text-gray-500">
+                Ganado con {stats.currentBadge.streakWhenEarned} semanas
+              </div>
+            </div>
+          </div>
         </div>
+      )}
+
+      {/* Puntos */}
+      <div className="mb-4">
+        <div className="flex justify-between items-center">
+          <span className="text-sm font-medium text-gray-700">Puntos Totales</span>
+          <span className="text-lg font-bold text-purple-600">⭐ {stats.totalPoints}</span>
+        </div>
+      </div>
+
+      {/* Información de Debug */}
+      {process.env.NODE_ENV === 'development' && (
+        <div className="mt-4 p-2 bg-gray-100 rounded text-xs text-gray-600">
+          <div>Debug Info:</div>
+          <div>• Última actualización: {lastUpdate?.toLocaleTimeString()}</div>
+          <div>• Lecciones esta semana: {stats.currentWeekLessons}</div>
+          <div>• Racha más larga: {stats.longestStreak}</div>
+          <div>• Meta cumplida: {stats.goalMet ? 'Sí' : 'No'}</div>
+        </div>
+      )}
+
+      {/* Botón de recuperación si es necesario */}
+      {stats.canRecover && (
+        <button className="w-full mt-3 bg-orange-500 hover:bg-orange-600 text-white text-sm py-2 px-4 rounded transition-colors">
+          🔄 Recuperar Racha ({stats.recoveryCost} puntos)
+        </button>
       )}
     </div>
   );
 }
-
-// Agregar estilos CSS específicos para el componente
-export const streakStyles = `
-.streak-display-compact {
-  padding: 0.75rem;
-  border-top: 1px solid var(--gray-200);
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  border-radius: 0 0 12px 12px;
-}
-
-.streak-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 0.5rem;
-}
-
-.streak-emoji {
-  font-size: 1.2rem;
-  margin-right: 0.5rem;
-}
-
-.streak-text {
-  font-weight: 600;
-  font-size: 0.875rem;
-  color: var(--gray-900);
-}
-
-.streak-info {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 0.25rem;
-}
-
-.streak-count {
-  font-size: 0.75rem;
-  color: var(--gray-600);
-  font-weight: 500;
-}
-
-.streak-badge {
-  font-size: 1rem;
-}
-
-.streak-points {
-  margin: 0.5rem 0;
-  text-align: center;
-}
-
-.points-text {
-  font-size: 0.75rem;
-  color: var(--primary-blue);
-  font-weight: 600;
-  background: rgba(37, 99, 235, 0.1);
-  padding: 0.25rem 0.5rem;
-  border-radius: 12px;
-  display: inline-block;
-}
-
-.progress-bar {
-  width: 100%;
-  height: 6px;
-  background: var(--gray-200);
-  border-radius: 3px;
-  overflow: hidden;
-  margin-top: 0.5rem;
-}
-
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #3b82f6, #1d4ed8);
-  border-radius: 3px;
-  transition: width 0.3s ease;
-  position: relative;
-}
-
-.progress-fill.completed {
-  background: linear-gradient(90deg, #10b981, #059669);
-}
-
-.progress-fill.completed::after {
-  content: '✨';
-  position: absolute;
-  right: -1rem;
-  top: -0.5rem;
-  font-size: 0.875rem;
-  animation: sparkle 2s infinite;
-}
-
-@keyframes sparkle {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.7; transform: scale(1.2); }
-}
-
-/* Versión expandida */
-.streak-display-full {
-  padding: 1rem;
-  background: white;
-  border-radius: 12px;
-  border: 1px solid var(--gray-200);
-}
-
-.stat-main {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.stat-emoji {
-  font-size: 2rem;
-}
-
-.stat-primary {
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: var(--gray-900);
-}
-
-.stat-secondary {
-  font-size: 0.875rem;
-  color: var(--gray-600);
-}
-
-.badge-display {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-  padding: 0.5rem;
-  background: var(--gray-50);
-  border-radius: 8px;
-}
-
-.badge-emoji {
-  font-size: 1.25rem;
-}
-
-.badge-name {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--gray-700);
-  text-transform: capitalize;
-}
-
-.points-display {
-  margin-top: 0.75rem;
-  text-align: center;
-  padding: 0.5rem;
-  background: rgba(37, 99, 235, 0.05);
-  border-radius: 8px;
-  font-weight: 600;
-  color: var(--primary-blue);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .streak-display-compact {
-    padding: 0.5rem;
-  }
-  
-  .streak-text {
-    font-size: 0.8rem;
-  }
-  
-  .points-text {
-    font-size: 0.7rem;
-  }
-}
-`;
