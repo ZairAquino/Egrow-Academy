@@ -26,7 +26,11 @@ interface StreakStats {
   canRecover: boolean;
 }
 
-export default function StreakDisplay() {
+interface StreakDisplayProps {
+  compact?: boolean;
+}
+
+export default function StreakDisplay({ compact = false }: StreakDisplayProps) {
   const { isAuthenticated } = useAuth();
   const [stats, setStats] = useState<StreakStats | null>(null);
   const [loading, setLoading] = useState(false);
@@ -168,11 +172,11 @@ export default function StreakDisplay() {
   };
 
   return (
-    <div className="streak-display bg-white rounded-lg shadow-md p-4 border border-gray-200">
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="text-lg font-semibold text-gray-800 flex items-center">
+    <div className={`streak-display bg-white rounded-lg shadow-md border border-gray-200 ${compact ? 'p-2' : 'p-4'}`}>
+      <div className={`flex items-center justify-between ${compact ? 'mb-2' : 'mb-3'}`}>
+        <h3 className={`${compact ? 'text-sm' : 'text-lg'} font-semibold text-gray-800 flex items-center`}>
           <span className="mr-2">🏆</span>
-          Sistema de Rachas
+          {compact ? 'Rachas' : 'Sistema de Rachas'}
         </h3>
         <button 
           onClick={fetchStreakStats}
