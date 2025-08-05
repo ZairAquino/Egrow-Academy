@@ -6,20 +6,17 @@ async function updateWebinarDate() {
   try {
     console.log('🔄 Actualizando fecha del webinar "Monetiza con IA"...');
 
-    // Obtener la fecha actual en hora de México (UTC-6)
+    // Obtener la fecha actual
     const now = new Date();
-    const mexicoTime = new Date(now.getTime() - (6 * 60 * 60 * 1000)); // UTC-6
     
-    // Establecer la fecha a hoy (5 de agosto) y la hora a 4:00 PM (16:00) hora de México
-    const webinarDate = new Date(mexicoTime);
-    webinarDate.setHours(16, 0, 0, 0); // 4:00 PM
-    
-    // Convertir de vuelta a UTC para almacenar en la base de datos
-    const utcDate = new Date(webinarDate.getTime() + (6 * 60 * 60 * 1000));
+    // Crear la fecha del webinar para hoy a las 4:00 PM hora de México
+    // 4:00 PM México = 22:00 UTC (4 + 6 = 10, pero como es PM, 16 + 6 = 22)
+    const utcDate = new Date();
+    utcDate.setUTCHours(22, 0, 0, 0); // 22:00 UTC = 4:00 PM México
 
-    console.log('📅 Fecha actual (México):', mexicoTime.toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }));
-    console.log('📅 Nueva fecha del webinar (México):', webinarDate.toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }));
+    console.log('📅 Fecha actual (México):', now.toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }));
     console.log('📅 Nueva fecha del webinar (UTC):', utcDate.toISOString());
+    console.log('📅 Nueva fecha del webinar (México):', utcDate.toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }));
 
     // Buscar y actualizar el webinar
     const updatedWebinar = await prisma.webinar.updateMany({
@@ -53,7 +50,7 @@ async function updateWebinarDate() {
         console.log('📝 Título:', webinar.title);
         console.log('🔗 Slug:', webinar.slug);
         console.log('📅 Nueva fecha (UTC):', webinar.dateTime.toISOString());
-        console.log('📅 Nueva fecha (México):', new Date(webinar.dateTime.getTime() - (6 * 60 * 60 * 1000)).toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }));
+        console.log('📅 Nueva fecha (México):', new Date(webinar.dateTime).toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }));
         console.log('⏱️ Duración:', webinar.duration, 'minutos');
         console.log('👥 Cupos:', webinar.maxAttendees);
         console.log('💰 Precio:', webinar.isFree ? 'Gratis' : `$${webinar.price}`);
