@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, Suspense, useEffect, useMemo } from 'react';
+import { useState, Suspense, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import DynamicLogo from '@/components/ui/DynamicLogo';
 
@@ -12,7 +12,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useCommunityPosts, CommunityPost } from '@/hooks/useCommunityPosts';
 import { useCommunityStats } from '@/hooks/useCommunityStats';
-import { useEvents } from '@/hooks/useEvents';
+import { useWebinars } from '@/hooks/useWebinars';
+import WebinarCarousel from '@/components/webinar/WebinarCarousel';
 
 // Lazy load components
 const CompaniesMarquee = dynamic(() => import('@/components/ui/CompaniesMarquee'), {
@@ -36,7 +37,7 @@ export default function CommunityPage() {
   const router = useRouter();
   const { posts, loading, error, createPost, toggleLike, createComment } = useCommunityPosts();
   const { stats: communityStats, loading: statsLoading } = useCommunityStats();
-  const { events: dbEvents, userRegistrations, loading: eventsLoading, registerToEvent, isUserRegistered } = useEvents();
+  const { webinars, userRegistrations: webinarRegistrations, loading: webinarsLoading, registerToWebinar, isUserRegistered: isUserRegisteredWebinar } = useWebinars();
 
   
 
@@ -212,106 +213,25 @@ export default function CommunityPage() {
     };
   };
 
-  const [filteredEvents, setFilteredEvents] = useState<any[]>([]);
-
-  // Usar eventos de la base de datos en lugar del array hardcodeado
-  const allEvents = useMemo(() => dbEvents, [dbEvents]);
-
-  // Función para filtrar eventos válidos (eventos futuros y recientes)
-  const filterValidEvents = (events: any[]) => {
-    const today = new Date();
-    const threeDaysAgo = new Date(today);
-    threeDaysAgo.setDate(today.getDate() - 3);
-
-    return events.filter(event => {
-      const eventDate = new Date(event.date);
-      // Mostrar eventos futuros y eventos que ocurrieron en los últimos 3 días
-      return eventDate >= threeDaysAgo;
-
-      
-    });
-  };
-
-  // Función para calcular días restantes hasta que se elimine el evento
-  const getDaysUntilRemoval = (eventDate: string) => {
-    const today = new Date();
-    const eventDateObj = new Date(eventDate);
-    const threeDaysAfterEvent = new Date(eventDateObj);
-    threeDaysAfterEvent.setDate(eventDateObj.getDate() + 3);
-    
-    const diffTime = threeDaysAfterEvent.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
-    return diffDays;
-  };
-
-  // Función para verificar si un evento está próximo a expirar
-  const isEventExpiringSoon = (eventDate: string) => {
-    const daysUntilRemoval = getDaysUntilRemoval(eventDate);
-    return daysUntilRemoval <= 1;
-  };
-
-  // Función para formatear la fecha de manera amigable
-  const formatEventDate = (dateInput: string | Date) => {
-    const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
-    const today = new Date();
-    const tomorrow = new Date(today);
-    tomorrow.setDate(today.getDate() + 1);
-    
-    if (date.toDateString() === today.toDateString()) {
-      return 'Hoy';
-    } else if (date.toDateString() === tomorrow.toDateString()) {
-      return 'Mañana';
-    } else {
-      return date.toLocaleDateString('es-ES', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
-    }
-  };
-
-  // Efecto para actualizar eventos filtrados
-  useEffect(() => {
-    const validEvents = filterValidEvents(allEvents);
-    setFilteredEvents(validEvents);
-  }, [allEvents]);
 
 
-
-
-
-
-
-
-
-  // Limpiar eventos pasados cada hora
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const validEvents = filterValidEvents(allEvents);
-      setFilteredEvents(validEvents);
-    }, 60 * 60 * 1000); // 1 hora
-    return () => clearInterval(interval);
-  }, []); // Sin dependencias para evitar recrear el intervalo
-
-  const handleEventRegistration = async (eventId: string) => {
+  const handleWebinarRegistration = async (webinarId: string) => {
     if (!user) {
       router.push('/login?redirect=/community');
       return;
     }
 
     try {
-      const result = await registerToEvent(eventId);
+      const result = await registerToWebinar(webinarId);
       
       if (result.success) {
-        alert('¡Te has registrado exitosamente! Te enviaremos recordatorios por email.');
+        alert('¡Te has registrado exitosamente al webinar! Revisa tu email para la confirmación.');
       } else {
         alert(result.message);
       }
     } catch (error) {
-      console.error('Error al registrar al evento:', error);
-      alert(error instanceof Error ? error.message : 'Error al registrarse al evento. Por favor, intenta de nuevo.');
+      console.error('Error al registrar al webinar:', error);
+      alert(error instanceof Error ? error.message : 'Error al registrarse al webinar. Por favor, intenta de nuevo.');
     }
   };
 
@@ -401,7 +321,7 @@ export default function CommunityPage() {
             <div className="community-nav-buttons">
               <a href="#features" className="btn btn-primary">¿Qué Ofrecemos?</a>
               <a href="#forum" className="btn btn-primary">Ver Foro</a>
-              <a href="#events" className="btn btn-primary">Ver Eventos</a>
+              <a href="#events" className="btn btn-primary">Webinars</a>
               <a href="#faq" className="btn btn-primary">FAQ</a>
             </div>
           </div>
@@ -663,95 +583,33 @@ export default function CommunityPage() {
           </div>
         </section>
 
-        {/* Upcoming Events */}
+        {/* Webinars Section */}
         <section id="events" className="section events-section">
           <div className="container">
             <div className="section-header">
-              <h2 className="section-title">Próximos Eventos</h2>
+              <h2 className="section-title">🎥 Próximos Webinars</h2>
               <p className="section-description">
-                Participa en nuestros eventos y workshops exclusivos
+                Participa en nuestros webinars exclusivos y aprende de expertos en IA
               </p>
             </div>
 
-            <div className="events-table-container">
-              {/* Indicador de deslizamiento para móvil */}
-              <div className="scroll-indicator">
-                <span className="scroll-text">Desliza para ver más</span>
-                <div className="scroll-arrow">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </div>
-              </div>
+            {/* Webinar Carousel */}
+            <div className="webinars-container">
+              <WebinarCarousel 
+                webinars={webinars}
+                onRegister={handleWebinarRegistration}
+                isUserRegistered={isUserRegisteredWebinar}
+              />
               
-              {dbEvents.length > 0 ? (
-                <div className="events-table">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>Evento</th>
-                        <th>Fecha</th>
-                        <th>Hora</th>
-                        <th>Tipo</th>
-                        <th>Asistentes</th>
-                        <th>Acción</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {dbEvents.map((event) => {
-                        const isRegistered = isUserRegistered(event.id);
-                        return (
-                          <tr key={event.id}>
-                            <td>
-                              <div className="event-info">
-                                <h4>{event.title}</h4>
-                                <p>{event.description}</p>
-                                <small>Con {event.instructor}</small>
-                              </div>
-                            </td>
-                            <td>{formatEventDate(event.date)}</td>
-                            <td>{event.time}</td>
-                            <td>
-                              <span className={`event-type-badge ${event.type.toLowerCase()}`}>
-                                {event.type}
-                              </span>
-                            </td>
-                            <td>👥 {event.attendees}</td>
-                            <td>
-                              {isRegistered ? (
-                                <button 
-                                  className="btn btn-success btn-small"
-                                  disabled
-                                >
-                                  ✅ Registrado
-                                </button>
-                              ) : (
-                                <button 
-                                  className="btn btn-primary btn-small"
-                                  onClick={() => handleEventRegistration(event.id)}
-                                >
-                                  📅 Registrarse
-                                </button>
-                              )}
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-              ) : (
-                <div className="no-events-message">
-                  <div className="no-events-icon">📅</div>
-                  <h3>No hay eventos próximos</h3>
-                  <p>Mantente atento a nuestros próximos lanzamientos y eventos especiales.</p>
-                  <div className="no-events-cta">
-                    <a href="/community/foro" className="btn btn-primary">
-                      Únete a la comunidad
-                    </a>
-                  </div>
-                </div>
-              )}
+              {/* Botón para ver todos los webinars */}
+              <div className="webinars-cta">
+                <a href="/webinars" className="btn btn-primary btn-large">
+                  🎥 Ver Todos los Webinars
+                </a>
+                <p className="webinars-cta-text">
+                  Descubre más webinars, eventos y contenido exclusivo
+                </p>
+              </div>
             </div>
           </div>
         </section>
@@ -1549,6 +1407,52 @@ export default function CommunityPage() {
           height: 100%;
           object-fit: cover;
           z-index: -1;
+        }
+
+        /* Estilos para la sección de webinars */
+        .webinars-container {
+          margin-top: 2rem;
+        }
+
+        .webinars-cta {
+          text-align: center;
+          margin-top: 3rem;
+          padding: 2rem;
+          background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+          border-radius: 16px;
+          border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .webinars-cta .btn-large {
+          padding: 1rem 2rem;
+          font-size: 1.1rem;
+          font-weight: 600;
+          border-radius: 12px;
+          transition: all 0.3s ease;
+          margin-bottom: 1rem;
+        }
+
+        .webinars-cta .btn-large:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .webinars-cta-text {
+          color: #6b7280;
+          font-size: 0.95rem;
+          margin: 0;
+        }
+
+        @media (max-width: 768px) {
+          .webinars-cta {
+            padding: 1.5rem;
+            margin-top: 2rem;
+          }
+
+          .webinars-cta .btn-large {
+            padding: 0.875rem 1.5rem;
+            font-size: 1rem;
+          }
         }
       `}</style>
     </>

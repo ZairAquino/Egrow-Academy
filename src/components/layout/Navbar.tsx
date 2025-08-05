@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from 'react';
 import UserProfile from '@/components/auth/UserProfile';
 import Link from 'next/link';

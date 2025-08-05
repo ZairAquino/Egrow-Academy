@@ -36,7 +36,7 @@ export default function ContenidoMockupCeroPage() {
     lessons: [
       // MÓDULO 1 - Introducción a los Mockups con IA
       {
-        id: 'cmdyqqkg80001e5sklyq6zhc3',
+        id: 'cmdysefxg0002e56coorhimym',
         moduleId: 1,
         title: '1.1 ¿Qué es un mockup?',
         duration: '10 min',
@@ -77,7 +77,7 @@ export default function ContenidoMockupCeroPage() {
         `
       },
       {
-        id: 'cmdyqqkkj0003e5skpj6xocji',
+        id: 'cmdyseg1u0004e56c16m2fip5',
         moduleId: 1,
         title: '1.2 Tipologías',
         duration: '12 min',
@@ -116,7 +116,7 @@ export default function ContenidoMockupCeroPage() {
         `
       },
       {
-        id: 'cmdyqqkmq0005e5skd7awa7hf',
+        id: 'cmdyseg420006e56cfwqtrkbn',
         moduleId: 1,
         title: '1.3 Diferencias entre wireframes, prototipos y mockups',
         duration: '15 min',
@@ -169,7 +169,7 @@ export default function ContenidoMockupCeroPage() {
         `
       },
       {
-        id: 'cmdyqqkox0007e5skmk20laur',
+        id: 'cmdyseg6a0008e56c0uv9b0nx',
         moduleId: 1,
         title: '1.4 Actividad Práctica 1: Análisis Rápido de Mockups Exitosos',
         duration: '8 min',
@@ -210,7 +210,7 @@ export default function ContenidoMockupCeroPage() {
 
       // MÓDULO 2 - Principales herramientas de IA
       {
-        id: 'cmdyqqkr40009e5skmm3hwpfb',
+        id: 'cmdyseg8j000ae56cklphnoh4',
         moduleId: 2,
         title: '2.1 Familiarizarte con las principales herramientas de IA',
         duration: '25 min',
@@ -279,7 +279,7 @@ export default function ContenidoMockupCeroPage() {
 
       // MÓDULO 3 - Landing page completa
       {
-        id: 'cmdyqqktb000be5skivefjiex',
+        id: 'cmdysegar000ce56cbbx6g90p',
         moduleId: 3,
         title: '3.1 Crear una landing page completa',
         duration: '30 min',
@@ -346,7 +346,7 @@ export default function ContenidoMockupCeroPage() {
 
       // MÓDULO 4 - Mockups para apps móviles
       {
-        id: 'cmdyqqkvi000de5skwui8tlc5',
+        id: 'cmdysegcy000ee56crc3poanu',
         moduleId: 4,
         title: '4.1 Aprender a diseñar mockups',
         duration: '35 min',
@@ -417,7 +417,7 @@ export default function ContenidoMockupCeroPage() {
 
       // MÓDULO 5 - Identidad visual de marca
       {
-        id: 'cmdyqqkxq000fe5ska1d3r6ru',
+        id: 'cmdysegf5000ge56c3drdqro9',
         moduleId: 5,
         title: '5.1 Crear una identidad visual de marca',
         duration: '40 min',
@@ -809,11 +809,11 @@ export default function ContenidoMockupCeroPage() {
   };
 
   const LAST_LESSONS_BY_MODULE: Record<number, string> = {
-    1: 'cmdyqqkox0007e5skmk20laur', // 1.4 Actividad Práctica 1
-    2: 'cmdyqqkr40009e5skmm3hwpfb', // 2.1 Familiarizarte con las principales herramientas de IA
-    3: 'cmdyqqktb000be5skivefjiex', // 3.1 Crear una landing page completa
-    4: 'cmdyqqkvi000de5skwui8tlc5', // 4.1 Aprender a diseñar mockups
-    5: 'cmdyqqkxq000fe5ska1d3r6ru'  // 5.1 Crear una identidad visual de marca
+    1: 'cmdyseg6a0008e56c0uv9b0nx', // 1.4 Actividad Práctica 1
+    2: 'cmdyseg8j000ae56cklphnoh4', // 2.1 Familiarizarte con las principales herramientas de IA
+    3: 'cmdysegar000ce56cbbx6g90p', // 3.1 Crear una landing page completa
+    4: 'cmdysegcy000ee56crc3poanu', // 4.1 Aprender a diseñar mockups
+    5: 'cmdysegf5000ge56c3drdqro9'  // 5.1 Crear una identidad visual de marca
   };
 
   const isLastLessonOfModule = (lessonId: string, moduleId: number): boolean => {

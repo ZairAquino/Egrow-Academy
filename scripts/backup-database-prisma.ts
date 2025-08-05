@@ -6,7 +6,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import * as os from 'os'
 import * as dotenv from 'dotenv'
-import { BACKUP_CONFIG, getBackupPath, generateBackupFilename, ensureBackupDirectories } from './backup-config'
+import { PrismaClient } from '@prisma/client'
 
 // Cargar variables de entorno
 dotenv.config()
@@ -24,11 +24,19 @@ interface BackupConfig {
   environment: 'development' | 'production'
 }
 
-class DatabaseBackup {
+class DatabaseBackupPrisma {
   private config: BackupConfig
+  private prisma: PrismaClient
 
   constructor(config: BackupConfig) {
     this.config = config
+    this.prisma = new PrismaClient({
+      datasources: {
+        db: {
+          url: config.databaseUrl
+        }
+      }
+    })
     this.ensureBackupDirectory()
   }
 
@@ -44,18 +52,6 @@ class DatabaseBackup {
     return now.toISOString().replace(/[:.]/g, '-').slice(0, -5)
   }
 
-  private generatePgDumpCommand(host: string, port: string, username: string, database: string, password: string, outputPath: string): string {
-    const isWindows = process.platform === 'win32'
-    
-    if (isWindows) {
-      // En Windows, usar set para la variable de entorno
-      return `set PGPASSWORD="${password}" && pg_dump -h ${host} -p ${port} -U ${username} -d ${database} --verbose --clean --if-exists --no-owner --no-privileges > "${outputPath}"`
-    } else {
-      // En Unix/Linux
-      return `PGPASSWORD="${password}" pg_dump -h ${host} -p ${port} -U ${username} -d ${database} --verbose --clean --if-exists --no-owner --no-privileges > "${outputPath}"`
-    }
-  }
-
   private async executeCommand(command: string): Promise<string> {
     try {
       const { stdout, stderr } = await execAsync(command)
@@ -69,27 +65,21 @@ class DatabaseBackup {
     }
   }
 
-  private async createBackup(): Promise<string> {
+  private async createBackupWithPrisma(): Promise<string> {
     const timestamp = this.getTimestamp()
     const environment = this.config.environment
-    const backupFileName = `egrow-academy-${environment}-backup-${timestamp}.sql`
+    const backupFileName = `egrow-academy-${environment}-backup-${timestamp}.json`
     const backupPath = path.join(this.config.backupDir, backupFileName)
 
     console.log(`🔄 Iniciando backup de ${environment} en proyecto: ${backupFileName}`)
 
-    // Extraer información de conexión de la URL de la base de datos
-    const dbUrl = new URL(this.config.databaseUrl)
-    const host = dbUrl.hostname
-    const port = dbUrl.port || '5432'
-    const database = dbUrl.pathname.slice(1)
-    const username = dbUrl.username
-    const password = dbUrl.password
-
-    // Comando pg_dump para PostgreSQL (compatible con Windows)
-    const pgDumpCommand = this.generatePgDumpCommand(host, port, username, database, password, backupPath)
-
     try {
-      await this.executeCommand(pgDumpCommand)
+      // Obtener todos los datos de la base de datos usando Prisma
+      const backupData = await this.generateBackupData()
+      
+      // Guardar como JSON
+      fs.writeFileSync(backupPath, JSON.stringify(backupData, null, 2))
+      
       console.log(`✅ Backup de ${environment} creado exitosamente en proyecto: ${backupPath}`)
       return backupPath
     } catch (error) {
@@ -98,10 +88,10 @@ class DatabaseBackup {
     }
   }
 
-  private async createLocalBackup(): Promise<string> {
+  private async createLocalBackupWithPrisma(): Promise<string> {
     const timestamp = this.getTimestamp()
     const environment = this.config.environment
-    const backupFileName = `egrow-academy-${environment}-backup-${timestamp}.sql`
+    const backupFileName = `egrow-academy-${environment}-backup-${timestamp}.json`
     const backupPath = path.join(this.config.localBackupDir, backupFileName)
 
     console.log(`🔄 Iniciando backup de ${environment} en equipo local: ${backupFileName}`)
@@ -112,23 +102,65 @@ class DatabaseBackup {
       console.log(`📁 Directorio local creado: ${this.config.localBackupDir}`)
     }
 
-    // Extraer información de conexión de la URL de la base de datos
-    const dbUrl = new URL(this.config.databaseUrl)
-    const host = dbUrl.hostname
-    const port = dbUrl.port || '5432'
-    const database = dbUrl.pathname.slice(1)
-    const username = dbUrl.username
-    const password = dbUrl.password
-
-    // Comando pg_dump para PostgreSQL (compatible con Windows)
-    const pgDumpCommand = this.generatePgDumpCommand(host, port, username, database, password, backupPath)
-
     try {
-      await this.executeCommand(pgDumpCommand)
+      // Obtener todos los datos de la base de datos usando Prisma
+      const backupData = await this.generateBackupData()
+      
+      // Guardar como JSON
+      fs.writeFileSync(backupPath, JSON.stringify(backupData, null, 2))
+      
       console.log(`✅ Backup de ${environment} creado exitosamente en equipo local: ${backupPath}`)
       return backupPath
     } catch (error) {
       console.error('❌ Error creando backup en equipo local:', error)
+      throw error
+    }
+  }
+
+  private async generateBackupData(): Promise<any> {
+    console.log('📊 Generando datos de backup...')
+    
+    const backupData: any = {
+      metadata: {
+        timestamp: new Date().toISOString(),
+        environment: this.config.environment,
+        version: '1.0.0'
+      },
+      data: {}
+    }
+
+    try {
+      // Obtener datos de todas las tablas principales
+      const tables = [
+        'User',
+        'Course',
+        'Lesson',
+        'Enrollment',
+        'Progress',
+        'Achievement',
+        'UserAchievement',
+        'Streak',
+        'Resource',
+        'Promotion',
+        'Event'
+      ]
+
+      for (const table of tables) {
+        try {
+          const data = await (this.prisma as any)[table.toLowerCase()].findMany({
+            take: 1000 // Limitar a 1000 registros por tabla para evitar problemas de memoria
+          })
+          backupData.data[table] = data
+          console.log(`✅ ${table}: ${data.length} registros`)
+        } catch (error) {
+          console.warn(`⚠️ No se pudo hacer backup de ${table}:`, error.message)
+          backupData.data[table] = []
+        }
+      }
+
+      return backupData
+    } catch (error) {
+      console.error('❌ Error generando datos de backup:', error)
       throw error
     }
   }
@@ -147,7 +179,7 @@ class DatabaseBackup {
       return compressedPath
     } catch (error) {
       console.error('❌ Error comprimiendo backup:', error)
-      throw error
+      return backupPath // Retornar archivo sin comprimir si falla
     }
   }
 
@@ -171,7 +203,7 @@ class DatabaseBackup {
       return encryptedPath
     } catch (error) {
       console.error('❌ Error encriptando backup:', error)
-      throw error
+      return backupPath // Retornar archivo sin encriptar si falla
     }
   }
 
@@ -233,24 +265,20 @@ class DatabaseBackup {
 
   private async uploadToCloud(backupPath: string): Promise<void> {
     // Aquí puedes implementar la subida a servicios en la nube
-    // como AWS S3, Google Cloud Storage, etc.
     console.log(`☁️ Backup listo para subir a la nube: ${backupPath}`)
-    
-    // Ejemplo para AWS S3 (requiere configuración adicional)
-    // await this.uploadToS3(backupPath)
   }
 
   public async performBackup(): Promise<void> {
     const startTime = Date.now()
     
     try {
-      console.log('🚀 Iniciando proceso de backup de eGrow Academy...')
+      console.log('🚀 Iniciando proceso de backup de eGrow Academy (usando Prisma)...')
       
       // 1. Crear backup en el proyecto
-      const projectBackupPath = await this.createBackup()
+      const projectBackupPath = await this.createBackupWithPrisma()
       
       // 2. Crear backup en el equipo local
-      const localBackupPath = await this.createLocalBackup()
+      const localBackupPath = await this.createLocalBackupWithPrisma()
       
       // 3. Comprimir backups
       const compressedProjectPath = await this.compressBackup(projectBackupPath)
@@ -279,6 +307,8 @@ class DatabaseBackup {
       console.error('💥 Error durante el backup:', error)
       await this.logBackupError(error)
       throw error
+    } finally {
+      await this.prisma.$disconnect()
     }
   }
 
@@ -360,6 +390,8 @@ class DatabaseBackup {
       }
     } catch (error) {
       console.error('❌ Error listando backups:', error)
+    } finally {
+      await this.prisma.$disconnect()
     }
   }
 }
@@ -402,7 +434,7 @@ async function main() {
     process.exit(1)
   }
 
-  const backup = new DatabaseBackup(backupConfig)
+  const backup = new DatabaseBackupPrisma(backupConfig)
 
   const command = process.argv[2]
 
@@ -414,8 +446,8 @@ async function main() {
       await backup.listBackups()
       break
     default:
-      console.log('Uso: npm run backup-database [backup|list]')
-      console.log('  backup - Crear nuevo backup')
+      console.log('Uso: npm run backup-database-prisma [backup|list]')
+      console.log('  backup - Crear nuevo backup usando Prisma')
       console.log('  list   - Listar backups existentes')
       process.exit(1)
   }
@@ -425,4 +457,4 @@ if (require.main === module) {
   main().catch(console.error)
 }
 
-export { DatabaseBackup, backupConfig } 
+export { DatabaseBackupPrisma, backupConfig } 

@@ -49,6 +49,7 @@ model User {
   userStreakBadges        UserStreakBadge[]
   userPointsHistory       UserPointsHistory[]
   streakRecoveryHistory   StreakRecoveryHistory[]
+  webinarRegistrations    WebinarRegistration[]
 
   @@index([membershipLevel])
   @@index([email, membershipLevel])
@@ -821,4 +822,60 @@ enum PointTransactionType {
   RECOVERY_SPENT
   BONUS_EARNED
   ACHIEVEMENT_REWARD
+}
+
+model Webinar {
+  id                String           @id @default(cuid())
+  title             String
+  slug              String           @unique
+  description       String
+  shortDescription  String?
+  imageUrl          String?
+  videoUrl          String?
+  dateTime          DateTime
+  duration          Int              // en minutos
+  maxAttendees      Int?
+  currentAttendees  Int              @default(0)
+  isActive          Boolean          @default(true)
+  isFree            Boolean          @default(true)
+  price             Decimal          @default(0)
+  category          String?
+  tags              String[]
+  hostName          String?
+  hostBio           String?
+  zoomLink          String?
+  meetingId         String?
+  password          String?
+  recordingUrl      String?
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  registrations     WebinarRegistration[]
+
+  @@index([dateTime, isActive])
+  @@index([category])
+  @@index([slug])
+  @@map("webinars")
+}
+
+model WebinarRegistration {
+  id          String   @id @default(cuid())
+  webinarId   String
+  userId      String?
+  email       String
+  firstName   String
+  lastName    String
+  phone       String?
+  questions   String?
+  isConfirmed Boolean  @default(false)
+  reminderSent Boolean  @default(false)
+  attended    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  webinar     Webinar  @relation(fields: [webinarId], references: [id], onDelete: Cascade)
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@unique([webinarId, email])
+  @@index([webinarId, createdAt])
+  @@index([email])
+  @@map("webinar_registrations")
 }
