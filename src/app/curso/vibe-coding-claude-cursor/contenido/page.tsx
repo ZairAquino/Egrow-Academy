@@ -506,7 +506,8 @@ export default function ContenidoVibeCodingClaudeCursorPage() {
 
       <div className="course-content">
         <div className="content-layout">
-          <div className="current-lesson">
+          <div className="main-content-area">
+            <div className="current-lesson">
             <div className="lesson-header">
               <h2>{courseData.lessons[progress.currentLesson]?.title}</h2>
               <div className="lesson-meta">
@@ -520,15 +521,6 @@ export default function ContenidoVibeCodingClaudeCursorPage() {
             </div>
 
             <div className="lesson-content">
-              {courseData.lessons[progress.currentLesson]?.videoUrl && (
-                <div className="lesson-video-container">
-                  <VideoPlayer
-                    videoUrl={courseData.lessons[progress.currentLesson].videoUrl}
-                    title={courseData.lessons[progress.currentLesson].title}
-                  />
-                </div>
-              )}
-              
               <div 
                 className="lesson-text-content"
                 dangerouslySetInnerHTML={{ 
@@ -572,6 +564,7 @@ export default function ContenidoVibeCodingClaudeCursorPage() {
                 </button>
               </div>
             </div>
+          </div>
           </div>
 
           <div className="lessons-navigation">
@@ -1127,6 +1120,13 @@ export default function ContenidoVibeCodingClaudeCursorPage() {
           line-height: 1.6;
         }
 
+        @media (min-width: 769px) and (max-width: 1199px) {
+          .content-layout {
+            grid-template-columns: 1fr 280px;
+            gap: 1.5rem;
+          }
+        }
+
         @media (max-width: 768px) {
           .content-layout {
             grid-template-columns: 1fr;
@@ -1626,6 +1626,54 @@ export default function ContenidoVibeCodingClaudeCursorPage() {
 
           .completion-info {
             font-size: 0.8rem;
+          }
+        }
+
+        /* Estilos para el contenedor del video */
+        .lesson-video {
+          width: 100% !important;
+          max-width: 100% !important;
+          margin: 2rem 0 !important;
+          border-radius: 12px !important;
+          overflow: hidden !important;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
+          background: #000 !important;
+        }
+
+        /* Responsive para diferentes tamaños de pantalla */
+        @media (min-width: 1200px) {
+          .lesson-video {
+            max-width: 900px !important;
+            margin: 2rem auto !important;
+          }
+        }
+
+        @media (min-width: 768px) and (max-width: 1199px) {
+          .lesson-video {
+            max-width: 100% !important;
+            margin: 1.5rem 0 !important;
+            max-height: 60vh !important;
+          }
+        }
+
+        @media (max-width: 767px) {
+          .lesson-video {
+            margin: 1rem 0 !important;
+            border-radius: 8px !important;
+            max-height: 50vh !important;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .lesson-video {
+            margin: 0.5rem 0 !important;
+            max-height: 40vh !important;
+          }
+        }
+
+        @media (max-width: 375px) {
+          .lesson-video {
+            max-height: 35vh !important;
           }
         }
       `}</style>

@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Footer from '@/components/layout/Footer';
 import Navbar from '@/components/layout/Navbar';
+import VideoPlayer from '@/components/courses/VideoPlayer';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
 // Eliminamos CourseActionButton para usar la lógica directa que funciona
@@ -373,12 +374,11 @@ export default function DesarrolloWebFullStackPage() {
                   
                   {/* Video solo para móvil - entre descripción y botón */}
                   <div className="mobile-video-preview">
-                    <div className="preview-video">
-                      <img src="/images/optimized/p1.webp" alt={courseData.title} />
-                      <div className="play-button" onClick={() => window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ', '_blank')}>
-                        <span>▶</span>
-                      </div>
-                    </div>
+                    <VideoPlayer
+                      videoUrl="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                      title="Desarrollo Web Full Stack - Preview"
+                      className="mobile-preview-video"
+                    />
                   </div>
                   
                   {/* Botones copiados exactamente de monetiza-ia */}
@@ -440,37 +440,12 @@ export default function DesarrolloWebFullStackPage() {
                 </div>
                 
                 <div className="course-preview">
-                  <div className="preview-video">
-                    <img src={courseData.image} alt={courseData.title} />
-                    <div className="play-button">
-                      <span>▶</span>
-                    </div>
-                  </div>
+                  <VideoPlayer
+                    videoUrl="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                    title="Desarrollo Web Full Stack - Preview"
+                    className="desktop-preview-video"
+                  />
                   
-                  {user && hasPremiumAccess && !isLoading && (
-                    <div className="progress-card">
-                      <h3>Tu Progreso</h3>
-                      <div className="progress-bar">
-                        <div className="progress-fill" style={{ width: `${progressPercentage}%` }}></div>
-                      </div>
-                      <div className="progress-details">
-                        <p className="progress-text">
-                          {completedLessons.length}/{courseData.lessons.length} lecciones completadas
-                        </p>
-                        <p className="progress-remaining">
-                          {courseData.lessons.length - completedLessons.length} módulos restantes • {getRemainingTime()}
-                        </p>
-                      </div>
-                      {completedLessons.length > 0 && (
-                        <div 
-                          className="course-action-button course-action-resume"
-                          onClick={goToCourseContent}
-                        >
-                          🔄 Continuar donde lo dejaste
-                        </div>
-                      )}
-                    </div>
-                  )}
                 </div>
               </div>
             </div>
@@ -1431,6 +1406,21 @@ export default function DesarrolloWebFullStackPage() {
         /* Ocultar video móvil en desktop */
         .mobile-video-preview {
           display: none;
+        }
+        
+        /* Estilos para videos de preview */
+        .mobile-preview-video {
+          margin: 1.5rem 0;
+          border-radius: 12px;
+          overflow: hidden;
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .desktop-preview-video {
+          margin: 0;
+          border-radius: 12px;
+          overflow: hidden;
+          box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
         }
 
         .mobile-instructor-section {

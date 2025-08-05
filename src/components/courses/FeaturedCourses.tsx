@@ -21,6 +21,16 @@ const featuredCourses = [
     level: "Intermedio",
     link: "/curso/asistentes-virtuales-ia",
     isFree: true
+  },
+  {
+    image: "/images/mockups-ia.png",
+    title: "Crea Mockups con IA desde cero sin saber nada de diseño",
+    description: "Diseñar presentaciones visuales atractivas usando inteligencia artificial. Aprende a crear mockups profesionales sin experiencia previa en diseño.",
+    tag: "⭐ Curso Destacado",
+    duration: "5 horas",
+    level: "Principiante",
+    link: "/curso/mockup-cero",
+    isFree: true
   }
 ];
 

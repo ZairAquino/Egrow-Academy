@@ -11,24 +11,21 @@ import VideoPlayer from '@/components/courses/VideoPlayer';
 
 import { useAuth } from '@/contexts/AuthContext';
 
-// Contador eliminado - ya no se necesita
-
 // Lazy load components
 const CompaniesMarquee = dynamic(() => import('@/components/ui/CompaniesMarquee'), {
   loading: () => <LoadingSpinner />,
   ssr: false
 });
 
-export default function MonetizaIAPage() {
-  console.log('🔍 [DEBUG] Componente MonetizaIAPage cargado');
+export default function MockupCeroPage() {
+  console.log('🔍 [DEBUG] Componente MockupCeroPage cargado');
   
   
   const [currentLesson, setCurrentLesson] = useState(0);
-  const [completedLessons, setCompletedLessons] = useState<number[]>([]);
+  const [completedLessons, setCompletedLessons] = useState<string[]>([]);
   const [progressPercentage, setProgressPercentage] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [expandedLessons, setExpandedLessons] = useState<number[]>([]);
-  // Estados del contador eliminados
   const { user, status } = useAuth();
   const router = useRouter();
   
@@ -41,10 +38,6 @@ export default function MonetizaIAPage() {
     userDetails: user ? { id: user.id, email: user.email } : null,
     authStatus: status
   });
-
-  
-
-  // useEffect del contador eliminado
 
   // Función para alternar la expansión de lecciones
   const toggleLesson = (index: number) => {
@@ -71,7 +64,7 @@ export default function MonetizaIAPage() {
     
     if (!user || status === 'unauthenticated') {
       // Si el usuario no está logueado, redirigir al login con redirect
-      const loginUrl = `/login?redirect=/curso/monetiza-ia/contenido`;
+      const loginUrl = `/login?redirect=/curso/mockup-cero/contenido`;
       console.log(`🔐 Usuario no logueado - Redirigiendo a login: ${loginUrl}`);
       
       if (typeof window !== 'undefined') {
@@ -81,7 +74,7 @@ export default function MonetizaIAPage() {
     }
     
     // Si el usuario está logueado, ir directamente al contenido
-    const contentUrl = '/curso/monetiza-ia/contenido';
+    const contentUrl = '/curso/mockup-cero/contenido';
     console.log(`✅ Usuario logueado (${user.email}) - Redirigiendo a contenido: ${contentUrl}`);
     
     if (typeof window !== 'undefined') {
@@ -90,110 +83,95 @@ export default function MonetizaIAPage() {
   };
 
   const courseData = {
-    id: 'monetiza-ia',
-    title: 'Monetiza con la IA',
-    description: 'Descubre cómo generar ingresos utilizando inteligencia artificial. Aprende estrategias prácticas para monetizar herramientas de IA y crear fuentes de ingresos pasivos.',
-    duration: '3 horas',
-    level: 'Intermedio',
-    difficulty: 'Intermedio',
-    category: 'Monetización',
+    id: 'mockup-cero',
+    title: 'Crea Mockups con IA desde cero',
+    description: 'Aprende a presentar ideas, productos y servicios de manera visual y profesional sin experiencia previa en diseño. Domina herramientas de IA como ChatGPT, Canva y Sora para crear mockups modernos en formatos web, móvil, producto y redes sociales. Incluye prompts listos para usar y un mini portafolio al finalizar.',
+    duration: '5 horas',
+    level: 'Principiante',
+    difficulty: 'Principiante',
+    categoryText: 'Online • Certificado digital incluido',
+    category: 'Diseño y Mockups',
     price: 'Gratis',
     language: 'Español',
-    image: '/images/optimized/v-5.webp',
-    lessonsCount: 8,
+    image: '/images/mockup-course.png',
+    lessonsCount: 25,
     instructor: {
-      name: 'Zair Adolfo Aquino Rodriguez',
-      title: 'Especialista en Monetización Digital - eGrow Academy',
+      name: 'eGrow Academy',
+      title: 'Especialista en Diseño y Mockups con IA - eGrow Academy',
       image: '/images/Zair.jpeg',
-      bio: 'Experto en estrategias de monetización digital con más de 10 años de experiencia en el sector de la inteligencia artificial y el marketing digital.'
+      bio: 'Experto en diseño de mockups y prototipado con herramientas de IA, con más de 4 años de experiencia en diseño digital y UX/UI.'
     },
     prerequisites: [
-      'Conocimientos básicos de internet y tecnología',
-      'Interés en generar ingresos online',
-      'Disposición para aprender nuevas herramientas'
+      'Conocimientos básicos de diseño (opcional)',
+      'Computadora con acceso a internet',
+      'Ganas de aprender herramientas de IA',
+      'No se requiere experiencia previa en mockups'
     ],
     whatYouWillLearn: [
-      'Estrategias de monetización con IA',
-      'Creación de productos digitales con herramientas de IA',
-      'Automatización de procesos de venta',
-      'Marketing digital optimizado con IA',
-      'Creación de fuentes de ingresos pasivos',
-      'Análisis y optimización de resultados',
-      'Escalabilidad de negocios digitales',
-      'Tendencias futuras en monetización con IA'
+      'Fundamentos del diseño de mockups',
+      'Uso de herramientas de IA para mockups',
+      'Creación de mockups para sitios web',
+      'Diseño de mockups para aplicaciones móviles',
+      'Mockups de productos y branding',
+      'Presentaciones profesionales con Sora',
+      'Técnicas de prototipado rápido',
+      'Mejores prácticas del diseño UX/UI'
     ],
     tools: [
-      'ChatGPT y herramientas de IA',
-      'Plataformas de e-commerce',
-      'Herramientas de marketing digital',
-      'Analytics y métricas',
-      'Automatización de procesos',
-      'Gestión de contenido digital'
+      'Figma con IA',
+      'Adobe XD',
+      'Canva Pro',
+      'Midjourney',
+      'DALL-E 3',
+      'Sora (OpenAI)',
+      'Framer',
+      'Sketch'
     ],
     lessons: [
       {
         id: 1,
-        title: 'M0 - AI Money‑Toolkit',
-        description: 'Intro | Herramientas - Checklist de apps y presets listos para facturar',
-        duration: 12,
+        title: 'MÓDULO 1: Introducción al Mockup',
+        description: 'Comprende los fundamentos del diseño de mockups, su importancia en el proceso de diseño y las herramientas de IA disponibles',
+        duration: 50,
         type: 'Video',
-        videoUrl: 'https://www.youtube.com/watch?v=example1'
+        videoUrl: 'https://www.youtube.com/watch?v=example1',
+        lessonsCount: 4
       },
       {
         id: 2,
-        title: 'M1 - Venta sin Fricción',
-        description: 'Intro Ventas - Script de oferta listo para DM / llamada',
-        duration: 18,
-        type: 'Video',
-        videoUrl: 'https://www.youtube.com/watch?v=example2'
+        title: 'MÓDULO 2: Preparación y Análisis',
+        description: 'Aprende a analizar proyectos, definir requisitos y preparar el entorno de trabajo para crear mockups efectivos',
+        duration: 65,
+        type: 'Lab',
+        videoUrl: 'https://www.youtube.com/watch?v=example2',
+        lessonsCount: 5
       },
       {
         id: 3,
-        title: 'M1.1 - Ayuda que Cierra',
-        description: 'Vender & Ayudar - Mensaje Problema → Ayuda → Oferta (copiar‑pegar)',
-        duration: 22,
-        type: 'Video',
-        videoUrl: 'https://www.youtube.com/watch?v=example3'
+        title: 'MÓDULO 3: Creación de Mockups Web',
+        description: 'Domina la creación de mockups para sitios web responsive utilizando herramientas de inteligencia artificial',
+        duration: 70,
+        type: 'Lab',
+        videoUrl: 'https://www.youtube.com/watch?v=example3',
+        lessonsCount: 6
       },
       {
         id: 4,
-        title: 'M2 - Soporte que Retiene',
-        description: 'Servicio al Cliente - Plantilla post‑venta "fan for life"',
-        duration: 25,
+        title: 'MÓDULO 4: Mockups para Móvil y Apps',
+        description: 'Especialízate en el diseño de mockups para aplicaciones móviles y interfaces de usuario optimizadas',
+        duration: 75,
         type: 'Lab',
-        videoUrl: 'https://www.youtube.com/watch?v=example4'
+        videoUrl: 'https://www.youtube.com/watch?v=example4',
+        lessonsCount: 5
       },
       {
         id: 5,
-        title: 'M2.1 - Diferénciate & Cobra Más',
-        description: 'Diferénciate - One‑liner de posicionamiento ganador',
-        duration: 20,
-        type: 'Video',
-        videoUrl: 'https://www.youtube.com/watch?v=example5'
-      },
-      {
-        id: 6,
-        title: 'M3 - IA Amplify Engine',
-        description: 'Marketing con IA - Flujo Prompt → Copy → Publica',
-        duration: 28,
-        type: 'Video',
-        videoUrl: 'https://www.youtube.com/watch?v=example6'
-      },
-      {
-        id: 7,
-        title: 'M3.1 - Mirror & Monetize',
-        description: 'Aplicarlo a uno mismo - Caso demo propio (antes / después)',
-        duration: 35,
-        type: 'Lab',
-        videoUrl: 'https://www.youtube.com/watch?v=example7'
-      },
-      {
-        id: 8,
-        title: 'M4 - Escala, Repite, Monetiza',
-        description: 'Final - Plan de iteración + métrica clave',
-        duration: 45,
+        title: 'MÓDULO 5: Mockups de Producto, Branding y Presentación con Sora',
+        description: 'Crea mockups de productos físicos, desarrolla branding coherente y presenta tus diseños con Sora AI',
+        duration: 80,
         type: 'Project',
-        videoUrl: 'https://www.youtube.com/watch?v=example8'
+        videoUrl: 'https://www.youtube.com/watch?v=example5',
+        lessonsCount: 5
       }
     ]
   };
@@ -205,33 +183,35 @@ export default function MonetizaIAPage() {
 
   // Efectos para manejar el progreso del usuario
   useEffect(() => {
-    console.log('🔍 [DEBUG] useEffect [user] ejecutado');
-    console.log('🔍 [DEBUG] Estado del usuario:', { user: !!user, userId: user?.id });
+    console.log('🔍 [DEBUG] useEffect [user, status] ejecutado');
+    console.log('🔍 [DEBUG] Estado del usuario:', { user: !!user, userId: user?.id, status });
     
-    if (user) {
-      console.log('🔍 [DEBUG] Usuario detectado, cargando progreso');
+    if (user && status === 'authenticated') {
+      console.log('🔍 [DEBUG] Usuario autenticado detectado, cargando progreso');
       loadUserProgress();
-    } else {
-      console.log('🔍 [DEBUG] No hay usuario, estableciendo isLoading = false');
+    } else if (status === 'unauthenticated' || (!user && status !== 'loading')) {
+      console.log('🔍 [DEBUG] Usuario no autenticado, estableciendo isLoading = false');
       setIsLoading(false);
+    } else {
+      console.log('🔍 [DEBUG] Estado de autenticación en progreso...');
     }
-  }, [user]);
+  }, [user, status]);
 
   useEffect(() => {
     const handleFocus = () => {
-      if (user) {
+      if (user && status === 'authenticated') {
         loadUserProgress();
       }
     };
 
     const handleVisibilityChange = () => {
-      if (!document.hidden && user) {
+      if (!document.hidden && user && status === 'authenticated') {
         loadUserProgress();
       }
     };
 
     const handlePopState = () => {
-      if (user) {
+      if (user && status === 'authenticated') {
         loadUserProgress();
       }
     };
@@ -245,14 +225,51 @@ export default function MonetizaIAPage() {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('popstate', handlePopState);
     };
-  }, [user]);
+  }, [user, status]);
+
+  // YouTube API para controlar animación del video
+  useEffect(() => {
+    // Cargar YouTube API
+    const loadYouTubeAPI = () => {
+      if (typeof window !== 'undefined' && !(window as any).YT) {
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        if (firstScriptTag && firstScriptTag.parentNode) {
+          firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        }
+      }
+    };
+
+    // Función global para YouTube API
+    (window as any).onYouTubeIframeAPIReady = () => {
+      const player = new (window as any).YT.Player('youtube-iframe', {
+        events: {
+          'onStateChange': (event: any) => {
+            const videoPlayer = document.getElementById('video-player');
+            if (videoPlayer) {
+              if (event.data === (window as any).YT.PlayerState.PLAYING) {
+                videoPlayer.classList.add('playing');
+              } else if (event.data === (window as any).YT.PlayerState.PAUSED || 
+                         event.data === (window as any).YT.PlayerState.ENDED) {
+                videoPlayer.classList.remove('playing');
+              }
+            }
+          }
+        }
+      });
+    };
+
+    loadYouTubeAPI();
+  }, []);
 
   const loadUserProgress = async () => {
     console.log('🔍 [DEBUG] loadUserProgress iniciado');
-    console.log('🔍 [DEBUG] Usuario:', { user: !!user, userId: user?.id });
+    console.log('🔍 [DEBUG] Usuario:', { user: !!user, userId: user?.id, status });
     
-    if (!user) {
-      console.log('🔍 [DEBUG] No hay usuario, saliendo de loadUserProgress');
+    if (!user || status !== 'authenticated') {
+      console.log('🔍 [DEBUG] Usuario no autenticado, saliendo de loadUserProgress');
+      setIsLoading(false);
       return;
     }
 
@@ -271,17 +288,35 @@ export default function MonetizaIAPage() {
       if (response.ok) {
         const data = await response.json();
         console.log('🔍 [DEBUG] Datos de progreso recibidos:', data);
-        setCurrentLesson(data.currentLesson || 0);
-        setCompletedLessons(data.completedLessons || []);
-        setProgressPercentage(data.progressPercentage || 0);
+        console.log('🔍 [DEBUG] Actualizando estados locales...');
+        
+        const newCurrentLesson = data.currentLesson || 0;
+        const newCompletedLessons = data.completedLessons || [];
+        const newProgressPercentage = data.progressPercentage || 0;
+        
+        setCurrentLesson(newCurrentLesson);
+        setCompletedLessons(newCompletedLessons);
+        setProgressPercentage(newProgressPercentage);
+        
+        console.log('🔍 [DEBUG] Estados actualizados:', {
+          currentLesson: newCurrentLesson,
+          completedLessonsLength: newCompletedLessons.length,
+          progressPercentage: newProgressPercentage
+        });
+        
+        // Verificar si debería mostrar "Continuar"
+        const shouldShowContinue = newCompletedLessons.length > 0;
+        console.log('🔍 [DEBUG] Debería mostrar "Continuar":', shouldShowContinue);
+        
       } else if (response.status === 404) {
         console.log('🔍 [DEBUG] Usuario no inscrito (404), estableciendo valores por defecto');
-        // Usuario no inscrito, mantener valores por defecto
         setCurrentLesson(0);
         setCompletedLessons([]);
         setProgressPercentage(0);
       } else {
         console.log('🔍 [DEBUG] Error en respuesta de progreso:', response.status);
+        const errorText = await response.text();
+        console.log('🔍 [DEBUG] Error details:', errorText);
       }
     } catch (error) {
       console.error('❌ Error al cargar el progreso:', error);
@@ -293,16 +328,50 @@ export default function MonetizaIAPage() {
 
   const getRemainingTime = () => {
     if (completedLessons.length === 0) {
-      return `${totalDuration}min`;
+      return `${Math.floor(totalDuration / 60)}h ${totalDuration % 60}min`;
     }
     
-    const remainingLessons = courseData.lessons.length - completedLessons.length;
-    const averageTimePerLesson = totalDuration / courseData.lessons.length;
+    const remainingLessons = courseData.lessonsCount - completedLessons.length;
+    const averageTimePerLesson = totalDuration / courseData.lessonsCount;
     const totalRemainingTime = remainingLessons * averageTimePerLesson;
     
     const hours = Math.floor(totalRemainingTime / 60);
     const minutes = Math.round(totalRemainingTime % 60);
     return `${hours}h ${minutes}min`;
+  };
+
+  // Mapeo de las lecciones por módulo para determinar si un módulo está completado
+  const getModuleLessons = (moduleId: number): string[] => {
+    const lessonsByModule: Record<number, string[]> = {
+      1: ['mockup1', 'mockup2', 'mockup3', 'mockup4'],
+      2: ['mockup5', 'mockup6', 'mockup7', 'mockup8', 'mockup9'],
+      3: ['mockup10', 'mockup11', 'mockup12', 'mockup13', 'mockup14', 'mockup15'],
+      4: ['mockup16', 'mockup17', 'mockup18', 'mockup19', 'mockup20'],
+      5: ['mockup21', 'mockup22', 'mockup23', 'mockup24', 'mockup25']
+    };
+    return lessonsByModule[moduleId] || [];
+  };
+
+  const isModuleCompleted = (moduleId: number): boolean => {
+    const moduleLessons = getModuleLessons(moduleId);
+    return moduleLessons.every(lessonId => completedLessons.includes(lessonId));
+  };
+
+  // Calcular módulos completados (hay 5 módulos en total)
+  const getCompletedModulesCount = (): number => {
+    let completedCount = 0;
+    for (let moduleId = 1; moduleId <= 5; moduleId++) {
+      if (isModuleCompleted(moduleId)) {
+        completedCount++;
+      }
+    }
+    return completedCount;
+  };
+
+  // Calcular porcentaje de progreso basado en módulos (5 módulos total)
+  const getModuleProgressPercentage = (): number => {
+    const completedModules = getCompletedModulesCount();
+    return Math.round((completedModules / 5) * 100);
   };
 
   console.log('🔍 [DEBUG] Renderizando componente, isLoading:', isLoading, 'authStatus:', status);
@@ -322,11 +391,19 @@ export default function MonetizaIAPage() {
   const isUserAuthenticated = user && status === 'authenticated';
 
   console.log('🔍 [DEBUG] Renderizando JSX principal');
+  console.log('🔍 [DEBUG] Estados finales antes del render:', {
+    user: !!user,
+    status,
+    isUserAuthenticated,
+    completedLessonsLength: completedLessons.length,
+    currentLesson,
+    progressPercentage,
+    isLoading
+  });
+  console.log('🔍 [DEBUG] Condición del botón (isUserAuthenticated && completedLessons.length > 0):', isUserAuthenticated && completedLessons.length > 0);
   
   return (
     <>
-
-      
       <Navbar />
       
       <main className="main-content">
@@ -347,8 +424,8 @@ export default function MonetizaIAPage() {
                 {/* Video solo para móvil - entre descripción y botón */}
                 <div className="mobile-video-preview">
                   <VideoPlayer
-                    videoUrl="https://www.youtube.com/watch?v=hBuXs6NYesw"
-                    title="Preview del Curso - Monetiza con IA"
+                    videoUrl="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                    title="Mockups con IA desde cero - Preview"
                     className="mobile-preview-video"
                   />
                 </div>
@@ -359,8 +436,11 @@ export default function MonetizaIAPage() {
                     <div className="progress-section-new">
                       <div className="progress-info-new">
                         <p className="progress-text-new">
-                          📚 <strong>Progreso actual:</strong> Lección {currentLesson + 1} de {courseData.lessons.length}
+                          📚 <strong>Progreso actual:</strong> Lección {currentLesson + 1} de {courseData.lessonsCount}
                         </p>
+                        <div className="progress-bar-new">
+                          <div className="progress-fill-new" style={{ width: `${Math.round(progressPercentage)}%` }}></div>
+                        </div>
                         <p className="progress-detail-new">
                           {completedLessons.length} lecciones completadas • {Math.round(progressPercentage)}% del curso
                         </p>
@@ -380,8 +460,6 @@ export default function MonetizaIAPage() {
                       >
                         {isUserAuthenticated ? '🎯 Comenzar Curso Gratis' : '🔐 Iniciar Sesión para Comenzar'}
                       </div>
-                      
-                      {/* Contador eliminado */}
                     </div>
                   )}
                 </div>
@@ -389,16 +467,16 @@ export default function MonetizaIAPage() {
                 <div className="course-meta">
                   <div className="course-badges-secondary">
                     <span className="badge badge-language">🌍 {courseData.language}</span>
-                    <span className="badge badge-includes">📦 Proyecto práctico incluido</span>
-                    <span className="badge badge-access">🔓 Acceso de por vida</span>
+                    <span className="badge badge-includes">💻 Modalidad Online</span>
+                    <span className="badge badge-access">🏆 Certificado Digital Incluido</span>
                   </div>
                 </div>
               </div>
               
               <div className="course-preview">
                 <VideoPlayer
-                  videoUrl="https://www.youtube.com/watch?v=hBuXs6NYesw"
-                  title="Preview del Curso - Monetiza con IA"
+                  videoUrl="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                  title="Mockups con IA desde cero - Preview"
                   className="desktop-preview-video"
                 />
                 
@@ -418,7 +496,7 @@ export default function MonetizaIAPage() {
                   <h2>Contenido del Curso</h2>
                   <div className="curriculum-stats">
                     <div className="stat-item">
-                      <span className="stat-number">{courseData.lessons.length}</span>
+                      <span className="stat-number">{courseData.lessonsCount}</span>
                       <span className="stat-label">Lecciones</span>
                     </div>
                     <div className="stat-item">
@@ -434,11 +512,11 @@ export default function MonetizaIAPage() {
                   <div className="lessons-list">
                     <div className="lessons-grid">
                       {courseData.lessons.map((lesson, index) => (
-                        <div key={lesson.id} className={`lesson-card ${completedLessons.includes(index) ? 'completed' : ''}`}>
+                        <div key={lesson.id} className={`lesson-card ${isModuleCompleted(lesson.id) ? 'completed' : ''}`}>
                           <div className="lesson-header">
                             <div className="lesson-number">{index + 1}</div>
                             <div className="lesson-status">
-                              {completedLessons.includes(index) ? '✓' : '○'}
+                              {isModuleCompleted(lesson.id) ? '✓' : '○'}
                             </div>
                           </div>
                           <div className="lesson-content">
@@ -457,28 +535,17 @@ export default function MonetizaIAPage() {
 
                 {/* What You'll Learn */}
                 <div className="learning-objectives">
-                  <h2>Lo que Aprenderás</h2>
+                  <h2>Objetivo del Curso</h2>
                   
                   <div className="course-introduction">
                     <p>
-                      La <strong>monetización con inteligencia artificial</strong> representa una de las oportunidades 
-                      más prometedoras en el panorama digital actual. Con el auge de herramientas como ChatGPT, 
-                      Claude y otras plataformas de IA, se han abierto nuevas posibilidades para crear fuentes 
-                      de ingresos innovadoras y escalables.
+                      <strong>Al finalizar este curso, el estudiante será capaz de:</strong>
                     </p>
                     
-                    <p>
-                      Este curso te guiará a través de estrategias prácticas y probadas para monetizar 
-                      efectivamente las herramientas de IA. Desde la creación de productos digitales hasta 
-                      la automatización de procesos de venta, aprenderás cómo construir un negocio digital 
-                      que funcione las 24 horas del día, los 7 días de la semana.
-                    </p>
-                    
-                    <p>
-                      A diferencia de otros cursos que se enfocan únicamente en la teoría, aquí encontrarás 
-                      implementaciones reales y casos de estudio de personas que ya están generando ingresos 
-                      significativos utilizando estas estrategias.
-                    </p>
+                    <ul className="course-objectives-list">
+                      <li>Reconocer los tipos de mockups más utilizados en la industria del diseño gráfico y cómo aplicarlos con diseños generados por IA</li>
+                      <li>Manejar correctamente herramientas de IA como Chat GPT, Sora de OpenAI y funciones avanzadas de Canva</li>
+                    </ul>
                   </div>
                   
                   <div className="objectives-grid">
@@ -497,7 +564,7 @@ export default function MonetizaIAPage() {
                   <div className="tools-grid">
                     {courseData.tools.map((tool, index) => (
                       <div key={index} className="tool-item">
-                        <span className="tool-icon">🔧</span>
+                        <span className="tool-icon">🎨</span>
                         <span>{tool}</span>
                       </div>
                     ))}
@@ -543,7 +610,7 @@ export default function MonetizaIAPage() {
               <h2>Contenido del Curso</h2>
               <div className="curriculum-stats">
                 <div className="stat-item">
-                  <span className="stat-number">{courseData.lessons.length}</span>
+                  <span className="stat-number">{courseData.lessonsCount}</span>
                   <span className="stat-label">Lecciones</span>
                 </div>
                 <div className="stat-item">
@@ -559,12 +626,12 @@ export default function MonetizaIAPage() {
               <div className="lessons-list">
                 <div className="lessons-horizontal">
                   {courseData.lessons.map((lesson, index) => (
-                    <div key={lesson.id} className={`lesson-item-horizontal ${completedLessons.includes(index) ? 'completed' : ''}`}>
+                    <div key={lesson.id} className={`lesson-item-horizontal ${isModuleCompleted(lesson.id) ? 'completed' : ''}`}>
                       <div className="lesson-header-horizontal" onClick={() => toggleLesson(index)}>
                         <div className="lesson-number-horizontal">{index + 1}</div>
                         <div className="lesson-title-horizontal">{lesson.title}</div>
                         <div className="lesson-status-horizontal">
-                          {completedLessons.includes(index) ? '✓' : '○'}
+                          {isModuleCompleted(lesson.id) ? '✓' : '○'}
                         </div>
                         <div className="lesson-toggle">
                           {expandedLessons.includes(index) ? '−' : '+'}
@@ -624,28 +691,17 @@ export default function MonetizaIAPage() {
         <section className="mobile-learning-section">
           <div className="container">
             <div className="learning-objectives">
-              <h2>Lo que Aprenderás</h2>
+              <h2>Objetivo del Curso</h2>
               
               <div className="course-introduction">
                 <p>
-                  La <strong>monetización con inteligencia artificial</strong> representa una de las oportunidades 
-                  más prometedoras en el panorama digital actual. Con el auge de herramientas como ChatGPT, 
-                  Claude y otras plataformas de IA, se han abierto nuevas posibilidades para crear fuentes 
-                  de ingresos innovadoras y escalables.
+                  <strong>Al finalizar este curso, el estudiante será capaz de:</strong>
                 </p>
                 
-                <p>
-                  Este curso te guiará a través de estrategias prácticas y probadas para monetizar 
-                  efectivamente las herramientas de IA. Desde la creación de productos digitales hasta 
-                  la automatización de procesos de venta, aprenderás cómo construir un negocio digital 
-                  que funcione las 24 horas del día, los 7 días de la semana.
-                </p>
-                
-                <p>
-                  A diferencia de otros cursos que se enfocan únicamente en la teoría, aquí encontrarás 
-                  implementaciones reales y casos de estudio de personas que ya están generando ingresos 
-                  significativos utilizando estas estrategias.
-                </p>
+                <ul className="course-objectives-list">
+                  <li>Reconocer los tipos de mockups más utilizados en la industria del diseño gráfico y cómo aplicarlos con diseños generados por IA</li>
+                  <li>Manejar correctamente herramientas de IA como Chat GPT, Sora de OpenAI y funciones avanzadas de Canva</li>
+                </ul>
               </div>
               
               <div className="objectives-grid">
@@ -668,7 +724,7 @@ export default function MonetizaIAPage() {
               <div className="tools-grid">
                 {courseData.tools.map((tool, index) => (
                   <div key={index} className="tool-item">
-                    <span className="tool-icon">🔧</span>
+                    <span className="tool-icon">🎨</span>
                     <span>{tool}</span>
                   </div>
                 ))}
@@ -690,8 +746,6 @@ export default function MonetizaIAPage() {
           gap: 1rem;
         }
 
-
-
         .hero-section {
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
           color: white;
@@ -707,6 +761,7 @@ export default function MonetizaIAPage() {
           max-width: 1200px;
           margin: 0 auto;
           padding: 0 1rem;
+          position: relative;
         }
 
         .course-badges {
@@ -763,25 +818,25 @@ export default function MonetizaIAPage() {
           margin-bottom: 1.5rem;
         }
 
-                  /* Ocultar video móvil en desktop */
-          .mobile-video-preview {
-            display: none;
-          }
-          
-          /* Estilos para videos de preview */
-          .mobile-preview-video {
-            margin: 1.5rem 0;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-          }
-          
-          .desktop-preview-video {
-            margin: 0;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-          }
+        /* Ocultar video móvil en desktop */
+        .mobile-video-preview {
+          display: none;
+        }
+        
+        /* Estilos para videos de preview */
+        .mobile-preview-video {
+          margin: 1.5rem 0;
+          border-radius: 12px;
+          overflow: hidden;
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .desktop-preview-video {
+          margin: 0;
+          border-radius: 12px;
+          overflow: hidden;
+          box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
 
         .progress-section-new {
           display: flex;
@@ -808,75 +863,27 @@ export default function MonetizaIAPage() {
           opacity: 0.8;
         }
 
+        .progress-bar-new {
+          width: 100%;
+          height: 6px;
+          background: rgba(255, 255, 255, 0.2);
+          border-radius: 3px;
+          overflow: hidden;
+          margin: 0.5rem 0;
+        }
+
+        .progress-fill-new {
+          height: 100%;
+          background: linear-gradient(135deg, #22c55e, #16a34a);
+          transition: width 0.3s ease;
+          border-radius: 3px;
+        }
+
         .start-section-new {
           display: flex;
           flex-direction: column;
           gap: 1rem;
           align-items: flex-start;
-        }
-
-        .course-actions-with-progress {
-          display: flex;
-          flex-direction: column;
-          gap: 1rem;
-          width: 100%;
-        }
-
-        .progress-summary {
-          background: rgba(255, 255, 255, 0.1);
-          padding: 1rem;
-          border-radius: 8px;
-          border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .progress-status {
-          margin: 0 0 0.5rem 0;
-          font-weight: 600;
-        }
-
-        .progress-detail {
-          margin: 0;
-          font-size: 0.9rem;
-          opacity: 0.8;
-        }
-
-        .btn {
-          padding: 1rem 2rem;
-          border-radius: 8px;
-          font-weight: 600;
-          font-size: 1rem;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          border: none;
-          text-decoration: none;
-          display: inline-flex;
-          align-items: center;
-          gap: 0.5rem;
-        }
-
-        .btn-primary {
-          background: linear-gradient(135deg, #22c55e, #16a34a);
-          color: white;
-        }
-
-        .btn-primary:hover {
-          background: linear-gradient(135deg, #16a34a, #15803d);
-          transform: translateY(-2px);
-          box-shadow: 0 8px 25px rgba(34, 197, 94, 0.3);
-        }
-
-        .btn-large {
-          padding: 1.25rem 2.5rem;
-          font-size: 1.1rem;
-        }
-
-        .btn-continue-course {
-          background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-        }
-
-        .btn-continue-course:hover {
-          background: linear-gradient(135deg, #1d4ed8, #1e40af);
-          box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
         }
 
         .course-meta {
@@ -895,112 +902,6 @@ export default function MonetizaIAPage() {
           border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
-        .course-preview {
-          display: flex;
-          flex-direction: column;
-          gap: 1rem;
-        }
-
-        .preview-video {
-          position: relative;
-          border-radius: 12px;
-          overflow: hidden;
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        .preview-video img {
-          width: 100%;
-          height: auto;
-          display: block;
-        }
-
-        .play-button {
-          position: absolute;
-          top: 80%;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 50px;
-          height: 50px;
-          background: rgba(255, 255, 255, 0.3);
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 1.2rem;
-          color: #1f2937;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          backdrop-filter: blur(3px);
-        }
-
-        .play-button:hover {
-          background: rgba(255, 255, 255, 0.5);
-          transform: translateX(-50%) scale(1.1);
-        }
-
-        .course-actions {
-          display: flex;
-          flex-direction: column;
-          gap: 1rem;
-          align-items: flex-start;
-        }
-
-        /* Estilos del contador eliminados */
-
-        .progress-card {
-          background: white;
-          padding: 2rem;
-          border-radius: 12px;
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-          margin-top: 2rem;
-          text-align: center;
-        }
-
-        .progress-card h3 {
-          margin: 0 0 1.5rem 0;
-          color: #1f2937;
-        }
-
-        .progress-bar {
-          width: 100%;
-          height: 8px;
-          background: #e5e7eb;
-          border-radius: 4px;
-          overflow: hidden;
-          margin-bottom: 1rem;
-        }
-
-        .progress-fill {
-          height: 100%;
-          background: linear-gradient(135deg, #22c55e, #16a34a);
-          transition: width 0.3s ease;
-        }
-
-        .progress-details {
-          margin-bottom: 1rem;
-        }
-
-        .progress-text, .progress-remaining {
-          margin: 0.25rem 0;
-          color: #6b7280;
-          font-size: 0.9rem;
-        }
-
-        .btn-outline {
-          background: transparent;
-          color: #22c55e;
-          border: 2px solid #22c55e;
-        }
-
-        .btn-outline:hover {
-          background: #22c55e;
-          color: white;
-        }
-
-        .btn-small {
-          padding: 0.75rem 1.5rem;
-          font-size: 0.9rem;
-        }
 
         .course-action-button {
           padding: 1rem 2rem;
@@ -1115,7 +1016,6 @@ export default function MonetizaIAPage() {
           margin: 0 auto;
         }
 
-        /* Ocultar funcionalidad expandible en desktop */
         .lessons-horizontal {
           display: none;
         }
@@ -1213,144 +1113,6 @@ export default function MonetizaIAPage() {
           font-weight: 500;
         }
 
-                  .lesson-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-          }
-
-          /* Estilos responsive para grid móvil */
-          @media (max-width: 768px) {
-            .lessons-grid {
-              grid-template-columns: repeat(2, 1fr);
-              gap: 0.75rem;
-              justify-items: stretch;
-              align-items: stretch;
-              width: 100%;
-              max-width: 100%;
-            }
-
-            .lesson-card {
-              padding: 0.75rem;
-              gap: 0.5rem;
-              width: 100%;
-              height: 300px;
-              box-sizing: border-box;
-              flex-direction: column;
-              overflow: hidden;
-              display: flex;
-            }
-
-            .lesson-number {
-              width: 28px;
-              height: 28px;
-              font-size: 0.8rem;
-            }
-
-            .lesson-status {
-              font-size: 1rem;
-            }
-
-            .lesson-title {
-              font-size: 0.8rem;
-              line-height: 1.2;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              white-space: nowrap;
-            }
-
-            .lesson-description {
-              font-size: 0.7rem;
-              line-height: 1.3;
-              overflow: hidden;
-              display: -webkit-box;
-              -webkit-line-clamp: 5;
-              -webkit-box-orient: vertical;
-              text-overflow: ellipsis;
-            }
-
-            .lesson-meta {
-              gap: 0.4rem;
-              margin-top: 0.4rem;
-            }
-
-            .lesson-type, .lesson-duration {
-              font-size: 0.6rem;
-              padding: 0.15rem 0.3rem;
-            }
-          }
-
-        .lesson-item:hover {
-          border-color: #22c55e;
-          box-shadow: 0 2px 8px rgba(34, 197, 94, 0.1);
-        }
-
-        .lesson-item.completed {
-          background: #f0fdf4;
-          border-color: #22c55e;
-        }
-
-        .lesson-number {
-          width: 40px;
-          height: 40px;
-          background: #22c55e;
-          color: white;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-weight: 600;
-          flex-shrink: 0;
-        }
-
-        .lesson-content {
-          flex: 1;
-        }
-
-        .lesson-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 0.5rem;
-        }
-
-        .lesson-header h3 {
-          margin: 0;
-          font-size: 1.1rem;
-          font-weight: 600;
-          color: #1f2937;
-        }
-
-        .lesson-meta {
-          display: flex;
-          gap: 0.5rem;
-        }
-
-        .lesson-type, .lesson-duration {
-          font-size: 0.8rem;
-          color: #6b7280;
-          background: #f3f4f6;
-          padding: 0.25rem 0.5rem;
-          border-radius: 4px;
-        }
-
-        .lesson-description {
-          margin: 0;
-          font-size: 0.9rem;
-          color: #6b7280;
-          line-height: 1.5;
-        }
-
-        .lesson-status {
-          font-size: 1.5rem;
-          color: #22c55e;
-          font-weight: 700;
-        }
-
         .course-introduction {
           margin-bottom: 2rem;
         }
@@ -1359,6 +1121,33 @@ export default function MonetizaIAPage() {
           margin: 0 0 1rem 0;
           line-height: 1.6;
           color: #4b5563;
+        }
+
+        .course-objectives-list {
+          list-style: none;
+          padding: 0;
+          margin: 1rem 0;
+        }
+
+        .course-objectives-list li {
+          display: flex;
+          align-items: flex-start;
+          gap: 0.75rem;
+          padding: 0.75rem 0;
+          border-bottom: 1px solid #e5e7eb;
+          color: #4b5563;
+          line-height: 1.6;
+        }
+
+        .course-objectives-list li:last-child {
+          border-bottom: none;
+        }
+
+        .course-objectives-list li::before {
+          content: "🎯";
+          font-size: 1.2rem;
+          flex-shrink: 0;
+          margin-top: 0.1rem;
         }
 
         .objectives-grid {
@@ -1410,34 +1199,33 @@ export default function MonetizaIAPage() {
           gap: 2rem;
         }
 
-        .mobile-instructor-section {
+        .mobile-instructor-section,
+        .mobile-prerequisites-section,
+        .mobile-curriculum-section,
+        .mobile-learning-section,
+        .mobile-tools-section {
           display: none;
           padding: 2rem 0;
-          background: #f9fafb;
-        }
-
-        .mobile-prerequisites-section {
-          display: none;
-          padding: 2rem 0;
-          background: #f3f4f6;
         }
 
         .mobile-curriculum-section {
-          display: none;
-          padding: 2rem 0;
           background: #ffffff;
         }
 
         .mobile-learning-section {
-          display: none;
-          padding: 2rem 0;
           background: #f9fafb;
         }
 
         .mobile-tools-section {
-          display: none;
-          padding: 2rem 0;
           background: #ffffff;
+        }
+
+        .mobile-instructor-section {
+          background: #f9fafb;
+        }
+
+        .mobile-prerequisites-section {
+          background: #f3f4f6;
         }
 
         .instructor-card, .prerequisites-card {
@@ -1529,12 +1317,10 @@ export default function MonetizaIAPage() {
             gap: 1rem;
           }
 
-          /* Ocultar video en su posición original en móvil */
           .course-preview {
             display: none;
           }
 
-          /* Mostrar video móvil entre descripción y botón */
           .mobile-video-preview {
             display: block;
             margin: 1.5rem 0;
@@ -1552,7 +1338,6 @@ export default function MonetizaIAPage() {
             justify-items: center;
           }
 
-          /* Ocultar contenido desktop en móvil */
           .desktop-content {
             display: none;
           }
@@ -1561,23 +1346,10 @@ export default function MonetizaIAPage() {
             display: none;
           }
 
-          /* Mostrar secciones móviles */
-          .mobile-curriculum-section {
-            display: block;
-          }
-
-          .mobile-learning-section {
-            display: block;
-          }
-
-          .mobile-tools-section {
-            display: block;
-          }
-
-          .mobile-instructor-section {
-            display: block;
-          }
-
+          .mobile-curriculum-section,
+          .mobile-learning-section,
+          .mobile-tools-section,
+          .mobile-instructor-section,
           .mobile-prerequisites-section {
             display: block;
           }
@@ -1603,12 +1375,6 @@ export default function MonetizaIAPage() {
             margin-bottom: 0.75rem;
           }
 
-          .btn-large {
-            padding: 0.9rem 1.8rem;
-            font-size: 0.95rem;
-          }
-
-          /* Ajustar badges en móvil */
           .course-badges {
             gap: 0.25rem;
             margin-bottom: 0.5rem;
@@ -1631,14 +1397,12 @@ export default function MonetizaIAPage() {
             padding: 0.1rem 0.4rem;
           }
 
-          /* Ajustar botones de acción en móvil */
           .course-action-button {
             font-size: 0.85rem;
             padding: 0.7rem 1.2rem;
             border-radius: 8px;
           }
 
-          /* Ajustar secciones de progreso en móvil */
           .progress-info-new {
             padding: 0.8rem;
             border-radius: 6px;
@@ -1653,7 +1417,6 @@ export default function MonetizaIAPage() {
             font-size: 0.75rem;
           }
 
-          /* Mostrar funcionalidad expandible solo en móvil */
           .lessons-horizontal {
             display: flex !important;
             flex-direction: column;
@@ -1662,7 +1425,6 @@ export default function MonetizaIAPage() {
             margin: 0 auto;
           }
 
-          /* Ocultar grid en móvil */
           .lessons-grid {
             display: none;
           }
@@ -1786,12 +1548,9 @@ export default function MonetizaIAPage() {
             font-weight: 500;
           }
 
-          /* Ajustar hero section padding en móvil */
           .hero-section {
             padding: 0.75rem 0;
           }
-
-
 
           .course-hero {
             gap: 0.75rem;
@@ -1802,7 +1561,6 @@ export default function MonetizaIAPage() {
             padding: 0 1rem;
           }
 
-          /* Ajustar espaciado de elementos */
           .course-meta {
             margin-top: 0.75rem;
           }
@@ -1810,4 +1568,4 @@ export default function MonetizaIAPage() {
       `}</style>
     </>
   );
-} 
+}

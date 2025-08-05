@@ -2664,6 +2664,13 @@ export default function ContenidoAsistentesVirtualesIAPage() {
           font-weight: 500;
         }
 
+        @media (min-width: 769px) and (max-width: 1199px) {
+          .content-layout {
+            grid-template-columns: 1fr 280px;
+            gap: 1.5rem;
+          }
+        }
+
         @media (max-width: 768px) {
           .content-layout {
             grid-template-columns: 1fr;
@@ -3110,6 +3117,54 @@ export default function ContenidoAsistentesVirtualesIAPage() {
             overflow-x: hidden !important;
             padding: 0 0.5rem !important;
             box-sizing: border-box !important;
+          }
+
+          /* Estilos para el contenedor del video */
+          .lesson-video {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 2rem 0 !important;
+            border-radius: 12px !important;
+            overflow: hidden !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
+            background: #000 !important;
+          }
+
+          /* Responsive para diferentes tamaños de pantalla */
+          @media (min-width: 1200px) {
+            .lesson-video {
+              max-width: 900px !important;
+              margin: 2rem auto !important;
+            }
+          }
+
+          @media (min-width: 768px) and (max-width: 1199px) {
+            .lesson-video {
+              max-width: 100% !important;
+              margin: 1.5rem 0 !important;
+              max-height: 60vh !important;
+            }
+          }
+
+          @media (max-width: 767px) {
+            .lesson-video {
+              margin: 1rem 0 !important;
+              border-radius: 8px !important;
+              max-height: 50vh !important;
+            }
+          }
+
+          @media (max-width: 480px) {
+            .lesson-video {
+              margin: 0.5rem 0 !important;
+              max-height: 40vh !important;
+            }
+          }
+
+          @media (max-width: 375px) {
+            .lesson-video {
+              max-height: 35vh !important;
+            }
           }
         }
 

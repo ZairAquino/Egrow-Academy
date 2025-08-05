@@ -204,6 +204,20 @@ export default function VideosProfesionalesIAPage() {
     return completedLessons.length >= moduleId * 4;
   };
 
+  const getRemainingTime = () => {
+    if (completedLessons.length === 0) {
+      return `${Math.floor(totalDuration / 60)}h ${totalDuration % 60}min`;
+    }
+    
+    const remainingLessons = courseData.lessonsCount - completedLessons.length;
+    const averageTimePerLesson = totalDuration / courseData.lessonsCount;
+    const totalRemainingTime = remainingLessons * averageTimePerLesson;
+    
+    const hours = Math.floor(totalRemainingTime / 60);
+    const minutes = Math.round(totalRemainingTime % 60);
+    return `${hours}h ${minutes}min`;
+  };
+
   if (status === 'loading' || isLoading) {
     return (
       <div className="loading-container" suppressHydrationWarning>
@@ -232,6 +246,15 @@ export default function VideosProfesionalesIAPage() {
                 
                 <h1 className="course-title-large">{courseData.title}</h1>
                 <p className="course-description course-description-dark">{courseData.description}</p>
+                
+                {/* Video solo para móvil - entre descripción y botón */}
+                <div className="mobile-video-preview">
+                  <VideoPlayer
+                    videoUrl="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                    title="Videos Profesionales con IA - Preview"
+                    className="mobile-preview-video"
+                  />
+                </div>
                 
                 <div className="new-course-actions">
                   {isUserAuthenticated && completedLessons.length > 0 ? (
@@ -279,6 +302,15 @@ export default function VideosProfesionalesIAPage() {
                     <span className="badge badge-access">🔓 Acceso de por vida</span>
                   </div>
                 </div>
+              </div>
+              
+              <div className="course-preview">
+                <VideoPlayer
+                  videoUrl="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                  title="Videos Profesionales con IA - Preview"
+                  className="desktop-preview-video"
+                />
+                
               </div>
             </div>
           </div>
@@ -452,7 +484,7 @@ export default function VideosProfesionalesIAPage() {
 
         .course-hero {
           display: grid;
-          grid-template-columns: 1fr;
+          grid-template-columns: 1fr 1fr;
           gap: 1.5rem;
           align-items: start;
           max-width: 1200px;
@@ -509,6 +541,26 @@ export default function VideosProfesionalesIAPage() {
 
         .new-course-actions {
           margin-bottom: 1.5rem;
+        }
+
+        /* Ocultar video móvil en desktop */
+        .mobile-video-preview {
+          display: none;
+        }
+        
+        /* Estilos para videos de preview */
+        .mobile-preview-video {
+          margin: 1.5rem 0;
+          border-radius: 12px;
+          overflow: hidden;
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .desktop-preview-video {
+          margin: 0;
+          border-radius: 12px;
+          overflow: hidden;
+          box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
         }
 
         .progress-section-new {

@@ -99,7 +99,7 @@ export default function AsistentesVirtualesIAPage() {
     category: 'Asistentes Virtuales',
     price: 'Gratis',
     language: 'Español',
-    image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=250&fit=crop&crop=center',
+    image: '/images/18.png',
     lessonsCount: 21,
     instructor: {
       name: 'eGrow Academy',
@@ -431,7 +431,7 @@ export default function AsistentesVirtualesIAPage() {
                 <div className="mobile-video-preview">
                   <VideoPlayer
                     videoUrl="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-                    title="Never Gonna Give You Up - Rick Astley"
+                    title="Asistentes Virtuales con IA - Preview"
                     className="mobile-preview-video"
                   />
                 </div>
@@ -480,18 +480,14 @@ export default function AsistentesVirtualesIAPage() {
                   </div>
                 </div>
               </div>
-            </div>
-            
-            <div className="new-video-player" id="video-player">
-              <div className="new-desktop-video">
-                <iframe
-                  src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0&modestbranding=1&rel=0&showinfo=0&controls=1&enablejsapi=1"
-                  title="Never Gonna Give You Up - Rick Astley"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                  id="youtube-iframe"
+              
+              <div className="course-preview">
+                <VideoPlayer
+                  videoUrl="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                  title="Asistentes Virtuales con IA - Preview"
+                  className="desktop-preview-video"
                 />
+                
               </div>
             </div>
           </div>
@@ -863,6 +859,13 @@ export default function AsistentesVirtualesIAPage() {
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+          }
+          
+          .desktop-preview-video {
+            margin: 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
           }
           
 

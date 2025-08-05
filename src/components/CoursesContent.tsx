@@ -38,10 +38,11 @@ interface Course {
 
 // Categorías disponibles
 const categories = [
-  { id: 'all', name: 'Todos los Cursos', icon: '📚', count: 4 },
+  { id: 'all', name: 'Todos los Cursos', icon: '📚', count: 6 },
   { id: 'IA_PARA_EMPRENDER', name: 'IA para Emprender', icon: '🚀', count: 2 },
   { id: 'DESARROLLO_WEB', name: 'Desarrollo Web', icon: '💻', count: 2 },
   { id: 'MARKETING_DIGITAL', name: 'Marketing Digital', icon: '📈', count: 1 },
+  { id: 'HABILIDADES_IRREMPLAZABLES', name: 'Habilidades Irremplazables', icon: '🎆', count: 1 },
   { id: 'PRODUCTIVIDAD', name: 'Productividad', icon: '⚡', count: 0 },
   { id: 'FINANZAS_PERSONALES', name: 'Finanzas Personales', icon: '💰', count: 0 },
   { id: 'LIDERAZGO', name: 'Liderazgo', icon: '👑', count: 0 },
@@ -154,6 +155,20 @@ export default function CoursesContent() {
         isFree: true,
         requiresAuth: false,
         link: '/curso/asistentes-virtuales-ia'
+      },
+      {
+        id: 'mockup-cero',
+        title: 'Crea Mockups con IA desde cero sin saber nada de diseño',
+        description: 'Diseñar presentaciones visuales atractivas usando inteligencia artificial. Aprende a crear mockups profesionales sin experiencia previa en diseño, utilizando herramientas de IA para presentar ideas, productos y servicios.',
+        category: 'HABILIDADES_IRREMPLAZABLES',
+        duration: '5 horas',
+        level: 'Principiante',
+        price: 'Gratis',
+        image: '/images/mockups-ia.png',
+        tag: 'Gratis',
+        isFree: true,
+        requiresAuth: false,
+        link: '/curso/mockup-cero'
       },
       {
         id: 'desarrollo-web-fullstack',

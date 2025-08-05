@@ -442,7 +442,7 @@ export default function VibeCodingClaudeCursorPage() {
                 <div className="mobile-video-preview">
                   <VideoPlayer
                     videoUrl="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-                    title="Never Gonna Give You Up - Rick Astley"
+                    title="Vibe Coding con Claude & Cursor - Preview"
                     className="mobile-preview-video"
                   />
                 </div>
@@ -494,18 +494,14 @@ export default function VibeCodingClaudeCursorPage() {
                   </div>
                 </div>
               </div>
-            </div>
-            
-            <div className="new-video-player" id="video-player">
-              <div className="new-desktop-video">
-                <iframe
-                  src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0&modestbranding=1&rel=0&showinfo=0&controls=1&enablejsapi=1"
-                  title="Never Gonna Give You Up - Rick Astley"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                  id="youtube-iframe"
+              
+              <div className="course-preview">
+                <VideoPlayer
+                  videoUrl="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                  title="Vibe Coding con Claude & Cursor - Preview"
+                  className="desktop-preview-video"
                 />
+                
               </div>
             </div>
           </div>
@@ -875,6 +871,13 @@ export default function VibeCodingClaudeCursorPage() {
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+          }
+          
+          .desktop-preview-video {
+            margin: 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
           }
           
 
