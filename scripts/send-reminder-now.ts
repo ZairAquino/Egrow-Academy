@@ -3,11 +3,11 @@ import { sendBulkWebinarReminders } from '../src/lib/email/webinar-email-service
 
 const prisma = new PrismaClient();
 
-async function checkWebinarRegistrations() {
+async function sendReminderNow() {
   try {
-    console.log('🔍 Verificando registros del webinar "Monetiza con IA"...');
+    console.log('🔄 Enviando recordatorio inmediato para webinar "Monetiza con IA"...');
 
-    // Buscar el webinar con sus registros
+    // Buscar el webinar
     const webinar = await prisma.webinar.findFirst({
       where: {
         OR: [
@@ -27,17 +27,14 @@ async function checkWebinarRegistrations() {
       return;
     }
 
-    console.log('\n📋 Detalles del webinar:');
-    console.log('📝 Título:', webinar.title);
-    console.log('📅 Fecha:', new Date(webinar.dateTime).toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }));
-    console.log('👥 Registros confirmados:', webinar.registrations.length);
+    console.log('✅ Webinar encontrado:', webinar.title);
+    console.log('📅 Fecha del webinar:', new Date(webinar.dateTime).toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }));
+    console.log('👥 Usuarios registrados:', webinar.registrations.length);
 
     if (webinar.registrations.length === 0) {
-      console.log('\n⚠️ No hay usuarios registrados para enviar recordatorios');
-      console.log('💡 Para probar el sistema, necesitas registrar algunos usuarios primero');
+      console.log('⚠️ No hay usuarios registrados');
+      console.log('💡 Creando registro de prueba...');
       
-      // Crear un registro de prueba para enviar recordatorio
-      console.log('\n🔄 Creando registro de prueba...');
       const testRegistration = await prisma.webinarRegistration.create({
         data: {
           firstName: 'Usuario',
@@ -52,34 +49,34 @@ async function checkWebinarRegistrations() {
       console.log('✅ Registro de prueba creado:', testRegistration.email);
     }
 
-    // Enviar recordatorios manualmente
-    console.log('\n📧 Enviando recordatorios manualmente...');
+    // Enviar recordatorio inmediatamente
+    console.log('\n📧 Enviando recordatorio inmediato...');
     const result = await sendBulkWebinarReminders(webinar.id);
 
-    console.log('\n📊 Resultado del envío de recordatorios:');
+    console.log('\n📊 Resultado del envío:');
     console.log('✅ Emails enviados exitosamente:', result.success);
     console.log('❌ Emails fallidos:', result.failed);
-    console.log('📧 Total de usuarios registrados:', webinar.registrations.length + (webinar.registrations.length === 0 ? 1 : 0));
 
     if (result.success > 0) {
-      console.log('\n📋 Detalles del email de recordatorio:');
+      console.log('\n📋 Detalles del email de recordatorio enviado:');
       console.log('📝 Asunto: ⏰ ¡El webinar comienza en 15 minutos! - "Monetiza con IA: Estrategias Prácticas para 2024"');
       console.log('🔗 Link de acceso incluido:', webinar.zoomLink);
       console.log('🆔 Meeting ID incluido:', webinar.meetingId);
       console.log('🔑 Contraseña incluida:', webinar.password);
       console.log('⏰ Hora de inicio:', new Date(webinar.dateTime).toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }));
       
-      console.log('\n✅ Recordatorios enviados exitosamente');
+      console.log('\n✅ Recordatorio enviado exitosamente');
+      console.log('📧 Los usuarios registrados recibieron el email con toda la información de acceso');
     } else {
       console.log('\n❌ No se pudieron enviar los recordatorios');
     }
 
   } catch (error) {
-    console.error('❌ Error verificando registros:', error);
+    console.error('❌ Error enviando recordatorio:', error);
   } finally {
     await prisma.$disconnect();
   }
 }
 
 // Ejecutar el script
-checkWebinarRegistrations(); 
+sendReminderNow(); 
