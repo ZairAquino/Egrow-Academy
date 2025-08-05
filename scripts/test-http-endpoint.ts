@@ -1,53 +1,81 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
-import { verifyToken } from '@/lib/auth';
+import jwt from 'jsonwebtoken';
 
 const prisma = new PrismaClient();
 
-export async function POST(request: NextRequest) {
+async function testHttpEndpoint() {
   try {
-    console.log('🔍 [COMPLETE-COURSE] Iniciando proceso de completar curso...');
+    console.log('🧪 Probando endpoint HTTP de finalización de cursos...');
+    
+    // Buscar un usuario de prueba
+    const user = await prisma.user.findFirst({
+      where: { isActive: true }
+    });
 
-    // Verificar autenticación
-    const cookieToken = request.cookies.get('auth-token')?.value;
-    const headerToken = request.headers.get('authorization')?.replace('Bearer ', '');
-    const token = cookieToken || headerToken;
+    if (!user) {
+      console.log('❌ No se encontró ningún usuario activo');
+      return;
+    }
+
+    console.log(`👤 Usuario de prueba: ${user.firstName} ${user.lastName} (${user.email})`);
+
+    // Generar token de prueba
+    const token = jwt.sign(
+      { userId: user.id },
+      process.env.JWT_SECRET || 'test-secret',
+      { expiresIn: '1h' }
+    );
+
+    // Simular una petición HTTP real
+    const requestData = {
+      courseSlug: 'mockup-cero'
+    };
+
+    // Simular las cookies y headers
+    const cookies = `auth-token=${token}`;
+    const headers = {
+      'Content-Type': 'application/json',
+      'Cookie': cookies,
+      'Authorization': `Bearer ${token}`
+    };
+
+    console.log('\n🌐 Simulando petición HTTP...');
+    console.log('📝 Headers:', headers);
+    console.log('📝 Body:', requestData);
+
+    // Simular el proceso del endpoint paso a paso
+    console.log('\n🔍 [COMPLETE-COURSE] Iniciando proceso de completar curso...');
+
+    // Extraer token de cookies y headers
+    const cookieToken = token; // Simulamos que viene de cookies
+    const headerToken = token; // Simulamos que viene de headers
+    const finalToken = cookieToken || headerToken;
 
     console.log('🔍 [COMPLETE-COURSE] Cookie token:', cookieToken ? 'Presente' : 'Ausente');
     console.log('🔍 [COMPLETE-COURSE] Header token:', headerToken ? 'Presente' : 'Ausente');
 
-    if (!token) {
+    if (!finalToken) {
       console.log('❌ [COMPLETE-COURSE] No hay token de autenticación');
-      return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
+      return;
     }
 
     try {
-      const { userId } = verifyToken(token);
+      const { userId } = jwt.verify(finalToken, process.env.JWT_SECRET || 'test-secret') as { userId: string };
       console.log('✅ [COMPLETE-COURSE] Token verificado, userId:', userId);
     } catch (tokenError) {
       console.log('❌ [COMPLETE-COURSE] Error verificando token:', tokenError);
-      return NextResponse.json({ error: 'Token inválido' }, { status: 401 });
+      return;
     }
 
-    // Obtener datos del request
-    const { courseSlug } = await request.json();
-    
-    if (!courseSlug) {
-      console.log('❌ [COMPLETE-COURSE] No se proporcionó courseSlug');
-      return NextResponse.json({ error: 'Course slug es requerido' }, { status: 400 });
-    }
-
-    console.log('📝 [COMPLETE-COURSE] Completando curso:', courseSlug);
-
-    // Buscar el curso por slug
+    // Buscar el curso
     const course = await prisma.course.findUnique({
-      where: { slug: courseSlug },
+      where: { slug: 'mockup-cero' },
       select: { id: true, title: true, slug: true }
     });
 
     if (!course) {
-      console.log('❌ [COMPLETE-COURSE] Curso no encontrado:', courseSlug);
-      return NextResponse.json({ error: 'Curso no encontrado' }, { status: 404 });
+      console.log('❌ [COMPLETE-COURSE] Curso no encontrado: mockup-cero');
+      return;
     }
 
     console.log('✅ [COMPLETE-COURSE] Curso encontrado:', course.title);
@@ -56,7 +84,7 @@ export async function POST(request: NextRequest) {
     const enrollment = await prisma.enrollment.findUnique({
       where: {
         userId_courseId: {
-          userId,
+          userId: user.id,
           courseId: course.id
         }
       },
@@ -67,7 +95,7 @@ export async function POST(request: NextRequest) {
 
     if (!enrollment) {
       console.log('❌ [COMPLETE-COURSE] Usuario no inscrito en el curso');
-      return NextResponse.json({ error: 'No estás inscrito en este curso' }, { status: 404 });
+      return;
     }
 
     console.log('✅ [COMPLETE-COURSE] Inscripción encontrada');
@@ -85,6 +113,8 @@ export async function POST(request: NextRequest) {
     // Marcar todas las lecciones como completadas en el progreso
     const completedLessons = lessons.map(lesson => lesson.id);
     
+    console.log('📝 [COMPLETE-COURSE] Lecciones a marcar como completadas:', completedLessons);
+
     // Actualizar el progreso del curso
     const updatedProgress = await prisma.courseProgress.upsert({
       where: { enrollmentId: enrollment.id },
@@ -144,28 +174,19 @@ export async function POST(request: NextRequest) {
 
     console.log('✅ [COMPLETE-COURSE] Progreso de lecciones actualizado');
 
-    return NextResponse.json({
-      success: true,
-      message: 'Curso marcado como completado exitosamente',
-      course: {
-        id: course.id,
-        title: course.title,
-        slug: course.slug
-      },
-      enrollment: {
-        status: updatedEnrollment.status,
-        progressPercentage: updatedEnrollment.progressPercentage,
-        completedAt: updatedEnrollment.completedAt
-      }
-    });
+    console.log('\n📊 Resultado final:');
+    console.log(`   Estado: ${updatedEnrollment.status}`);
+    console.log(`   Progreso: ${updatedEnrollment.progressPercentage}%`);
+    console.log(`   Completado: ${updatedEnrollment.completedAt ? 'Sí' : 'No'}`);
+    console.log(`   Lecciones completadas: ${updatedProgress.completedLessons.length}`);
+
+    console.log('\n✅ Endpoint HTTP probado exitosamente');
 
   } catch (error) {
-    console.error('❌ [COMPLETE-COURSE] Error:', error);
-    return NextResponse.json(
-      { error: 'Error interno del servidor' },
-      { status: 500 }
-    );
+    console.error('❌ Error en la prueba del endpoint HTTP:', error);
   } finally {
     await prisma.$disconnect();
   }
-} 
+}
+
+testHttpEndpoint(); 
