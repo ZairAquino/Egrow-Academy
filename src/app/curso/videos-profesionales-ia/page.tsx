@@ -85,7 +85,7 @@ export default function VideosProfesionalesIAPage() {
     price: 'Premium',
     language: 'Español',
     image: '/images/15.png',
-    lessonsCount: 11,
+    lessonsCount: 21,
     instructor: {
       name: 'eGrow Academy',
       title: 'Especialista en Contenido Audiovisual - eGrow Academy',

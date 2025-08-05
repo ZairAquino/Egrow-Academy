@@ -170,9 +170,10 @@ export async function GET(request: NextRequest) {
       totalLessons: (() => {
         switch (courseId) {
           case 'asistentes-virtuales-ia': return 21;
-          case 'vibe-coding-claude-cursor': return 17;
-          case 'videos-profesionales-ia': return 11;
+          case 'vibe-coding-claude-cursor': return 6;
+          case 'videos-profesionales-ia': return 21;
           case 'mockup-cero': return 8;
+          case 'monetiza-ia': return 8;
           default: return 18;
         }
       })()
@@ -337,9 +338,10 @@ export async function POST(request: NextRequest) {
     const totalLessons = (() => {
       switch (courseId) {
         case 'asistentes-virtuales-ia': return 21;
-        case 'vibe-coding-claude-cursor': return 17;
-        case 'videos-profesionales-ia': return 11;
+        case 'vibe-coding-claude-cursor': return 6;
+        case 'videos-profesionales-ia': return 21;
         case 'mockup-cero': return 8;
+        case 'monetiza-ia': return 8;
         default: return 18;
       }
     })();

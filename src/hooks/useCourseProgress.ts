@@ -36,9 +36,10 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
   const getTotalLessons = (courseId: string) => {
     switch (courseId) {
       case 'asistentes-virtuales-ia': return 21;
-      case 'vibe-coding-claude-cursor': return 17;
-      case 'videos-profesionales-ia': return 11;
+      case 'vibe-coding-claude-cursor': return 6;
+      case 'videos-profesionales-ia': return 21;
       case 'mockup-cero': return 8;
+      case 'monetiza-ia': return 8;
       default: return 18;
     }
   };

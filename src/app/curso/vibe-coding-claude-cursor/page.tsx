@@ -109,7 +109,7 @@ export default function VibeCodingClaudeCursorPage() {
     price: 'Premium',
     language: 'Español',
     image: '/images/17.png',
-    lessonsCount: 17,
+    lessonsCount: 6,
     instructor: {
       name: 'eGrow Academy',
       title: 'Especialista en Inteligencia Artificial - eGrow Academy',
