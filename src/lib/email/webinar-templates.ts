@@ -56,9 +56,15 @@ export function getWebinarConfirmationEmail(data: WebinarEmailData) {
             
             <div class="highlight">
               <h4>🔗 Link de Acceso</h4>
-              <p>Recibirás el link de acceso por email 15 minutos antes del evento.</p>
-              <p><strong>Meeting ID:</strong> ${webinar.meetingId}</p>
-              <p><strong>Contraseña:</strong> ${webinar.password}</p>
+              <p><strong>Guarda este email con tu información de acceso:</strong></p>
+              ${webinar.zoomLink ? `
+                <p><strong>Link de Zoom:</strong> <a href="${webinar.zoomLink}" style="color: #667eea;">${webinar.zoomLink}</a></p>
+              ` : ''}
+              ${webinar.meetingId ? `<p><strong>Meeting ID:</strong> ${webinar.meetingId}</p>` : ''}
+              ${webinar.password ? `<p><strong>Contraseña:</strong> ${webinar.password}</p>` : ''}
+              <p style="margin-top: 10px; font-size: 0.9em; color: #666;">
+                <em>Te enviaremos un recordatorio 15 minutos antes del evento con esta misma información.</em>
+              </p>
             </div>
             
             <h3>📋 Lo que aprenderás:</h3>
