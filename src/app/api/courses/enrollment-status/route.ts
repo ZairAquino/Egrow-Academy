@@ -12,9 +12,12 @@ export async function POST(request: NextRequest) {
 
 async function checkEnrollmentStatus(request: NextRequest) {
   try {
+    console.log('🔍 [ENROLLMENT-STATUS] Iniciando verificación de inscripción...');
+    
     // Verificar autenticación
     const token = request.cookies.get('auth-token')?.value;
     if (!token) {
+      console.log('❌ [ENROLLMENT-STATUS] No hay token');
       return NextResponse.json(
         { error: 'Debes iniciar sesión para verificar inscripción' },
         { status: 401 }
@@ -23,6 +26,7 @@ async function checkEnrollmentStatus(request: NextRequest) {
 
     // Verificar token JWT
     const { userId } = verifyToken(token);
+    console.log('🔍 [ENROLLMENT-STATUS] Usuario ID:', userId);
 
     // Verificar si es una sesión de base de datos
     const session = await prisma.session.findUnique({
@@ -52,11 +56,14 @@ async function checkEnrollmentStatus(request: NextRequest) {
     }
 
     if (!courseId) {
+      console.log('❌ [ENROLLMENT-STATUS] Se requiere courseId');
       return NextResponse.json(
         { error: 'Se requiere courseId' },
         { status: 400 }
       );
     }
+
+    console.log('🔍 [ENROLLMENT-STATUS] Buscando curso:', courseId);
 
     // Buscar el curso por ID o slug (igual que en el endpoint de inscripción)
     let course;
@@ -71,6 +78,7 @@ async function checkEnrollmentStatus(request: NextRequest) {
     }
 
     if (!course) {
+      console.log('❌ [ENROLLMENT-STATUS] Curso no encontrado');
       return NextResponse.json(
         { error: 'Curso no encontrado' },
         { status: 404 }
@@ -78,18 +86,18 @@ async function checkEnrollmentStatus(request: NextRequest) {
     }
 
     const actualCourseId = course.id;
+    console.log('✅ [ENROLLMENT-STATUS] Curso encontrado:', { id: actualCourseId, title: course.title });
 
     // Verificar si el usuario está inscrito usando el ID real del curso
-    const enrollment = await prisma.enrollment.findUnique({
+    const enrollment = await prisma.enrollment.findFirst({
       where: {
-        userId_courseId: {
-          userId,
-          courseId: actualCourseId
-        }
+        userId,
+        courseId: actualCourseId
       }
     });
 
     const isEnrolled = !!enrollment;
+    console.log('🔍 [ENROLLMENT-STATUS] Resultado inscripción:', { isEnrolled, enrollmentId: enrollment?.id });
 
     return NextResponse.json({
       isEnrolled,

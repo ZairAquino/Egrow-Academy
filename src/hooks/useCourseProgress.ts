@@ -33,6 +33,16 @@ interface CourseProgress {
 }
 
 export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
+  const getTotalLessons = (courseId: string) => {
+    switch (courseId) {
+      case 'asistentes-virtuales-ia': return 21;
+      case 'vibe-coding-claude-cursor': return 17;
+      case 'videos-profesionales-ia': return 11;
+      case 'mockup-cero': return 8;
+      default: return 18;
+    }
+  };
+
   const [progress, setProgress] = useState<CourseProgress>({
     currentLesson: 0,
     completedLessons: [],
@@ -45,7 +55,7 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
     startedAt: '2024-01-01T00:00:00.000Z',
     lastAccessed: '2024-01-01T00:00:00.000Z',
     lessonProgress: [],
-    totalLessons: 18
+    totalLessons: getTotalLessons(courseId)
   });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -71,7 +81,7 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
         completedLessons: [],
         progressPercentage: 0,
         status: 'NOT_STARTED',
-        totalLessons: courseId === 'asistentes-virtuales-ia' ? 21 : courseId === 'vibe-coding-claude-cursor' ? 17 : courseId === 'videos-profesionales-ia' ? 11 : 18
+        totalLessons: getTotalLessons(courseId)
       }));
     }
 
@@ -90,7 +100,7 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
         const data = await response.json();
         
         // Asegurar que currentLesson no exceda el número de lecciones disponibles
-        const totalLessons = courseId === 'asistentes-virtuales-ia' ? 21 : courseId === 'vibe-coding-claude-cursor' ? 17 : courseId === 'videos-profesionales-ia' ? 11 : 18;
+        const totalLessons = getTotalLessons(courseId);
         const maxLessonIndex = totalLessons - 1;
         const safeCurrentLesson = Math.min(data.currentLesson || 0, maxLessonIndex);
         
@@ -110,7 +120,7 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
             const data = JSON.parse(savedProgress);
             
             // Asegurar que currentLesson no exceda el número de lecciones disponibles
-            const totalLessons = courseId === 'asistentes-virtuales-ia' ? 21 : courseId === 'vibe-coding-claude-cursor' ? 17 : courseId === 'videos-profesionales-ia' ? 11 : 18;
+            const totalLessons = getTotalLessons(courseId);
             const maxLessonIndex = totalLessons - 1;
             const safeCurrentLesson = Math.min(data.currentLesson || 0, maxLessonIndex);
             
@@ -122,7 +132,7 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
             setHasLoadedOnce(true);
           } else {
             // Si no hay progreso guardado, usar valores por defecto
-            const totalLessonsDefault = courseId === 'asistentes-virtuales-ia' ? 21 : courseId === 'vibe-coding-claude-cursor' ? 17 : courseId === 'videos-profesionales-ia' ? 11 : 18;
+            const totalLessonsDefault = getTotalLessons(courseId);
             const defaultProgress: CourseProgress = {
               currentLesson: 0,
               completedLessons: [],

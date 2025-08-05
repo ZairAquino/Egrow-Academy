@@ -23,7 +23,7 @@ const featuredCourses = [
     isFree: true
   },
   {
-    image: "/images/mockups-ia.png",
+    image: "/images/19.png",
     title: "Crea Mockups con IA desde cero sin saber nada de diseño",
     description: "Diseñar presentaciones visuales atractivas usando inteligencia artificial. Aprende a crear mockups profesionales sin experiencia previa en diseño.",
     tag: "⭐ Curso Destacado",

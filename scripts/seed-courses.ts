@@ -53,6 +53,23 @@ const courses = [
     studentsCount: 0,
     rating: 0,
     status: 'PUBLISHED'
+  },
+  {
+    id: 'mockup-cero',
+    title: 'Mockups con IA desde Cero',
+    slug: 'mockup-cero',
+    description: 'Aprende a crear mockups profesionales utilizando inteligencia artificial desde los conceptos básicos hasta técnicas avanzadas. Domina herramientas como Uizard, Galileo AI y Figma con plugins de IA.',
+    shortDescription: 'Crea mockups profesionales con IA sin experiencia previa',
+    imageUrl: '/images/Rick.png',
+    price: 0,
+    isFree: true,
+    requiresAuth: false,
+    difficulty: 'BEGINNER',
+    durationHours: 17,
+    lessonsCount: 25,
+    studentsCount: 0,
+    rating: 0,
+    status: 'PUBLISHED'
   }
 ];
 

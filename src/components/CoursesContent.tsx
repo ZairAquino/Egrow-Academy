@@ -164,7 +164,7 @@ export default function CoursesContent() {
         duration: '5 horas',
         level: 'Principiante',
         price: 'Gratis',
-        image: '/images/mockups-ia.png',
+        image: '/images/19.png',
         tag: 'Gratis',
         isFree: true,
         requiresAuth: false,

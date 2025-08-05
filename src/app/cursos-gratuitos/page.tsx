@@ -56,19 +56,19 @@ export default function CursosGratuitosPage() {
       source: 'eGrow Academy',
       link: '/curso/asistentes-virtuales-ia'
     },
-    // Curso - Crea Mockups con IA desde cero
+    // Curso - Crea Mockups con IA desde cero sin saber nada de diseño
     {
-      id: 'mockups-ia-desde-cero',
-      title: 'Crea Mockups con IA desde cero',
-      description: 'Aprende a crear mockups profesionales desde cero utilizando herramientas de inteligencia artificial. Domina las técnicas modernas de diseño y prototipado con IA para llevar tus ideas al siguiente nivel.',
-      duration: '3 horas',
+      id: 'mockup-cero',
+      title: 'Crea Mockups con IA desde cero sin saber nada de diseño',
+      description: 'Diseñar presentaciones visuales atractivas usando inteligencia artificial. Aprende a crear mockups profesionales sin experiencia previa en diseño.',
+      duration: '5 horas',
       level: 'Principiante',
       price: 'Gratis',
-      image: '/images/mockups-ia.png',
+      image: '/images/19.png',
       tag: 'eGrow Academy',
       instructor: 'eGrow Academy',
       source: 'eGrow Academy',
-      link: '/curso/mockups-ia-desde-cero'
+      link: '/curso/mockup-cero'
     },
 
   ];

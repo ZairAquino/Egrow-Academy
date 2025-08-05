@@ -71,7 +71,9 @@
       "Bash(del temp-check.ts)",
       "Bash(del check-resource-categories.js check-raw-categories.js)",
       "Bash(del test-db-connection.js)",
-      "Bash(del test-streaks-production.js)"
+      "Bash(del test-streaks-production.js)",
+      "Bash(del \"C:\\Users\\think\\Egrow-Academy\\scripts\\test-mockup-course.ts\")",
+      "Bash(del check-courses.js delete-duplicate-course.js update-mockup-course.js)"
     ],
     "deny": []
   }

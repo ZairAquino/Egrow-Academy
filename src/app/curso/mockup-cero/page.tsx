@@ -48,24 +48,25 @@ export default function MockupCeroPage() {
     );
   };
 
-  // Función completamente nueva para redirección directa
-  const goToCourseContent = () => {
-    console.log('🎯 Botón clickeado - Estado de autenticación:', { 
+  // Función para inscribir e ir al contenido del curso
+  const goToCourseContent = async () => {
+    console.log('🎯 [MOCKUP-PAGE] Botón clickeado - Estado de autenticación:', { 
       user: !!user, 
       status, 
-      userEmail: user?.email 
+      userEmail: user?.email,
+      userId: user?.id 
     });
     
     // Verificar si el usuario está autenticado
     if (status === 'loading') {
-      console.log('⏳ Estado de autenticación cargando, esperando...');
+      console.log('⏳ [MOCKUP-PAGE] Estado de autenticación cargando, esperando...');
       return;
     }
     
     if (!user || status === 'unauthenticated') {
       // Si el usuario no está logueado, redirigir al login con redirect
       const loginUrl = `/login?redirect=/curso/mockup-cero/contenido`;
-      console.log(`🔐 Usuario no logueado - Redirigiendo a login: ${loginUrl}`);
+      console.log(`🔐 [MOCKUP-PAGE] Usuario no logueado - Redirigiendo a login: ${loginUrl}`);
       
       if (typeof window !== 'undefined') {
         window.location.href = loginUrl;
@@ -73,9 +74,44 @@ export default function MockupCeroPage() {
       return;
     }
     
-    // Si el usuario está logueado, ir directamente al contenido
+    // Si el usuario está logueado, inscribirlo automáticamente y redirigir
+    console.log(`✅ [MOCKUP-PAGE] Usuario logueado (${user.email}) - Inscribiendo y redirigiendo...`);
+    
+    try {
+      console.log('🔄 [MOCKUP-PAGE] Iniciando inscripción automática...');
+      
+      // Inscribir automáticamente al usuario
+      const enrollResponse = await fetch('/api/courses/enroll', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ courseId: courseData.id }),
+        credentials: 'include',
+      });
+      
+      console.log('📡 [MOCKUP-PAGE] Respuesta de inscripción:', { 
+        status: enrollResponse.status, 
+        ok: enrollResponse.ok 
+      });
+      
+      if (enrollResponse.ok) {
+        const enrollData = await enrollResponse.json();
+        console.log('✅ [MOCKUP-PAGE] Usuario inscrito automáticamente:', enrollData);
+      } else {
+        const errorData = await enrollResponse.text();
+        console.error('⚠️ [MOCKUP-PAGE] Error al inscribir:', { 
+          status: enrollResponse.status, 
+          error: errorData 
+        });
+      }
+    } catch (error) {
+      console.error('❌ [MOCKUP-PAGE] Error en inscripción automática:', error);
+    }
+    
+    // Redirigir al contenido del curso independientemente del resultado de la inscripción
     const contentUrl = '/curso/mockup-cero/contenido';
-    console.log(`✅ Usuario logueado (${user.email}) - Redirigiendo a contenido: ${contentUrl}`);
+    console.log(`🔄 [MOCKUP-PAGE] Redirigiendo a: ${contentUrl}`);
     
     if (typeof window !== 'undefined') {
       window.location.href = contentUrl;
@@ -93,19 +129,19 @@ export default function MockupCeroPage() {
     category: 'Diseño y Mockups',
     price: 'Gratis',
     language: 'Español',
-    image: '/images/mockup-course.png',
+    image: '/images/19.png',
     lessonsCount: 25,
     instructor: {
       name: 'eGrow Academy',
       title: 'Especialista en Diseño y Mockups con IA - eGrow Academy',
-      image: '/images/Zair.jpeg',
+      image: '/images/Rick.png',
       bio: 'Experto en diseño de mockups y prototipado con herramientas de IA, con más de 4 años de experiencia en diseño digital y UX/UI.'
     },
     prerequisites: [
-      'Conocimientos básicos de diseño (opcional)',
-      'Computadora con acceso a internet',
-      'Ganas de aprender herramientas de IA',
-      'No se requiere experiencia previa en mockups'
+      'Manejo básico de internet.',
+      'Tener cuentas activas en Canva, Sora (generador de video IA) y acceso a ChatGPT.',
+      'Computadora con navegador actualizado.'
+
     ],
     whatYouWillLearn: [
       'Fundamentos del diseño de mockups',
