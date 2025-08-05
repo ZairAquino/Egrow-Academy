@@ -10,9 +10,9 @@ async function updateWebinarDate() {
     const now = new Date();
     const mexicoTime = new Date(now.getTime() - (6 * 60 * 60 * 1000)); // UTC-6
     
-    // Establecer la hora a 3:40 PM (15:40) hora de México
+    // Establecer la fecha a hoy (5 de agosto) y la hora a 4:00 PM (16:00) hora de México
     const webinarDate = new Date(mexicoTime);
-    webinarDate.setHours(15, 40, 0, 0); // 3:40 PM
+    webinarDate.setHours(16, 0, 0, 0); // 4:00 PM
     
     // Convertir de vuelta a UTC para almacenar en la base de datos
     const utcDate = new Date(webinarDate.getTime() + (6 * 60 * 60 * 1000));
@@ -63,7 +63,7 @@ async function updateWebinarDate() {
         console.log(`http://localhost:3000/webinar/${webinar.slug}`);
         
         console.log('\n📧 El sistema de emails de recordatorio debería enviar automáticamente');
-        console.log('   los emails a los usuarios registrados 1 hora antes del webinar.');
+        console.log('   los emails a los usuarios registrados 15 minutos antes del webinar.');
       }
     } else {
       console.log('⚠️ No se encontró ningún webinar con "Monetiza con IA"');

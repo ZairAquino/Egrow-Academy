@@ -1,7 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getWebinarBySlug } from '@/lib/webinar';
-import WebinarHero from '@/components/webinar/WebinarHero';
 import WebinarCountdown from '@/components/webinar/WebinarCountdown';
 import WebinarRegistrationWrapper from '@/components/webinar/WebinarRegistrationWrapper';
 import Navbar from '@/components/layout/Navbar';
@@ -51,9 +50,6 @@ export default async function WebinarPage({ params }: WebinarPageProps) {
     <>
       <Navbar />
       
-      {/* Hero Section */}
-      <WebinarHero webinar={webinar} />
-
       {/* Main Content */}
       <section className="bg-gray-50 py-16">
         <div className="container mx-auto px-4">
