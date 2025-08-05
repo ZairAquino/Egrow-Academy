@@ -5,11 +5,9 @@ import { Webinar } from '@/types/webinar';
 
 interface WebinarCarouselProps {
   webinars: Webinar[];
-  onRegister: (webinarId: string) => void;
-  isUserRegistered: (webinarId: string) => boolean;
 }
 
-export default function WebinarCarousel({ webinars, onRegister, isUserRegistered }: WebinarCarouselProps) {
+export default function WebinarCarousel({ webinars }: WebinarCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const itemsPerView = 3; // Mostrar 3 webinars por vista
   const totalSlides = Math.ceil(webinars.length / itemsPerView);
@@ -193,22 +191,9 @@ export default function WebinarCarousel({ webinars, onRegister, isUserRegistered
                             </div>
 
                             <div className="webinar-actions">
-                              {isUserRegistered(webinar.id) ? (
-                                <button className="btn btn-success btn-full" disabled>
-                                  ✅ Ya registrado
-                                </button>
-                              ) : (
-                                <button 
-                                  className="btn btn-primary btn-full"
-                                  onClick={() => onRegister(webinar.id)}
-                                >
-                                  🎥 Registrarse
-                                </button>
-                              )}
-                              
                               <a 
                                 href={`/webinar/${webinar.slug}`}
-                                className="btn btn-outline btn-full"
+                                className="btn btn-primary btn-full"
                               >
                                 📋 Ver detalles
                               </a>

@@ -595,10 +595,8 @@ export default function CommunityPage() {
 
             {/* Webinar Carousel */}
             <div className="webinars-container">
-              <WebinarCarousel 
-                webinars={webinars}
-                onRegister={handleWebinarRegistration}
-                isUserRegistered={isUserRegisteredWebinar}
+                            <WebinarCarousel 
+                webinars={webinars} 
               />
               
               {/* Botón para ver todos los webinars */}
