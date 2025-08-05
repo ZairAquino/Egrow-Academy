@@ -167,7 +167,15 @@ export async function GET(request: NextRequest) {
       lastAccessed: progress.lastAccessed?.toISOString() || new Date().toISOString(),
       completedAt: progress.completedAt?.toISOString() || null,
       lessonProgress: progress.lessonProgress || [],
-      totalLessons: courseId === 'asistentes-virtuales-ia' ? 21 : 5 // Número de lecciones según el curso
+      totalLessons: (() => {
+        switch (courseId) {
+          case 'asistentes-virtuales-ia': return 21;
+          case 'vibe-coding-claude-cursor': return 17;
+          case 'videos-profesionales-ia': return 11;
+          case 'mockup-cero': return 8;
+          default: return 18;
+        }
+      })()
     };
 
     return NextResponse.json(response);
@@ -326,7 +334,15 @@ export async function POST(request: NextRequest) {
     }
 
     // Calcular nuevo porcentaje de progreso
-    const totalLessons = actualCourseId.includes('asistentes-virtuales-ia') || courseId === 'asistentes-virtuales-ia' ? 21 : 10;
+    const totalLessons = (() => {
+      switch (courseId) {
+        case 'asistentes-virtuales-ia': return 21;
+        case 'vibe-coding-claude-cursor': return 17;
+        case 'videos-profesionales-ia': return 11;
+        case 'mockup-cero': return 8;
+        default: return 18;
+      }
+    })();
     const newProgressPercentage = Math.round((completedLessons?.length || 0) / totalLessons * 100);
 
     // Determinar el estado del curso

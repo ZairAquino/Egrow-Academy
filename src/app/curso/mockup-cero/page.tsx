@@ -130,7 +130,7 @@ export default function MockupCeroPage() {
     price: 'Gratis',
     language: 'Español',
     image: '/images/19.png',
-    lessonsCount: 25,
+    lessonsCount: 8,
     instructor: {
       name: 'eGrow Academy',
       title: 'Especialista en Diseño y Mockups con IA - eGrow Academy',
