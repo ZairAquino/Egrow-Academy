@@ -223,6 +223,20 @@
   line-height: 1.5;
 }
 
+/* Estilos para características no incluidas */
+.plan-feature.not-included {
+  opacity: 0.6;
+}
+
+.plan-feature-icon.not-included-icon {
+  color: #ef4444;
+}
+
+.plan-feature-text.not-included-text {
+  color: var(--gray-500);
+  text-decoration: line-through;
+}
+
 .plan-button {
   width: 100%;
   padding: 1rem;
@@ -419,4 +433,41 @@
   }
 }
 
- 
+/* Free Plan and Tertiary Button Styles */
+.cta-button.tertiary {
+  border: 2px solid var(--green-500, #10b981);
+  color: var(--green-600, #059669);
+  background: var(--green-50, #ecfdf5);
+}
+
+.cta-button.tertiary:hover {
+  background: var(--green-100, #dcfce7);
+  color: var(--green-700, #047857);
+  transform: translateY(-1px);
+}
+
+.plan-button.current-plan {
+  background: var(--green-100, #dcfce7);
+  color: var(--green-700, #047857);
+  border: 2px solid var(--green-500, #10b981);
+}
+
+.plan-button.current-plan:hover {
+  background: var(--green-100, #dcfce7);
+  transform: none;
+  cursor: default;
+}
+
+/* Not included feature styles */
+.plan-feature.not-included {
+  opacity: 0.6;
+}
+
+.plan-feature-icon.not-included-icon {
+  color: var(--red-500, #ef4444);
+}
+
+.plan-feature-text.not-included-text {
+  color: var(--gray-500, #6b7280);
+  text-decoration: line-through;
+} 
