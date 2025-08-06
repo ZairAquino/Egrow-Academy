@@ -57,11 +57,7 @@ export function getWebinarConfirmationEmail(data: WebinarEmailData) {
             <div class="highlight">
               <h4>🔗 Link de Acceso</h4>
               <p><strong>Guarda este email con tu información de acceso:</strong></p>
-              ${webinar.zoomLink ? `
-                <p><strong>Link de Zoom:</strong> <a href="${webinar.zoomLink}" style="color: #667eea;">${webinar.zoomLink}</a></p>
-              ` : ''}
-              ${webinar.meetingId ? `<p><strong>Meeting ID:</strong> ${webinar.meetingId}</p>` : ''}
-              ${webinar.password ? `<p><strong>Contraseña:</strong> ${webinar.password}</p>` : ''}
+              <p><strong>Google Meet:</strong> <a href="https://meet.google.com/ido-wvhw-zaj" style="color: #667eea;">https://meet.google.com/ido-wvhw-zaj</a></p>
               <p style="margin-top: 10px; font-size: 0.9em; color: #666;">
                 <em>Te enviaremos un recordatorio 15 minutos antes del evento con esta misma información.</em>
               </p>
@@ -152,9 +148,7 @@ export function getWebinarReminderEmail(data: WebinarEmailData) {
             
             <div class="info-box">
               <h3>🔗 Link de Acceso Directo</h3>
-              <p><strong>Google Meet Link:</strong> <a href="${webinar.zoomLink}">${webinar.zoomLink}</a></p>
-              <p><strong>Meeting ID:</strong> ${webinar.meetingId}</p>
-              <p><strong>Contraseña:</strong> ${webinar.password}</p>
+              <p><strong>Google Meet:</strong> <a href="https://meet.google.com/ido-wvhw-zaj">https://meet.google.com/ido-wvhw-zaj</a></p>
               <p><strong>Hora de inicio:</strong> ${formatWebinarDate(webinar.dateTime)}</p>
             </div>
             
@@ -168,7 +162,7 @@ export function getWebinarReminderEmail(data: WebinarEmailData) {
             </ul>
             
             <div style="text-align: center; margin: 30px 0;">
-              <a href="${webinar.zoomLink}" class="button">
+              <a href="https://meet.google.com/ido-wvhw-zaj" class="button">
                 🚀 Unirse Ahora al Webinar
               </a>
             </div>

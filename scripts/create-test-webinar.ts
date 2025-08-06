@@ -22,7 +22,7 @@ async function createTestWebinar() {
         tags: ['IA', 'Monetización', 'Emprendimiento', 'Tecnología'],
         hostName: 'Carlos Rodríguez',
         hostBio: 'Experto en IA y emprendimiento digital con más de 10 años de experiencia ayudando a empresas a implementar soluciones de inteligencia artificial.',
-        zoomLink: 'https://zoom.us/j/123456789',
+        zoomLink: 'https://meet.google.com/ido-wvhw-zaj',
         meetingId: '123456789',
         password: 'egrow2024'
       }

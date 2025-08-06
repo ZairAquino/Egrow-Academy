@@ -108,11 +108,9 @@ export default function WebinarRegistrationForm({ webinar, onSuccess, onError }:
           <p className="text-sm text-green-700 mt-2">
             <strong>Duración:</strong> {webinar.duration} minutos
           </p>
-          {webinar.zoomLink && (
-            <p className="text-sm text-green-700 mt-2">
-              <strong>Link de Zoom:</strong> Se enviará por email
-            </p>
-          )}
+          <p className="text-sm text-green-700 mt-2">
+            <strong>Google Meet:</strong> Se enviará por email
+          </p>
         </div>
         <p className="text-sm text-green-600 mt-4">
           Revisa tu email para confirmar tu registro y recibir el link del webinar.
