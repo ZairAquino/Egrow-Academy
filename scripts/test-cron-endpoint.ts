@@ -1,45 +1,53 @@
-// Script para probar el endpoint de cron localmente
-async function testCronEndpoint() {
-  try {
-    console.log('🧪 Probando endpoint de cron de recordatorios...\n');
+import { config } from 'dotenv';
 
-    // URL del endpoint local
-    const url = 'http://localhost:3000/api/cron/webinar-reminders';
-    
-    // Probar con método POST (solo funciona en desarrollo)
-    console.log('📡 Enviando petición POST de prueba...');
-    const response = await fetch(url, {
-      method: 'POST',
+// Cargar variables de entorno
+config();
+
+async function testCronEndpoint() {
+  console.log('🧪 Probando endpoint de cron manualmente\n');
+  console.log('Simulando llamada de Vercel Cron...');
+  
+  const CRON_SECRET = process.env.CRON_SECRET;
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://egrowacademy.com';
+  
+  console.log('CRON_SECRET:', CRON_SECRET ? 'Configurada' : 'NO CONFIGURADA');
+  console.log('BASE_URL:', BASE_URL);
+  
+  try {
+    const response = await fetch(`${BASE_URL}/api/cron/webinar-reminders`, {
+      method: 'GET',
       headers: {
-        'Content-Type': 'application/json'
+        'Authorization': `Bearer ${CRON_SECRET}`,
+        'Content-Type': 'application/json',
+        'User-Agent': 'Vercel-Cron/1.0'
       }
     });
-
+    
+    console.log('\n📡 Respuesta del endpoint:');
+    console.log('Status:', response.status);
+    console.log('Status Text:', response.statusText);
+    
+    const responseText = await response.text();
+    console.log('Response Body:', responseText);
+    
     if (response.ok) {
-      const data = await response.json();
-      console.log('✅ Respuesta exitosa:', JSON.stringify(data, null, 2));
-      
-      if (data.results && data.results.length > 0) {
-        console.log('\n📧 Resumen de emails enviados:');
-        data.results.forEach((result: any) => {
-          console.log(`  - ${result.webinar}: ${result.success} enviados, ${result.failed} fallidos`);
-        });
-      } else {
-        console.log('\n📭 No hay webinars próximos para enviar recordatorios');
+      try {
+        const json = JSON.parse(responseText);
+        console.log('\n✅ Respuesta JSON:', JSON.stringify(json, null, 2));
+      } catch (e) {
+        console.log('⚠️ Respuesta no es JSON válido');
       }
     } else {
-      console.error('❌ Error en la respuesta:', response.status, response.statusText);
-      const errorData = await response.text();
-      console.error('Detalles:', errorData);
+      console.log('❌ Error en la respuesta:', response.status, response.statusText);
+      
+      if (response.status === 401) {
+        console.log('🔐 Error de autenticación - CRON_SECRET podría estar mal configurado en Vercel');
+      }
     }
-
-    console.log('\n💡 Nota: Este endpoint POST solo funciona en desarrollo.');
-    console.log('💡 En producción, Vercel ejecutará el endpoint GET cada minuto automáticamente.');
     
   } catch (error) {
-    console.error('❌ Error al probar el endpoint:', error);
+    console.error('❌ Error haciendo la petición:', error);
   }
 }
 
-// Ejecutar la prueba
-testCronEndpoint();
+testCronEndpoint().catch(console.error);
