@@ -4,6 +4,7 @@ import WebinarCountdown from '@/components/webinar/WebinarCountdown';
 import WebinarRegistrationWrapper from '@/components/webinar/WebinarRegistrationWrapper';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import FacebookPixelTracker, { WebinarTracker } from '@/components/analytics/FacebookPixelTracker';
 import { notFound } from 'next/navigation';
 
 // Metadata para SEO
@@ -246,6 +247,55 @@ export default async function VideosIAWebinarPage() {
           </div>
         </div>
       </section>
+
+      {/* Facebook Pixel Tracking para Webinar */}
+      <WebinarTracker 
+        webinarId="videos-profesionales-ia"
+        webinarName="Crea Videos Profesionales con IA"
+      />
+      
+      {/* Tracking adicional para eventos específicos del webinar */}
+      <FacebookPixelTracker 
+        trackPageView={true}
+        pageData={{
+          content_name: 'Crea Videos Profesionales con IA',
+          content_category: 'Webinar',
+          content_type: 'webinar_landing_page',
+          content_ids: ['videos-profesionales-ia']
+        }}
+        customEvents={[
+          {
+            event: 'ViewContent',
+            data: {
+              content_name: 'Crea Videos Profesionales con IA',
+              content_category: 'Webinar',
+              content_type: 'webinar_view',
+              content_ids: ['videos-profesionales-ia'],
+              custom_parameters: {
+                webinar_id: 'videos-profesionales-ia',
+                webinar_type: 'ia_video_creation',
+                course_duration: '90 minutos',
+                course_level: 'Principiante',
+                course_category: 'Marketing Digital'
+              }
+            },
+            delay: 1000 // 1 segundo después de cargar
+          },
+          {
+            event: 'CustomEvent',
+            data: {
+              content_name: 'Webinar Landing Page View',
+              content_category: 'Webinar',
+              content_type: 'webinar_landing_view',
+              custom_parameters: {
+                webinar_id: 'videos-profesionales-ia',
+                funnel_step: 'landing_page_view'
+              }
+            },
+            delay: 2000 // 2 segundos después de cargar
+          }
+        ]}
+      />
 
       <Footer />
     </>
