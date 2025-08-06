@@ -21,6 +21,22 @@ interface SubscriptionPlan {
 
 const subscriptionPlans: SubscriptionPlan[] = [
   {
+    id: 'free',
+    name: 'Plan Gratuito',
+    price: 0,
+    interval: 'month',
+    features: [
+      'Acceso a cursos públicos gratuitos',
+      'Sistema básico de rachas',
+      'Comunidad básica',
+      'Soporte por email estándar',
+      '✕ Acceso a cursos especializados premium',
+      '✕ Certificados de finalización',
+      '✕ Badge visible en navbar',
+      '✕ Personalización de badges y rachas'
+    ]
+  },
+  {
     id: 'monthly',
     name: 'Plan Mensual',
     price: 12.49,
@@ -29,9 +45,11 @@ const subscriptionPlans: SubscriptionPlan[] = [
       'Acceso a todos los cursos especializados',
       'Contenido actualizado mensualmente',
       'Certificados de finalización',
+      'Sistema completo de rachas',
+      'Badge visible en navbar',
+      'Personalización de badges y rachas',
       'Soporte técnico prioritario',
-      'Acceso a la comunidad exclusiva',
-      'Proyectos prácticos incluidos'
+      'Acceso a la comunidad exclusiva'
     ]
   },
   {
@@ -44,6 +62,8 @@ const subscriptionPlans: SubscriptionPlan[] = [
     features: [
       'Todo lo del plan mensual',
       '2 meses gratis',
+      'Personalización completa de badges y rachas',
+      'Badge visible en barra de navegación',
       'Acceso anticipado a nuevos cursos',
       'Mentorías grupales mensuales',
       'Recursos premium adicionales',
@@ -66,9 +86,21 @@ export default function SubscriptionPage() {
   // }, [user, status, router]);
 
   const handleSubscribe = async (planId: string) => {
-    // Solo requerir login cuando intentan suscribirse
+    // Si es plan gratuito y no hay usuario, redirigir al registro
+    if (planId === 'free' && !user) {
+      router.push(`/register?plan=${planId}`);
+      return;
+    }
+
+    // Para planes de pago, solo requerir login cuando intentan suscribirse
     if (!user) {
-      router.push('/login?redirect=/subscription');
+      router.push(`/register?plan=${planId}`);
+      return;
+    }
+
+    // Si es plan gratuito y ya está logueado, ya tiene el plan gratuito
+    if (planId === 'free' && user) {
+      alert('Ya tienes el plan gratuito activado');
       return;
     }
 
@@ -243,26 +275,39 @@ export default function SubscriptionPage() {
                 </div>
 
                 <ul className="plan-features">
-                  {plan.features.map((feature, index) => (
-                    <li key={index} className="plan-feature">
-                      <span className="plan-feature-icon">✓</span>
-                      <span className="plan-feature-text">{feature}</span>
-                    </li>
-                  ))}
+                  {plan.features.map((feature, index) => {
+                    const isNotIncluded = feature.startsWith('✕');
+                    const displayFeature = isNotIncluded ? feature.substring(2) : feature;
+                    
+                    return (
+                      <li key={index} className={`plan-feature ${isNotIncluded ? 'not-included' : ''}`}>
+                        <span className={`plan-feature-icon ${isNotIncluded ? 'not-included-icon' : ''}`}>
+                          {isNotIncluded ? '✕' : '✓'}
+                        </span>
+                        <span className={`plan-feature-text ${isNotIncluded ? 'not-included-text' : ''}`}>
+                          {displayFeature}
+                        </span>
+                      </li>
+                    );
+                  })}
                 </ul>
 
                 <button
                   onClick={() => handleSubscribe(plan.id)}
-                  disabled={isProcessing}
-                  className={`plan-button ${plan.popular ? 'primary' : 'secondary'}`}
+                  disabled={isProcessing || (plan.id === 'free' && user?.membershipLevel === 'FREE')}
+                  className={`plan-button ${plan.popular ? 'primary' : 'secondary'} ${plan.id === 'free' && user?.membershipLevel === 'FREE' ? 'current-plan' : ''}`}
                 >
                   {isProcessing ? (
                     <div className="flex items-center justify-center">
                       <div className="loading-spinner rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
                       Procesando...
                     </div>
+                  ) : plan.id === 'free' && user?.membershipLevel === 'FREE' ? (
+                    'Plan Actual ✓'
+                  ) : plan.id === 'free' ? (
+                    !user ? 'Registrarse Gratis' : 'Plan Gratuito'
                   ) : !user ? (
-                    'Iniciar Sesión para Suscribirse'
+                    'Registrarse y Suscribirse'
                   ) : (
                     `Suscribirse por $${plan.price}`
                   )}
@@ -287,14 +332,21 @@ export default function SubscriptionPage() {
                 disabled={isProcessing}
                 className="cta-button primary"
               >
-                {!user ? 'Iniciar Sesión para Comenzar' : 'Comenzar Plan Anual'}
+                {!user ? 'Registrarse - Plan Anual' : 'Comenzar Plan Anual'}
               </button>
               <button
                 onClick={() => handleSubscribe('monthly')}
                 disabled={isProcessing}
                 className="cta-button secondary"
               >
-                {!user ? 'Iniciar Sesión para Comenzar' : 'Comenzar Plan Mensual'}
+                {!user ? 'Registrarse - Plan Mensual' : 'Comenzar Plan Mensual'}
+              </button>
+              <button
+                onClick={() => handleSubscribe('free')}
+                disabled={isProcessing || (user?.membershipLevel === 'FREE')}
+                className="cta-button tertiary"
+              >
+                {user?.membershipLevel === 'FREE' ? 'Plan Actual ✓' : (!user ? 'Registrarse Gratis' : 'Comenzar Gratis')}
               </button>
             </div>
           </div>
