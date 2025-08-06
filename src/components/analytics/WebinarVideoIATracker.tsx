@@ -78,7 +78,7 @@ export default function WebinarVideoIATracker({
   }, [trackPageView, hasTrackedPageView, status, user, webinarId, webinarName]);
 
   // Track Registration con metadatos completos
-  const trackRegistration = () => {
+  const handleRegistration = () => {
     if (trackRegistration && !hasTrackedRegistration && status === 'authenticated') {
       const userMetadata = getUserMetadata();
       
@@ -108,7 +108,7 @@ export default function WebinarVideoIATracker({
   };
 
   // Track Engagement events
-  const trackEngagement = (eventType: string, additionalData: any = {}) => {
+  const handleEngagement = (eventType: string, additionalData: any = {}) => {
     if (trackEngagement && status === 'authenticated') {
       const userMetadata = getUserMetadata();
       
@@ -139,12 +139,12 @@ export default function WebinarVideoIATracker({
   useEffect(() => {
     if (typeof window !== 'undefined') {
       (window as any).trackWebinarVideoIA = {
-        trackRegistration,
-        trackEngagement,
+        trackRegistration: handleRegistration,
+        trackEngagement: handleEngagement,
         getUserMetadata
       };
     }
-  }, [trackRegistration, trackEngagement]);
+  }, [handleRegistration, handleEngagement]);
 
   // Track automático de engagement basado en interacciones
   useEffect(() => {
@@ -154,32 +154,32 @@ export default function WebinarVideoIATracker({
       const scrollPercentage = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
       
       if (scrollPercentage > 25 && !engagementEvents.includes('scroll_25')) {
-        trackEngagement('scroll_25', { scroll_percentage: scrollPercentage });
+        handleEngagement('scroll_25', { scroll_percentage: scrollPercentage });
       }
       if (scrollPercentage > 50 && !engagementEvents.includes('scroll_50')) {
-        trackEngagement('scroll_50', { scroll_percentage: scrollPercentage });
+        handleEngagement('scroll_50', { scroll_percentage: scrollPercentage });
       }
       if (scrollPercentage > 75 && !engagementEvents.includes('scroll_75')) {
-        trackEngagement('scroll_75', { scroll_percentage: scrollPercentage });
+        handleEngagement('scroll_75', { scroll_percentage: scrollPercentage });
       }
     };
 
     const trackTimeOnPage = () => {
       setTimeout(() => {
         if (!engagementEvents.includes('time_30s')) {
-          trackEngagement('time_30s', { time_on_page: 30 });
+          handleEngagement('time_30s', { time_on_page: 30 });
         }
       }, 30000);
 
       setTimeout(() => {
         if (!engagementEvents.includes('time_60s')) {
-          trackEngagement('time_60s', { time_on_page: 60 });
+          handleEngagement('time_60s', { time_on_page: 60 });
         }
       }, 60000);
 
       setTimeout(() => {
         if (!engagementEvents.includes('time_120s')) {
-          trackEngagement('time_120s', { time_on_page: 120 });
+          handleEngagement('time_120s', { time_on_page: 120 });
         }
       }, 120000);
     };
