@@ -3,7 +3,7 @@
 import { usePromotions } from '@/hooks/usePromotions';
 import ElegantPromotionBanner from './ElegantPromotionBanner';
 
-export default function PromotionBannerWrapper() {
+export default function PromotionBannerWrapper({ skipDelay = false }: { skipDelay?: boolean }) {
   const { 
     activePromotion, 
     isLoading, 
@@ -19,6 +19,7 @@ export default function PromotionBannerWrapper() {
   return (
     <ElegantPromotionBanner
       promotion={activePromotion}
+      skipDelay={skipDelay}
       onClose={handleBannerClose}
       onTrack={(action) => {
         if (action === 'impression') {

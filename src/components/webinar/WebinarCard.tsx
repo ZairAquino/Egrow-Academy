@@ -3,6 +3,7 @@
 import { Webinar } from '@/types/webinar';
 import { formatWebinarDate, getTimeUntilWebinar } from '@/lib/webinar';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface WebinarCardProps {
   webinar: Webinar;
@@ -16,11 +17,13 @@ export default function WebinarCard({ webinar }: WebinarCardProps) {
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow">
       {/* Image */}
-      {webinar.imageUrl && (
+      {(webinar.imageUrl || webinar.title.toLowerCase().includes('aprende a crear videos profesionales con ia')) && (
         <div className="relative h-48">
-          <img
-            src={webinar.imageUrl}
+          <Image
+            src={webinar.title.toLowerCase().includes('aprende a crear videos profesionales con ia') ? "/images/webinarcv.png" : webinar.imageUrl}
             alt={webinar.title}
+            width={400}
+            height={192}
             className="w-full h-full object-cover"
           />
           

@@ -17,21 +17,27 @@ interface ElegantPromotionBannerProps {
   promotion: Promotion;
   onClose?: () => void;
   onTrack?: (action: 'impression' | 'click' | 'close' | 'conversion') => void;
+  skipDelay?: boolean;
 }
 
-export default function ElegantPromotionBanner({ promotion, onClose, onTrack }: ElegantPromotionBannerProps) {
+export default function ElegantPromotionBanner({ promotion, onClose, onTrack, skipDelay = false }: ElegantPromotionBannerProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
 
   useEffect(() => {
-    // Mostrar banner después de 2 segundos (más rápido que antes)
-    const timer = setTimeout(() => {
+    if (skipDelay) {
+      // Si skipDelay es true, mostrar inmediatamente
       setIsVisible(true);
       onTrack?.('impression');
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, [onTrack]);
+    } else {
+      // Mostrar banner después de 2 segundos (comportamiento original)
+      const timer = setTimeout(() => {
+        setIsVisible(true);
+        onTrack?.('impression');
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [onTrack, skipDelay]);
 
   const handleClose = () => {
     setIsClosing(true);

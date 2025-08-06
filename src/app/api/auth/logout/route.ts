@@ -5,7 +5,7 @@ import { verifyToken, extractTokenFromHeader } from '@/lib/auth';
 export async function POST(request: NextRequest) {
   try {
     // Check cookies first, then authorization header
-    const cookieToken = request.cookies.get('auth-token')?.value;
+    const cookieToken = request.cookies.get('session')?.value;
     const authHeader = request.headers.get('authorization');
     const headerToken = extractTokenFromHeader(authHeader);
     
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Clear cookie
-    response.cookies.delete('auth-token');
+    response.cookies.delete('session');
 
     return response;
 
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
     
-    response.cookies.delete('auth-token');
+    response.cookies.delete('session');
     return response;
   }
 }

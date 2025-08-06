@@ -7,21 +7,28 @@ import Hero from '@/components/layout/Hero';
 import CompaniesMarquee from '@/components/ui/CompaniesMarquee';
 import FeaturedCourses from '@/components/courses/FeaturedCourses';
 import Newsletter from '@/components/ui/Newsletter';
-import WhyChoose from '@/components/ui/WhyChoose';
 import Footer from '@/components/layout/Footer';
 import ClientOnly from '@/components/ClientOnly';
 import Navbar from '@/components/layout/Navbar';
 import { RecommendationsSection } from '@/components/ui/RecommendationsSection';
+import WelcomeBannerSection from '@/components/welcome/WelcomeBannerSection';
+import WelcomeToEgrowSection from '@/components/welcome/WelcomeToEgrowSection';
+import MyCourses from '@/components/courses/MyCourses';
+import PersonalizedRecommendations from '@/components/courses/PersonalizedRecommendations';
 
 import WelcomeModal from '@/components/ui/WelcomeModal';
 import DynamicSEO from '@/components/seo/DynamicSEO';
 import PromotionBannerWrapper from '@/components/PromotionBannerWrapper';
+import FacebookPixelTracker from '@/components/analytics/FacebookPixelTracker';
+import { useFacebookPixel } from '@/hooks/useFacebookPixel';
 
 
 function HomeContent() {
   const [showSuccessNotification, setShowSuccessNotification] = useState(false);
   const searchParams = useSearchParams();
-  const { refreshUser } = useAuth();
+  const { user, status, refreshUser } = useAuth();
+  const { trackEvent, trackFunnel, isUserLoggedIn } = useFacebookPixel();
+  const isAuthenticated = status === 'authenticated' && user;
 
   // Efecto para mostrar notificación de pago exitoso y refrescar usuario
   useEffect(() => {
@@ -32,18 +39,74 @@ function HomeContent() {
       // Refrescar la información del usuario después del pago exitoso
       refreshUser();
       
+      // Trackear evento de pago exitoso
+      trackEvent('Purchase', {
+        content_name: 'Payment Success',
+        content_category: 'Payment',
+        content_type: 'payment_success',
+        value: 0, // Valor será actualizado cuando tengamos datos reales
+        currency: 'USD'
+      });
+      
       // Ocultar la notificación después de 5 segundos
       const timer = setTimeout(() => {
         setShowSuccessNotification(false);
       }, 5000);
       return () => clearTimeout(timer);
     }
-  }, [searchParams]); // Removemos refreshUser de las dependencias
+  }, [searchParams, refreshUser, trackEvent]);
 
+  // Trackear eventos de engagement en la página de inicio
+  useEffect(() => {
+    // Trackear visualización de página de inicio
+    trackEvent('ViewContent', {
+      content_name: 'eGrow Academy Homepage',
+      content_category: 'Homepage',
+      content_type: 'homepage',
+      custom_parameters: {
+        page_section: 'main',
+        user_status: isUserLoggedIn ? 'logged_in' : 'anonymous'
+      }
+    });
 
+    // Trackear funnel de conversión - paso 1: visualización
+    trackFunnel('view', {
+      content_name: 'eGrow Academy Homepage',
+      content_category: 'Homepage',
+      custom_parameters: {
+        funnel_step: 'homepage_view',
+        user_status: isUserLoggedIn ? 'logged_in' : 'anonymous'
+      }
+    });
+  }, [trackEvent, trackFunnel, isUserLoggedIn]);
 
   return (
     <>
+      {/* Facebook Pixel Tracking para página de inicio */}
+      <FacebookPixelTracker 
+        trackPageView={true}
+        pageData={{
+          content_name: 'eGrow Academy Homepage',
+          content_category: 'Homepage',
+          content_type: 'homepage',
+          custom_parameters: {
+            page_section: 'main',
+            user_status: isUserLoggedIn ? 'logged_in' : 'anonymous'
+          }
+        }}
+        customEvents={[
+          {
+            event: 'ViewContent',
+            data: {
+              content_name: 'eGrow Academy Homepage',
+              content_category: 'Homepage',
+              content_type: 'homepage'
+            },
+            delay: 1000 // Delay de 1 segundo para asegurar que la página esté cargada
+          }
+        ]}
+      />
+
       {/* SEO Dinámico para la página principal */}
       <DynamicSEO 
         title="eGrow Academy - Cursos de Inteligencia Artificial | Líder en México y Latinoamérica"
@@ -66,8 +129,6 @@ function HomeContent() {
       <ClientOnly>
         <Navbar />
       </ClientOnly>
-
-
       
       {/* Modal de bienvenida */}
       <ClientOnly>
@@ -78,26 +139,53 @@ function HomeContent() {
       </ClientOnly>
       
       <main className="main-content pt-16">
-        <Hero />
-        
-        {/* Banner Promocional - Posición elegante después del Hero */}
-        <div className="w-full bg-gradient-to-b from-white to-gray-50 py-8">
-          <PromotionBannerWrapper />
-        </div>
-        
-        <CompaniesMarquee />
-        
-        {/* Sección de Recomendaciones Personalizadas - Temporalmente deshabilitada */}
-        {/* <RecommendationsSection 
-          title="Recomendado para ti"
-          limit={6}
-          showReason={true}
-          className="bg-gray-50"
-        /> */}
-        
-        <FeaturedCourses />
-        <WhyChoose />
-        <Newsletter />
+        {isAuthenticated ? (
+          /* Contenido para usuarios autenticados */
+          <>
+            <Hero />
+            
+            {/* Banner Promocional y Mensaje de Bienvenida */}
+            <WelcomeBannerSection />
+            
+            <CompaniesMarquee />
+            
+            {/* Sección de Bienvenida para usuarios sin cursos */}
+            <WelcomeToEgrowSection />
+            
+            {/* Mis Cursos - Cursos en progreso del usuario */}
+            <MyCourses />
+            
+            {/* Cursos Destacados */}
+            <FeaturedCourses />
+            
+            {/* Recomendaciones Personalizadas */}
+            <PersonalizedRecommendations />
+            
+            {/* Newsletter de Webinars */}
+            <Newsletter />
+          </>
+        ) : (
+          /* Contenido para usuarios no autenticados (original) */
+          <>
+            <Hero />
+            
+            {/* Banner Promocional y Mensaje de Bienvenida */}
+            <WelcomeBannerSection />
+            
+            <CompaniesMarquee />
+            
+            {/* Sección de Recomendaciones Personalizadas - Temporalmente deshabilitada */}
+            {/* <RecommendationsSection 
+              title="Recomendado para ti"
+              limit={6}
+              showReason={true}
+              className="bg-gray-50"
+            /> */}
+            
+            <FeaturedCourses />
+            <Newsletter />
+          </>
+        )}
       </main>
 
       <Footer />

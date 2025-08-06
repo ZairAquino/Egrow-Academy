@@ -26,16 +26,51 @@ interface StreakStats {
   canRecover: boolean;
 }
 
+interface BadgeCustomization {
+  preferredBadgeStyle: 'emoji' | 'text' | 'colorful';
+  badgeColor: string;
+  showBadgeInNavbar: boolean;
+  preferredEmojis: {
+    [key: string]: string;
+  };
+}
+
 interface StreakDisplayProps {
   compact?: boolean;
 }
 
 export default function StreakDisplay({ compact = false }: StreakDisplayProps) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const [stats, setStats] = useState<StreakStats | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
+  const [badgeCustomization, setBadgeCustomization] = useState<BadgeCustomization | null>(null);
+
+
+  const fetchBadgeCustomization = async () => {
+    if (!isAuthenticated) return;
+    
+    try {
+      const token = localStorage.getItem('authToken');
+      const response = await fetch('/api/profile/badge-customization', {
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` })
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.badgeCustomization) {
+          setBadgeCustomization(data.badgeCustomization);
+          console.log('✅ [STREAKS] Badge customization loaded:', data.badgeCustomization);
+        }
+      }
+    } catch (err) {
+      console.warn('⚠️ [STREAKS] Error fetching badge customization:', err);
+    }
+  };
 
   const fetchStreakStats = async () => {
     if (!isAuthenticated) return;
@@ -69,9 +104,10 @@ export default function StreakDisplay({ compact = false }: StreakDisplayProps) {
     }
   };
 
-  // Cargar estadísticas al montar el componente
+  // Cargar estadísticas y preferencias al montar el componente
   useEffect(() => {
     fetchStreakStats();
+    fetchBadgeCustomization();
   }, [isAuthenticated]);
 
   // Auto-refresh cada 30 segundos
@@ -105,7 +141,10 @@ export default function StreakDisplay({ compact = false }: StreakDisplayProps) {
     window.addEventListener('storage', handleStorageChange);
 
     // Función global para trigger manual
-    (window as any).refreshStreaks = fetchStreakStats;
+    (window as any).refreshStreaks = () => {
+      fetchStreakStats();
+      fetchBadgeCustomization();
+    };
 
     return () => {
       window.removeEventListener('lessonCompleted', handleLessonCompleted);
@@ -117,6 +156,7 @@ export default function StreakDisplay({ compact = false }: StreakDisplayProps) {
   if (!isAuthenticated) {
     return null;
   }
+
 
   if (loading && !stats) {
     return (
@@ -159,6 +199,12 @@ export default function StreakDisplay({ compact = false }: StreakDisplayProps) {
   };
 
   const getBadgeEmoji = (level: string): string => {
+    // Use user's custom emojis if available
+    if (badgeCustomization?.preferredEmojis?.[level]) {
+      return badgeCustomization.preferredEmojis[level];
+    }
+    
+    // Fall back to default emojis
     const emojiMap: { [key: string]: string } = {
       PRINCIPIANTE: '🌱',
       ESTUDIANTE: '📚',
@@ -179,7 +225,10 @@ export default function StreakDisplay({ compact = false }: StreakDisplayProps) {
           {compact ? 'Rachas' : 'Sistema de Rachas'}
         </h3>
         <button 
-          onClick={fetchStreakStats}
+          onClick={() => {
+            fetchStreakStats();
+            fetchBadgeCustomization();
+          }}
           className="text-blue-500 hover:text-blue-700 text-sm"
           title="Actualizar"
         >

@@ -5,7 +5,7 @@ import { verifyToken, extractTokenFromHeader, createSafeUser } from '@/lib/auth'
 export async function GET(request: NextRequest) {
   try {
     // Verificar token desde cookies o headers
-    const cookieToken = request.cookies.get('auth-token')?.value
+    const cookieToken = request.cookies.get('session')?.value
     const headerToken = extractTokenFromHeader(request)
     
     const token = cookieToken || headerToken

@@ -8,6 +8,8 @@ import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Footer from '@/components/layout/Footer';
 import Navbar from '@/components/layout/Navbar';
 import VideoPlayer from '@/components/courses/VideoPlayer';
+import FacebookPixelTracker from '@/components/analytics/FacebookPixelTracker';
+import { useFacebookPixel } from '@/hooks/useFacebookPixel';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
@@ -27,6 +29,45 @@ export default function VideosProfesionalesIAPage() {
   const { user, status } = useAuth();
   const { hasPremiumAccess, isLoading: subscriptionLoading } = useSubscriptionStatus();
   const router = useRouter();
+  const { trackEvent, trackWebinarRegistration, trackCourseView, isUserLoggedIn } = useFacebookPixel();
+
+  // Tracking específico para el webinar "Crea Videos Profesionales con IA"
+  useEffect(() => {
+    // Trackear visualización del curso/webinar
+    trackCourseView({
+      course_id: 'videos-profesionales-ia',
+      course_name: 'Crea Videos Profesionales con IA'
+    });
+
+    // Trackear evento de webinar específico
+    trackEvent('ViewContent', {
+      content_name: 'Crea Videos Profesionales con IA',
+      content_category: 'Webinar',
+      content_type: 'webinar_view',
+      content_ids: ['videos-profesionales-ia'],
+      custom_parameters: {
+        webinar_id: 'videos-profesionales-ia',
+        webinar_type: 'ia_video_creation',
+        course_duration: '18h 30min',
+        course_level: 'Intermedio',
+        course_category: 'Marketing Digital'
+      }
+    });
+
+    // Trackear funnel de conversión - paso 1: visualización
+    trackEvent('CustomEvent', {
+      content_name: 'Webinar View: Videos Profesionales IA',
+      content_category: 'Webinar',
+      content_type: 'webinar_funnel_view',
+      custom_parameters: {
+        funnel_step: 'webinar_view',
+        webinar_id: 'videos-profesionales-ia',
+        user_status: isUserLoggedIn ? 'logged_in' : 'anonymous'
+      }
+    });
+
+    console.log('📊 [Facebook Pixel] Webinar "Crea Videos Profesionales con IA" trackeado');
+  }, [trackEvent, trackCourseView, isUserLoggedIn]);
 
   const toggleLesson = (index: number) => {
     setExpandedLessons(prev => 
@@ -54,6 +95,18 @@ export default function VideosProfesionalesIAPage() {
     }
     
     if (!user || status === 'unauthenticated') {
+      // Trackear intento de acceso sin login
+      trackEvent('Lead', {
+        content_name: 'Webinar Registration Attempt',
+        content_category: 'Webinar',
+        content_type: 'webinar_registration_attempt',
+        custom_parameters: {
+          webinar_id: 'videos-profesionales-ia',
+          action: 'redirect_to_login',
+          user_status: 'anonymous'
+        }
+      });
+
       const loginUrl = `/login?redirect=/curso/videos-profesionales-ia/contenido`;
       if (typeof window !== 'undefined') {
         window.location.href = loginUrl;
@@ -62,12 +115,42 @@ export default function VideosProfesionalesIAPage() {
     }
     
     if (!hasPremiumAccess) {
+      // Trackear intento de acceso sin premium
+      trackEvent('Lead', {
+        content_name: 'Webinar Registration Attempt',
+        content_category: 'Webinar',
+        content_type: 'webinar_registration_attempt',
+        custom_parameters: {
+          webinar_id: 'videos-profesionales-ia',
+          action: 'redirect_to_subscription',
+          user_status: 'logged_in_no_premium'
+        }
+      });
+
       if (typeof window !== 'undefined') {
         window.location.href = '/subscription';
       }
       return;
     }
     
+    // Trackear registro exitoso al webinar
+    trackWebinarRegistration({
+      webinar_id: 'videos-profesionales-ia',
+      webinar_name: 'Crea Videos Profesionales con IA'
+    });
+
+    // Trackear funnel de conversión - paso 2: registro
+    trackEvent('CustomEvent', {
+      content_name: 'Webinar Registration: Videos Profesionales IA',
+      content_category: 'Webinar',
+      content_type: 'webinar_funnel_registration',
+      custom_parameters: {
+        funnel_step: 'webinar_registration',
+        webinar_id: 'videos-profesionales-ia',
+        user_status: 'logged_in_premium'
+      }
+    });
+
     const contentUrl = '/curso/videos-profesionales-ia/contenido';
     if (typeof window !== 'undefined') {
       window.location.href = contentUrl;
@@ -231,6 +314,50 @@ export default function VideosProfesionalesIAPage() {
 
   return (
     <>
+      {/* Facebook Pixel Tracking para webinar "Crea Videos Profesionales con IA" */}
+      <FacebookPixelTracker 
+        trackPageView={true}
+        pageData={{
+          content_name: 'Crea Videos Profesionales con IA',
+          content_category: 'Webinar',
+          content_type: 'webinar_page',
+          content_ids: ['videos-profesionales-ia'],
+          custom_parameters: {
+            webinar_id: 'videos-profesionales-ia',
+            webinar_type: 'ia_video_creation',
+            course_duration: '18h 30min',
+            course_level: 'Intermedio',
+            course_category: 'Marketing Digital',
+            page_type: 'webinar_landing'
+          }
+        }}
+        customEvents={[
+          {
+            event: 'ViewContent',
+            data: {
+              content_name: 'Crea Videos Profesionales con IA',
+              content_category: 'Webinar',
+              content_type: 'webinar_view',
+              content_ids: ['videos-profesionales-ia']
+            },
+            delay: 1000
+          },
+          {
+            event: 'CustomEvent',
+            data: {
+              content_name: 'Webinar Landing Page View',
+              content_category: 'Webinar',
+              content_type: 'webinar_landing_view',
+              custom_parameters: {
+                webinar_id: 'videos-profesionales-ia',
+                funnel_step: 'landing_page_view'
+              }
+            },
+            delay: 2000
+          }
+        ]}
+      />
+
       <Navbar />
       
       <main className="main-content">

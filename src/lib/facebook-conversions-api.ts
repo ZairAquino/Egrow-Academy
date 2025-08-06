@@ -66,6 +66,18 @@ export async function sendFacebookConversionEvent(
   } = {}
 ): Promise<boolean> {
   try {
+    // Verificar si estamos en desarrollo y deshabilitar en modo dev si es necesario
+    if (process.env.NODE_ENV === 'development' && !process.env.ENABLE_FACEBOOK_CONVERSIONS_DEV) {
+      console.log('🔧 [Conversions API] Deshabilitado en desarrollo');
+      return true;
+    }
+
+    // Validar que tenemos el token de acceso
+    if (!FACEBOOK_ACCESS_TOKEN || FACEBOOK_ACCESS_TOKEN === '') {
+      console.warn('⚠️ [Conversions API] Token de acceso no configurado');
+      return false;
+    }
+
     const payload: ConversionsApiPayload = {
       data: [{
         event_name: eventName,
@@ -94,7 +106,7 @@ export async function sendFacebookConversionEvent(
     console.log('📊 [Conversions API] Enviando evento:', {
       eventName,
       eventData,
-      userData
+      userData: { ...userData, email: userData.email ? '[REDACTED]' : undefined }
     });
 
     const response = await fetch(CONVERSIONS_API_ENDPOINT, {
@@ -105,17 +117,30 @@ export async function sendFacebookConversionEvent(
       body: JSON.stringify(payload)
     });
 
-    const result = await response.json();
-
-    if (response.ok) {
-      console.log('✅ [Conversions API] Evento enviado correctamente:', result);
-      return true;
-    } else {
-      console.error('❌ [Conversions API] Error al enviar evento:', result);
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('❌ [Conversions API] Error HTTP:', response.status, errorText);
       return false;
     }
+
+    const result = await response.json();
+
+    // Verificar si el resultado está vacío o tiene errores
+    if (!result || Object.keys(result).length === 0) {
+      console.error('❌ [Conversions API] Respuesta vacía del servidor');
+      return false;
+    }
+
+    if (result.error) {
+      console.error('❌ [Conversions API] Error en respuesta:', result.error);
+      return false;
+    }
+
+    console.log('✅ [Conversions API] Evento enviado correctamente:', result);
+    return true;
+    
   } catch (error) {
-    console.error('❌ [Conversions API] Error de red:', error);
+    console.error('❌ [Conversions API] Error de red o parsing:', error);
     return false;
   }
 }

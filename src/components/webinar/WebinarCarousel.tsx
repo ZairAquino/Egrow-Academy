@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { Webinar } from '@/types/webinar';
 
 interface WebinarCarouselProps {
@@ -8,14 +9,27 @@ interface WebinarCarouselProps {
 }
 
 export default function WebinarCarousel({ webinars }: WebinarCarouselProps) {
+  // Filtrar solo webinars futuros (que no hayan pasado)
+  const upcomingWebinars = webinars.filter(webinar => {
+    const webinarDate = new Date(webinar.dateTime);
+    const now = new Date();
+    // Solo incluir webinars que:
+    // 1. Estén activos (isActive = true)
+    // 2. Su fecha sea futura (dateTime > now)
+    return webinar.isActive && webinarDate > now;
+  }).sort((a, b) => {
+    // Ordenar por fecha más cercana primero
+    return new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime();
+  });
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const itemsPerView = 3; // Mostrar 3 webinars por vista
-  const totalSlides = Math.ceil(webinars.length / itemsPerView);
+  const totalSlides = Math.ceil(upcomingWebinars.length / itemsPerView);
 
   // Obtener los webinars para la vista actual
   const getCurrentWebinars = () => {
     const startIndex = currentIndex * itemsPerView;
-    return webinars.slice(startIndex, startIndex + itemsPerView);
+    return upcomingWebinars.slice(startIndex, startIndex + itemsPerView);
   };
 
   const nextSlide = () => {
@@ -76,7 +90,7 @@ export default function WebinarCarousel({ webinars }: WebinarCarouselProps) {
     }
   };
 
-  if (webinars.length === 0) {
+  if (upcomingWebinars.length === 0) {
     return (
       <div className="no-webinars-message">
         <div className="no-webinars-icon">🎥</div>
@@ -115,7 +129,7 @@ export default function WebinarCarousel({ webinars }: WebinarCarouselProps) {
           >
             {Array.from({ length: totalSlides }, (_, slideIndex) => {
               const startIndex = slideIndex * itemsPerView;
-              const slideWebinars = webinars.slice(startIndex, startIndex + itemsPerView);
+              const slideWebinars = upcomingWebinars.slice(startIndex, startIndex + itemsPerView);
               
               return (
                 <div 
@@ -126,14 +140,20 @@ export default function WebinarCarousel({ webinars }: WebinarCarouselProps) {
                     {slideWebinars.map((webinar, index) => (
                       <div key={webinar.id} className="webinar-card">
                         <div className="webinar-image">
-                          {webinar.imageUrl ? (
-                            <img src={webinar.imageUrl} alt={webinar.title} />
+                          {webinar.imageUrl || webinar.title.toLowerCase().includes('aprende a crear videos profesionales con ia') ? (
+                            <Image
+                              src={webinar.title.toLowerCase().includes('aprende a crear videos profesionales con ia') ? "/images/webinarcv.png" : webinar.imageUrl}
+                              alt={webinar.title}
+                              width={400}
+                              height={160}
+                              className="webinar-carousel-image"
+                            />
                           ) : (
                             <div className="webinar-placeholder">
                               <span>🎥</span>
                             </div>
                           )}
-                          <div className="webinar-overlay">
+                          <div className="webinar-status-overlay">
                             <div className="webinar-status">
                               {new Date(webinar.dateTime) <= new Date() ? (
                                 <span className="status-live">🔴 EN VIVO</span>
@@ -302,7 +322,8 @@ export default function WebinarCarousel({ webinars }: WebinarCarouselProps) {
           overflow: hidden;
         }
 
-        .webinar-image img {
+        .webinar-image img,
+        .webinar-carousel-image {
           width: 100%;
           height: 100%;
           object-fit: cover;
@@ -317,26 +338,23 @@ export default function WebinarCarousel({ webinars }: WebinarCarouselProps) {
           color: rgba(255, 255, 255, 0.8);
         }
 
-        .webinar-overlay {
+        .webinar-status-overlay {
           position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: linear-gradient(135deg, rgba(102, 126, 234, 0.8), rgba(118, 75, 162, 0.8));
-          display: flex;
-          align-items: flex-start;
-          justify-content: flex-end;
-          padding: 0.75rem;
+          top: 0.75rem;
+          right: 0.75rem;
+          z-index: 10;
         }
 
         .webinar-status {
-          background: rgba(0, 0, 0, 0.7);
+          background: rgba(0, 0, 0, 0.85);
           color: white;
-          padding: 0.25rem 0.75rem;
-          border-radius: 16px;
+          padding: 0.5rem 0.875rem;
+          border-radius: 20px;
           font-size: 0.75rem;
-          font-weight: 600;
+          font-weight: 700;
+          backdrop-filter: blur(8px);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+          border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .status-live {

@@ -28,6 +28,9 @@ export default function FacebookConversionsTracker({
 }: FacebookConversionsTrackerProps) {
   
   useEffect(() => {
+    // Verificar si estamos en el cliente y FB Conversions está habilitado
+    if (typeof window === 'undefined') return;
+
     // Tracking de PageView
     if (trackPageView) {
       sendFacebookConversionEvent('PageView', {
@@ -35,6 +38,9 @@ export default function FacebookConversionsTracker({
         content_category: pageData.content_category || 'Page',
         content_type: pageData.content_type || 'page_view',
         content_ids: pageData.content_ids || []
+      }).catch(error => {
+        // Manejo silencioso de errores para no interrumpir la experiencia del usuario
+        console.warn('Facebook Conversions API error handled gracefully:', error);
       });
     }
 
@@ -43,7 +49,10 @@ export default function FacebookConversionsTracker({
       const delay = customEvent.delay || 0;
       
       setTimeout(() => {
-        sendFacebookConversionEvent(customEvent.event as any, customEvent.data);
+        sendFacebookConversionEvent(customEvent.event as any, customEvent.data).catch(error => {
+          // Manejo silencioso de errores
+          console.warn('Facebook Conversions API event error handled gracefully:', error);
+        });
       }, delay);
     });
   }, [trackPageView, pageData, customEvents]);
@@ -65,12 +74,19 @@ export function WebinarConversionsTracker({
 }) {
   
   useEffect(() => {
+    // Verificar si estamos en el cliente
+    if (typeof window === 'undefined') return;
+
     // Tracking de visualización de página de webinar
-    webinarEvents.trackWebinarPageView(webinarId, webinarName);
+    webinarEvents.trackWebinarPageView(webinarId, webinarName).catch(error => {
+      console.warn('Webinar page view tracking error handled gracefully:', error);
+    });
     
     // Tracking de lead si hay email
     if (userEmail) {
-      webinarEvents.trackWebinarLead(webinarId, webinarName, userEmail);
+      webinarEvents.trackWebinarLead(webinarId, webinarName, userEmail).catch(error => {
+        console.warn('Webinar lead tracking error handled gracefully:', error);
+      });
     }
   }, [webinarId, webinarName, userEmail]);
 
@@ -82,15 +98,30 @@ export function WebinarConversionsTracker({
  */
 export function useWebinarConversions() {
   const trackRegistration = async (webinarId: string, webinarName: string, userEmail?: string) => {
-    return await webinarEvents.trackWebinarRegistration(webinarId, webinarName, userEmail);
+    try {
+      return await webinarEvents.trackWebinarRegistration(webinarId, webinarName, userEmail);
+    } catch (error) {
+      console.warn('Registration tracking error handled gracefully:', error);
+      return false;
+    }
   };
 
   const trackPageView = async (webinarId: string, webinarName: string) => {
-    return await webinarEvents.trackWebinarPageView(webinarId, webinarName);
+    try {
+      return await webinarEvents.trackWebinarPageView(webinarId, webinarName);
+    } catch (error) {
+      console.warn('Page view tracking error handled gracefully:', error);
+      return false;
+    }
   };
 
   const trackLead = async (webinarId: string, webinarName: string, userEmail?: string) => {
-    return await webinarEvents.trackWebinarLead(webinarId, webinarName, userEmail);
+    try {
+      return await webinarEvents.trackWebinarLead(webinarId, webinarName, userEmail);
+    } catch (error) {
+      console.warn('Lead tracking error handled gracefully:', error);
+      return false;
+    }
   };
 
   return {
