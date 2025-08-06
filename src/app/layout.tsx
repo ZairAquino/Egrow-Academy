@@ -155,28 +155,14 @@ export default function RootLayout({
             </>
           )}
           
-          {/* Facebook Pixel Code - Funciona en producción y test */}
+          {/* Facebook Pixel Code - Nueva configuración pendiente */}
           <script
             dangerouslySetInnerHTML={{
               __html: `
-                !function(f,b,e,v,n,t,s)
-                {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-                n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-                if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-                n.queue=[];t=b.createElement(e);t.async=!0;
-                t.src=v;s=b.getElementsByTagName(e)[0];
-                s.parentNode.insertBefore(t,s)}(window, document,'script',
-                'https://connect.facebook.net/en_US/fbevents.js');
-                fbq('init', '1247652460159167');
-                fbq('track', 'PageView');
-                
-                // Logs de depuración
-                console.log('✅ Facebook Pixel cargado correctamente');
-                console.log('📊 Pixel ID: 1247652460159167');
-                console.log('🌐 URL actual:', window.location.href);
-                console.log('🔍 Para probar eventos, escribe en Console:');
-                console.log('   fbq("track", "PageView")');
-                console.log('   fbq("track", "Lead", {content_name: "Test"})');
+                // Facebook Pixel - Configuración pendiente
+                console.log('🔧 Facebook Pixel - Configuración en progreso');
+                console.log('📋 Token de acceso generado');
+                console.log('🎯 Próximo paso: Configurar Conversions API');
               `,
             }}
           />
