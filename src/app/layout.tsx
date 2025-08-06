@@ -169,6 +169,14 @@ export default function RootLayout({
                 'https://connect.facebook.net/en_US/fbevents.js');
                 fbq('init', '1247652460159167');
                 fbq('track', 'PageView');
+                
+                // Logs de depuración
+                console.log('✅ Facebook Pixel cargado correctamente');
+                console.log('📊 Pixel ID: 1247652460159167');
+                console.log('🌐 URL actual:', window.location.href);
+                console.log('🔍 Para probar eventos, escribe en Console:');
+                console.log('   fbq("track", "PageView")');
+                console.log('   fbq("track", "Lead", {content_name: "Test"})');
               `,
             }}
           />
