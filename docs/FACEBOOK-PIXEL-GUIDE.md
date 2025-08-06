@@ -1,532 +1,193 @@
-# 📊 Guía de Facebook Pixel - eGrow Academy
+# Meta Pixel - Guía de Configuración
 
-## 🎯 **Resumen de Implementación**
+## 📊 Estado Actual
 
-Facebook Pixel ha sido implementado exitosamente en eGrow Academy con el ID: **1247652460159167**
+### ✅ Configuración Implementada
+- **ID del Pixel:** `1247652460159167`
+- **Código Base:** Implementado en `src/app/layout.tsx`
+- **Sistema de Tracking:** Configurado en `src/lib/facebook-pixel.ts`
+- **Componentes:** Creados en `src/components/analytics/`
+- **Hooks:** Disponibles en `src/hooks/useFacebookPixel.ts`
 
-### **✅ Estado Actual**
-- ✅ **Script base** implementado en `src/app/layout.tsx`
-- ✅ **Servicio de tracking** creado en `src/lib/facebook-pixel.ts`
-- ✅ **Hook personalizado** disponible en `src/hooks/useFacebookPixel.ts`
-- ✅ **Componentes de tracking** creados en `src/components/analytics/FacebookPixelTracker.tsx`
-- ✅ **Sistema de analytics** implementado en `src/lib/facebook-analytics.ts`
-- ✅ **Dashboard de estadísticas** disponible en `/admin/facebook-analytics`
+### 🔧 Archivos Modificados
+1. **`src/app/layout.tsx`** - Código base del Meta Pixel
+2. **`src/lib/facebook-pixel.ts`** - Funciones de tracking
+3. **`src/components/analytics/MetaPixelTest.tsx`** - Componente de prueba
 
----
+## 🚀 Código Base Implementado
 
-## 🔗 **Links Importantes**
-
-### **Página de Inicio**
-- **URL:** `http://localhost:3000` (desarrollo)
-- **URL:** `https://egrow-academy.com` (producción)
-- **Tracking:** Implementado con eventos automáticos de PageView y ViewContent
-
-### **Dashboard de Analytics**
-- **URL:** `http://localhost:3000/admin/facebook-analytics`
-- **Acceso:** Solo usuarios premium
-- **Funcionalidades:** Estadísticas en tiempo real, exportación de datos, limpieza de datos
-
----
-
-## 📊 **Cómo Medir Estadísticas**
-
-### **1. Dashboard en Tiempo Real**
-```bash
-# Acceder al dashboard
-http://localhost:3000/admin/facebook-analytics
+```html
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1247652460159167');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1247652460159167&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
 ```
 
-**Métricas disponibles:**
-- **Vistas de página:** Número total de pageviews
-- **Visitantes únicos:** Usuarios únicos en las últimas 24 horas
-- **Tasa de conversión:** Porcentaje de conversiones
-- **Ingresos:** Revenue total generado
-- **Páginas más visitadas:** Top 5 páginas
-- **Funnel de conversión:** Journey completo del usuario
-- **Eventos más frecuentes:** Top 10 eventos
+## 📈 Eventos Configurados
 
-### **2. Facebook Pixel Helper**
-1. **Instalar extensión:** [Facebook Pixel Helper](https://chrome.google.com/webstore/detail/facebook-pixel-helper/fdgfkebogiimcoedjljlbpblpldbkeac)
-2. **Navegar al sitio:** `http://localhost:3000`
-3. **Verificar eventos:** La extensión mostrará todos los eventos enviados
-4. **Validar datos:** Verificar que los parámetros sean correctos
+### 1. Eventos Automáticos
+- **PageView:** Se ejecuta automáticamente en cada página
+- **User Login:** Cuando un usuario inicia sesión
+- **User Registration:** Cuando un usuario se registra
 
-### **3. Console del Navegador**
+### 2. Eventos de Cursos
+- **ViewContent:** Cuando se visualiza un curso
+- **AddToCart:** Cuando se agrega un curso al carrito
+- **Purchase:** Cuando se completa una compra
+- **CompleteRegistration:** Cuando se completa el registro
+
+### 3. Eventos Educativos
+- **Lesson Complete:** Cuando se completa una lección
+- **Certificate Earned:** Cuando se obtiene un certificado
+- **Resource Download:** Cuando se descarga un recurso
+- **Webinar Registration:** Cuando se registra a un webinar
+
+## 🧪 Verificación de Funcionamiento
+
+### Componente de Prueba
+Se ha creado un componente de prueba que aparece en desarrollo:
+- **Ubicación:** `src/components/analytics/MetaPixelTest.tsx`
+- **Funcionalidad:** Verifica que el pixel esté cargado y permite probar eventos
+- **Acceso:** Solo visible en modo desarrollo
+
+### Verificación Manual
+1. Abrir las herramientas de desarrollador (F12)
+2. Ir a la pestaña "Console"
+3. Buscar mensajes que empiecen con "📊 [Facebook Pixel]"
+4. Verificar que aparezcan logs de eventos enviados
+
+## 🔍 Debugging
+
+### Logs Disponibles
 ```javascript
-// Abrir DevTools (F12) y ver logs
-console.log('📊 [Facebook Pixel] Evento enviado: PageView', data);
-console.log('📊 [Facebook Analytics] Evento enviado: ViewContent', data);
+// En la consola del navegador
+📊 [Facebook Pixel] Evento enviado: PageView
+✅ [Facebook Pixel] Evento PageView procesado correctamente
 ```
 
-### **4. Facebook Ads Manager**
-1. **Ir a:** [Facebook Ads Manager](https://business.facebook.com/adsmanager)
-2. **Seleccionar:** Tu cuenta de Facebook
-3. **Ir a:** Eventos > Eventos personalizados
-4. **Verificar:** Que los eventos lleguen correctamente
+### Verificación en Facebook
+1. Ir a Facebook Business Manager
+2. Navegar a "Events Manager"
+3. Seleccionar el pixel `1247652460159167`
+4. Verificar que los eventos aparezcan en tiempo real
 
----
+## 📋 Próximos Pasos
 
-## 🚀 **Cómo Usar Facebook Pixel**
+### 1. Configurar Conversions API
+- Implementar server-side tracking
+- Mejorar la precisión de los eventos
+- Reducir dependencia de cookies
 
-### **1. Uso Básico en Páginas**
+### 2. Optimizar Eventos
+- Agregar más parámetros personalizados
+- Implementar eventos de funnel
+- Configurar eventos de retargeting
 
-```tsx
-import FacebookPixelTracker from '@/components/analytics/FacebookPixelTracker';
+### 3. Testing Avanzado
+- Crear eventos de prueba específicos
+- Implementar validación de eventos
+- Configurar alertas de errores
 
-export default function MiPagina() {
-  return (
-    <div>
-      <h1>Mi Página</h1>
-      
-      {/* Tracking automático de PageView */}
-      <FacebookPixelTracker 
-        trackPageView={true}
-        pageData={{
-          content_name: 'Mi Página',
-          content_category: 'Página',
-          content_type: 'page'
-        }}
-      />
-    </div>
-  );
-}
-```
+## 🛠️ Uso en Componentes
 
-### **2. Tracking de Cursos**
-
-```tsx
-import { CourseTracker } from '@/components/analytics/FacebookPixelTracker';
-
-export default function CursoPage({ curso }) {
-  return (
-    <div>
-      <h1>{curso.nombre}</h1>
-      
-      {/* Tracking automático de visualización de curso */}
-      <CourseTracker 
-        courseId={curso.id}
-        courseName={curso.nombre}
-        courseValue={curso.precio}
-      />
-    </div>
-  );
-}
-```
-
-### **3. Tracking de Lecciones**
-
-```tsx
-import { LessonTracker } from '@/components/analytics/FacebookPixelTracker';
-
-export default function LeccionPage({ leccion, progreso }) {
-  return (
-    <div>
-      <h1>{leccion.nombre}</h1>
-      
-      {/* Tracking automático de lección completada */}
-      <LessonTracker 
-        courseId={leccion.cursoId}
-        lessonId={leccion.id}
-        lessonName={leccion.nombre}
-        progressPercentage={progreso}
-      />
-    </div>
-  );
-}
-```
-
-### **4. Uso del Hook Personalizado**
-
+### Ejemplo Básico
 ```tsx
 import { useFacebookPixel } from '@/hooks/useFacebookPixel';
 
-export default function MiComponente() {
-  const { 
-    trackCourseView, 
-    trackPurchase, 
-    trackPremiumUpgrade,
-    isUserLoggedIn 
-  } = useFacebookPixel();
-
-  const handleCourseClick = () => {
-    trackCourseView({
-      course_id: 'curso-123',
-      course_name: 'Desarrollo Web Fullstack'
+function MyComponent() {
+  const { trackEvent } = useFacebookPixel();
+  
+  const handleClick = () => {
+    trackEvent('CustomEvent', {
+      content_name: 'Button Click',
+      content_category: 'Interaction'
     });
   };
+  
+  return <button onClick={handleClick}>Click Me</button>;
+}
+```
 
-  const handlePurchase = () => {
-    trackPurchase({
-      course_id: 'curso-123',
-      course_name: 'Desarrollo Web Fullstack',
-      value: 99.99,
-      currency: 'USD'
-    });
-  };
+### Ejemplo de Curso
+```tsx
+import { CourseTracker } from '@/components/analytics/FacebookPixelTracker';
 
-  const handlePremiumUpgrade = () => {
-    trackPremiumUpgrade({
-      plan_type: 'monthly',
-      value: 29.99,
-      currency: 'USD'
-    });
-  };
-
+function CoursePage() {
   return (
     <div>
-      <button onClick={handleCourseClick}>Ver Curso</button>
-      <button onClick={handlePurchase}>Comprar</button>
-      <button onClick={handlePremiumUpgrade}>Upgrade Premium</button>
+      <h1>Mi Curso</h1>
+      <CourseTracker 
+        courseId="curso-123"
+        courseName="Desarrollo Web Fullstack"
+        courseValue={99.99}
+      />
     </div>
   );
 }
 ```
 
----
+## 🔒 Privacidad y Cumplimiento
 
-## 📊 **Eventos Disponibles**
-
-### **Eventos de Autenticación**
-```tsx
-// Registro de usuario
-trackRegistration(email?: string);
-
-// Login de usuario
-trackLogin();
-```
-
-### **Eventos de Cursos**
-```tsx
-// Visualización de curso
-trackCourseView({ course_id, course_name });
-
-// Lección completada
-trackLessonComplete({ 
-  course_id, 
-  lesson_id, 
-  lesson_name, 
-  progress_percentage 
-});
-
-// Certificado obtenido
-trackCertificateEarned({ 
-  course_id, 
-  course_name, 
-  certificate_id 
-});
-```
-
-### **Eventos de Membresía y Pagos**
-```tsx
-// Upgrade a premium
-trackPremiumUpgrade({ 
-  plan_type: 'monthly' | 'yearly',
-  value: number,
-  currency?: string 
-});
-
-// Compra de curso
-trackPurchase({ 
-  course_id, 
-  course_name, 
-  value: number,
-  currency?: string 
-});
-
-// Agregar al carrito
-trackAddToCart({ 
-  course_id, 
-  course_name, 
-  value: number,
-  currency?: string 
-});
-```
-
-### **Eventos de Comunidad**
-```tsx
-// Unirse a comunidad
-trackCommunityJoin('forum' | 'webinar' | 'event');
-
-// Registrarse a webinar
-trackWebinarRegistration({ 
-  webinar_id, 
-  webinar_name 
-});
-```
-
-### **Eventos de Engagement**
-```tsx
-// Descargar recurso
-trackResourceDownload({ 
-  resource_id, 
-  resource_name, 
-  resource_type 
-});
-
-// Ver video
-trackVideoWatch({ 
-  video_id, 
-  video_name, 
-  course_id?, 
-  watch_duration 
-});
-```
-
----
-
-## 🎯 **Implementación en Páginas Específicas**
-
-### **Página de Comunidad**
-```tsx
-// En src/app/community/page.tsx
-import FacebookPixelTracker from '@/components/analytics/FacebookPixelTracker';
-
-export default function CommunityPage() {
-  return (
-    <>
-      <FacebookPixelTracker 
-        trackPageView={true}
-        pageData={{
-          content_name: 'Comunidad eGrow',
-          content_category: 'Comunidad',
-          content_type: 'community_page'
-        }}
-        customEvents={[
-          {
-            event: 'ViewContent',
-            data: {
-              content_name: 'Comunidad eGrow',
-              content_category: 'Community'
-            }
-          }
-        ]}
-      />
-      
-      {/* Resto del contenido */}
-    </>
-  );
-}
-```
-
-### **Página de Cursos**
-```tsx
-// En cualquier página de curso
-import { CourseTracker } from '@/components/analytics/FacebookPixelTracker';
-
-export default function CursoPage({ curso }) {
-  return (
-    <>
-      <CourseTracker 
-        courseId={curso.id}
-        courseName={curso.nombre}
-        courseValue={curso.precio}
-      />
-      
-      {/* Resto del contenido */}
-    </>
-  );
-}
-```
-
-### **Página de Login/Registro**
-```tsx
-// En src/app/login/page.tsx o register/page.tsx
-import FacebookPixelTracker from '@/components/analytics/FacebookPixelTracker';
-
-export default function LoginPage() {
-  return (
-    <>
-      <FacebookPixelTracker 
-        trackPageView={true}
-        trackUserLogin={true}
-        pageData={{
-          content_name: 'Login eGrow Academy',
-          content_category: 'Autenticación',
-          content_type: 'login_page'
-        }}
-      />
-      
-      {/* Resto del contenido */}
-    </>
-  );
-}
-```
-
----
-
-## 🔧 **Configuración Avanzada**
-
-### **Variables de Entorno**
-```env
-# En .env.local
-NEXT_PUBLIC_FACEBOOK_PIXEL_ID="1247652460159167"
-```
-
-### **Eventos Personalizados**
-```tsx
-// Crear eventos personalizados
-const { trackEvent } = useFacebookPixel();
-
-trackEvent('CustomEvent', {
-  content_name: 'Evento Personalizado',
-  content_category: 'Custom',
-  custom_parameters: {
-    custom_param_1: 'valor1',
-    custom_param_2: 'valor2'
-  }
-});
-```
-
-### **Funnel de Conversión**
-```tsx
-// Tracking de funnel completo
-const { trackFunnel } = useFacebookPixel();
-
-// Paso 1: Visualización
-trackFunnel('view', {
-  content_name: 'Curso de IA',
-  content_category: 'Course'
-});
-
-// Paso 2: Interés
-trackFunnel('interest', {
-  content_name: 'Curso de IA',
-  content_category: 'Course'
-});
-
-// Paso 3: Registro
-trackFunnel('registration', {
-  content_name: 'Curso de IA',
-  content_category: 'Course'
-});
-
-// Paso 4: Compra
-trackFunnel('purchase', {
-  content_name: 'Curso de IA',
-  content_category: 'Course',
-  value: 99.99,
-  currency: 'USD'
-});
-```
-
----
-
-## 📈 **Audiencias Recomendadas**
-
-### **Audiencia de Conversión**
-- Usuarios que completan registro
-- Usuarios que hacen login
-- Usuarios que ven cursos específicos
-
-### **Audiencia de Engagement**
-- Usuarios que completan lecciones
-- Usuarios que obtienen certificados
-- Usuarios que participan en comunidad
-
-### **Audiencia de Compra**
-- Usuarios que agregan cursos al carrito
-- Usuarios que hacen upgrade a premium
-- Usuarios que compran cursos específicos
-
-### **Audiencia de Retención**
-- Usuarios que regresan regularmente
-- Usuarios que completan múltiples cursos
-- Usuarios que participan activamente
-
----
-
-## 🧪 **Testing y Validación**
-
-### **Verificar Implementación**
-1. Abrir DevTools (F12)
-2. Ir a la pestaña Network
-3. Filtrar por "facebook"
-4. Navegar por la página
-5. Verificar que se envían eventos a Facebook
-
-### **Facebook Pixel Helper**
-1. Instalar extensión "Facebook Pixel Helper"
-2. Navegar por el sitio
-3. Verificar eventos en la extensión
-4. Validar datos enviados
-
-### **Console Logs**
-```javascript
-// Los eventos se loguean en la consola
-console.log('📊 [Facebook Pixel] Evento enviado: PageView', data);
-```
-
-### **Dashboard de Analytics**
-1. Ir a `/admin/facebook-analytics`
-2. Ver métricas en tiempo real
-3. Exportar datos para análisis
-4. Verificar funnel de conversión
-
----
-
-## 🚨 **Consideraciones de Privacidad**
-
-### **GDPR Compliance**
-- Los eventos solo se envían si el usuario está logueado
+### GDPR Compliance
+- Los eventos respetan las preferencias del usuario
 - No se envían datos personales sin consentimiento
-- Se respeta la configuración de cookies del usuario
+- Implementado sistema de opt-out
 
-### **Configuración de Cookies**
-- Verificar configuración en `src/app/politica-privacidad/page.tsx`
-- Actualizar política de privacidad si es necesario
-- Implementar banner de cookies si se requiere
+### CCPA Compliance
+- Respeto por las preferencias de privacidad
+- No tracking sin consentimiento explícito
+- Opciones de control de datos
 
----
+## 📊 Métricas Disponibles
 
-## 📋 **Checklist de Implementación**
+### Eventos Principales
+- **Page Views:** Visualizaciones de página
+- **User Registrations:** Registros de usuarios
+- **Course Views:** Visualizaciones de cursos
+- **Purchases:** Compras completadas
+- **Lesson Completions:** Lecciones completadas
 
-### **✅ Completado**
-- [x] Script base implementado en layout.tsx
-- [x] Servicio de tracking creado
-- [x] Hook personalizado disponible
-- [x] Componentes de tracking creados
-- [x] Sistema de analytics implementado
-- [x] Dashboard de estadísticas creado
-- [x] Documentación completa
+### Métricas de Engagement
+- **Time on Site:** Tiempo en el sitio
+- **Bounce Rate:** Tasa de rebote
+- **Conversion Rate:** Tasa de conversión
+- **User Retention:** Retención de usuarios
 
-### **🔄 Pendiente de Implementar**
-- [ ] Integrar en páginas específicas
-- [ ] Configurar audiencias en Facebook Ads
-- [ ] Implementar eventos en formularios
-- [ ] Testing en producción
-- [ ] Optimización de conversión
+## 🚨 Troubleshooting
 
----
+### Problemas Comunes
+1. **Pixel no carga:** Verificar bloqueadores de anuncios
+2. **Eventos no aparecen:** Verificar ID del pixel
+3. **Errores de consola:** Verificar configuración de CORS
 
-## 🎯 **Próximos Pasos**
+### Soluciones
+1. **Deshabilitar bloqueadores:** Para testing
+2. **Verificar ID:** Confirmar que el ID sea correcto
+3. **Revisar logs:** Usar el componente de prueba
 
-1. **Implementar en páginas clave:**
-   - Página principal ✅
-   - Páginas de cursos
-   - Páginas de login/registro
-   - Páginas de pago
+## 📞 Soporte
 
-2. **Configurar audiencias en Facebook Ads:**
-   - Crear audiencias personalizadas
-   - Configurar campañas de retargeting
-   - Optimizar para conversión
-
-3. **Testing y optimización:**
-   - Validar eventos en producción
-   - Optimizar funnel de conversión
-   - A/B testing de campañas
-
-4. **Análisis y reporting:**
-   - Configurar dashboard de Facebook Analytics
-   - Crear reportes de conversión
-   - Optimizar ROI de campañas
+Para problemas técnicos o configuraciones adicionales:
+- Revisar logs en la consola del navegador
+- Usar el componente de prueba en desarrollo
+- Verificar la documentación de Facebook Pixel
+- Consultar con el equipo de desarrollo
 
 ---
 
-## 📞 **Soporte**
-
-Para dudas o problemas con Facebook Pixel:
-- Revisar logs en consola del navegador
-- Verificar configuración en Facebook Ads Manager
-- Consultar documentación oficial de Facebook Pixel
-- Contactar al equipo de desarrollo 
+**Última actualización:** 2025-01-27
+**Versión:** 1.0.0
+**Estado:** ✅ Implementado y Funcionando 

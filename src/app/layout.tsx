@@ -19,6 +19,7 @@ import SocialTrackingWrapper from '@/components/social/SocialTrackingWrapper';
 import StreakNotifications from '@/components/notifications/StreakNotifications';
 import StreakSynchronizer from '@/components/streaks/StreakSynchronizer';
 import StreakSystemInitializer from '@/components/streaks/StreakSystemInitializer';
+import MetaPixelTest from '@/components/analytics/MetaPixelTest';
 
 const montserrat = Montserrat({ 
   subsets: ["latin"],
@@ -155,14 +156,20 @@ export default function RootLayout({
             </>
           )}
           
-          {/* Facebook Pixel Code - Nueva configuración pendiente */}
+          {/* Meta Pixel Code */}
           <script
             dangerouslySetInnerHTML={{
               __html: `
-                // Facebook Pixel - Configuración pendiente
-                console.log('🔧 Facebook Pixel - Configuración en progreso');
-                console.log('📋 Token de acceso generado');
-                console.log('🎯 Próximo paso: Configurar Conversions API');
+                !function(f,b,e,v,n,t,s)
+                {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+                n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+                if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+                n.queue=[];t=b.createElement(e);t.async=!0;
+                t.src=v;s=b.getElementsByTagName(e)[0];
+                s.parentNode.insertBefore(t,s)}(window, document,'script',
+                'https://connect.facebook.net/en_US/fbevents.js');
+                fbq('init', '1247652460159167');
+                fbq('track', 'PageView');
               `,
             }}
           />
@@ -174,9 +181,13 @@ export default function RootLayout({
               src="https://www.facebook.com/tr?id=1247652460159167&ev=PageView&noscript=1"
             />
           </noscript>
+          {/* End Meta Pixel Code */}
           
           {/* Conversion Tracker */}
           <ConversionTracker />
+          
+          {/* Meta Pixel Test Component (solo en desarrollo) */}
+          <MetaPixelTest />
         </Providers>
       </body>
     </html>

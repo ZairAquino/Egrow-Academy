@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Webinar, WebinarFormData } from '@/types/webinar';
 import { useAuth } from '@/contexts/AuthContext';
+import { useWebinarVideoIATracker } from '@/components/analytics/WebinarVideoIATracker';
 
 interface WebinarRegistrationFormProps {
   webinar: Webinar;
@@ -12,6 +13,7 @@ interface WebinarRegistrationFormProps {
 
 export default function WebinarRegistrationForm({ webinar, onSuccess, onError }: WebinarRegistrationFormProps) {
   const { user, status } = useAuth();
+  const { trackRegistration, trackEngagement, getUserMetadata } = useWebinarVideoIATracker();
   const [formData, setFormData] = useState<WebinarFormData>({
     email: '',
     firstName: '',
@@ -70,6 +72,22 @@ export default function WebinarRegistrationForm({ webinar, onSuccess, onError }:
 
       if (result.success) {
         setIsRegistered(true);
+        
+        // Track registration success con metadatos completos
+        if (webinar.slug === 'videos-profesionales-ia') {
+          trackRegistration();
+          trackEngagement('registration_success', {
+            registration_method: 'form_submission',
+            user_metadata: getUserMetadata(),
+            webinar_details: {
+              id: webinar.id,
+              title: webinar.title,
+              duration: webinar.duration,
+              dateTime: webinar.dateTime
+            }
+          });
+        }
+        
         onSuccess?.();
       } else {
         setErrorMessage(result.message || 'Error al registrar');

@@ -311,6 +311,13 @@ export const trackAddToCart = (cartData: {
 export const initializeFacebookPixel = (pixelId: string) => {
   if (typeof window !== 'undefined') {
     console.log('✅ Facebook Pixel inicializado con ID:', pixelId);
+    
+    // Verificar que fbq esté disponible
+    if (window.fbq) {
+      console.log('✅ Facebook Pixel (fbq) está disponible');
+    } else {
+      console.warn('❌ Facebook Pixel (fbq) no está disponible');
+    }
   }
 };
 

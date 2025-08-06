@@ -5,22 +5,23 @@ import WebinarRegistrationWrapper from '@/components/webinar/WebinarRegistration
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import FacebookConversionsTracker, { WebinarConversionsTracker } from '@/components/analytics/FacebookConversionsTracker';
+import WebinarVideoIATracker from '@/components/analytics/WebinarVideoIATracker';
 import { notFound } from 'next/navigation';
 
 // Metadata para SEO
 export const metadata: Metadata = {
   title: 'Aprende a crear videos profesionales con IA - eGrow Academy',
-  description: 'Crea videos profesionales con Inteligencia Artificial usando Sora y VEO Gemini. Atrae 80% más clientes sin experiencia en edición.',
+  description: 'Aprende a crear videos profesionales con Inteligencia Artificial usando Sora y VEO Gemini. Atrae 80% más clientes sin experiencia en edición.',
   openGraph: {
     title: 'Aprende a crear videos profesionales con IA',
-    description: 'Descubre cómo crear contenido de alto impacto con IA y atraer hasta 80% más de clientes.',
+    description: 'Aprende a crear contenido de alto impacto con IA y atraer hasta 80% más de clientes.',
     type: 'website',
     images: ['/images/webinars/videos-ia-webinar.jpg'],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Aprende a crear videos profesionales con IA',
-    description: 'Crea videos profesionales con IA y atrae 80% más clientes sin experiencia en edición.',
+    description: 'Aprende a crear videos profesionales con IA y atrae 80% más clientes sin experiencia en edición.',
     images: ['/images/webinars/videos-ia-webinar.jpg'],
   },
 };
@@ -40,7 +41,7 @@ export default async function VideosIAWebinarPage() {
       <section className="bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 text-white py-20">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            Crea Videos Profesionales con IA
+            Aprende a crear videos profesionales con IA
           </h1>
           <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
             Descubre cómo crear videos impactantes usando inteligencia artificial. 
@@ -202,17 +203,26 @@ export default async function VideosIAWebinarPage() {
         </div>
       </section>
 
+      {/* Webinar Video IA Specific Tracking */}
+      <WebinarVideoIATracker
+        webinarId="videos-profesionales-ia"
+        webinarName="Aprende a crear videos profesionales con IA"
+        trackPageView={true}
+        trackRegistration={true}
+        trackEngagement={true}
+      />
+      
       {/* Facebook Conversions API Tracking */}
       <WebinarConversionsTracker
         webinarId="videos-profesionales-ia"
-        webinarName="Crea Videos Profesionales con IA"
+        webinarName="Aprende a crear videos profesionales con IA"
       />
       
       {/* Tracking adicional para eventos específicos del webinar */}
       <FacebookConversionsTracker 
         trackPageView={true}
         pageData={{
-          content_name: 'Crea Videos Profesionales con IA',
+          content_name: 'Aprende a crear videos profesionales con IA',
           content_category: 'Webinar',
           content_type: 'webinar_landing_page',
           content_ids: ['videos-profesionales-ia']
@@ -221,7 +231,7 @@ export default async function VideosIAWebinarPage() {
           {
             event: 'ViewContent',
             data: {
-              content_name: 'Crea Videos Profesionales con IA',
+              content_name: 'Aprende a crear videos profesionales con IA',
               content_category: 'Webinar',
               content_type: 'webinar_view',
               content_ids: ['videos-profesionales-ia'],
