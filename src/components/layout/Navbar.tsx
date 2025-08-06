@@ -9,6 +9,166 @@ import Sidebar from '@/components/layout/Sidebar';
 import { AdvancedSearch } from '@/components/ui/AdvancedSearch';
 import { useSearchEngine } from '@/hooks/useSearchEngine';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
+import StreakDisplay from '@/components/streaks/StreakDisplay';
+
+// Componente mini para mostrar el badge de racha en el navbar
+const StreakBadgeMini: React.FC = () => {
+  const [stats, setStats] = useState<any>(null);
+  const [badgeCustomization, setBadgeCustomization] = useState<any>(null);
+  const { user } = useAuth();
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      if (!user) return;
+      
+      const token = localStorage.getItem('authToken');
+      
+      try {
+        // Fetch streak stats
+        const streakResponse = await fetch('/api/streaks', {
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token && { 'Authorization': `Bearer ${token}` })
+          }
+        });
+
+        if (streakResponse.ok) {
+          const streakData = await streakResponse.json();
+          setStats(streakData.data);
+        }
+
+        // Fetch badge customization
+        const badgeResponse = await fetch('/api/profile/badge-customization', {
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token && { 'Authorization': `Bearer ${token}` })
+          }
+        });
+
+        if (badgeResponse.ok) {
+          const badgeData = await badgeResponse.json();
+          setBadgeCustomization(badgeData.badgeCustomization);
+          console.log('🎨 [NAVBAR] Badge customization loaded:', badgeData.badgeCustomization);
+        }
+      } catch (err) {
+        console.error('Error fetching navbar data:', err);
+      }
+    };
+
+    fetchData();
+    
+    // Listen for badge updates from profile page
+    const handleBadgeUpdate = () => {
+      console.log('🔄 [NAVBAR] Badge update detected, refreshing...');
+      fetchData();
+    };
+
+    window.addEventListener('badgeCustomizationUpdated', handleBadgeUpdate);
+    
+    return () => {
+      window.removeEventListener('badgeCustomizationUpdated', handleBadgeUpdate);
+    };
+  }, [user]);
+
+  const getBadgeDisplay = () => {
+    if (!stats) return { emoji: '🏆', text: '-' };
+
+    const currentBadge = stats.currentBadge;
+    const streak = stats.currentStreak;
+
+    // Use custom badge if available
+    if (badgeCustomization && currentBadge) {
+      const customEmoji = badgeCustomization.preferredEmojis?.[currentBadge.badgeLevel];
+      if (customEmoji) {
+        return {
+          emoji: customEmoji,
+          text: badgeCustomization.preferredBadgeStyle === 'text' ? currentBadge.badgeLevel : streak.toString(),
+          level: currentBadge.badgeLevel
+        };
+      }
+    }
+
+    // Fall back to streak-based emoji
+    const getStreakEmoji = (streak: number): string => {
+      if (streak >= 52) return '🚀';
+      if (streak >= 24) return '👑';
+      if (streak >= 12) return '⚡';
+      if (streak >= 8) return '🔥';
+      if (streak >= 4) return '🎯';
+      if (streak >= 2) return '📚';
+      if (streak >= 1) return '🌱';
+      return '💤';
+    };
+
+    return {
+      emoji: getStreakEmoji(streak),
+      text: streak.toString(),
+      level: null
+    };
+  };
+
+  const display = getBadgeDisplay();
+  
+  if (!stats) {
+    return (
+      <div className="flex items-center bg-gray-100 px-2 py-1 rounded-full text-sm">
+        <span>🏆</span>
+        <span className="ml-1 text-xs">-</span>
+      </div>
+    );
+  }
+
+  // Apply custom styling based on user preferences
+  const getBackgroundStyle = () => {
+    if (badgeCustomization) {
+      if (badgeCustomization.preferredBadgeStyle === 'colorful' && badgeCustomization.badgeColor) {
+        const color = badgeCustomization.badgeColor;
+        return {
+          background: `linear-gradient(135deg, ${color}40, ${color}20)`,
+          borderColor: `${color}80`
+        };
+      }
+    }
+    return {};
+  };
+
+  const customStyle = getBackgroundStyle();
+
+  return (
+    <div 
+      className="flex items-center px-3 py-1 rounded-full text-sm border transition-all duration-300"
+      style={Object.keys(customStyle).length > 0 ? customStyle : {
+        background: 'linear-gradient(135deg, rgb(219 234 254), rgb(237 233 254))'
+      }}
+    >
+      {badgeCustomization?.preferredBadgeStyle === 'text' ? (
+        <span className="text-xs font-bold text-gray-700 uppercase tracking-wide">
+          {display.level ? display.level.replace('_', ' ') : display.text}
+        </span>
+      ) : badgeCustomization?.preferredBadgeStyle === 'colorful' ? (
+        <>
+          <div 
+            className="w-4 h-4 rounded-full mr-2 flex items-center justify-center text-white text-xs font-bold"
+            style={{ 
+              backgroundColor: badgeCustomization.badgeColor || '#3b82f6'
+            }}
+          >
+            {display.text}
+          </div>
+          <span className="text-xs font-semibold text-gray-700">
+            {display.level ? display.level.replace('_', ' ') : 'Racha'}
+          </span>
+        </>
+      ) : (
+        <>
+          <span className="text-lg">{display.emoji}</span>
+          <span className="ml-1 font-semibold text-gray-700">{display.text}</span>
+        </>
+      )}
+    </div>
+  );
+};
 
 interface NavbarProps {
   // Prop opcional para compatibilidad con páginas que aún la usen
@@ -20,6 +180,7 @@ interface NavbarProps {
 const NavbarContent: React.FC<NavbarProps> = ({ hideSidebar = false }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
+  const { user, status } = useAuth();
 
   // Motor de búsqueda global
   const {
@@ -57,6 +218,40 @@ const NavbarContent: React.FC<NavbarProps> = ({ hideSidebar = false }) => {
     performSearch(suggestion, filters);
     // Redirigir a la página de búsqueda
     router.push(`/search?q=${encodeURIComponent(suggestion)}`);
+  };
+
+  // Función para renderizar el botón dinámico
+  const renderActionButton = () => {
+    // Usuario no autenticado
+    if (!user) {
+      return (
+        <Link
+          href="/subscription"
+          className="navbar-subscribe-btn"
+        >
+          Regístrate
+        </Link>
+      );
+    }
+
+    // Usuarios con planes de pago pueden ver el badge de racha
+    if (user.membershipLevel === 'PREMIUM') {
+      return (
+        <div className="navbar-streak-badge">
+          <StreakBadgeMini />
+        </div>
+      );
+    }
+
+    // Usuario con plan gratuito - mostrar suscríbete
+    return (
+      <Link
+        href="/subscription"
+        className="navbar-subscribe-btn"
+      >
+        Suscríbete
+      </Link>
+    );
   };
 
   return (
@@ -107,14 +302,9 @@ const NavbarContent: React.FC<NavbarProps> = ({ hideSidebar = false }) => {
           />
         </Link>
 
-        {/* Botón de suscripción y UserProfile */}
+        {/* Botón dinámico y UserProfile */}
         <div className="flex items-center space-x-1">
-          <Link
-            href="/subscription"
-            className="navbar-subscribe-btn"
-          >
-            Suscríbete
-          </Link>
+          {renderActionButton()}
           <UserProfile />
         </div>
       </nav>

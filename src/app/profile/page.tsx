@@ -445,7 +445,7 @@ export default function ProfilePage() {
 
   const tabs = [
     { id: 'personal', name: 'Información Personal', icon: '👤' },
-    ...((user?.membershipLevel === 'PREMIUM' || user?.membershipLevel === 'BASIC') ? [{ id: 'badges', name: 'Badges y Rachas', icon: '🏆' }] : []),
+    ...(user?.membershipLevel === 'PREMIUM' ? [{ id: 'badges', name: 'Badges y Rachas', icon: '🏆' }] : []),
     { id: 'notifications', name: 'Notificaciones', icon: '🔔' },
     { id: 'privacy', name: 'Privacidad', icon: '🔒' },
     { id: 'security', name: 'Seguridad', icon: '🛡️' }
@@ -632,7 +632,7 @@ export default function ProfilePage() {
                       <h2 className="tab-title">Personalización de Badges y Rachas</h2>
                       
                       {/* Verificar si el usuario tiene plan de pago */}
-                      {user?.membershipLevel !== 'PREMIUM' && user?.membershipLevel !== 'BASIC' ? (
+                      {user?.membershipLevel !== 'PREMIUM' ? (
                         <div className="premium-feature-locked">
                           <div className="text-center py-12">
                             <div className="text-6xl mb-4">🔒</div>
