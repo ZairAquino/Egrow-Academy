@@ -59,9 +59,25 @@ export const trackFacebookPixelEvent = (
     // Enviar evento a Facebook Pixel
     window.fbq('track', eventType, eventParams);
 
-    console.log(`📊 [Facebook Pixel] Evento enviado: ${eventType}`, eventParams);
+    // Logs detallados para depuración
+    console.log(`📊 [Facebook Pixel] Evento enviado: ${eventType}`, {
+      eventType,
+      eventParams,
+      timestamp: new Date().toISOString(),
+      url: window.location.href,
+      userAgent: navigator.userAgent
+    });
+
+    // Verificar que el evento se envió correctamente
+    setTimeout(() => {
+      console.log(`✅ [Facebook Pixel] Evento ${eventType} procesado correctamente`);
+    }, 100);
   } else {
-    console.warn('Facebook Pixel no está disponible');
+    console.warn('❌ [Facebook Pixel] Facebook Pixel no está disponible', {
+      window: typeof window,
+      fbq: typeof window !== 'undefined' ? typeof window.fbq : 'undefined',
+      url: typeof window !== 'undefined' ? window.location.href : 'undefined'
+    });
   }
 };
 
