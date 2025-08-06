@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Webinar, WebinarFormData } from '@/types/webinar';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface WebinarRegistrationFormProps {
   webinar: Webinar;
@@ -10,6 +11,7 @@ interface WebinarRegistrationFormProps {
 }
 
 export default function WebinarRegistrationForm({ webinar, onSuccess, onError }: WebinarRegistrationFormProps) {
+  const { user, status } = useAuth();
   const [formData, setFormData] = useState<WebinarFormData>({
     email: '',
     firstName: '',
@@ -21,6 +23,21 @@ export default function WebinarRegistrationForm({ webinar, onSuccess, onError }:
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
+
+  // Auto-rellenar campos cuando el usuario esté logueado
+  useEffect(() => {
+    if (status === 'authenticated' && user) {
+      setFormData(prev => ({
+        ...prev,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        // El teléfono se mantiene vacío ya que no está en el modelo User
+        phone: prev.phone || '',
+        questions: prev.questions || ''
+      }));
+    }
+  }, [user, status]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -43,7 +60,9 @@ export default function WebinarRegistrationForm({ webinar, onSuccess, onError }:
         },
         body: JSON.stringify({
           webinarId: webinar.id,
-          ...formData
+          ...formData,
+          // Incluir userId si el usuario está logueado
+          ...(status === 'authenticated' && user ? { userId: user.id } : {})
         }),
       });
 
@@ -132,11 +151,28 @@ export default function WebinarRegistrationForm({ webinar, onSuccess, onError }:
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Indicador de usuario logueado */}
+        {status === 'authenticated' && user && (
+          <div className="bg-green-50 border border-green-200 rounded-md p-3">
+            <div className="flex items-center">
+              <svg className="h-5 w-5 text-green-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <p className="text-sm text-green-800">
+                Registrándote como: <strong>{user.firstName} {user.lastName}</strong>
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Nombre y Apellido */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
               Nombre *
+              {status === 'authenticated' && user && (
+                <span className="ml-2 text-xs text-green-600">(auto-completado)</span>
+              )}
             </label>
             <input
               type="text"
@@ -145,13 +181,21 @@ export default function WebinarRegistrationForm({ webinar, onSuccess, onError }:
               value={formData.firstName}
               onChange={handleInputChange}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              readOnly={status === 'authenticated' && !!user}
+              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                status === 'authenticated' && user 
+                  ? 'bg-gray-50 border-gray-200 cursor-not-allowed' 
+                  : 'border-gray-300'
+              }`}
               placeholder="Tu nombre"
             />
           </div>
           <div>
             <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">
               Apellido *
+              {status === 'authenticated' && user && (
+                <span className="ml-2 text-xs text-green-600">(auto-completado)</span>
+              )}
             </label>
             <input
               type="text"
@@ -160,7 +204,12 @@ export default function WebinarRegistrationForm({ webinar, onSuccess, onError }:
               value={formData.lastName}
               onChange={handleInputChange}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              readOnly={status === 'authenticated' && !!user}
+              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                status === 'authenticated' && user 
+                  ? 'bg-gray-50 border-gray-200 cursor-not-allowed' 
+                  : 'border-gray-300'
+              }`}
               placeholder="Tu apellido"
             />
           </div>
@@ -170,6 +219,9 @@ export default function WebinarRegistrationForm({ webinar, onSuccess, onError }:
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
             Email *
+            {status === 'authenticated' && user && (
+              <span className="ml-2 text-xs text-green-600">(auto-completado)</span>
+            )}
           </label>
           <input
             type="email"
@@ -178,7 +230,12 @@ export default function WebinarRegistrationForm({ webinar, onSuccess, onError }:
             value={formData.email}
             onChange={handleInputChange}
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            readOnly={status === 'authenticated' && !!user}
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+              status === 'authenticated' && user 
+                ? 'bg-gray-50 border-gray-200 cursor-not-allowed' 
+                : 'border-gray-300'
+            }`}
             placeholder="tu@email.com"
           />
         </div>
