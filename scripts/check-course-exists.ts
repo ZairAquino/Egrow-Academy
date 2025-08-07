@@ -4,61 +4,64 @@ const prisma = new PrismaClient();
 
 async function checkCourseExists() {
   try {
-    console.log('🔍 Verificando existencia del curso mockup-cero...');
+    console.log('🔍 Verificando si el curso existe en la base de datos...');
     
     // Buscar el curso por slug
     const course = await prisma.course.findUnique({
-      where: { slug: 'mockup-cero' },
+      where: {
+        slug: 'guiones-videos-promocionales-ia'
+      },
       include: {
-        lessons: {
-          orderBy: { order: 'asc' }
-        }
+        lessons: true
       }
     });
 
-    if (!course) {
-      console.log('❌ El curso mockup-cero NO existe en la base de datos');
-      return;
-    }
-
-    console.log('✅ Curso encontrado:');
-    console.log(`   ID: ${course.id}`);
-    console.log(`   Título: ${course.title}`);
-    console.log(`   Slug: ${course.slug}`);
-    console.log(`   Estado: ${course.status}`);
-    console.log(`   Lecciones: ${course.lessons.length}`);
-
-    // Verificar lecciones
-    if (course.lessons.length > 0) {
-      console.log('\n📚 Lecciones del curso:');
-      course.lessons.forEach((lesson, index) => {
-        console.log(`   ${index + 1}. ${lesson.title} (Orden: ${lesson.order})`);
-      });
+    if (course) {
+      console.log('✅ Curso encontrado:');
+      console.log(`- ID: ${course.id}`);
+      console.log(`- Título: ${course.title}`);
+      console.log(`- Slug: ${course.slug}`);
+      console.log(`- Estado: ${course.status}`);
+      console.log(`- Lecciones: ${course.lessons.length}`);
+      console.log(`- Es gratis: ${course.isFree}`);
+      
+      if (course.lessons.length > 0) {
+        console.log('\n📚 Lecciones encontradas:');
+        course.lessons.forEach((lesson, index) => {
+          console.log(`${index + 1}. ${lesson.title} (${lesson.duration}min)`);
+        });
+      } else {
+        console.log('\n⚠️ No hay lecciones registradas para este curso');
+      }
     } else {
-      console.log('⚠️ El curso no tiene lecciones');
+      console.log('❌ El curso NO existe en la base de datos');
+      console.log('Necesitas crear el curso en la base de datos');
     }
 
-    // Verificar inscripciones
-    const enrollments = await prisma.enrollment.findMany({
-      where: { courseId: course.id },
-      include: {
-        user: {
-          select: { id: true, email: true, firstName: true, lastName: true }
-        },
-        progress: true
+    // Verificar si hay otros cursos similares
+    const similarCourses = await prisma.course.findMany({
+      where: {
+        title: {
+          contains: 'guiones'
+        }
+      },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        status: true
       }
     });
 
-    console.log(`\n👥 Inscripciones: ${enrollments.length}`);
-    enrollments.forEach((enrollment, index) => {
-      console.log(`   ${index + 1}. ${enrollment.user.firstName} ${enrollment.user.lastName} (${enrollment.user.email})`);
-      console.log(`      Estado: ${enrollment.status}`);
-      console.log(`      Progreso: ${enrollment.progressPercentage}%`);
-      console.log(`      Completado: ${enrollment.completedAt ? 'Sí' : 'No'}`);
-    });
+    if (similarCourses.length > 0) {
+      console.log('\n🔍 Cursos similares encontrados:');
+      similarCourses.forEach(course => {
+        console.log(`- ${course.title} (${course.slug}) - ${course.status}`);
+      });
+    }
 
   } catch (error) {
-    console.error('❌ Error verificando curso:', error);
+    console.error('❌ Error al verificar el curso:', error);
   } finally {
     await prisma.$disconnect();
   }
