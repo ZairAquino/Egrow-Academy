@@ -2396,16 +2396,21 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
 
     // Mostrar notificación de éxito
     const moduleTitle = getModuleTitle(moduleId);
-    const moduleProgress = getModuleProgress(moduleId);
+    // Calcular progreso del módulo usando la lista ya sincronizada
+    const moduleLessonsForStats = lessons.filter(lesson => lesson.moduleId === moduleId);
+    const completedCountForStats = moduleLessonsForStats.filter(lesson =>
+      newCompletedLessons.includes(lesson.id)
+    ).length;
+    const totalCountForStats = moduleLessonsForStats.length;
     
     setAchievementData({
       type: 'module',
       title: `¡Módulo Completado!`,
       message: `¡Felicitaciones! Has completado exitosamente el ${moduleTitle}. Continúa con el siguiente módulo para avanzar en tu aprendizaje.`,
       stats: {
-        completed: moduleProgress.completed,
-        total: moduleProgress.total,
-        percentage: Math.round((moduleProgress.completed / moduleProgress.total) * 100)
+        completed: completedCountForStats,
+        total: totalCountForStats,
+        percentage: Math.round((completedCountForStats / totalCountForStats) * 100)
       }
     });
     setShowModuleNotification(true);
