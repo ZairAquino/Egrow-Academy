@@ -1,4 +1,4 @@
-import CourseCard from './CourseCard';
+import CarouselCourseCard from './CarouselCourseCard';
 import Link from 'next/link';
 
 const featuredCourses = [
@@ -48,7 +48,7 @@ export default function FeaturedCourses() {
 
         <div className="courses-grid">
           {featuredCourses.map((course, index) => (
-            <CourseCard
+            <CarouselCourseCard
               key={index}
               id={`featured-${index}`}
               image={course.image}

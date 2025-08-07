@@ -52,11 +52,10 @@ export default function StreakDisplay({ compact = false }: StreakDisplayProps) {
     if (!isAuthenticated) return;
     
     try {
-      const token = localStorage.getItem('authToken');
       const response = await fetch('/api/profile/badge-customization', {
+        credentials: 'include', // Incluir cookies automáticamente
         headers: {
           'Content-Type': 'application/json',
-          ...(token && { 'Authorization': `Bearer ${token}` })
         }
       });
 
@@ -79,11 +78,10 @@ export default function StreakDisplay({ compact = false }: StreakDisplayProps) {
       setLoading(true);
       setError(null);
       
-      const token = localStorage.getItem('authToken');
       const response = await fetch('/api/streaks', {
+        credentials: 'include', // Incluir cookies automáticamente
         headers: {
           'Content-Type': 'application/json',
-          ...(token && { 'Authorization': `Bearer ${token}` })
         }
       });
 
@@ -92,6 +90,9 @@ export default function StreakDisplay({ compact = false }: StreakDisplayProps) {
         setStats(data.data);
         setLastUpdate(new Date());
         console.log('✅ [STREAKS] Estadísticas actualizadas:', data.data);
+      } else if (response.status === 401) {
+        console.warn('⚠️ [STREAKS] Unauthorized, user may not be logged in');
+        setError('Sesión expirada');
       } else {
         console.error('❌ [STREAKS] Error fetching stats:', response.status);
         setError('Error al cargar estadísticas');

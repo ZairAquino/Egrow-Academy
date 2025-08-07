@@ -28,38 +28,17 @@ export default function DynamicLogo({
   const [isLoading, setIsLoading] = useState(true);
   const imgRef = useRef<HTMLImageElement>(null);
 
-  // Verificar estado de suscripción cuando cambie el usuario o status
+  // Usar solo los datos del contexto de autenticación para evitar errores 401
   useEffect(() => {
     if (status === 'authenticated' && user) {
-      setIsLoading(true);
-      const checkSubscription = async () => {
-        try {
-          console.log(`🔍 [DynamicLogo] Checking subscription for user:`, user.email);
-          console.log(`🔍 [DynamicLogo] User membershipLevel from context:`, user.membershipLevel);
-          
-          const response = await fetch('/api/auth/subscription-status');
-          console.log(`🔍 [DynamicLogo] Response status:`, response.status);
-          
-          if (response.ok) {
-            const data = await response.json();
-            console.log(`🔍 [DynamicLogo] Subscription data received:`, data);
-            setSubscriptionData({
-              hasActiveSubscription: data.hasActiveSubscription,
-              membershipLevel: data.membershipLevel || 'FREE'
-            });
-          } else {
-            console.error(`❌ [DynamicLogo] Error response:`, response.status);
-            const errorText = await response.text();
-            console.error(`❌ [DynamicLogo] Error text:`, errorText);
-          }
-        } catch (error) {
-          console.error(`❌ [DynamicLogo] Error checking subscription:`, error);
-        } finally {
-          setIsLoading(false);
-        }
-      };
+      console.log(`🔍 [DynamicLogo] User authenticated:`, user.email);
+      console.log(`🔍 [DynamicLogo] User membershipLevel:`, user.membershipLevel);
       
-      checkSubscription();
+      setSubscriptionData({
+        hasActiveSubscription: user.membershipLevel === 'PREMIUM',
+        membershipLevel: user.membershipLevel || 'FREE'
+      });
+      setIsLoading(false);
     } else {
       setIsLoading(false);
     }

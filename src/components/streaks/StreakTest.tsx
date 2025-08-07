@@ -9,11 +9,10 @@ export default function StreakTest() {
     try {
       setTestResult('Probando API de streaks...');
       
-      const token = localStorage.getItem('authToken');
       const response = await fetch('/api/streaks', {
+        credentials: 'include', // Incluir cookies automáticamente
         headers: {
           'Content-Type': 'application/json',
-          ...(token && { 'Authorization': `Bearer ${token}` })
         }
       });
 
@@ -33,12 +32,11 @@ export default function StreakTest() {
     try {
       setTestResult('Probando completar lección...');
       
-      const token = localStorage.getItem('authToken');
       const response = await fetch('/api/courses/progress', {
         method: 'POST',
+        credentials: 'include', // Incluir cookies automáticamente
         headers: {
           'Content-Type': 'application/json',
-          ...(token && { 'Authorization': `Bearer ${token}` })
         },
         body: JSON.stringify({
           courseId: 'asistentes-virtuales-ia',
