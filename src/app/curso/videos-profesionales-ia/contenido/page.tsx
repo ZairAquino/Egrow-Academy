@@ -2130,7 +2130,11 @@ export default function ContenidoVideosProfesionalesIAPage() {
                         <p className="complete-course-info">
                           {areAllLessonsCompleted() 
                             ? '¡Felicidades! Has completado todas las lecciones. Puedes terminar el curso.'
-                            : `Completa todas las lecciones (${progress.completedLessons.length}/${courseData.lessons.length}) para poder terminar el curso`
+                            : (
+                                <> 
+                                  Completa todas las lecciones ({progress.completedLessons.length}/{courseData.lessons.length}) para poder terminar el curso
+                                </>
+                              )
                           }
                         </p>
                       </>
