@@ -1,75 +1,43 @@
 import fs from 'fs';
 import path from 'path';
 
-function countLessonsInFile(filePath: string): number {
+async function countLessons() {
   try {
+    console.log('🔍 [COUNT] Contando lecciones del curso de guiones...');
+    
+    const filePath = path.join(process.cwd(), 'src/app/curso/guiones-videos-promocionales-ia/contenido/page.tsx');
     const content = fs.readFileSync(filePath, 'utf8');
-    const lines = content.split('\n');
-    let lessonCount = 0;
     
-    for (const line of lines) {
-      // Buscar patrones de IDs de lecciones
-      if (line.includes("id: '") && (
-        line.includes("cmdy") || 
-        line.includes("cmds") || 
-        line.includes("vpc-") || 
-        line.includes("vcc-") ||
-        line.includes("m0-") ||
-        line.includes("m1-") ||
-        line.includes("m2-") ||
-        line.includes("m3-") ||
-        line.includes("m4-")
-      )) {
-        lessonCount++;
-      }
+    // Buscar todos los módulos
+    const moduleMatches = content.match(/id: \d+,/g);
+    const totalModules = moduleMatches ? moduleMatches.length : 0;
+    
+    console.log(`📊 Total de módulos encontrados: ${totalModules}`);
+    
+    // Buscar todas las lecciones (cada lección tiene un id único)
+    const lessonMatches = content.match(/id: 'cme[^']+',/g);
+    const totalLessons = lessonMatches ? lessonMatches.length : 0;
+    
+    console.log(`📚 Total de lecciones encontradas: ${totalLessons}`);
+    
+    // Contar lecciones por módulo
+    const moduleSections = content.split(/id: \d+,/);
+    console.log('\n📋 Desglose por módulo:');
+    
+    for (let i = 1; i < moduleSections.length; i++) {
+      const moduleContent = moduleSections[i];
+      const lessonCount = (moduleContent.match(/id: 'cme[^']+',/g) || []).length;
+      console.log(`   Módulo ${i}: ${lessonCount} lecciones`);
     }
     
-    return lessonCount;
+    console.log(`\n✅ Resumen: ${totalLessons} lecciones en ${totalModules} módulos`);
+    
+    return { totalLessons, totalModules };
+    
   } catch (error) {
-    console.error(`Error reading file ${filePath}:`, error);
-    return 0;
+    console.error('❌ Error contando lecciones:', error);
+    return { totalLessons: 0, totalModules: 0 };
   }
 }
 
-function analyzeAllCourses() {
-  const coursesDir = path.join(process.cwd(), 'src/app/curso');
-  const courses = [
-    'mockup-cero',
-    'videos-profesionales-ia', 
-    'asistentes-virtuales-ia',
-    'vibe-coding-claude-cursor',
-    'monetiza-ia'
-  ];
-
-  console.log('📊 Análisis de lecciones por curso:\n');
-
-  for (const course of courses) {
-    const contentPath = path.join(coursesDir, course, 'contenido/page.tsx');
-    const pagePath = path.join(coursesDir, course, 'page.tsx');
-    
-    let actualLessons = 0;
-    let configuredLessons = 0;
-    
-    // Contar lecciones reales
-    if (fs.existsSync(contentPath)) {
-      actualLessons = countLessonsInFile(contentPath);
-    }
-    
-    // Obtener lecciones configuradas
-    if (fs.existsSync(pagePath)) {
-      const pageContent = fs.readFileSync(pagePath, 'utf8');
-      const lessonsMatch = pageContent.match(/lessonsCount:\s*(\d+)/);
-      if (lessonsMatch) {
-        configuredLessons = parseInt(lessonsMatch[1]);
-      }
-    }
-    
-    console.log(`📚 ${course}:`);
-    console.log(`   Lecciones reales: ${actualLessons}`);
-    console.log(`   Lecciones configuradas: ${configuredLessons}`);
-    console.log(`   Estado: ${actualLessons === configuredLessons ? '✅ Sincronizado' : '❌ Desincronizado'}`);
-    console.log('');
-  }
-}
-
-analyzeAllCourses(); 
+countLessons(); 
