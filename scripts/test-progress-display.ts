@@ -88,7 +88,7 @@ async function testProgressDisplay() {
     });
 
     console.log('\n📈 Cálculo del progreso:');
-    const totalLessons = 19; // Actualizado
+    const totalLessons = 15; // Corregido: 15 lecciones totales
     const completedCount = progress.lessonProgress.filter(l => l.isCompleted).length;
     const calculatedPercentage = Math.round((completedCount / totalLessons) * 100);
     

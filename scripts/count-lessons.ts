@@ -14,23 +14,32 @@ async function countLessons() {
     
     console.log(`📊 Total de módulos encontrados: ${totalModules}`);
     
-    // Buscar todas las lecciones (cada lección tiene un id único)
-    const lessonMatches = content.match(/id: 'cme[^']+',/g);
-    const totalLessons = lessonMatches ? lessonMatches.length : 0;
+    // Buscar títulos de lecciones específicamente
+    const lessonTitleMatches = content.match(/title: '[0-9]+\.[0-9]+ [^']+',/g);
+    const totalLessons = lessonTitleMatches ? lessonTitleMatches.length : 0;
     
     console.log(`📚 Total de lecciones encontradas: ${totalLessons}`);
     
-    // Contar lecciones por módulo
+    // Contar lecciones por módulo usando títulos
     const moduleSections = content.split(/id: \d+,/);
     console.log('\n📋 Desglose por módulo:');
     
     for (let i = 1; i < moduleSections.length; i++) {
       const moduleContent = moduleSections[i];
-      const lessonCount = (moduleContent.match(/id: 'cme[^']+',/g) || []).length;
+      const lessonCount = (moduleContent.match(/title: '[0-9]+\.[0-9]+ [^']+',/g) || []).length;
       console.log(`   Módulo ${i}: ${lessonCount} lecciones`);
     }
     
     console.log(`\n✅ Resumen: ${totalLessons} lecciones en ${totalModules} módulos`);
+    
+    // Mostrar todas las lecciones encontradas
+    console.log('\n📝 Lista de todas las lecciones:');
+    if (lessonTitleMatches) {
+      lessonTitleMatches.forEach((match, index) => {
+        const title = match.replace(/title: '([^']+)',/, '$1');
+        console.log(`   ${index + 1}. ${title}`);
+      });
+    }
     
     return { totalLessons, totalModules };
     
