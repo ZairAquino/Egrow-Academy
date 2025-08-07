@@ -2877,23 +2877,31 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
       <Footer />
 
       {/* Notificaciones de logros */}
-      <AchievementNotification
-        isVisible={showModuleNotification}
-        onClose={() => setShowModuleNotification(false)}
-        type={achievementData.type}
-        title={achievementData.title}
-        message={achievementData.message}
-        stats={achievementData.stats}
-      />
+      {showModuleNotification && (
+        <AchievementNotification
+          achievement={{
+            id: 'module-notification',
+            type: achievementData.type,
+            title: achievementData.title,
+            message: achievementData.message,
+            stats: achievementData.stats
+          }}
+          onClose={() => setShowModuleNotification(false)}
+        />
+      )}
 
-      <AchievementNotification
-        isVisible={showCourseNotification}
-        onClose={() => setShowCourseNotification(false)}
-        type={achievementData.type}
-        title={achievementData.title}
-        message={achievementData.message}
-        stats={achievementData.stats}
-      />
+      {showCourseNotification && (
+        <AchievementNotification
+          achievement={{
+            id: 'course-notification',
+            type: achievementData.type,
+            title: achievementData.title,
+            message: achievementData.message,
+            stats: achievementData.stats
+          }}
+          onClose={() => setShowCourseNotification(false)}
+        />
+      )}
 
       <style jsx>{`
         .enrollment-required {
