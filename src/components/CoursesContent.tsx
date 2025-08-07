@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
 import DynamicLogo from '@/components/ui/DynamicLogo';
-import { SkeletonGrid, SkeletonCourseCard } from '@/components/ui/SkeletonLoader';
+import { SkeletonGrid } from '@/components/ui/SkeletonLoader';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { AdvancedSearch } from '@/components/ui/AdvancedSearch';
 import { useSearchEngine } from '@/hooks/useSearchEngine';
@@ -357,7 +357,7 @@ export default function CoursesContent() {
         <div className="container mx-auto px-4 py-12">
           {/* Breadcrumbs */}
           <div className="mb-8">
-            <Breadcrumbs items={breadcrumbItems} />
+            <Breadcrumbs customItems={breadcrumbItems} />
           </div>
 
           {/* Search Bar */}
@@ -476,28 +476,23 @@ export default function CoursesContent() {
 
           {/* Courses Grid */}
           {isLoading || coursesLoading ? (
-            <SkeletonGrid>
-              {[...Array(6)].map((_, i) => (
-                <SkeletonCourseCard key={i} />
-              ))}
-            </SkeletonGrid>
+            <SkeletonGrid items={6} />
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
               {displayCourses.map((course) => (
                 <CourseCard
-                  key={course.id}
-                  title={course.title}
-                  description={course.description}
-                  category={course.category}
-                  duration={course.duration}
-                  level={course.level}
-                  price={course.price}
-                  image={course.image}
-                  tag={course.tag}
-                  link={course.link}
-                  isFree={course.isFree}
-                  requiresAuth={course.requiresAuth}
-                  priceId={course.priceId}
+                  id={course.id || ''}
+                  title={course.title || 'Título no disponible'}
+                  description={course.description || 'Descripción no disponible'}
+                  category={course.category || 'General'}
+                  duration={course.duration || '0 horas'}
+                  level={course.level || 'Principiante'}
+                  image={course.image || '/images/default-course.png'}
+                  tag={course.tag || ''}
+                  link={course.link || '#'}
+                  isFree={course.isFree ?? true}
+                  requiresAuth={course.requiresAuth ?? false}
+                  priceId={course.price || ''}
                   isAuthenticated={!!user}
                 />
               ))}
