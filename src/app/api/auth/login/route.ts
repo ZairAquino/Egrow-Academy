@@ -70,12 +70,12 @@ export async function POST(request: NextRequest) {
 
     console.log('✅ [LOGIN] Usuario encontrado, verificando contraseña')
 
-    // Verificar si el usuario tiene contraseña (no es usuario OAuth)
+    // Verificar si el usuario tiene contraseña
     if (!user.passwordHash) {
-      console.log('❌ [LOGIN] Usuario sin contraseña (probablemente OAuth):', sanitizedEmail)
+      console.log('❌ [LOGIN] Usuario sin contraseña:', sanitizedEmail)
       await logSecurityEvent('LOGIN_FAILED_NO_PASSWORD', { email: sanitizedEmail }, ip)
       return addSecurityHeaders(NextResponse.json(
-        { error: 'Esta cuenta fue creada con Google. Por favor, inicia sesión con Google' },
+        { error: 'Esta cuenta no tiene contraseña configurada. Por favor, usa la opción "Olvidé mi contraseña" para establecer una nueva contraseña' },
         { status: 401 }
       ))
     }

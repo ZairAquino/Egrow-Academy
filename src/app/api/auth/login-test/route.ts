@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     if (!user.passwordHash) {
       await prisma.$disconnect()
       return NextResponse.json(
-        { error: 'Esta cuenta fue creada con Google. Por favor, inicia sesión con Google' },
+        { error: 'Esta cuenta no tiene contraseña configurada. Por favor, usa la opción "Olvidé mi contraseña" para establecer una nueva contraseña' },
         { status: 401 }
       )
     }
