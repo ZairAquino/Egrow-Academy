@@ -481,6 +481,7 @@ export default function CoursesContent() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
               {displayCourses.map((course) => (
                 <CourseCard
+                  key={course.id || course.title}
                   id={course.id || ''}
                   title={course.title || 'Título no disponible'}
                   description={course.description || 'Descripción no disponible'}
