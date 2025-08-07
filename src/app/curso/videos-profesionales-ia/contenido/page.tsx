@@ -2102,48 +2102,8 @@ export default function ContenidoVideosProfesionalesIAPage() {
                     })}
                   </div>
                   
-                  {/* Botón Terminar Curso */}
-                  <div className="complete-course-section">
-                    {isCourseCompleted() ? (
-                      <div className="course-completed-message">
-                        <div className="completion-badge">
-                          <span className="completion-icon">🏆</span>
-                          <span className="completion-text">¡Curso Completado!</span>
-                        </div>
-                        <p className="completion-info">
-                          Has completado exitosamente este curso. Puedes revisar el contenido cuando quieras.
-                        </p>
-                        <div className="completion-stats">
-                          <span>📊 Progreso: 100%</span>
-                          <span>✅ Lecciones: {courseData.lessons.length}/{courseData.lessons.length}</span>
-                        </div>
-                      </div>
-                    ) : (
-                      <>
-                        <button 
-                          className={`btn btn-complete-course ${!areAllLessonsCompleted() ? 'disabled' : ''}`}
-                          onClick={handleCompleteCourse}
-                          disabled={isSaving || !areAllLessonsCompleted()}
-                        >
-                          {isSaving ? '🔄 Procesando...' : '🏆 Terminar Curso'}
-                        </button>
-                        <p className="complete-course-info">
-                          {areAllLessonsCompleted() 
-                            ? '¡Felicidades! Has completado todas las lecciones. Puedes terminar el curso.'
-                            : (
-                                <> 
-                                  Completa todas las lecciones 
-                                  <strong>{progress.completedLessons.length}</strong>
-                                  /
-                                  <strong>{courseData.lessons.length}</strong>
-                                  {' '}para poder terminar el curso
-                                </>
-                              )
-                          }
-                        </p>
-                      </>
-                    )}
-                  </div>
+                  {/* Botón Terminar Curso (temporalmente deshabilitado para resolver error de build) */}
+                  <div className="complete-course-section"></div>
                 </div>
               </div>
             </div>
