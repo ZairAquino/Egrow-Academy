@@ -602,7 +602,7 @@ export default function ContenidoMockupCeroPage() {
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ courseId: courseData.id }),
+            body: JSON.stringify({ courseId: 'mockup-cero' }),
             credentials: 'include',
           });
           
@@ -628,7 +628,7 @@ export default function ContenidoMockupCeroPage() {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ courseId: courseData.id }),
+          body: JSON.stringify({ courseId: 'mockup-cero' }),
           credentials: 'include',
         });
         
