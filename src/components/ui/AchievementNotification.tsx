@@ -3,23 +3,10 @@
 import { useState, useEffect } from 'react';
 
 interface AchievementNotificationProps {
-  // Nueva forma usando objeto achievement
-  achievement?: {
-    id: string;
-    type: 'module' | 'course';
-    title: string;
-    message: string;
-    stats?: {
-      completed: number;
-      total: number;
-      percentage: number;
-    };
-  };
-  // Forma antigua usando props individuales (compatibilidad)
-  isVisible?: boolean;
-  type?: 'module' | 'course';
-  title?: string;
-  message?: string;
+  isVisible: boolean;
+  type: 'module' | 'course';
+  title: string;
+  message: string;
   stats?: {
     completed: number;
     total: number;
@@ -29,25 +16,17 @@ interface AchievementNotificationProps {
 }
 
 export default function AchievementNotification({
-  achievement,
   isVisible,
-  type: propType,
-  title: propTitle,
-  message: propMessage,
-  stats: propStats,
+  type,
+  title,
+  message,
+  stats,
   onClose
 }: AchievementNotificationProps) {
   const [isAnimating, setIsAnimating] = useState(false);
   
-  // Determinar si usar el objeto achievement o props individuales
-  const isVisibleCheck = achievement ? true : isVisible;
-  const type = achievement?.type || propType;
-  const title = achievement?.title || propTitle;
-  const message = achievement?.message || propMessage;
-  const stats = achievement?.stats || propStats;
-  
-  // Si no hay datos o no es visible, no renderizar
-  if (!isVisibleCheck || !type || !title || !message) {
+  // Si no es visible, no renderizar
+  if (!isVisible) {
     return null;
   }
 
@@ -414,21 +393,22 @@ export default function AchievementNotification({
   );
 } 
 
-// Hook para manejar notificaciones de logros
+// Hook para manejar notificaciones de logros (simplificado)
 export const useAchievements = () => {
-  const [achievements, setAchievements] = useState<Array<{
-    id: string;
-    type: 'module' | 'course';
-    title: string;
-    message: string;
-    stats?: {
-      completed: number;
-      total: number;
-      percentage: number;
-    };
-  }>>([]);
+  const [showModuleNotification, setShowModuleNotification] = useState(false);
+  const [showCourseNotification, setShowCourseNotification] = useState(false);
+  const [achievementData, setAchievementData] = useState({
+    type: 'module' as 'module' | 'course',
+    title: '',
+    message: '',
+    stats: {
+      completed: 0,
+      total: 0,
+      percentage: 0
+    }
+  });
 
-  const addAchievement = (achievement: {
+  const showAchievement = (achievement: {
     type: 'module' | 'course';
     title: string;
     message: string;
@@ -438,20 +418,27 @@ export const useAchievements = () => {
       percentage: number;
     };
   }) => {
-    const newAchievement = {
-      id: Date.now().toString(),
+    setAchievementData({
       ...achievement,
-    };
-    setAchievements(prev => [...prev, newAchievement]);
+      stats: achievement.stats || { completed: 0, total: 0, percentage: 0 }
+    });
+    
+    if (achievement.type === 'module') {
+      setShowModuleNotification(true);
+    } else {
+      setShowCourseNotification(true);
+    }
   };
 
-  const removeAchievement = (id: string) => {
-    setAchievements(prev => prev.filter(achievement => achievement.id !== id));
-  };
+  const hideModuleNotification = () => setShowModuleNotification(false);
+  const hideCourseNotification = () => setShowCourseNotification(false);
 
   return {
-    achievements,
-    addAchievement,
-    removeAchievement,
+    showModuleNotification,
+    showCourseNotification,
+    achievementData,
+    showAchievement,
+    hideModuleNotification,
+    hideCourseNotification,
   };
 }; 

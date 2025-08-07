@@ -2824,26 +2824,22 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
       {/* Notificaciones de logros */}
       {showModuleNotification && (
         <AchievementNotification
-          achievement={{
-            id: 'module-notification',
-            type: achievementData.type,
-            title: achievementData.title,
-            message: achievementData.message,
-            stats: achievementData.stats
-          }}
+          isVisible={showModuleNotification}
+          type={achievementData.type}
+          title={achievementData.title}
+          message={achievementData.message}
+          stats={achievementData.stats}
           onClose={() => setShowModuleNotification(false)}
         />
       )}
 
       {showCourseNotification && (
         <AchievementNotification
-          achievement={{
-            id: 'course-notification',
-            type: achievementData.type,
-            title: achievementData.title,
-            message: achievementData.message,
-            stats: achievementData.stats
-          }}
+          isVisible={showCourseNotification}
+          type={achievementData.type}
+          title={achievementData.title}
+          message={achievementData.message}
+          stats={achievementData.stats}
           onClose={() => setShowCourseNotification(false)}
         />
       )}
