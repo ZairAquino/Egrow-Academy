@@ -350,6 +350,7 @@ function Counter() {
     console.log('🔍 [DEBUG] Cambiando a lección:', newLessonIndex);
     
     // Guardar progreso de la lección actual antes de cambiar
+    const currentLessonIndex = progress.currentLesson;
     const currentLesson = courseData.lessons[currentLessonIndex];
     await saveProgress(
       currentLessonIndex,
@@ -368,6 +369,7 @@ function Counter() {
     
     try {
       // Guardar progreso de la lección actual antes de salir
+      const currentLessonIndex = progress.currentLesson;
       const currentLesson = courseData.lessons[currentLessonIndex];
       await saveProgress(
         currentLessonIndex,
@@ -387,6 +389,7 @@ function Counter() {
   };
 
   const handlePreviousLesson = async () => {
+    const currentLessonIndex = progress.currentLesson;
     if (currentLessonIndex > 0) {
       console.log('🔍 [DEBUG] Regresando a lección anterior:', currentLessonIndex - 1);
       

@@ -35,12 +35,13 @@ interface CourseProgress {
 export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
   const getTotalLessons = (courseId: string) => {
     switch (courseId) {
-      case 'asistentes-virtuales-ia': return 21;
+      case 'asistentes-virtuales-ia': return 22; // Corregido: de 21 a 22
       case 'vibe-coding-claude-cursor': return 6;
-      case 'videos-profesionales-ia': return 21;
-      case 'mockup-cero': return 8;
+      case 'videos-profesionales-ia': return 22; // Corregido: de 21 a 22
+      case 'mockup-cero': return 9; // Corregido: de 8 a 9
       case 'monetiza-ia': return 8;
       case 'guiones-videos-promocionales-ia': return 15; // Corregido: 15 lecciones totales (3 por módulo)
+      case 'desarrollo-web-fullstack': return 5; // Corregido: de 18 a 5
       default: return 18;
     }
   };
