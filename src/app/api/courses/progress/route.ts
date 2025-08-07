@@ -174,6 +174,7 @@ export async function GET(request: NextRequest) {
           case 'videos-profesionales-ia': return 21;
           case 'mockup-cero': return 8;
           case 'monetiza-ia': return 8;
+          case 'guiones-videos-promocionales-ia': return 15;
           default: return 18;
         }
       })()
@@ -342,6 +343,7 @@ export async function POST(request: NextRequest) {
         case 'videos-profesionales-ia': return 21;
         case 'mockup-cero': return 8;
         case 'monetiza-ia': return 8;
+        case 'guiones-videos-promocionales-ia': return 15;
         default: return 18;
       }
     })();
@@ -389,15 +391,8 @@ export async function POST(request: NextRequest) {
       const isLessonId = typeof lessonNumber === 'string' && lessonNumber.length > 10;
       
       if (isLessonId) {
-        // Es un ID real de la base de datos, usar un número basado en el índice
-        // Para el sistema de racha, usamos el índice + 1 como número de lección
-        const lessonIndex = progress.currentLesson;
-        const lessonNumberForStreak = lessonIndex + 1;
-        
-        console.log(`🆔 [API] ID de lección detectado: ${lessonNumber}, usando número: ${lessonNumberForStreak}`);
-        
-        // Para el sistema de racha, usar el número de lección
-        console.log(`🆔 [API] ID de lección detectado: ${lessonNumber}, usando número: ${lessonNumberForStreak}`);
+        // Si llega un ID, no upsert de LessonProgress aquí (necesitamos número). El cliente ya enviará número.
+        // Continuamos sin crear registro individual.
       } else {
         // Es un número tradicional, usar directamente
         const lessonNumberInt = typeof lessonNumber === 'number' ? lessonNumber : parseInt(lessonNumber);

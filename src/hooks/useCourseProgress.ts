@@ -40,7 +40,7 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
       case 'videos-profesionales-ia': return 21;
       case 'mockup-cero': return 8;
       case 'monetiza-ia': return 8;
-      case 'guiones-videos-promocionales-ia': return 24; // Actualizado según la base de datos
+      case 'guiones-videos-promocionales-ia': return 15; // Sincronizado con producción
       default: return 18;
     }
   };

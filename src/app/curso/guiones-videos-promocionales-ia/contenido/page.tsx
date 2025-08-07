@@ -43,6 +43,47 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
     setCurrentLesson
   } = useCourseProgress('guiones-videos-promocionales-ia', isEnrolled);
 
+  // Mapeo de IDs legacy (frontend) a IDs reales de BD (producción)
+  const LEGACY_TO_DB_ID_MAP: Record<string, string> = {
+    'gvp-mod1-les1': 'cme1s4sft0003e5zoajkhytmn',
+    'gvp-mod1-les2': 'cme1s4smg0007e5zozsau178f',
+    'gvp-mod1-les3': 'cme1s4st1000de5zoxcjgqoq7',
+    'gvp-mod1-actividad1': 'cme1s4sv7000fe5zo02vbmbxv',
+    'gvp-mod2-les1': 'cme1s4t1s000le5zo94wvokdz',
+    'gvp-mod2-les2': 'cme1s4t3y000ne5zole6zszqv',
+    'gvp-mod2-les3': 'cme1s4t64000pe5zo7003920w',
+    'gvp-mod3-les1': 'cme1s4tah000te5zogehx69u9',
+    'gvp-mod3-les2': 'cme1s4tco000ve5zob3pbncum',
+    'gvp-mod3-les3': 'cme1s4tev000xe5zoszjiuj2z',
+    'gvp-mod4-les1': 'cme1s4tj80011e5zot8zjw35z',
+    'gvp-mod4-les2': 'cme1s4tle0013e5zoag46olae',
+    'gvp-mod4-les3': 'cme1s4tnm0015e5zov3hnazbu',
+    'gvp-mod5-les1': 'cme1s4trx0019e5zomcv9kagv',
+    'gvp-mod5-les2': 'cme1s4tu3001be5zobudyywsx',
+    'gvp-mod5-les3': 'cme1s4tw9001de5zoea0oomu3'
+  };
+  const DB_TO_LEGACY_ID_MAP: Record<string, string> = Object.fromEntries(
+    Object.entries(LEGACY_TO_DB_ID_MAP).map(([legacy, db]) => [db, legacy])
+  );
+
+  const isIdCompleted = (id: string): boolean => {
+    return (
+      progress.completedLessons.includes(id) ||
+      progress.completedLessons.includes(DB_TO_LEGACY_ID_MAP[id] || '') ||
+      progress.completedLessons.includes(LEGACY_TO_DB_ID_MAP[id] || '')
+    );
+  };
+
+  const addCompletedIdUniq = (list: string[], id: string): string[] => {
+    const ids = new Set(list);
+    ids.add(id);
+    const legacy = DB_TO_LEGACY_ID_MAP[id];
+    if (legacy && ids.has(legacy)) {
+      ids.delete(legacy);
+    }
+    return Array.from(ids);
+  };
+
   const courseData = {
     id: 'guiones-videos-promocionales-ia',
     title: 'Guiones para videos promocionales con IA',
@@ -55,7 +96,7 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
         description: 'Aprende los principios básicos de la redacción de guiones para contenido digital',
         lessons: [
           {
-            id: 'gvp-mod1-les1',
+            id: 'cme1s4sft0003e5zoajkhytmn',
             title: '1.1 ¿Qué es un guión digital?',
             duration: '15 min',
             type: 'video',
@@ -73,7 +114,7 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
             `
           },
           {
-            id: 'gvp-mod1-les2',
+            id: 'cme1s4smg0007e5zozsau178f',
             title: '1.2 Estructura básica de un guión efectivo',
             duration: '18 min',
             type: 'video',
@@ -100,7 +141,7 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
             `
           },
           {
-            id: 'gvp-mod1-les3',
+            id: 'cme1s4st1000de5zoxcjgqoq7',
             title: '1.3 Diferencias entre guiones para YouTube, TikTok e Instagram',
             duration: '37 min',
             type: 'video',
@@ -175,7 +216,7 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
         description: 'Domina ChatGPT, Claude y otras herramientas de IA para crear guiones efectivos',
         lessons: [
           {
-            id: 'gvp-mod2-les1',
+            id: 'cme1s4t1s000le5zo94wvokdz',
             title: '2.1 Introducción a herramientas de IA',
             duration: '20 min',
             type: 'video',
@@ -227,7 +268,7 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
             `
           },
           {
-            id: 'gvp-mod2-les2',
+            id: 'cme1s4t3y000ne5zole6zszqv',
             title: '2.2 Prompts efectivos para guiones',
             duration: '25 min',
             type: 'video',
@@ -275,7 +316,7 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
             `
           },
           {
-            id: 'gvp-mod2-les3',
+            id: 'cme1s4t64000pe5zo7003920w',
             title: '2.3 Configuración y buenas prácticas',
             duration: '20 min',
             type: 'video',
@@ -378,7 +419,7 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
         description: 'Crea guiones persuasivos para videos promocionales y publicitarios usando AIDA',
         lessons: [
           {
-            id: 'gvp-mod3-les1',
+            id: 'cme1s4tah000te5zogehx69u9',
             title: '3.1 Estructura AIDA aplicada al guión',
             duration: '25 min',
             type: 'video',
@@ -454,7 +495,7 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
             `
           },
           {
-            id: 'gvp-mod3-les2',
+            id: 'cme1s4tco000ve5zob3pbncum',
             title: '3.2 Adaptación al tipo de audiencia',
             duration: '25 min',
             type: 'video',
@@ -565,7 +606,7 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
             `
           },
           {
-            id: 'gvp-mod3-les3',
+            id: 'cme1s4tev000xe5zoszjiuj2z',
             title: '3.3 Técnicas de persuasión',
             duration: '25 min',
             type: 'video',
@@ -726,7 +767,7 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
         description: 'Adapta tus guiones a diferentes plataformas y optimiza para algoritmos de redes sociales',
         lessons: [
           {
-            id: 'gvp-mod4-les1',
+            id: 'cme1s4tj80011e5zot8zjw35z',
             title: '4.1 Formatos específicos',
             duration: '25 min',
             type: 'video',
@@ -855,7 +896,7 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
             `
           },
           {
-            id: 'gvp-mod4-les2',
+            id: 'cme1s4tle0013e5zoag46olae',
             title: '4.2 Optimización para algoritmos',
             duration: '25 min',
             type: 'video',
@@ -1003,7 +1044,7 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
             `
           },
           {
-            id: 'gvp-mod4-les3',
+            id: 'cme1s4tnm0015e5zov3hnazbu',
             title: '4.3 Uso de tendencias y hashtags',
             duration: '20 min',
             type: 'video',
@@ -1272,7 +1313,7 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
         description: 'Mide, analiza y optimiza tus guiones usando datos y A/B testing',
         lessons: [
           {
-            id: 'gvp-mod5-les1',
+            id: 'cme1s4trx0019e5zomcv9kagv',
             title: '5.1 Métricas clave para evaluar guiones',
             duration: '25 min',
             type: 'video',
@@ -1467,7 +1508,7 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
             `
           },
           {
-            id: 'gvp-mod5-les2',
+            id: 'cme1s4tu3001be5zobudyywsx',
             title: '5.2 A/B testing de guiones',
             duration: '20 min',
             type: 'video',
@@ -1655,7 +1696,7 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
             `
           },
           {
-            id: 'gvp-mod5-les3',
+            id: 'cme1s4tw9001de5zoea0oomu3',
             title: '5.3 Mejora continua del contenido',
             duration: '20 min',
             type: 'video',
@@ -1930,7 +1971,7 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
     ],
     lessons: [
       {
-        id: 'gvp-mod1-les1',
+        id: 'cme1s4sft0003e5zoajkhytmn',
         moduleId: 1,
         title: '1.1 ¿Qué es un guión digital?',
         duration: '15 min',
@@ -1950,7 +1991,7 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
         `
       },
       {
-        id: 'gvp-mod1-les2',
+        id: 'cme1s4smg0007e5zozsau178f',
         moduleId: 1,
         title: '1.2 Estructura básica de un guión efectivo',
         duration: '18 min',
@@ -1979,7 +2020,7 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
         `
       },
       {
-        id: 'gvp-mod1-les3',
+        id: 'cme1s4st1000de5zoxcjgqoq7',
         moduleId: 1,
         title: '1.3 Diferencias entre guiones para YouTube, TikTok e Instagram',
         duration: '17 min',
@@ -2014,7 +2055,7 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
         `
       },
       {
-        id: 'gvp-mod1-actividad1',
+        id: 'cme1s4sv7000fe5zo02vbmbxv',
         moduleId: 1,
         title: 'Actividad práctica 1: Análisis de guiones virales',
         duration: '20 min',
@@ -2203,7 +2244,7 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
     await saveProgress(
       progress.currentLesson,
       progress.completedLessons,
-      currentLesson?.id ? parseInt(currentLesson.id.split('-').pop() || '0') : undefined,
+      progress.currentLesson + 1,
       currentLesson?.title,
       'access',
       1
@@ -2218,7 +2259,7 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
       await saveProgress(
         progress.currentLesson,
         progress.completedLessons,
-        currentLesson?.id ? parseInt(currentLesson.id.split('-').pop() || '0') : undefined,
+        progress.currentLesson + 1,
         currentLesson?.title,
         'access',
         1
@@ -2236,7 +2277,7 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
       await saveProgress(
         progress.currentLesson,
         progress.completedLessons,
-        currentLesson?.id ? parseInt(currentLesson.id.split('-').pop() || '0') : undefined,
+        progress.currentLesson + 1,
         currentLesson?.title,
         'access',
         1
@@ -2248,16 +2289,12 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
   // Funciones helper para módulos
   const isModuleCompleted = (moduleId: number) => {
     const moduleLessons = lessons.filter(lesson => lesson.moduleId === moduleId);
-    return moduleLessons.every(lesson => 
-      progress.completedLessons.includes(lesson.id)
-    );
+    return moduleLessons.every(lesson => isIdCompleted(lesson.id));
   };
 
   const getModuleProgress = (moduleId: number) => {
     const moduleLessons = lessons.filter(lesson => lesson.moduleId === moduleId);
-    const completedCount = moduleLessons.filter(lesson => 
-      progress.completedLessons.includes(lesson.id)
-    ).length;
+    const completedCount = moduleLessons.filter(lesson => isIdCompleted(lesson.id)).length;
     return {
       completed: completedCount,
       total: moduleLessons.length
@@ -2274,16 +2311,17 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
     const currentLessonIndex = lessons.findIndex(lesson => lesson.id === lessonId);
     const currentLesson = lessons[currentLessonIndex];
     
-    const newCompletedLessons = progress.completedLessons.includes(lessonId) 
-      ? progress.completedLessons 
-      : [...progress.completedLessons, lessonId];
+    const dbId = LEGACY_TO_DB_ID_MAP[lessonId] || lessonId;
+    const newCompletedLessons = isIdCompleted(dbId)
+      ? progress.completedLessons
+      : addCompletedIdUniq(progress.completedLessons, dbId);
     
     markLessonComplete(lessonId);
     
     await saveProgress(
       currentLessonIndex,
       newCompletedLessons,
-      currentLesson.id ? parseInt(currentLesson.id.split('-').pop() || '0') : undefined,
+      currentLessonIndex + 1,
       currentLesson.title,
       'complete',
       5
@@ -2318,23 +2356,24 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
     const previousLessons = moduleLessons.filter(lesson => lesson.id !== currentLesson.id);
     
     // Verificar que todas las lecciones anteriores estén completadas
-    const allPreviousCompleted = previousLessons.every(lesson => progress.completedLessons.includes(lesson.id));
+    const allPreviousCompleted = previousLessons.every(lesson => isIdCompleted(LEGACY_TO_DB_ID_MAP[lesson.id] || lesson.id));
     
     return allPreviousCompleted;
   };
 
   // Últimas lecciones de cada módulo
   const LAST_LESSONS_BY_MODULE: Record<number, string> = {
-    1: 'gvp-mod1-les3', // 1.3 Diferencias entre guiones por plataforma
-    2: 'gvp-mod2-les3', // 2.3 Configuración y buenas prácticas
-    3: 'gvp-mod3-les3', // 3.3 Optimización de guiones con IA
-    4: 'gvp-mod4-les3', // 4.3 Distribución y promoción
-    5: 'gvp-mod5-les3'  // 5.3 Mejora continua del contenido
+    1: 'cme1s4st1000de5zoxcjgqoq7',
+    2: 'cme1s4t64000pe5zo7003920w',
+    3: 'cme1s4tev000xe5zoszjiuj2z',
+    4: 'cme1s4tnm0015e5zov3hnazbu',
+    5: 'cme1s4tw9001de5zoea0oomu3'
   };
 
   // Función para verificar si es la última lección del módulo
   const isLastLessonOfModule = (lessonId: string, moduleId: number): boolean => {
-    return LAST_LESSONS_BY_MODULE[moduleId] === lessonId;
+    const dbId = LEGACY_TO_DB_ID_MAP[lessonId] || lessonId;
+    return LAST_LESSONS_BY_MODULE[moduleId] === dbId;
   };
 
   // Función auxiliar para obtener el título del módulo
@@ -2368,7 +2407,7 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
     const moduleLessons = lessons.filter(lesson => lesson.moduleId === moduleId);
     
     // Crear array con todas las lecciones completadas (existentes + todas las del módulo)
-    const allModuleLessonIds = moduleLessons.map(lesson => lesson.id);
+    const allModuleLessonIds = moduleLessons.map(lesson => LEGACY_TO_DB_ID_MAP[lesson.id] || lesson.id);
     const newCompletedLessons = [
       ...progress.completedLessons.filter(id => !allModuleLessonIds.includes(id)), // Lecciones de otros módulos
       ...allModuleLessonIds // Todas las lecciones de este módulo
@@ -2388,10 +2427,10 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
     await saveProgress(
       currentLessonIndex,
       newCompletedLessons,
-      currentLesson.id ? parseInt(currentLesson.id.split('-').pop() || '0') : undefined,
+      currentLessonIndex + 1,
       `Módulo ${moduleId} Completado`,
       'complete',
-      10 // Tiempo adicional por completar módulo
+      10
     );
 
     // Mostrar notificación de éxito
@@ -2399,7 +2438,7 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
     // Calcular progreso del módulo usando la lista ya sincronizada
     const moduleLessonsForStats = lessons.filter(lesson => lesson.moduleId === moduleId);
     const completedCountForStats = moduleLessonsForStats.filter(lesson =>
-      newCompletedLessons.includes(lesson.id)
+      newCompletedLessons.includes(LEGACY_TO_DB_ID_MAP[lesson.id] || lesson.id)
     ).length;
     const totalCountForStats = moduleLessonsForStats.length;
     
@@ -2448,7 +2487,7 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
     
     // Verificar si todas las lecciones están completadas
     const allLessonsCompleted = lessons.every(lesson => 
-      progress.completedLessons.includes(lesson.id)
+      isIdCompleted(LEGACY_TO_DB_ID_MAP[lesson.id] || lesson.id)
     );
     
     if (!allLessonsCompleted) {
@@ -2534,7 +2573,8 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
   };
 
   const isLessonCompleted = (lessonId: string) => {
-    return progress.completedLessons.includes(lessonId);
+    const dbId = LEGACY_TO_DB_ID_MAP[lessonId] || lessonId;
+    return isIdCompleted(dbId);
   };
 
   const isLessonAccessible = (lessonIndex: number) => {
@@ -2561,9 +2601,7 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
   };
 
   const areAllLessonsCompleted = () => {
-    return lessons.every(lesson => 
-      progress.completedLessons.includes(lesson.id)
-    );
+    return lessons.every(lesson => isIdCompleted(LEGACY_TO_DB_ID_MAP[lesson.id] || lesson.id));
   };
 
   if (!user || isLoading || isCheckingEnrollment) {
