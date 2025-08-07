@@ -21,8 +21,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
     }
 
+    // userId necesita estar accesible fuera del try
+    let userId: string;
     try {
-      const { userId } = verifyToken(token);
+      const decoded = verifyToken(token);
+      userId = decoded.userId;
       console.log('✅ [COMPLETE-COURSE] Token verificado, userId:', userId);
     } catch (tokenError) {
       console.log('❌ [COMPLETE-COURSE] Error verificando token:', tokenError);

@@ -26,10 +26,10 @@ export default function AchievementNotification({
 
   useEffect(() => {
     setIsAnimating(true);
-    // Auto-close after 5 seconds
+    // Auto-close after 2 minutes
     const timer = setTimeout(() => {
       onClose();
-    }, 5000);
+    }, 120000);
     return () => clearTimeout(timer);
   }, [onClose]);
 
@@ -137,7 +137,7 @@ export default function AchievementNotification({
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%) scale(0.8);
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: #4f46e5; /* Indigo 600 sólido, sin degradado */
           border-radius: 20px;
           padding: 2rem;
           box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
@@ -260,7 +260,7 @@ export default function AchievementNotification({
 
         .progress-fill {
           height: 100%;
-          background: linear-gradient(90deg, #fbbf24, #f59e0b);
+          background: #f59e0b; /* Amber 500 sólido, sin degradado */
           border-radius: 4px;
           transition: width 0.8s ease;
         }
