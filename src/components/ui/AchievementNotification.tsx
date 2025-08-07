@@ -25,19 +25,21 @@ export default function AchievementNotification({
 }: AchievementNotificationProps) {
   const [isAnimating, setIsAnimating] = useState(false);
   
+  useEffect(() => {
+    if (isVisible) {
+      setIsAnimating(true);
+      // Auto-close after 2 minutes
+      const timer = setTimeout(() => {
+        onClose();
+      }, 120000);
+      return () => clearTimeout(timer);
+    }
+  }, [isVisible, onClose]);
+
   // Si no es visible, no renderizar
   if (!isVisible) {
     return null;
   }
-
-  useEffect(() => {
-    setIsAnimating(true);
-    // Auto-close after 2 minutes
-    const timer = setTimeout(() => {
-      onClose();
-    }, 120000);
-    return () => clearTimeout(timer);
-  }, [onClose]);
 
   return (
     <>
