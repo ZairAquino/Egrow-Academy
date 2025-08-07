@@ -214,7 +214,9 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
         const data = await response.json();
         setProgress(prev => ({
           ...prev,
-          ...data.progress
+          ...data.progress,
+          // Mantener currentLesson actual para evitar saltos no deseados
+          currentLesson: prev.currentLesson
         }));
       } else {
         // Fallback a localStorage si la API falla (solo en cliente)
