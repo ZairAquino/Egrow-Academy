@@ -29,8 +29,18 @@ async function checkEnrollmentStatus(request: NextRequest) {
 
     // Verificar token JWT
     console.log('🔍 [ENROLLMENT-STATUS] Verificando token...');
-    const { userId } = verifyToken(token);
-    console.log('🔍 [ENROLLMENT-STATUS] Usuario ID:', userId);
+    let userId: string;
+    try {
+      const decoded = verifyToken(token);
+      userId = decoded.userId;
+      console.log('🔍 [ENROLLMENT-STATUS] Usuario ID:', userId);
+    } catch (tokenError) {
+      console.log('❌ [ENROLLMENT-STATUS] Error verificando token:', tokenError);
+      return NextResponse.json(
+        { error: 'Token inválido o expirado' },
+        { status: 401 }
+      );
+    }
 
     // Verificar si es una sesión de base de datos
     const session = await prisma.session.findUnique({

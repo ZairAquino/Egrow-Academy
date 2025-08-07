@@ -18,7 +18,16 @@ export async function GET(request: NextRequest) {
     }
 
     // Verificar token JWT
-    const { userId } = verifyToken(token);
+    let userId: string;
+    try {
+      const decoded = verifyToken(token);
+      userId = decoded.userId;
+    } catch (tokenError) {
+      return NextResponse.json(
+        { error: 'Token inválido' },
+        { status: 401 }
+      );
+    }
 
     // Verificar si es una sesión de base de datos
     const session = await prisma.session.findUnique({

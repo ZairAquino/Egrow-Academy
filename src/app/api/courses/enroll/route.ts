@@ -16,7 +16,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Verificar token JWT
-    const decoded = verifyToken(token);
+    let decoded;
+    try {
+      decoded = verifyToken(token);
+    } catch (tokenError) {
+      console.log('❌ [ENROLL] Token inválido:', tokenError);
+      return NextResponse.json({ error: 'Token inválido' }, { status: 401 });
+    }
+    
     if (!decoded) {
       console.log('❌ [ENROLL] Token inválido');
       return NextResponse.json({ error: 'Token inválido' }, { status: 401 });

@@ -18,7 +18,16 @@ export async function PUT(
       );
     }
 
-    const { userId } = verifyToken(token);
+    let userId: string;
+    try {
+      const decoded = verifyToken(token);
+      userId = decoded.userId;
+    } catch (tokenError) {
+      return NextResponse.json(
+        { error: 'Token inválido' },
+        { status: 401 }
+      );
+    }
     
     // Verificar que el usuario existe
     const user = await prisma.user.findUnique({
@@ -125,7 +134,16 @@ export async function DELETE(
       );
     }
 
-    const { userId } = verifyToken(token);
+    let userId: string;
+    try {
+      const decoded = verifyToken(token);
+      userId = decoded.userId;
+    } catch (tokenError) {
+      return NextResponse.json(
+        { error: 'Token inválido' },
+        { status: 401 }
+      );
+    }
     
     // Verificar que el usuario existe
     const user = await prisma.user.findUnique({

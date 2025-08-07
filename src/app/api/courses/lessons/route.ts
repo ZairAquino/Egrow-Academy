@@ -29,7 +29,15 @@ export async function GET(request: NextRequest) {
       );
     }
     
-    const tokenData = await verifyToken(token);
+    let tokenData;
+    try {
+      tokenData = verifyToken(token);
+    } catch (tokenError) {
+      return NextResponse.json(
+        { error: 'Token inválido' },
+        { status: 401 }
+      );
+    }
     
     if (!tokenData || !tokenData.userId) {
       return NextResponse.json(
