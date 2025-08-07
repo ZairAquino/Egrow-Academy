@@ -38,7 +38,13 @@ interface UserCourse {
 export default function MyCoursesPage() {
   const { user, status } = useAuth();
   const { achievements, progress, loading: achievementsLoading, recordDailyActivity } = useAchievements();
-  const { achievements: notifications, removeAchievement } = useAchievementNotifications();
+  const { 
+    showModuleNotification, 
+    showCourseNotification, 
+    achievementData, 
+    hideModuleNotification, 
+    hideCourseNotification 
+  } = useAchievementNotifications();
   
   const [activeTab, setActiveTab] = useState('all');
   const [courses, setCourses] = useState<UserCourse[]>([]);
@@ -162,13 +168,27 @@ export default function MyCoursesPage() {
       <Navbar />
       
       {/* Notificaciones de logros */}
-      {notifications.map((achievement) => (
+      {showModuleNotification && (
         <AchievementNotification
-          key={achievement.id}
-          achievement={achievement}
-          onClose={() => removeAchievement(achievement.id)}
+          isVisible={showModuleNotification}
+          type={achievementData.type}
+          title={achievementData.title}
+          message={achievementData.message}
+          stats={achievementData.stats}
+          onClose={hideModuleNotification}
         />
-      ))}
+      )}
+      
+      {showCourseNotification && (
+        <AchievementNotification
+          isVisible={showCourseNotification}
+          type={achievementData.type}
+          title={achievementData.title}
+          message={achievementData.message}
+          stats={achievementData.stats}
+          onClose={hideCourseNotification}
+        />
+      )}
       
       <main className="main-content pt-16">
         {/* Hero Section */}
