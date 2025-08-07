@@ -166,13 +166,13 @@ export async function GET(request: NextRequest) {
       lessonProgress: progress.lessonProgress || [],
       totalLessons: (() => {
         switch (courseId) {
-          case 'asistentes-virtuales-ia': return 22; // Corregido: de 21 a 22
-          case 'vibe-coding-claude-cursor': return 6;
-          case 'videos-profesionales-ia': return 22; // Corregido: de 21 a 22
-          case 'mockup-cero': return 9; // Corregido: de 8 a 9
-          case 'monetiza-ia': return 8;
-          case 'guiones-videos-promocionales-ia': return 15;
-          case 'desarrollo-web-fullstack': return 5; // Corregido: de 18 a 5
+          case 'asistentes-virtuales-ia': return 22; // ✅ Correcto
+          case 'vibe-coding-claude-cursor': return 7; // Corregido: de 6 a 7
+          case 'videos-profesionales-ia': return 22; // ✅ Correcto
+          case 'mockup-cero': return 9; // ✅ Correcto
+          case 'monetiza-ia': return 9; // Corregido: de 8 a 9
+          case 'guiones-videos-promocionales-ia': return 21; // Corregido: de 15 a 21
+          case 'desarrollo-web-fullstack': return 6; // Corregido: de 5 a 6
           default: return 18;
         }
       })()
