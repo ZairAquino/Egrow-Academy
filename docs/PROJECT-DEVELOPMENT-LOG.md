@@ -1,6 +1,23 @@
 # 📋 Log de Desarrollo - eGrow Academy
 
-## 🚀 Última Actualización: 2025-01-08
+## 🚀 Última Actualización: 2025-08-07
+
+### ✅ Fix de build en Vercel: 2025-08-07
+**Mensaje:** Corrección de sintaxis JSX que impedía el build de producción.
+
+**Problema:**
+- Error de compilación en `src/app/curso/videos-profesionales-ia/contenido/page.tsx` cerca de cierres `</div>`/`</section>` ("Expected '</', got 'jsx text (')
+
+**Solución:**
+- Limpieza del bloque de cierres en el JSX para eliminar cualquier carácter suelto/invisible que rompa el parseo.
+- Verificación con linter: sin errores.
+
+**Archivos Modificados:**
+- `src/app/curso/videos-profesionales-ia/contenido/page.tsx`
+
+**Impacto:**
+- El build de Next.js debería compilar correctamente en Vercel.
+
 
 ### ✅ Reglas de Protección de Datos de Usuarios Implementadas: 2025-01-08
 **Mensaje:** Implementación completa de reglas obligatorias para proteger datos de usuarios
