@@ -2132,7 +2132,11 @@ export default function ContenidoVideosProfesionalesIAPage() {
                             ? '¡Felicidades! Has completado todas las lecciones. Puedes terminar el curso.'
                             : (
                                 <> 
-                                  Completa todas las lecciones ({progress.completedLessons.length}/{courseData.lessons.length}) para poder terminar el curso
+                                  Completa todas las lecciones 
+                                  <strong>{progress.completedLessons.length}</strong>
+                                  /
+                                  <strong>{courseData.lessons.length}</strong>
+                                  {' '}para poder terminar el curso
                                 </>
                               )
                           }
