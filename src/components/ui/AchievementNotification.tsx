@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 
 interface AchievementNotificationProps {
-  achievement: {
+  // Nueva forma usando objeto achievement
+  achievement?: {
     id: string;
     type: 'module' | 'course';
     title: string;
@@ -14,15 +15,41 @@ interface AchievementNotificationProps {
       percentage: number;
     };
   };
+  // Forma antigua usando props individuales (compatibilidad)
+  isVisible?: boolean;
+  type?: 'module' | 'course';
+  title?: string;
+  message?: string;
+  stats?: {
+    completed: number;
+    total: number;
+    percentage: number;
+  };
   onClose: () => void;
 }
 
 export default function AchievementNotification({
   achievement,
+  isVisible,
+  type: propType,
+  title: propTitle,
+  message: propMessage,
+  stats: propStats,
   onClose
 }: AchievementNotificationProps) {
   const [isAnimating, setIsAnimating] = useState(false);
-  const { type, title, message, stats } = achievement;
+  
+  // Determinar si usar el objeto achievement o props individuales
+  const isVisibleCheck = achievement ? true : isVisible;
+  const type = achievement?.type || propType;
+  const title = achievement?.title || propTitle;
+  const message = achievement?.message || propMessage;
+  const stats = achievement?.stats || propStats;
+  
+  // Si no hay datos o no es visible, no renderizar
+  if (!isVisibleCheck || !type || !title || !message) {
+    return null;
+  }
 
   useEffect(() => {
     setIsAnimating(true);
