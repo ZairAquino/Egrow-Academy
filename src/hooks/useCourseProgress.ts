@@ -295,18 +295,19 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
   }, [courseId, isEnrolled, loadProgress]);
 
   // Efecto adicional para recargar progreso cuando el usuario regresa al curso
-  useEffect(() => {
-    if (isEnrolled && hasLoadedOnce) {
-      // Recargar progreso cuando el usuario regresa al curso
-      const handleFocus = () => {
-        console.log('🔄 [HOOK] Usuario regresó al curso, recargando progreso...');
-        loadProgress();
-      };
+  // DESHABILITADO: Causaba navegación automática no deseada a la última lección
+  // useEffect(() => {
+  //   if (isEnrolled && hasLoadedOnce) {
+  //     // Recargar progreso cuando el usuario regresa al curso
+  //     const handleFocus = () => {
+  //       console.log('🔄 [HOOK] Usuario regresó al curso, recargando progreso...');
+  //       loadProgress();
+  //     };
 
-      window.addEventListener('focus', handleFocus);
-      return () => window.removeEventListener('focus', handleFocus);
-    }
-  }, [isEnrolled, hasLoadedOnce, loadProgress]);
+  //     window.addEventListener('focus', handleFocus);
+  //     return () => window.removeEventListener('focus', handleFocus);
+  //   }
+  // }, [isEnrolled, hasLoadedOnce, loadProgress]);
 
   return {
     progress,
