@@ -5,7 +5,7 @@ import { verifyToken, extractTokenFromHeader } from '@/lib/auth';
 export async function GET(request: NextRequest) {
   try {
     // Verificar token desde cookies o headers
-    const cookieToken = request.cookies.get('auth-token')?.value;
+    const cookieToken = request.cookies.get('session')?.value;
     const authHeader = request.headers.get('authorization');
     const headerToken = extractTokenFromHeader(authHeader);
     

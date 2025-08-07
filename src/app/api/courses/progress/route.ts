@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Verificar token del usuario (buscar en cookies y headers)
-    const cookieToken = request.cookies.get('auth-token')?.value;
+    const cookieToken = request.cookies.get('session')?.value;
     const headerToken = request.headers.get('authorization')?.replace('Bearer ', '');
     const token = cookieToken || headerToken;
     
@@ -212,7 +212,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Verificar token del usuario (buscar en cookies y headers)
-    const cookieToken = request.cookies.get('auth-token')?.value;
+    const cookieToken = request.cookies.get('session')?.value;
     const headerToken = request.headers.get('authorization')?.replace('Bearer ', '');
     const token = cookieToken || headerToken;
     

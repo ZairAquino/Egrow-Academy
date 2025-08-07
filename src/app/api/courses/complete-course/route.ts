@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
     console.log('🔍 [COMPLETE-COURSE] Iniciando proceso de completar curso...');
 
     // Verificar autenticación
-    const cookieToken = request.cookies.get('auth-token')?.value;
+    const cookieToken = request.cookies.get('session')?.value;
     const headerToken = request.headers.get('authorization')?.replace('Bearer ', '');
     const token = cookieToken || headerToken;
 

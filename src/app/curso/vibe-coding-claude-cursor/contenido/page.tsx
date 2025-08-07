@@ -8,6 +8,7 @@ import Navbar from '@/components/layout/Navbar';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCourseProgress } from '@/hooks/useCourseProgress';
 import VideoPlayer from '@/components/courses/VideoPlayer';
+import AchievementNotification from '@/components/ui/AchievementNotification';
 
 export default function ContenidoVibeCodingClaudeCursorPage() {
   
@@ -15,6 +16,20 @@ export default function ContenidoVibeCodingClaudeCursorPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [isCheckingEnrollment, setIsCheckingEnrollment] = useState(true);
   const [expandedModules, setExpandedModules] = useState<Set<number>>(new Set());
+  
+  // Estados para notificaciones de logros
+  const [showModuleNotification, setShowModuleNotification] = useState(false);
+  const [showCourseNotification, setShowCourseNotification] = useState(false);
+  const [achievementData, setAchievementData] = useState({
+    type: 'module' as 'module' | 'course',
+    title: '',
+    message: '',
+    stats: {
+      completed: 0,
+      total: 0,
+      percentage: 0
+    }
+  });
   const { user } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
@@ -278,12 +293,43 @@ export default function ContenidoVibeCodingClaudeCursorPage() {
         
         setIsEnrolled(data.isEnrolled || false);
       } else {
-        const errorData = await response.json();
+        let errorData = {};
+        try {
+          errorData = await response.json();
+        } catch (parseError) {
+          console.log('🔍 [DEBUG] No se pudo parsear respuesta JSON, usando texto plano');
+          errorData = { message: 'Error de respuesta del servidor' };
+        }
         console.error('🔍 [DEBUG] Error en respuesta:', errorData);
         
         if (response.status === 401) {
+          console.log('🔍 [DEBUG] Error 401 - Token expirado o inválido, redirigiendo al login');
           router.push(`/login?redirect=/curso/${courseData.id}/contenido`);
           return;
+        }
+        
+        // Para otros errores, intentar inscripción directa
+        console.log('🔍 [DEBUG] Error no es 401, intentando inscripción directa...');
+        try {
+          const enrollResponse = await fetch('/api/courses/enroll', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ courseId: courseData.id }),
+            credentials: 'include',
+          });
+          
+          if (enrollResponse.ok) {
+            console.log('✅ [DEBUG] Usuario inscrito exitosamente tras error');
+            setIsEnrolled(true);
+          } else {
+            console.error('❌ [DEBUG] Error en inscripción tras error');
+            router.push(`/curso/${courseData.id}`);
+          }
+        } catch (enrollError) {
+          console.error('❌ [DEBUG] Error crítico en inscripción:', enrollError);
+          router.push(`/curso/${courseData.id}`);
         }
         
         router.push(`/curso/${courseData.id}`);
@@ -435,6 +481,171 @@ export default function ContenidoVibeCodingClaudeCursorPage() {
     }
   };
 
+  // Función para verificar si se puede mostrar el botón de completar módulo
+  const canCompleteModule = (moduleId: number) => {
+    const currentLesson = courseData.lessons[progress.currentLesson];
+    const moduleLessons = courseData.lessons.filter(lesson => lesson.moduleId === moduleId);
+    const isLastInModule = moduleLessons[moduleLessons.length - 1].id === currentLesson.id;
+    const moduleProgress = getModuleProgress(moduleId);
+    
+    // Verificar si todas las lecciones del módulo menos la actual están completadas
+    const allOtherLessonsCompleted = moduleProgress.completed === moduleProgress.total - 1;
+    
+    return isLastInModule && allOtherLessonsCompleted && !progress.completedLessons.includes(currentLesson.id);
+  };
+
+  // Función para verificar si se pueden completar todas las lecciones anteriores del módulo
+  const canCompleteModuleWithPrerequisites = (moduleId: number) => {
+    const moduleLessons = courseData.lessons.filter(lesson => lesson.moduleId === moduleId);
+    const currentLesson = courseData.lessons[progress.currentLesson];
+    
+    // Obtener todas las lecciones del módulo excepto la actual (que es la última)
+    const previousLessons = moduleLessons.filter(lesson => lesson.id !== currentLesson.id);
+    
+    // Verificar que todas las lecciones anteriores estén completadas
+    const allPreviousCompleted = previousLessons.every(lesson => progress.completedLessons.includes(lesson.id));
+    
+    return allPreviousCompleted;
+  };
+
+  // Función para verificar si un módulo completo está terminado
+  const isModuleCompleted = (moduleId: number) => {
+    const moduleLessons = courseData.lessons.filter(lesson => lesson.moduleId === moduleId);
+    return moduleLessons.every(lesson => progress.completedLessons.includes(lesson.id));
+  };
+
+  // Función para obtener el progreso de un módulo
+  const getModuleProgress = (moduleId: number) => {
+    const moduleLessons = courseData.lessons.filter(lesson => lesson.moduleId === moduleId);
+    const completedInModule = moduleLessons.filter(lesson => progress.completedLessons.includes(lesson.id));
+    return {
+      completed: completedInModule.length,
+      total: moduleLessons.length,
+      percentage: (completedInModule.length / moduleLessons.length) * 100
+    };
+  };
+
+  // Últimas lecciones de cada módulo
+  const LAST_LESSONS_BY_MODULE: Record<number, string> = {
+    1: 'vcc-mod1-les3', // 1.3 Flujos de Trabajo Avanzados
+    2: 'vcc-mod2-les3', // 2.3 Integración con APIs
+    3: 'vcc-mod3-les3', // 3.3 Optimización de Código
+    4: 'vcc-mod4-les3', // 4.3 Despliegue y CI/CD
+    5: 'vcc-mod5-les3'  // 5.3 Mantenimiento y Escalabilidad
+  };
+
+  // Función para verificar si es la última lección del módulo
+  const isLastLessonOfModule = (lessonId: string, moduleId: number): boolean => {
+    return LAST_LESSONS_BY_MODULE[moduleId] === lessonId;
+  };
+
+  // Función auxiliar para obtener el título del módulo
+  const getModuleTitle = (moduleId: number): string => {
+    switch (moduleId) {
+      case 1: return 'Módulo 1: FUNDAMENTOS DEL VIBE CODING';
+      case 2: return 'Módulo 2: HERRAMIENTAS AVANZADAS';
+      case 3: return 'Módulo 3: DESARROLLO PRÁCTICO';
+      case 4: return 'Módulo 4: DESPLIEGUE Y PRODUCCIÓN';
+      case 5: return 'Módulo 5: MANTENIMIENTO Y ESCALABILIDAD';
+      default: return `Módulo ${moduleId}`;
+    }
+  };
+
+  // Función para completar un módulo completo
+  const handleCompleteModule = async (moduleId: number) => {
+    if (!isEnrolled) return;
+
+    // Si el curso ya está completado, no permitir completar módulos
+    if (isCourseCompleted()) {
+      setAchievementData({
+        type: 'module',
+        title: 'Curso Ya Completado',
+        message: 'Este curso ya está completado. Estás en modo de revisión.',
+        stats: {
+          completed: courseData.lessons.length,
+          total: courseData.lessons.length,
+          percentage: 100
+        }
+      });
+      setShowModuleNotification(true);
+      return;
+    }
+
+    // Verificar que se puedan completar todas las lecciones anteriores del módulo
+    if (!canCompleteModuleWithPrerequisites(moduleId)) {
+      const moduleProgress = getModuleProgress(moduleId);
+      setAchievementData({
+        type: 'module',
+        title: 'Completa las Lecciones Anteriores',
+        message: 'Debes completar todas las lecciones anteriores del módulo antes de poder completarlo.',
+        stats: {
+          completed: moduleProgress.completed,
+          total: moduleProgress.total,
+          percentage: Math.round((moduleProgress.completed / moduleProgress.total) * 100)
+        }
+      });
+      setShowModuleNotification(true);
+      return;
+    }
+    
+    // Obtener todas las lecciones del módulo
+    const moduleLessons = courseData.lessons.filter(lesson => lesson.moduleId === moduleId);
+    
+    // Crear array con todas las lecciones completadas (existentes + todas las del módulo)
+    const allModuleLessonIds = moduleLessons.map(lesson => lesson.id);
+    const newCompletedLessons = [
+      ...progress.completedLessons.filter(id => !allModuleLessonIds.includes(id)), // Lecciones de otros módulos
+      ...allModuleLessonIds // Todas las lecciones de este módulo
+    ];
+
+    // Actualizar el estado local con todas las lecciones del módulo
+    allModuleLessonIds.forEach(lessonId => {
+      if (!progress.completedLessons.includes(lessonId)) {
+        markLessonComplete(lessonId);
+      }
+    });
+
+    // Guardar progreso con todas las lecciones del módulo completadas
+    const currentLessonIndex = progress.currentLesson;
+    const currentLesson = courseData.lessons[currentLessonIndex];
+
+    await saveProgress(
+      currentLessonIndex,
+      newCompletedLessons,
+      currentLesson.id ? parseInt(currentLesson.id.split('-').pop() || '0') : undefined,
+      `Módulo ${moduleId} Completado`,
+      'complete',
+      10 // Tiempo adicional por completar módulo
+    );
+
+    // Mostrar notificación de éxito
+    const moduleTitle = getModuleTitle(moduleId);
+    const moduleProgress = getModuleProgress(moduleId);
+    
+    setAchievementData({
+      type: 'module',
+      title: `¡Módulo Completado!`,
+      message: `¡Felicitaciones! Has completado exitosamente el ${moduleTitle}. Continúa con el siguiente módulo para avanzar en tu aprendizaje.`,
+      stats: {
+        completed: moduleProgress.completed,
+        total: moduleProgress.total,
+        percentage: Math.round((moduleProgress.completed / moduleProgress.total) * 100)
+      }
+    });
+    setShowModuleNotification(true);
+
+    // Si no es el último módulo, avanzar a la primera lección del siguiente módulo
+    if (moduleId < 5) {
+      const nextModuleLessons = courseData.lessons.filter(lesson => lesson.moduleId === moduleId + 1);
+      if (nextModuleLessons.length > 0) {
+        const nextLessonIndex = courseData.lessons.findIndex(lesson => lesson.id === nextModuleLessons[0].id);
+        if (nextLessonIndex !== -1) {
+          setCurrentLesson(nextLessonIndex);
+        }
+      }
+    }
+  };
+
   const isCourseCompleted = () => {
     return courseData.lessons.every(lesson => 
       progress.completedLessons.includes(lesson.id)
@@ -539,21 +750,75 @@ export default function ContenidoVibeCodingClaudeCursorPage() {
                   ← Anterior
                 </button>
 
-                <button
-                  className={`btn ${
-                    isLessonCompleted(courseData.lessons[progress.currentLesson]?.id)
-                      ? 'btn-success'
-                      : 'btn-primary'
-                  }`}
-                  onClick={() => handleMarkLessonComplete(courseData.lessons[progress.currentLesson]?.id)}
-                  disabled={isSaving}
-                >
-                  {isSaving ? 'Guardando...' : 
-                   isLessonCompleted(courseData.lessons[progress.currentLesson]?.id) 
-                     ? '✓ Completada' 
-                     : 'Marcar como Completada'
+                {/* Lógica de botones basada en si es la última lección del módulo */}
+                {(() => {
+                  const currentLesson = courseData.lessons[progress.currentLesson];
+                  const currentModuleId = currentLesson.moduleId;
+                  const isLastLesson = isLastLessonOfModule(currentLesson.id, currentModuleId);
+                  const isCurrentLessonCompleted = progress.completedLessons.includes(currentLesson.id);
+                  const isModuleAlreadyCompleted = isModuleCompleted(currentModuleId);
+                  
+                  if (isModuleAlreadyCompleted) {
+                    // Módulo ya completado - no mostrar botones de completar
+                    return (
+                      <button
+                        className={`btn ${
+                          isLessonCompleted(courseData.lessons[progress.currentLesson]?.id)
+                            ? 'btn-success'
+                            : 'btn-primary'
+                        }`}
+                        onClick={() => handleMarkLessonComplete(courseData.lessons[progress.currentLesson]?.id)}
+                        disabled={isSaving}
+                      >
+                        {isSaving ? 'Guardando...' : 
+                         isLessonCompleted(courseData.lessons[progress.currentLesson]?.id) 
+                           ? '✓ Completada' 
+                           : 'Marcar como Completada'
+                        }
+                      </button>
+                    );
                   }
-                </button>
+                  
+                  if (isLastLesson) {
+                    // Última lección del módulo - solo mostrar botón "Completar Módulo"
+                    const canComplete = canCompleteModuleWithPrerequisites(currentModuleId);
+                    return (
+                      <button 
+                        className={`btn btn-large ${canComplete ? 'btn-success' : 'btn-secondary'}`}
+                        onClick={() => handleCompleteModule(currentModuleId)}
+                        disabled={!canComplete}
+                        style={{ 
+                          fontSize: '1.1em', 
+                          padding: '12px 24px',
+                          opacity: canComplete ? 1 : 0.6,
+                          cursor: canComplete ? 'pointer' : 'not-allowed'
+                        }}
+                        title={canComplete ? 'Completar módulo' : 'Completa todas las lecciones anteriores del módulo primero'}
+                      >
+                        🏆 Completar {getModuleTitle(currentModuleId).split(':')[0]}
+                      </button>
+                    );
+                  } else {
+                    // Lección regular - mostrar botón "Completar Lección" si no está completada
+                    return !isCurrentLessonCompleted ? (
+                      <button
+                        className={`btn ${
+                          isLessonCompleted(courseData.lessons[progress.currentLesson]?.id)
+                            ? 'btn-success'
+                            : 'btn-primary'
+                        }`}
+                        onClick={() => handleMarkLessonComplete(courseData.lessons[progress.currentLesson]?.id)}
+                        disabled={isSaving}
+                      >
+                        {isSaving ? 'Guardando...' : 
+                         isLessonCompleted(courseData.lessons[progress.currentLesson]?.id) 
+                           ? '✓ Completada' 
+                           : 'Marcar como Completada'
+                        }
+                      </button>
+                    ) : null;
+                  }
+                })()}
 
                 <button
                   className="btn btn-primary"
@@ -654,6 +919,25 @@ export default function ContenidoVibeCodingClaudeCursorPage() {
       </div>
 
       <Footer />
+
+      {/* Notificaciones de logros */}
+      <AchievementNotification
+        isVisible={showModuleNotification}
+        onClose={() => setShowModuleNotification(false)}
+        type={achievementData.type}
+        title={achievementData.title}
+        message={achievementData.message}
+        stats={achievementData.stats}
+      />
+
+      <AchievementNotification
+        isVisible={showCourseNotification}
+        onClose={() => setShowCourseNotification(false)}
+        type={achievementData.type}
+        title={achievementData.title}
+        message={achievementData.message}
+        stats={achievementData.stats}
+      />
 
       <style jsx>{`
         .loading-container {

@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
     }
     
     // Verificar autenticación
-    const cookieToken = request.cookies.get('auth-token')?.value;
+    const cookieToken = request.cookies.get('session')?.value;
     const headerToken = extractTokenFromHeader(request);
     const token = cookieToken || headerToken;
     

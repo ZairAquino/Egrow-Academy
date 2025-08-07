@@ -77,7 +77,12 @@
       "WebFetch(domain:egrowacademy.com)",
       "Bash(del scriptstest-badge-customization.ts)",
       "Bash(del:*)",
-      "Bash(timeout 3 npm run dev)"
+      "Bash(timeout 3 npm run dev)",
+      "Bash(if [ -f \"C:/Users/think/Downloads/Rick.png\" ])",
+      "Bash(then echo \"Rick.png exists\")",
+      "Bash(else echo \"Rick.png not found\")",
+      "Bash(fi)",
+      "Bash(sed:*)"
     ],
     "deny": []
   }

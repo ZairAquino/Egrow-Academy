@@ -31,7 +31,7 @@ const featuredCourses = [
     level: "Principiante",
     link: "/curso/mockup-cero",
     isFree: true
-  }
+  },
 ];
 
 export default function FeaturedCourses() {

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAchievements } from '@/hooks/useAchievements';
 import { ProgressIndicator, ProgressGrid, LinearProgress } from '@/components/ui/ProgressIndicator';
-import { AchievementNotification, useAchievements as useAchievementNotifications } from '@/components/ui/AchievementNotification';
+import AchievementNotification, { useAchievements as useAchievementNotifications } from '@/components/ui/AchievementNotification';
 
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
@@ -22,6 +22,7 @@ interface Course {
   status: 'enrolled' | 'in_progress' | 'completed';
   lastAccessed?: Date;
   completedAt?: Date;
+  slug: string;
 }
 
 interface UserCourse {

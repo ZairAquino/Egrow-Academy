@@ -8,29 +8,29 @@ datasource db {
 }
 
 model User {
-  id                      String                 @id @default(cuid())
-  email                   String                 @unique
+  id                      String                   @id @default(cuid())
+  email                   String                   @unique
   passwordHash            String?
   firstName               String
   lastName                String
-  username                String?                @unique
+  username                String?                  @unique
   profileImage            String?
   bio                     String?
-  membershipLevel         MembershipLevel        @default(FREE)
-  isActive                Boolean                @default(true)
-  emailVerified           Boolean                @default(false)
-  createdAt               DateTime               @default(now())
-  updatedAt               DateTime               @updatedAt
+  membershipLevel         MembershipLevel          @default(FREE)
+  isActive                Boolean                  @default(true)
+  emailVerified           Boolean                  @default(false)
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
   lastLogin               DateTime?
   verificationCode        String?
-  stripeCustomerId        String?                @unique
+  stripeCustomerId        String?                  @unique
   verificationCodeExpires DateTime?
   country                 String?
-  hasBeenPremium          Boolean                @default(false)
+  hasBeenPremium          Boolean                  @default(false)
   achievements            Achievement[]
   comments                Comment[]
   posts                   CommunityPost[]
-  courses                 Course[]               @relation("CourseInstructor")
+  courses                 Course[]                 @relation("CourseInstructor")
   enrollments             Enrollment[]
   eventRegistrations      EventRegistration[]
   likes                   Like[]
@@ -41,15 +41,15 @@ model User {
   resourceAccessLogs      ResourceAccessLog[]
   securityLogs            SecurityLog[]
   sessions                Session[]
+  streakRecoveryHistory   StreakRecoveryHistory[]
   subscriptions           Subscription[]
   userBehaviors           UserBehavior[]
-  userPreferences         UserPreference?
-  userStreaks             UserStreak[]
-  weeklyLessonCompletions WeeklyLessonCompletion[]
-  userStreakBadges        UserStreakBadge[]
   userPointsHistory       UserPointsHistory[]
-  streakRecoveryHistory   StreakRecoveryHistory[]
+  userPreferences         UserPreference?
+  userStreakBadges        UserStreakBadge[]
+  userStreaks             UserStreak[]
   webinarRegistrations    WebinarRegistration[]
+  weeklyLessonCompletions WeeklyLessonCompletion[]
 
   @@index([membershipLevel])
   @@index([email, membershipLevel])
@@ -168,6 +168,7 @@ model CourseProgress {
   id                 String               @id @default(cuid())
   enrollmentId       String               @unique
   currentLesson      Int                  @default(0)
+  completedLessons   String[]             @default([])
   progressPercentage Decimal              @default(0)
   lastAccessed       DateTime             @default(now())
   startedAt          DateTime             @default(now())
@@ -178,7 +179,6 @@ model CourseProgress {
   longestSession     Int                  @default(0)
   status             CourseProgressStatus @default(IN_PROGRESS)
   courseSpecificData Json?
-  completedLessons   String[]             @default([])
   enrollment         Enrollment           @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
   lessonProgress     LessonProgress[]
 
@@ -507,18 +507,18 @@ model UserBehavior {
 }
 
 model UserPreference {
-  id                String   @id @default(cuid())
-  userId            String   @unique
-  interests         String[]
-  skillLevel        String?
-  learningGoals     String[]
-  preferredTopics   String[]
-  badgeCustomization String? @map("badge_customization") // JSON field for badge preferences
-  notificationPreferences String? @map("notification_preferences") // JSON field for notification settings
-  privacySettings   String? @map("privacy_settings") // JSON field for privacy settings
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                      String   @id @default(cuid())
+  userId                  String   @unique
+  interests               String[]
+  skillLevel              String?
+  learningGoals           String[]
+  preferredTopics         String[]
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+  badgeCustomization      String?  @map("badge_customization")
+  notificationPreferences String?  @map("notification_preferences")
+  privacySettings         String?  @map("privacy_settings")
+  user                    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("user_preferences")
 }
@@ -557,6 +557,151 @@ model Achievement {
   @@index([userId, type])
   @@index([createdAt])
   @@map("achievements")
+}
+
+model UserStreak {
+  id                    String    @id @default(cuid())
+  userId                String
+  weekStartDate         DateTime
+  currentWeekLessons    Int       @default(0)
+  currentStreak         Int       @default(0)
+  longestStreak         Int       @default(0)
+  totalPoints           Int       @default(0)
+  lifetimePointsEarned  Int       @default(0)
+  isCurrentWeekComplete Boolean   @default(false)
+  lastLessonCompletedAt DateTime?
+  pointsSpentOnRecovery Int       @default(0)
+  recoveryCount         Int       @default(0)
+  lastRecoveryUsed      DateTime?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, weekStartDate], name: "user_streaks_unique_user_week")
+  @@index([userId])
+  @@index([weekStartDate])
+  @@map("user_streaks")
+}
+
+model WeeklyLessonCompletion {
+  id                     String    @id @default(cuid())
+  userId                 String
+  weekStart              DateTime
+  courseId               String
+  lessonsCompletedInWeek Int       @default(0)
+  lastLessonAt           DateTime?
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+  user                   User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, weekStart, courseId], name: "weekly_lesson_completions_unique")
+  @@index([userId, weekStart])
+  @@index([weekStart])
+  @@map("weekly_lesson_completions")
+}
+
+model UserStreakBadge {
+  id               String           @id @default(cuid())
+  userId           String
+  badgeLevel       StreakBadgeLevel
+  streakWhenEarned Int
+  isActive         Boolean          @default(true)
+  earnedAt         DateTime         @default(now())
+  user             User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, badgeLevel], name: "user_streak_badges_unique_user_badge")
+  @@index([userId])
+  @@index([badgeLevel])
+  @@map("user_streak_badges")
+}
+
+model UserPointsHistory {
+  id               String               @id @default(cuid())
+  userId           String
+  pointsEarned     Int
+  transactionType  PointTransactionType
+  reason           String
+  weekStart        DateTime?
+  lessonsCompleted Int?
+  coursesUsed      Int?
+  createdAt        DateTime             @default(now())
+  user             User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([transactionType])
+  @@map("user_points_history")
+}
+
+model StreakRecoveryHistory {
+  id                 String           @id @default(cuid())
+  userId             String
+  pointsSpent        Int
+  badgeLevel         StreakBadgeLevel
+  recoveryReason     String?
+  originalStreakLost Int
+  weekMissed         DateTime
+  recoveredAt        DateTime         @default(now())
+  user               User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([recoveredAt])
+  @@map("streak_recovery_history")
+}
+
+model Webinar {
+  id               String                @id @default(cuid())
+  title            String
+  slug             String                @unique
+  description      String
+  shortDescription String?
+  imageUrl         String?
+  videoUrl         String?
+  dateTime         DateTime
+  duration         Int
+  maxAttendees     Int?
+  currentAttendees Int                   @default(0)
+  isActive         Boolean               @default(true)
+  isFree           Boolean               @default(true)
+  price            Decimal               @default(0)
+  category         String?
+  tags             String[]
+  hostName         String?
+  hostBio          String?
+  zoomLink         String?
+  meetingId        String?
+  password         String?
+  recordingUrl     String?
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @updatedAt
+  registrations    WebinarRegistration[]
+
+  @@index([dateTime, isActive])
+  @@index([category])
+  @@index([slug])
+  @@map("webinars")
+}
+
+model WebinarRegistration {
+  id           String   @id @default(cuid())
+  webinarId    String
+  userId       String?
+  email        String
+  firstName    String
+  lastName     String
+  phone        String?
+  questions    String?
+  isConfirmed  Boolean  @default(false)
+  reminderSent Boolean  @default(false)
+  attended     Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User?    @relation(fields: [userId], references: [id])
+  webinar      Webinar  @relation(fields: [webinarId], references: [id], onDelete: Cascade)
+
+  @@unique([webinarId, email])
+  @@index([webinarId, createdAt])
+  @@index([email])
+  @@map("webinar_registrations")
 }
 
 enum CourseProgressStatus {
@@ -717,99 +862,6 @@ enum InteractionAction {
   CONVERSION
 }
 
-// =================
-// STREAK SYSTEM MODELS
-// =================
-
-model UserStreak {
-  id                      String   @id @default(cuid())
-  userId                  String
-  weekStartDate           DateTime
-  currentWeekLessons      Int      @default(0)
-  currentStreak           Int      @default(0)
-  longestStreak           Int      @default(0)
-  totalPoints             Int      @default(0)
-  lifetimePointsEarned    Int      @default(0)
-  isCurrentWeekComplete   Boolean  @default(false)
-  lastLessonCompletedAt   DateTime?
-  pointsSpentOnRecovery   Int      @default(0)
-  recoveryCount           Int      @default(0)
-  lastRecoveryUsed        DateTime?
-  createdAt               DateTime @default(now())
-  updatedAt               DateTime @updatedAt
-  user                    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, weekStartDate], name: "user_streaks_unique_user_week")
-  @@index([userId])
-  @@index([weekStartDate])
-  @@map("user_streaks")
-}
-
-model WeeklyLessonCompletion {
-  id                     String   @id @default(cuid())
-  userId                 String
-  weekStart              DateTime
-  courseId               String
-  lessonsCompletedInWeek Int      @default(0)
-  lastLessonAt           DateTime?
-  createdAt              DateTime @default(now())
-  updatedAt              DateTime @updatedAt
-  user                   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, weekStart, courseId], name: "weekly_lesson_completions_unique")
-  @@index([userId, weekStart])
-  @@index([weekStart])
-  @@map("weekly_lesson_completions")
-}
-
-model UserStreakBadge {
-  id               String           @id @default(cuid())
-  userId           String
-  badgeLevel       StreakBadgeLevel
-  streakWhenEarned Int
-  isActive         Boolean          @default(true)
-  earnedAt         DateTime         @default(now())
-  user             User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, badgeLevel], name: "user_streak_badges_unique_user_badge")
-  @@index([userId])
-  @@index([badgeLevel])
-  @@map("user_streak_badges")
-}
-
-model UserPointsHistory {
-  id               String              @id @default(cuid())
-  userId           String
-  pointsEarned     Int
-  transactionType  PointTransactionType
-  reason           String
-  weekStart        DateTime?
-  lessonsCompleted Int?
-  coursesUsed      Int?
-  createdAt        DateTime            @default(now())
-  user             User                @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId, createdAt])
-  @@index([transactionType])
-  @@map("user_points_history")
-}
-
-model StreakRecoveryHistory {
-  id                String           @id @default(cuid())
-  userId            String
-  pointsSpent       Int
-  badgeLevel        StreakBadgeLevel
-  recoveryReason    String?
-  originalStreakLost Int
-  weekMissed        DateTime
-  recoveredAt       DateTime         @default(now())
-  user              User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@index([recoveredAt])
-  @@map("streak_recovery_history")
-}
-
 enum StreakBadgeLevel {
   PRINCIPIANTE
   ESTUDIANTE
@@ -825,60 +877,4 @@ enum PointTransactionType {
   RECOVERY_SPENT
   BONUS_EARNED
   ACHIEVEMENT_REWARD
-}
-
-model Webinar {
-  id                String           @id @default(cuid())
-  title             String
-  slug              String           @unique
-  description       String
-  shortDescription  String?
-  imageUrl          String?
-  videoUrl          String?
-  dateTime          DateTime
-  duration          Int              // en minutos
-  maxAttendees      Int?
-  currentAttendees  Int              @default(0)
-  isActive          Boolean          @default(true)
-  isFree            Boolean          @default(true)
-  price             Decimal          @default(0)
-  category          String?
-  tags              String[]
-  hostName          String?
-  hostBio           String?
-  zoomLink          String?
-  meetingId         String?
-  password          String?
-  recordingUrl      String?
-  createdAt         DateTime         @default(now())
-  updatedAt         DateTime         @updatedAt
-  registrations     WebinarRegistration[]
-
-  @@index([dateTime, isActive])
-  @@index([category])
-  @@index([slug])
-  @@map("webinars")
-}
-
-model WebinarRegistration {
-  id          String   @id @default(cuid())
-  webinarId   String
-  userId      String?
-  email       String
-  firstName   String
-  lastName    String
-  phone       String?
-  questions   String?
-  isConfirmed Boolean  @default(false)
-  reminderSent Boolean  @default(false)
-  attended    Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  webinar     Webinar  @relation(fields: [webinarId], references: [id], onDelete: Cascade)
-  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
-
-  @@unique([webinarId, email])
-  @@index([webinarId, createdAt])
-  @@index([email])
-  @@map("webinar_registrations")
 }

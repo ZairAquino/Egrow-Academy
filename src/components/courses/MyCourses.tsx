@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
-import Image from 'next/image';
+import UserCourseCard from './UserCourseCard';
 
 interface UserCourse {
   id: string;
@@ -51,30 +51,7 @@ export default function MyCourses() {
     }
   };
 
-  const formatLastAccessed = (date: Date) => {
-    const now = new Date();
-    const diffTime = Math.abs(now.getTime() - new Date(date).getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
-    if (diffDays === 1) return 'Hace 1 día';
-    if (diffDays < 7) return `Hace ${diffDays} días`;
-    if (diffDays < 30) return `Hace ${Math.ceil(diffDays / 7)} semanas`;
-    return `Hace ${Math.ceil(diffDays / 30)} meses`;
-  };
 
-  const getProgressColor = (progress: number) => {
-    if (progress === 0) return '#e5e7eb';
-    if (progress < 30) return '#fbbf24';
-    if (progress < 70) return '#3b82f6';
-    if (progress < 100) return '#10b981';
-    return '#059669';
-  };
-
-  const getProgressText = (progress: number) => {
-    if (progress === 0) return 'Sin empezar';
-    if (progress < 100) return 'En progreso';
-    return '¡Completado!';
-  };
 
   // Funciones del carrusel
   const nextSlide = () => {
@@ -190,78 +167,14 @@ export default function MyCourses() {
             }}
           >
             {sortedCourses.map((course) => (
-            <div key={course.id} className="course-card">
-              <div className="course-image">
-                {course.imageUrl ? (
-                  <Image
-                    src={course.imageUrl}
-                    alt={course.title}
-                    width={300}
-                    height={200}
-                    className="course-img"
-                  />
-                ) : (
-                  <div className="course-placeholder">
-                    <span>📚</span>
-                  </div>
-                )}
-                <div className="course-progress-overlay">
-                  <div 
-                    className="progress-circle"
-                    style={{"--progress": `${course.progress}%`} as React.CSSProperties}
-                  >
-                    <span className="progress-text">{Math.round(course.progress)}%</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="course-content">
-                <div className="course-meta">
-                  <span className="course-category">{course.category}</span>
-                  <span className="course-level">{course.level}</span>
-                </div>
-
-                <h3 className="course-title">{course.title}</h3>
-                <p className="course-description">
-                  {course.description.length > 100 
-                    ? `${course.description.substring(0, 100)}...` 
-                    : course.description
-                  }
-                </p>
-
-                <div className="course-stats">
-                  <div className="stat">
-                    <span className="stat-icon">📖</span>
-                    <span>{course.completedLessons}/{course.totalLessons} lecciones</span>
-                  </div>
-                  <div className="stat">
-                    <span className="stat-icon">🕒</span>
-                    <span>{formatLastAccessed(course.lastAccessed)}</span>
-                  </div>
-                </div>
-
-                <div className="progress-bar">
-                  <div 
-                    className="progress-fill"
-                    style={{
-                      width: `${course.progress}%`,
-                      backgroundColor: getProgressColor(course.progress)
-                    }}
-                  ></div>
-                </div>
-                <p className="progress-label">{getProgressText(course.progress)}</p>
-
-                <div className="course-actions">
-                  <Link 
-                    href={`/curso/${course.slug}`}
-                    className="btn btn-primary continue-btn"
-                  >
-                    {course.progress === 0 ? 'Comenzar' : 'Continuar'}
-                  </Link>
-                </div>
-              </div>
-            </div>
-          ))}
+              <UserCourseCard
+                key={course.id}
+                id={course.id}
+                title={course.title}
+                slug={course.slug}
+                imageUrl={course.imageUrl}
+              />
+            ))}
           </div>
         </div>
 
@@ -401,179 +314,7 @@ export default function MyCourses() {
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
 
-        .course-card {
-          background: white;
-          border-radius: 16px;
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-          transition: all 0.3s ease;
-          overflow: hidden;
-          border: 1px solid #e5e7eb;
-          min-width: 350px;
-          flex: 0 0 350px;
-        }
 
-        .course-card:hover {
-          transform: translateY(-8px);
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
-        }
-
-        .course-image {
-          position: relative;
-          height: 200px;
-          overflow: hidden;
-        }
-
-        .course-img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-
-        .course-placeholder {
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 3rem;
-          color: white;
-        }
-
-        .course-progress-overlay {
-          position: absolute;
-          top: 1rem;
-          right: 1rem;
-        }
-
-        .progress-circle {
-          width: 60px;
-          height: 60px;
-          border-radius: 50%;
-          background: conic-gradient(
-            #10b981 0deg,
-            #10b981 calc(var(--progress) * 3.6deg),
-            rgba(255, 255, 255, 0.3) calc(var(--progress) * 3.6deg)
-          );
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          backdrop-filter: blur(10px);
-          border: 2px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .progress-text {
-          font-size: 0.875rem;
-          font-weight: 700;
-          color: white;
-          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-        }
-
-        .course-content {
-          padding: 1.5rem;
-        }
-
-        .course-meta {
-          display: flex;
-          gap: 0.5rem;
-          margin-bottom: 1rem;
-        }
-
-        .course-category,
-        .course-level {
-          padding: 0.25rem 0.75rem;
-          border-radius: 20px;
-          font-size: 0.75rem;
-          font-weight: 600;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-        }
-
-        .course-category {
-          background: #dbeafe;
-          color: #1e40af;
-        }
-
-        .course-level {
-          background: #f3e8ff;
-          color: #7c3aed;
-        }
-
-        .course-title {
-          font-size: 1.25rem;
-          font-weight: 700;
-          color: #1f2937;
-          margin: 0 0 0.75rem 0;
-          line-height: 1.4;
-        }
-
-        .course-description {
-          color: #6b7280;
-          line-height: 1.6;
-          margin: 0 0 1.5rem 0;
-        }
-
-        .course-stats {
-          display: flex;
-          gap: 1.5rem;
-          margin-bottom: 1rem;
-        }
-
-        .stat {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          font-size: 0.875rem;
-          color: #6b7280;
-        }
-
-        .stat-icon {
-          font-size: 1rem;
-        }
-
-        .progress-bar {
-          width: 100%;
-          height: 8px;
-          background: #e5e7eb;
-          border-radius: 4px;
-          overflow: hidden;
-          margin-bottom: 0.5rem;
-        }
-
-        .progress-fill {
-          height: 100%;
-          transition: width 0.3s ease;
-        }
-
-        .progress-label {
-          font-size: 0.875rem;
-          color: #6b7280;
-          text-align: right;
-          margin: 0 0 1.5rem 0;
-        }
-
-        .course-actions {
-          display: flex;
-          justify-content: center;
-        }
-
-        .continue-btn {
-          width: 100%;
-          padding: 0.75rem 1.5rem;
-          font-weight: 600;
-          border-radius: 8px;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          text-decoration: none;
-          text-align: center;
-          transition: all 0.3s ease;
-          border: none;
-        }
-
-        .continue-btn:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-        }
 
         .view-all-section {
           text-align: center;
@@ -656,11 +397,6 @@ export default function MyCourses() {
         }
 
         @media (max-width: 1024px) {
-          .course-card {
-            min-width: 320px;
-            flex: 0 0 320px;
-          }
-
           .header-content {
             flex-direction: column;
             text-align: center;
@@ -674,16 +410,6 @@ export default function MyCourses() {
         @media (max-width: 768px) {
           .section-header h2 {
             font-size: 2rem;
-          }
-
-          .course-card {
-            min-width: 280px;
-            flex: 0 0 280px;
-          }
-          
-          .course-stats {
-            flex-direction: column;
-            gap: 0.75rem;
           }
 
           .carousel-btn {

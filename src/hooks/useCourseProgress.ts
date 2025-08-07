@@ -40,6 +40,7 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
       case 'videos-profesionales-ia': return 21;
       case 'mockup-cero': return 8;
       case 'monetiza-ia': return 8;
+      case 'guiones-videos-promocionales-ia': return 15; // 5 módulos x 3 lecciones cada uno
       default: return 18;
     }
   };

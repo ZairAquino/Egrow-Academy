@@ -449,18 +449,45 @@ Estrategias para aumentar RPH:
           setIsEnrolled(data.isEnrolled);
         }
       } else {
-        const errorData = await response.json();
+        let errorData = {};
+        try {
+          errorData = await response.json();
+        } catch (parseError) {
+          console.log('🔍 [DEBUG] No se pudo parsear respuesta JSON, usando texto plano');
+          errorData = { message: 'Error de respuesta del servidor' };
+        }
         console.error('🔍 [DEBUG] Error en respuesta:', errorData);
         
         // Si el error es de autenticación, redirigir al login
         if (response.status === 401) {
-          console.log('🔍 [DEBUG] Error 401 - Redirigiendo al login');
+          console.log('🔍 [DEBUG] Error 401 - Token expirado o inválido, redirigiendo al login');
           router.push('/login?redirect=/curso/monetiza-ia/contenido');
           return;
         }
         
-        // Para otros errores, redirigir a página del curso
-        router.push('/curso/monetiza-ia');
+        // Para otros errores, intentar inscripción directa
+        console.log('🔍 [DEBUG] Error no es 401, intentando inscripción directa...');
+        try {
+          const enrollResponse = await fetch('/api/courses/enroll', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ courseId: courseData.id }),
+            credentials: 'include',
+          });
+          
+          if (enrollResponse.ok) {
+            console.log('✅ [DEBUG] Usuario inscrito exitosamente tras error');
+            setIsEnrolled(true);
+          } else {
+            console.error('❌ [DEBUG] Error en inscripción tras error');
+            router.push('/curso/monetiza-ia');
+          }
+        } catch (enrollError) {
+          console.error('❌ [DEBUG] Error crítico en inscripción:', enrollError);
+          router.push('/curso/monetiza-ia');
+        }
       }
     } catch (error) {
       console.error('Error verificando inscripción:', error);

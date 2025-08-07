@@ -70,6 +70,20 @@ export default function CursosGratuitosPage() {
       source: 'eGrow Academy',
       link: '/curso/mockup-cero'
     },
+    // Curso - Guiones para videos promocionales con IA
+    {
+      id: 'guiones-videos-promocionales-ia',
+      title: 'Guiones para videos promocionales con IA',
+      description: 'Aprende a crear guiones efectivos para videos promocionales usando herramientas de IA como ChatGPT y Claude.',
+      duration: '2 horas',
+      level: 'Principiante',
+      price: 'Gratis',
+      image: '/images/20.png',
+      tag: 'eGrow Academy',
+      instructor: 'eGrow Academy',
+      source: 'eGrow Academy',
+      link: '/curso/guiones-videos-promocionales-ia'
+    },
 
   ];
 

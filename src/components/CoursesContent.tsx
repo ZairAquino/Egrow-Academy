@@ -38,10 +38,10 @@ interface Course {
 
 // Categorías disponibles
 const categories = [
-  { id: 'all', name: 'Todos los Cursos', icon: '📚', count: 6 },
+  { id: 'all', name: 'Todos los Cursos', icon: '📚', count: 7 },
   { id: 'IA_PARA_EMPRENDER', name: 'IA para Emprender', icon: '🚀', count: 2 },
   { id: 'DESARROLLO_WEB', name: 'Desarrollo Web', icon: '💻', count: 2 },
-  { id: 'MARKETING_DIGITAL', name: 'Marketing Digital', icon: '📈', count: 1 },
+  { id: 'MARKETING_DIGITAL', name: 'Marketing Digital', icon: '📈', count: 2 },
   { id: 'HABILIDADES_IRREMPLAZABLES', name: 'Habilidades Irremplazables', icon: '🎆', count: 1 },
   { id: 'PRODUCTIVIDAD', name: 'Productividad', icon: '⚡', count: 0 },
   { id: 'FINANZAS_PERSONALES', name: 'Finanzas Personales', icon: '💰', count: 0 },
@@ -214,6 +214,20 @@ export default function CoursesContent() {
         requiresAuth: true,
         priceId: 'price_videos_profesionales_ia',
         link: '/curso/videos-profesionales-ia'
+      },
+      {
+        id: 'guiones-videos-promocionales-ia',
+        title: 'Guiones para videos promocionales con IA',
+        description: 'Aprende a crear guiones efectivos para videos promocionales usando herramientas de IA como ChatGPT y Claude.',
+        category: 'MARKETING_DIGITAL',
+        duration: '2 horas',
+        level: 'Principiante',
+        price: 'Gratis',
+        image: '/images/20.png',
+        tag: 'Gratis',
+        isFree: true,
+        requiresAuth: false,
+        link: '/curso/guiones-videos-promocionales-ia'
       }
     ];
 

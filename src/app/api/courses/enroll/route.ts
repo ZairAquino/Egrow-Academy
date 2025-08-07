@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
     
     // Verificar token de autenticación
     const token = request.headers.get('authorization')?.replace('Bearer ', '') || 
-                  request.cookies.get('auth-token')?.value;
+                  request.cookies.get('session')?.value;
 
     if (!token) {
       console.log('❌ [ENROLL] No hay token');

@@ -8,6 +8,7 @@ import Navbar from '@/components/layout/Navbar';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCourseProgress } from '@/hooks/useCourseProgress';
 import VideoPlayer from '@/components/courses/VideoPlayer';
+import AchievementNotification from '@/components/ui/AchievementNotification';
 
 export default function ContenidoVideosProfesionalesIAPage() {
   
@@ -15,6 +16,20 @@ export default function ContenidoVideosProfesionalesIAPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [isCheckingEnrollment, setIsCheckingEnrollment] = useState(true);
   const [expandedModules, setExpandedModules] = useState<Set<number>>(new Set());
+  
+  // Estados para notificaciones de logros
+  const [showModuleNotification, setShowModuleNotification] = useState(false);
+  const [showCourseNotification, setShowCourseNotification] = useState(false);
+  const [achievementData, setAchievementData] = useState({
+    type: 'module' as 'module' | 'course',
+    title: '',
+    message: '',
+    stats: {
+      completed: 0,
+      total: 0,
+      percentage: 0
+    }
+  });
   const { user } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
@@ -1364,18 +1379,45 @@ export default function ContenidoVideosProfesionalesIAPage() {
           setIsEnrolled(data.isEnrolled);
         }
       } else {
-        const errorData = await response.json();
+        let errorData = {};
+        try {
+          errorData = await response.json();
+        } catch (parseError) {
+          console.log('🔍 [DEBUG] No se pudo parsear respuesta JSON, usando texto plano');
+          errorData = { message: 'Error de respuesta del servidor' };
+        }
         console.error('🔍 [DEBUG] Error en respuesta:', errorData);
         
         // Si el error es de autenticación, redirigir al login
         if (response.status === 401) {
-          console.log('🔍 [DEBUG] Error 401 - Redirigiendo al login');
+          console.log('🔍 [DEBUG] Error 401 - Token expirado o inválido, redirigiendo al login');
           router.push('/login?redirect=/curso/videos-profesionales-ia/contenido');
           return;
         }
         
-        // Para otros errores, redirigir a página del curso
-        router.push('/curso/videos-profesionales-ia');
+        // Para otros errores, intentar inscripción directa
+        console.log('🔍 [DEBUG] Error no es 401, intentando inscripción directa...');
+        try {
+          const enrollResponse = await fetch('/api/courses/enroll', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ courseId: courseData.id }),
+            credentials: 'include',
+          });
+          
+          if (enrollResponse.ok) {
+            console.log('✅ [DEBUG] Usuario inscrito exitosamente tras error');
+            setIsEnrolled(true);
+          } else {
+            console.error('❌ [DEBUG] Error en inscripción tras error');
+            router.push('/curso/videos-profesionales-ia');
+          }
+        } catch (enrollError) {
+          console.error('❌ [DEBUG] Error crítico en inscripción:', enrollError);
+          router.push('/curso/videos-profesionales-ia');
+        }
       }
     } catch (error) {
       console.error('Error verificando inscripción:', error);
@@ -1615,13 +1657,34 @@ export default function ContenidoVideosProfesionalesIAPage() {
 
     // Si el curso ya está completado, no permitir completar módulos
     if (isCourseCompleted()) {
-      alert('Este curso ya está completado. Estás en modo de revisión.');
+      setAchievementData({
+        type: 'module',
+        title: 'Curso Ya Completado',
+        message: 'Este curso ya está completado. Estás en modo de revisión.',
+        stats: {
+          completed: courseData.lessons.length,
+          total: courseData.lessons.length,
+          percentage: 100
+        }
+      });
+      setShowModuleNotification(true);
       return;
     }
 
     // Verificar que se puedan completar todas las lecciones anteriores del módulo
     if (!canCompleteModuleWithPrerequisites(moduleId)) {
-      alert('Debes completar todas las lecciones anteriores del módulo antes de poder completarlo.');
+      const moduleProgress = getModuleProgress(moduleId);
+      setAchievementData({
+        type: 'module',
+        title: 'Completa las Lecciones Anteriores',
+        message: 'Debes completar todas las lecciones anteriores del módulo antes de poder completarlo.',
+        stats: {
+          completed: moduleProgress.completed,
+          total: moduleProgress.total,
+          percentage: Math.round((moduleProgress.completed / moduleProgress.total) * 100)
+        }
+      });
+      setShowModuleNotification(true);
       return;
     }
     
@@ -1655,9 +1718,21 @@ export default function ContenidoVideosProfesionalesIAPage() {
       10 // Tiempo adicional por completar módulo
     );
 
-    // Mostrar mensaje de éxito
+    // Mostrar notificación de éxito
     const moduleTitle = getModuleTitle(moduleId);
-    alert(`¡Felicitaciones! Has completado el ${moduleTitle} 🎉`);
+    const moduleProgress = getModuleProgress(moduleId);
+    
+    setAchievementData({
+      type: 'module',
+      title: `¡Módulo Completado!`,
+      message: `¡Felicitaciones! Has completado exitosamente el ${moduleTitle}. Continúa con el siguiente módulo para avanzar en tu aprendizaje.`,
+      stats: {
+        completed: moduleProgress.completed,
+        total: moduleProgress.total,
+        percentage: Math.round((moduleProgress.completed / moduleProgress.total) * 100)
+      }
+    });
+    setShowModuleNotification(true);
 
     // Si no es el último módulo, avanzar a la primera lección del siguiente módulo
     if (moduleId < 5) {

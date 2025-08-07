@@ -8,6 +8,7 @@ import Navbar from '@/components/layout/Navbar';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCourseProgress } from '@/hooks/useCourseProgress';
 import VideoPlayer from '@/components/courses/VideoPlayer';
+import AchievementNotification from '@/components/ui/AchievementNotification';
 
 export default function ContenidoMockupCeroPage() {
   
@@ -15,6 +16,20 @@ export default function ContenidoMockupCeroPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [isCheckingEnrollment, setIsCheckingEnrollment] = useState(true);
   const [expandedModules, setExpandedModules] = useState<Set<number>>(new Set());
+  
+  // Estados para notificaciones de logros
+  const [showModuleNotification, setShowModuleNotification] = useState(false);
+  const [showCourseNotification, setShowCourseNotification] = useState(false);
+  const [achievementData, setAchievementData] = useState({
+    type: 'module' as 'module' | 'course',
+    title: '',
+    message: '',
+    stats: {
+      completed: 0,
+      total: 0,
+      percentage: 0
+    }
+  });
   const { user } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
@@ -563,31 +578,43 @@ export default function ContenidoMockupCeroPage() {
           setIsEnrolled(data.isEnrolled);
         }
       } else {
-        const errorData = await response.json();
+        let errorData = {};
+        try {
+          errorData = await response.json();
+        } catch (parseError) {
+          console.log('🔍 [DEBUG] No se pudo parsear respuesta JSON, usando texto plano');
+          errorData = { message: 'Error de respuesta del servidor' };
+        }
         console.error('🔍 [DEBUG] Error en respuesta:', errorData);
         
         // Si el error es de autenticación, redirigir al login
         if (response.status === 401) {
+          console.log('🔍 [DEBUG] Error 401 - Token expirado o inválido, redirigiendo al login');
           router.push('/login?redirect=/curso/mockup-cero/contenido');
           return;
         }
         
         // Para otros errores, intentar inscripción directa
-        console.log('🔍 [DEBUG] Intentando inscripción directa...');
-        const enrollResponse = await fetch('/api/courses/enroll', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ courseId: courseData.id }),
-          credentials: 'include',
-        });
-        
-        if (enrollResponse.ok) {
-          console.log('✅ [DEBUG] Usuario inscrito exitosamente tras error de conexión');
-          setIsEnrolled(true);
-        } else {
-          console.error('❌ [DEBUG] Error en inscripción tras error de conexión');
+        console.log('🔍 [DEBUG] Error no es 401, intentando inscripción directa...');
+        try {
+          const enrollResponse = await fetch('/api/courses/enroll', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ courseId: courseData.id }),
+            credentials: 'include',
+          });
+          
+          if (enrollResponse.ok) {
+            console.log('✅ [DEBUG] Usuario inscrito exitosamente tras error');
+            setIsEnrolled(true);
+          } else {
+            console.error('❌ [DEBUG] Error en inscripción tras error');
+            router.push('/curso/mockup-cero');
+          }
+        } catch (enrollError) {
+          console.error('❌ [DEBUG] Error crítico en inscripción:', enrollError);
           router.push('/curso/mockup-cero');
         }
       }
@@ -824,12 +851,33 @@ export default function ContenidoMockupCeroPage() {
     if (!isEnrolled) return;
 
     if (isCourseCompleted()) {
-      alert('Este curso ya está completado. Estás en modo de revisión.');
+      setAchievementData({
+        type: 'module',
+        title: 'Curso Ya Completado',
+        message: 'Este curso ya está completado. Estás en modo de revisión.',
+        stats: {
+          completed: courseData.lessons.length,
+          total: courseData.lessons.length,
+          percentage: 100
+        }
+      });
+      setShowModuleNotification(true);
       return;
     }
 
     if (!canCompleteModuleWithPrerequisites(moduleId)) {
-      alert('Debes completar todas las lecciones anteriores del módulo antes de poder completarlo.');
+      const moduleProgress = getModuleProgress(moduleId);
+      setAchievementData({
+        type: 'module',
+        title: 'Completa las Lecciones Anteriores',
+        message: 'Debes completar todas las lecciones anteriores del módulo antes de poder completarlo.',
+        stats: {
+          completed: moduleProgress.completed,
+          total: moduleProgress.total,
+          percentage: Math.round((moduleProgress.completed / moduleProgress.total) * 100)
+        }
+      });
+      setShowModuleNotification(true);
       return;
     }
     
@@ -860,7 +908,19 @@ export default function ContenidoMockupCeroPage() {
     );
 
     const moduleTitle = getModuleTitle(moduleId);
-    alert(`¡Felicitaciones! Has completado el ${moduleTitle} 🎉`);
+    const moduleProgress = getModuleProgress(moduleId);
+    
+    setAchievementData({
+      type: 'module',
+      title: `¡Módulo Completado!`,
+      message: `¡Felicitaciones! Has completado exitosamente el ${moduleTitle}. Continúa con el siguiente módulo para avanzar en tu aprendizaje.`,
+      stats: {
+        completed: moduleProgress.completed,
+        total: moduleProgress.total,
+        percentage: Math.round((moduleProgress.completed / moduleProgress.total) * 100)
+      }
+    });
+    setShowModuleNotification(true);
 
     if (moduleId < 5) {
       const nextModuleLessons = courseData.lessons.filter(lesson => lesson.moduleId === moduleId + 1);
@@ -1263,6 +1323,25 @@ export default function ContenidoMockupCeroPage() {
       </main>
 
       <Footer />
+
+      {/* Notificaciones de logros */}
+      <AchievementNotification
+        isVisible={showModuleNotification}
+        onClose={() => setShowModuleNotification(false)}
+        type={achievementData.type}
+        title={achievementData.title}
+        message={achievementData.message}
+        stats={achievementData.stats}
+      />
+
+      <AchievementNotification
+        isVisible={showCourseNotification}
+        onClose={() => setShowCourseNotification(false)}
+        type={achievementData.type}
+        title={achievementData.title}
+        message={achievementData.message}
+        stats={achievementData.stats}
+      />
 
       <style jsx>{`
         .enrollment-required {

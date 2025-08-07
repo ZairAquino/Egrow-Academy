@@ -70,6 +70,57 @@ const courses = [
     studentsCount: 0,
     rating: 0,
     status: 'PUBLISHED'
+  },
+  {
+    id: 'guiones-videos-promocionales-ia',
+    title: 'Guiones con Inteligencia Artificial para Videos Promocionales y Redes Sociales',
+    slug: 'guiones-videos-promocionales-ia',
+    description: 'En este curso aprenderás a crear guiones efectivos para videos promocionales y contenido en redes sociales utilizando herramientas de inteligencia artificial como ChatGPT, Claude y Copy.ai. A través de ejercicios prácticos, entenderás las diferencias entre los formatos, aprenderás técnicas de persuasión, y dominarás la estructura de contenido que convierte. Este curso es ideal para emprendedores, creadores de contenido, freelancers y equipos de marketing que buscan ahorrar tiempo, optimizar su mensaje y conectar con su audiencia usando IA.',
+    shortDescription: 'Aprende a crear guiones efectivos para videos promocionales usando IA',
+    imageUrl: '/images/20.png',
+    price: 0,
+    isFree: true,
+    requiresAuth: false,
+    difficulty: 'INTERMEDIATE',
+    durationHours: 4,
+    lessonsCount: 8,
+    studentsCount: 0,
+    rating: 0,
+    status: 'PUBLISHED'
+  },
+  {
+    id: 'asistentes-virtuales-ia',
+    title: 'Asistentes virtuales con IA',
+    slug: 'asistentes-virtuales-ia',
+    description: 'Descubre cómo crear y configurar asistentes virtuales inteligentes para automatizar tareas y mejorar la productividad en tu organización. Domina Google Gemini, ChatGPT y otras herramientas de IA.',
+    shortDescription: 'Crea asistentes virtuales inteligentes para automatizar tareas',
+    imageUrl: '/images/18.png',
+    price: 0,
+    isFree: true,
+    requiresAuth: false,
+    difficulty: 'INTERMEDIATE',
+    durationHours: 5,
+    lessonsCount: 21,
+    studentsCount: 0,
+    rating: 0,
+    status: 'PUBLISHED'
+  },
+  {
+    id: 'videos-profesionales-ia',
+    title: 'Aprende a crear videos profesionales con IA',
+    slug: 'videos-profesionales-ia',
+    description: 'Domina las herramientas de IA para crear contenido audiovisual profesional. Aprende a generar videos, editar con inteligencia artificial y optimizar para diferentes plataformas.',
+    shortDescription: 'Crea contenido audiovisual profesional con herramientas de IA',
+    imageUrl: '/images/15.png',
+    price: 49.99,
+    isFree: false,
+    requiresAuth: true,
+    difficulty: 'INTERMEDIATE',
+    durationHours: 18,
+    lessonsCount: 21,
+    studentsCount: 0,
+    rating: 0,
+    status: 'PUBLISHED'
   }
 ];
 

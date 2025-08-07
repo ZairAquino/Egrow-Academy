@@ -10,7 +10,7 @@ export async function GET(
 ) {
   try {
     // Verificar autenticación usando cookies
-    const token = request.cookies.get('auth-token')?.value;
+    const token = request.cookies.get('session')?.value;
     if (!token) {
       return NextResponse.json(
         { hasAccess: false, error: 'No autenticado' },

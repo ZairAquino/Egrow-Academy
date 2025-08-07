@@ -273,40 +273,45 @@ function Counter() {
           setIsEnrolled(data.isEnrolled);
         }
       } else {
-        const errorData = await response.json();
+        let errorData = {};
+        try {
+          errorData = await response.json();
+        } catch (parseError) {
+          console.log('🔍 [DEBUG] No se pudo parsear respuesta JSON, usando texto plano');
+          errorData = { message: 'Error de respuesta del servidor' };
+        }
         console.error('🔍 [DEBUG] Error en respuesta:', errorData);
         
         // Si el error es de autenticación, verificar si realmente no está autenticado
         if (response.status === 401) {
-          console.log('🔍 [DEBUG] Error 401 - Verificando si realmente no está autenticado...');
-          
-          // Intentar inscribir directamente sin verificar inscripción previa
-          try {
-            const enrollResponse = await fetch('/api/courses/enroll', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ courseId: 'desarrollo-web-fullstack' }),
-              credentials: 'include',
-            });
-            
-            if (enrollResponse.ok) {
-              console.log('✅ [DEBUG] Usuario inscrito exitosamente tras error 401');
-              setIsEnrolled(true);
-            } else {
-              console.log('🔍 [DEBUG] Error en inscripción tras 401 - Redirigiendo al login');
-              router.push('/login?redirect=/curso/desarrollo-web-fullstack/contenido');
-            }
-          } catch (enrollError) {
-            console.error('❌ [DEBUG] Error crítico en inscripción:', enrollError);
-            router.push('/login?redirect=/curso/desarrollo-web-fullstack/contenido');
-          }
+          console.log('🔍 [DEBUG] Error 401 - Token expirado o inválido, redirigiendo al login');
+          router.push('/login?redirect=/curso/desarrollo-web-fullstack/contenido');
           return;
         }
         
-        // Para otros errores, redirigir a página del curso
-        router.push('/curso/desarrollo-web-fullstack');
+        // Para otros errores, intentar inscripción directa
+        console.log('🔍 [DEBUG] Error no es 401, intentando inscripción directa...');
+        try {
+          const enrollResponse = await fetch('/api/courses/enroll', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ courseId: 'desarrollo-web-fullstack' }),
+            credentials: 'include',
+          });
+          
+          if (enrollResponse.ok) {
+            console.log('✅ [DEBUG] Usuario inscrito exitosamente tras error');
+            setIsEnrolled(true);
+          } else {
+            console.error('❌ [DEBUG] Error en inscripción tras error');
+            router.push('/curso/desarrollo-web-fullstack');
+          }
+        } catch (enrollError) {
+          console.error('❌ [DEBUG] Error crítico en inscripción:', enrollError);
+          router.push('/curso/desarrollo-web-fullstack');
+        }
       }
     } catch (error) {
       console.error('Error verificando inscripción:', error);

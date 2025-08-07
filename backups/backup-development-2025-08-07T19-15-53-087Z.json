@@ -1,0 +1,253 @@
+{
+  "timestamp": "2025-08-07T19:15:53.086Z",
+  "database": "development",
+  "course": {
+    "id": "cme1lzqod0000e53s63pjgprt",
+    "title": "Guiones para videos promocionales con IA",
+    "slug": "guiones-videos-promocionales-ia",
+    "description": "En este curso aprenderás a crear guiones efectivos para videos promocionales y contenido en redes sociales utilizando herramientas de inteligencia artificial como ChatGPT, Claude y Copy.ai. A través de ejercicios prácticos, entenderás las diferencias entre los formatos, aprenderás técnicas de persuasión, y dominarás la estructura de contenido que convierte. Este curso es ideal para emprendedores, creadores de contenido, freelancers y equipos de marketing que buscan ahorrar tiempo, optimizar su mensaje y conectar con su audiencia usando IA.",
+    "lessonsCount": 19,
+    "lessons": [
+      {
+        "id": "cme1rwpmi0001e5dof6b0gupv",
+        "title": "1.1 Introducción al Copywriting Digital",
+        "content": "Fundamentos básicos del copywriting aplicado a contenido digital",
+        "videoUrl": null,
+        "duration": 15,
+        "order": 1,
+        "createdAt": "2025-08-07T19:11:44.826Z",
+        "updatedAt": "2025-08-07T19:12:19.048Z"
+      },
+      {
+        "id": "cme1qcedn0001e5zwd8au5kj8",
+        "title": "MÓDULO 1: FUNDAMENTOS DEL GUIÓN DIGITAL",
+        "content": "\n          <div style=\"background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 10px; color: white; margin-bottom: 20px;\">\n            <h2 style=\"margin: 0; font-size: 24px;\">📝 MÓDULO 1: FUNDAMENTOS DEL GUIÓN DIGITAL</h2>\n            <p style=\"margin: 10px 0 0 0; opacity: 0.9;\">Aprende los principios básicos de la redacción de guiones para contenido digital</p>\n          </div>\n\n          <div style=\"background-color: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #007bff;\">\n            <h3 style=\"color: #007bff; margin-top: 0;\">🎯 ¿Qué aprenderás en este módulo?</h3>\n            <ul>\n              <li>Fundamentos de copywriting para videos promocionales</li>\n              <li>Estructuras de guiones que convierten</li>\n              <li>Técnicas de persuasión en contenido audiovisual</li>\n              <li>Adaptación de guiones para diferentes redes sociales</li>\n            </ul>\n          </div>\n\n          <div style=\"background-color: #fff3cd; padding: 20px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #ffc107;\">\n            <h3 style=\"color: #856404; margin-top: 0;\">📋 Contenido del Módulo</h3>\n            <ol>\n              <li><strong>1.1 ¿Qué es un guión digital?</strong> - Conceptos básicos</li>\n              <li><strong>1.2 Estructura básica de un guión efectivo</strong> - Hook, desarrollo, CTA</li>\n              <li><strong>1.3 Diferencias entre plataformas</strong> - YouTube, TikTok, Instagram</li>\n            </ol>\n          </div>\n\n          <div style=\"background-color: #d4edda; padding: 20px; border-radius: 10px; border-left: 4px solid #28a745;\">\n            <h3 style=\"color: #155724; margin-top: 0;\">🎯 Objetivos del Módulo</h3>\n            <p>Al finalizar este módulo serás capaz de:</p>\n            <ul>\n              <li>Entender los fundamentos del copywriting digital</li>\n              <li>Crear estructuras de guiones efectivas</li>\n              <li>Adaptar contenido para diferentes plataformas</li>\n              <li>Aplicar técnicas de persuasión básicas</li>\n            </ul>\n          </div>\n        ",
+        "videoUrl": null,
+        "duration": 70,
+        "order": 1,
+        "createdAt": "2025-08-07T18:27:57.515Z",
+        "updatedAt": "2025-08-07T18:27:57.515Z"
+      },
+      {
+        "id": "cme1rs6k10003e5ykqtbqdfq6",
+        "title": "1.2 Estructura de un Guión Efectivo",
+        "content": "Cómo estructurar guiones que convierten y mantienen la atención",
+        "videoUrl": null,
+        "duration": 20,
+        "order": 2,
+        "createdAt": "2025-08-07T19:08:13.490Z",
+        "updatedAt": "2025-08-07T19:08:13.490Z"
+      },
+      {
+        "id": "cme1qcehy0003e5zwmqh5cy75",
+        "title": "MÓDULO 2: HERRAMIENTAS DE IA PARA GUIONES",
+        "content": "\n          <div style=\"background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); padding: 20px; border-radius: 10px; color: #8b4513; margin-bottom: 20px;\">\n            <h2 style=\"margin: 0; font-size: 24px;\">🤖 MÓDULO 2: HERRAMIENTAS DE IA PARA GUIONES</h2>\n            <p style=\"margin: 10px 0 0 0; opacity: 0.9;\">Domina ChatGPT, Claude y otras herramientas de IA para crear guiones efectivos</p>\n          </div>\n\n          <div style=\"background-color: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #007bff;\">\n            <h3 style=\"color: #007bff; margin-top: 0;\">🎯 ¿Qué aprenderás en este módulo?</h3>\n            <ul>\n              <li>Dominio de ChatGPT y Claude para creación de guiones</li>\n              <li>Prompts efectivos para diferentes tipos de contenido</li>\n              <li>Configuración y buenas prácticas de IA</li>\n              <li>Optimización de llamadas a la acción</li>\n            </ul>\n          </div>\n\n          <div style=\"background-color: #fff3cd; padding: 20px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #ffc107;\">\n            <h3 style=\"color: #856404; margin-top: 0;\">📋 Contenido del Módulo</h3>\n            <ol>\n              <li><strong>2.1 Introducción a herramientas de IA</strong> - ChatGPT, Claude, Copy.ai</li>\n              <li><strong>2.2 Prompts efectivos para guiones</strong> - Técnicas de prompting</li>\n              <li><strong>2.3 Configuración y buenas prácticas</strong> - Optimización de resultados</li>\n            </ol>\n          </div>\n\n          <div style=\"background-color: #d4edda; padding: 20px; border-radius: 10px; border-left: 4px solid #28a745;\">\n            <h3 style=\"color: #155724; margin-top: 0;\">🎯 Objetivos del Módulo</h3>\n            <p>Al finalizar este módulo serás capaz de:</p>\n            <ul>\n              <li>Utilizar ChatGPT y Claude para crear guiones</li>\n              <li>Escribir prompts efectivos para diferentes objetivos</li>\n              <li>Configurar herramientas de IA para mejores resultados</li>\n              <li>Optimizar el proceso creativo con IA</li>\n            </ul>\n          </div>\n        ",
+        "videoUrl": null,
+        "duration": 65,
+        "order": 2,
+        "createdAt": "2025-08-07T18:27:57.670Z",
+        "updatedAt": "2025-08-07T18:27:57.670Z"
+      },
+      {
+        "id": "cme1qcek50005e5zwx9o50aoq",
+        "title": "MÓDULO 3: GUIONES PARA VIDEOS PROMOCIONALES",
+        "content": "\n          <div style=\"background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); padding: 20px; border-radius: 10px; color: #2d3748; margin-bottom: 20px;\">\n            <h2 style=\"margin: 0; font-size: 24px;\">🎬 MÓDULO 3: GUIONES PARA VIDEOS PROMOCIONALES</h2>\n            <p style=\"margin: 10px 0 0 0; opacity: 0.9;\">Crea guiones persuasivos para videos promocionales y publicitarios usando AIDA</p>\n          </div>\n\n          <div style=\"background-color: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #007bff;\">\n            <h3 style=\"color: #007bff; margin-top: 0;\">🎯 ¿Qué aprenderás en este módulo?</h3>\n            <ul>\n              <li>Estructura AIDA aplicada al guión</li>\n              <li>Adaptación al tipo de audiencia</li>\n              <li>Técnicas de persuasión avanzadas</li>\n              <li>Análisis y mejora de rendimiento de contenido</li>\n            </ul>\n          </div>\n\n          <div style=\"background-color: #fff3cd; padding: 20px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #ffc107;\">\n            <h3 style=\"color: #856404; margin-top: 0;\">📋 Contenido del Módulo</h3>\n            <ol>\n              <li><strong>3.1 Estructura AIDA aplicada al guión</strong> - Attention, Interest, Desire, Action</li>\n              <li><strong>3.2 Adaptación al tipo de audiencia</strong> - Buyer personas</li>\n              <li><strong>3.3 Técnicas de persuasión</strong> - Psicología del consumidor</li>\n            </ol>\n          </div>\n\n          <div style=\"background-color: #d4edda; padding: 20px; border-radius: 10px; border-left: 4px solid #28a745;\">\n            <h3 style=\"color: #155724; margin-top: 0;\">🎯 Objetivos del Módulo</h3>\n            <p>Al finalizar este módulo serás capaz de:</p>\n            <ul>\n              <li>Aplicar la estructura AIDA en guiones promocionales</li>\n              <li>Adaptar contenido para diferentes audiencias</li>\n              <li>Utilizar técnicas de persuasión efectivas</li>\n              <li>Crear guiones que convierten</li>\n            </ul>\n          </div>\n        ",
+        "videoUrl": null,
+        "duration": 75,
+        "order": 3,
+        "createdAt": "2025-08-07T18:27:57.750Z",
+        "updatedAt": "2025-08-07T18:27:57.750Z"
+      },
+      {
+        "id": "cme1rs6m70005e5yk55mosj7f",
+        "title": "1.3 Psicología de la Persuasión",
+        "content": "Principios psicológicos para crear contenido persuasivo",
+        "videoUrl": null,
+        "duration": 18,
+        "order": 3,
+        "createdAt": "2025-08-07T19:08:13.567Z",
+        "updatedAt": "2025-08-07T19:08:13.567Z"
+      },
+      {
+        "id": "cme1qceme0007e5zw0syicftk",
+        "title": "MÓDULO 4: GUIONES PARA REDES SOCIALES",
+        "content": "\n          <div style=\"background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 10px; color: white; margin-bottom: 20px;\">\n            <h2 style=\"margin: 0; font-size: 24px;\">📱 MÓDULO 4: GUIONES PARA REDES SOCIALES</h2>\n            <p style=\"margin: 10px 0 0 0; opacity: 0.9;\">Adapta tus guiones para diferentes plataformas de redes sociales</p>\n          </div>\n\n          <div style=\"background-color: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #007bff;\">\n            <h3 style=\"color: #007bff; margin-top: 0;\">🎯 ¿Qué aprenderás en este módulo?</h3>\n            <ul>\n              <li>Guiones para redes sociales específicas</li>\n              <li>Guiones para YouTube</li>\n              <li>Guiones para TikTok</li>\n              <li>Proyecto final integrador</li>\n            </ul>\n          </div>\n\n          <div style=\"background-color: #fff3cd; padding: 20px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #ffc107;\">\n            <h3 style=\"color: #856404; margin-top: 0;\">📋 Contenido del Módulo</h3>\n            <ol>\n              <li><strong>4.1 Guiones para redes sociales</strong> - Instagram, Facebook, LinkedIn</li>\n              <li><strong>4.2 Guiones para YouTube</strong> - Shorts, videos largos</li>\n              <li><strong>4.3 Guiones para TikTok</strong> - Trends, viralidad</li>\n              <li><strong>4.4 Proyecto final integrador</strong> - Aplicación práctica</li>\n            </ol>\n          </div>\n\n          <div style=\"background-color: #d4edda; padding: 20px; border-radius: 10px; border-left: 4px solid #28a745;\">\n            <h3 style=\"color: #155724; margin-top: 0;\">🎯 Objetivos del Módulo</h3>\n            <p>Al finalizar este módulo serás capaz de:</p>\n            <ul>\n              <li>Crear guiones optimizados para cada plataforma</li>\n              <li>Adaptar contenido para diferentes formatos</li>\n              <li>Maximizar engagement en redes sociales</li>\n              <li>Aplicar todo lo aprendido en un proyecto final</li>\n            </ul>\n          </div>\n        ",
+        "videoUrl": null,
+        "duration": 100,
+        "order": 4,
+        "createdAt": "2025-08-07T18:27:57.830Z",
+        "updatedAt": "2025-08-07T18:27:57.830Z"
+      },
+      {
+        "id": "cme1rwpv40007e5dovrtqmibl",
+        "title": "1.4 Adaptación para Diferentes Audiencias",
+        "content": "Cómo adaptar el mensaje según el público objetivo",
+        "videoUrl": null,
+        "duration": 17,
+        "order": 4,
+        "createdAt": "2025-08-07T19:11:45.136Z",
+        "updatedAt": "2025-08-07T19:11:45.136Z"
+      },
+      {
+        "id": "cme1qceok0009e5zwtc7xdro5",
+        "title": "MÓDULO 5: OPTIMIZACIÓN Y ANÁLISIS",
+        "content": "\n          <div style=\"background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); padding: 20px; border-radius: 10px; color: #8b4513; margin-bottom: 20px;\">\n            <h2 style=\"margin: 0; font-size: 24px;\">📊 MÓDULO 5: OPTIMIZACIÓN Y ANÁLISIS</h2>\n            <p style=\"margin: 10px 0 0 0; opacity: 0.9;\">Optimiza y analiza el rendimiento de tus guiones para mejorar conversiones</p>\n          </div>\n\n          <div style=\"background-color: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #007bff;\">\n            <h3 style=\"color: #007bff; margin-top: 0;\">🎯 ¿Qué aprenderás en este módulo?</h3>\n            <ul>\n              <li>Métricas clave para evaluar guiones</li>\n              <li>A/B testing de guiones</li>\n              <li>Mejora continua del contenido</li>\n              <li>Automatización del proceso creativo con IA</li>\n            </ul>\n          </div>\n\n          <div style=\"background-color: #fff3cd; padding: 20px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #ffc107;\">\n            <h3 style=\"color: #856404; margin-top: 0;\">📋 Contenido del Módulo</h3>\n            <ol>\n              <li><strong>5.1 Métricas clave para evaluar guiones</strong> - KPIs importantes</li>\n              <li><strong>5.2 A/B testing de guiones</strong> - Optimización basada en datos</li>\n              <li><strong>5.3 Mejora continua del contenido</strong> - Iteración y evolución</li>\n            </ol>\n          </div>\n\n          <div style=\"background-color: #d4edda; padding: 20px; border-radius: 10px; border-left: 4px solid #28a745;\">\n            <h3 style=\"color: #155724; margin-top: 0;\">🎯 Objetivos del Módulo</h3>\n            <p>Al finalizar este módulo serás capaz de:</p>\n            <ul>\n              <li>Medir la efectividad de tus guiones</li>\n              <li>Realizar pruebas A/B para optimizar</li>\n              <li>Implementar mejoras continuas</li>\n              <li>Automatizar procesos creativos con IA</li>\n            </ul>\n          </div>\n        ",
+        "videoUrl": null,
+        "duration": 45,
+        "order": 5,
+        "createdAt": "2025-08-07T18:27:57.908Z",
+        "updatedAt": "2025-08-07T18:27:57.908Z"
+      },
+      {
+        "id": "cme1rwpxa0009e5do66tv7w4f",
+        "title": "2.1 Introducción a ChatGPT para Guiones",
+        "content": "Configuración y primeros pasos con ChatGPT",
+        "videoUrl": null,
+        "duration": 15,
+        "order": 5,
+        "createdAt": "2025-08-07T19:11:45.214Z",
+        "updatedAt": "2025-08-07T19:11:45.214Z"
+      },
+      {
+        "id": "cme1rwpzf000be5doyilsmxpk",
+        "title": "2.2 Prompts Efectivos para Guiones",
+        "content": "Cómo escribir prompts que generen guiones de calidad",
+        "videoUrl": null,
+        "duration": 20,
+        "order": 6,
+        "createdAt": "2025-08-07T19:11:45.291Z",
+        "updatedAt": "2025-08-07T19:11:45.291Z"
+      },
+      {
+        "id": "cme1rs6v4000de5ykowhcurx6",
+        "title": "2.3 Claude AI para Refinamiento",
+        "content": "Uso de Claude para mejorar y pulir guiones",
+        "videoUrl": null,
+        "duration": 15,
+        "order": 7,
+        "createdAt": "2025-08-07T19:08:13.889Z",
+        "updatedAt": "2025-08-07T19:08:13.889Z"
+      },
+      {
+        "id": "cme1rwq3r000fe5dovb9hzjf8",
+        "title": "2.4 Copy.ai para Variaciones",
+        "content": "Generación de múltiples versiones de un guión",
+        "videoUrl": null,
+        "duration": 15,
+        "order": 8,
+        "createdAt": "2025-08-07T19:11:45.447Z",
+        "updatedAt": "2025-08-07T19:11:45.447Z"
+      },
+      {
+        "id": "cme1rwq5w000he5dowurp3of7",
+        "title": "3.1 Estructura AIDA para Videos Promocionales",
+        "content": "Aplicación del método AIDA en videos promocionales",
+        "videoUrl": null,
+        "duration": 20,
+        "order": 9,
+        "createdAt": "2025-08-07T19:11:45.524Z",
+        "updatedAt": "2025-08-07T19:11:45.524Z"
+      },
+      {
+        "id": "cme1rs71q000je5ykpcr6ylmi",
+        "title": "3.2 Hook y Apertura Impactante",
+        "content": "Cómo crear aperturas que capten la atención inmediatamente",
+        "videoUrl": null,
+        "duration": 18,
+        "order": 10,
+        "createdAt": "2025-08-07T19:08:14.127Z",
+        "updatedAt": "2025-08-07T19:08:14.127Z"
+      },
+      {
+        "id": "cme1rs73x000le5yk6bhvenbx",
+        "title": "3.3 Desarrollo del Beneficio Principal",
+        "content": "Presentación efectiva del beneficio principal del producto/servicio",
+        "videoUrl": null,
+        "duration": 20,
+        "order": 11,
+        "createdAt": "2025-08-07T19:08:14.205Z",
+        "updatedAt": "2025-08-07T19:08:14.205Z"
+      },
+      {
+        "id": "cme1rs764000ne5ykrb96aigv",
+        "title": "3.4 Llamadas a la Acción que Convierten",
+        "content": "Creación de CTAs efectivos para videos promocionales",
+        "videoUrl": null,
+        "duration": 17,
+        "order": 12,
+        "createdAt": "2025-08-07T19:08:14.284Z",
+        "updatedAt": "2025-08-07T19:08:14.284Z"
+      },
+      {
+        "id": "cme1rs78e000pe5ykzb7vb3dn",
+        "title": "4.1 Adaptación para Instagram",
+        "content": "Creación de guiones optimizados para Instagram",
+        "videoUrl": null,
+        "duration": 20,
+        "order": 13,
+        "createdAt": "2025-08-07T19:08:14.366Z",
+        "updatedAt": "2025-08-07T19:08:14.366Z"
+      },
+      {
+        "id": "cme1rs7aj000re5yko5qmw1go",
+        "title": "4.2 Guiones para TikTok",
+        "content": "Estructura y estilo para contenido de TikTok",
+        "videoUrl": null,
+        "duration": 18,
+        "order": 14,
+        "createdAt": "2025-08-07T19:08:14.444Z",
+        "updatedAt": "2025-08-07T19:08:14.444Z"
+      },
+      {
+        "id": "cme1rs7co000te5yks7qv9wi5",
+        "title": "4.3 Contenido para LinkedIn",
+        "content": "Guiones profesionales para LinkedIn",
+        "videoUrl": null,
+        "duration": 20,
+        "order": 15,
+        "createdAt": "2025-08-07T19:08:14.520Z",
+        "updatedAt": "2025-08-07T19:08:14.520Z"
+      },
+      {
+        "id": "cme1rwqkt000ve5do7c88tkge",
+        "title": "4.4 Adaptación para YouTube",
+        "content": "Guiones para videos largos de YouTube",
+        "videoUrl": null,
+        "duration": 22,
+        "order": 16,
+        "createdAt": "2025-08-07T19:11:46.062Z",
+        "updatedAt": "2025-08-07T19:11:46.062Z"
+      },
+      {
+        "id": "cme1rwqmz000xe5doui82zv2v",
+        "title": "5.1 A/B Testing de Guiones",
+        "content": "Cómo probar diferentes versiones de guiones",
+        "videoUrl": null,
+        "duration": 15,
+        "order": 17,
+        "createdAt": "2025-08-07T19:11:46.139Z",
+        "updatedAt": "2025-08-07T19:11:46.139Z"
+      },
+      {
+        "id": "cme1rwqp3000ze5doydbk6oen",
+        "title": "5.2 Métricas de Rendimiento",
+        "content": "Análisis de métricas para medir el éxito de los guiones",
+        "videoUrl": null,
+        "duration": 18,
+        "order": 18,
+        "createdAt": "2025-08-07T19:11:46.215Z",
+        "updatedAt": "2025-08-07T19:11:46.215Z"
+      },
+      {
+        "id": "cme1rs7lg0011e5ykh6onr28f",
+        "title": "5.3 Optimización Continua",
+        "content": "Proceso de mejora continua basado en datos",
+        "videoUrl": null,
+        "duration": 12,
+        "order": 19,
+        "createdAt": "2025-08-07T19:08:14.836Z",
+        "updatedAt": "2025-08-07T19:08:14.836Z"
+      }
+    ]
+  }
+}
