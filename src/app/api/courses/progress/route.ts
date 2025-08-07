@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyToken } from '@/lib/auth';
+import { verifyToken, verifySession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { recordLessonCompletion } from '@/lib/streaks';
 
@@ -22,23 +22,20 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    let decoded;
-    try {
-      decoded = verifyToken(token);
-    } catch (tokenError) {
-      return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
-    }
-    
-    const userId = decoded.userId;
+    let userId: string;
 
-    // Verificar si es una sesión de base de datos
-    const session = await prisma.session.findUnique({
-      where: { token }
-    });
-
-    // Si es una sesión de BD, verificar que no haya expirado
-    if (session && session.expiresAt < new Date()) {
-      return NextResponse.json({ error: 'Session expired' }, { status: 401 });
+    // Primero intentar verificar como sesión de base de datos
+    const sessionUser = await verifySession(token);
+    if (sessionUser) {
+      userId = sessionUser.userId;
+    } else {
+      // Si no es una sesión de BD, intentar como JWT
+      try {
+        const decoded = verifyToken(token);
+        userId = decoded.userId;
+      } catch (tokenError) {
+        return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
+      }
     }
 
     // ✅ OPTIMIZADO: Buscar curso y enrollment en una sola consulta
@@ -221,17 +218,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const decoded = verifyToken(token);
-    const userId = decoded.userId;
+    let userId: string;
 
-    // Verificar si es una sesión de base de datos
-    const session = await prisma.session.findUnique({
-      where: { token }
-    });
-
-    // Si es una sesión de BD, verificar que no haya expirado
-    if (session && session.expiresAt < new Date()) {
-      return NextResponse.json({ error: 'Session expired' }, { status: 401 });
+    // Primero intentar verificar como sesión de base de datos
+    const sessionUser = await verifySession(token);
+    if (sessionUser) {
+      userId = sessionUser.userId;
+    } else {
+      // Si no es una sesión de BD, intentar como JWT
+      try {
+        const decoded = verifyToken(token);
+        userId = decoded.userId;
+      } catch (tokenError) {
+        return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
+      }
     }
 
     // ✅ OPTIMIZADO: Buscar curso por slug si es necesario

@@ -22,19 +22,40 @@ async function backupAll() {
 
     const enrollments = await prisma.enrollment.findMany({
       include: {
+        user: {
+          select: {
+            id: true,
+            email: true,
+            firstName: true,
+            lastName: true,
+            membershipLevel: true,
+            isActive: true,
+            emailVerified: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
         progress: { include: { lessonProgress: true } },
       },
       orderBy: { enrolledAt: 'asc' },
     });
 
+    // Extraer usuarios únicos
+    const userMap = new Map<string, any>();
+    for (const e of enrollments) {
+      if (e.user) userMap.set(e.user.id, e.user);
+    }
+    const users = Array.from(userMap.values());
+
     const payload = {
       meta: {
         createdAt: new Date().toISOString(),
         databaseUrlHash: (process.env.DATABASE_URL || 'env-missing').slice(0, 16) + '...',
-        tables: ['courses', 'lessons', 'enrollments', 'course_progress', 'lesson_progress'],
+        tables: ['courses', 'lessons', 'users', 'enrollments', 'course_progress', 'lesson_progress'],
       },
       courses,
       lessons,
+      users,
       enrollments,
     };
 

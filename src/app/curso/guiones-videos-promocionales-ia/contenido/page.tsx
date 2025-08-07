@@ -43,6 +43,19 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
     setCurrentLesson
   } = useCourseProgress('guiones-videos-promocionales-ia', isEnrolled);
 
+  // Debug log para verificar el progreso cargado
+  useEffect(() => {
+    if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development' && !isLoading) {
+      console.log('🔍 [DEBUG] Progreso cargado:', {
+        currentLesson: progress.currentLesson,
+        completedLessons: progress.completedLessons,
+        progressPercentage: progress.progressPercentage,
+        status: progress.status,
+        totalLessons: progress.totalLessons
+      });
+    }
+  }, [progress, isLoading]);
+
   // Mapeo de IDs legacy (frontend) a IDs reales de BD (producción)
   const LEGACY_TO_DB_ID_MAP: Record<string, string> = {
     'gvp-mod1-les1': 'cme1s4sft0003e5zoajkhytmn',
@@ -67,11 +80,24 @@ export default function ContenidoGuionesVideosPromocionalesIAPage() {
   );
 
   const isIdCompleted = (id: string): boolean => {
-    return (
+    const isCompleted = (
       progress.completedLessons.includes(id) ||
       progress.completedLessons.includes(DB_TO_LEGACY_ID_MAP[id] || '') ||
       progress.completedLessons.includes(LEGACY_TO_DB_ID_MAP[id] || '')
     );
+    
+    // Debug log para verificar el estado de completado
+    if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
+      console.log(`🔍 [DEBUG] Verificando lección ${id}:`, {
+        isCompleted,
+        completedLessons: progress.completedLessons,
+        directMatch: progress.completedLessons.includes(id),
+        legacyMatch: progress.completedLessons.includes(DB_TO_LEGACY_ID_MAP[id] || ''),
+        dbMatch: progress.completedLessons.includes(LEGACY_TO_DB_ID_MAP[id] || '')
+      });
+    }
+    
+    return isCompleted;
   };
 
   const addCompletedIdUniq = (list: string[], id: string): string[] => {

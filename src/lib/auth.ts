@@ -42,6 +42,28 @@ export function verifyToken(token: string): { userId: string } {
   }
 }
 
+// Función para verificar sesión de base de datos
+export async function verifySession(token: string): Promise<{ userId: string } | null> {
+  try {
+    const session = await prisma.session.findUnique({
+      where: { token },
+      include: {
+        user: {
+          select: { id: true }
+        }
+      }
+    })
+    
+    if (!session || session.expiresAt < new Date()) {
+      return null
+    }
+    
+    return { userId: session.user.id }
+  } catch (error) {
+    return null
+  }
+}
+
 // Función para extraer token del header Authorization
 export function extractTokenFromHeader(requestOrHeader: NextRequest | string | null): string | null {
   if (!requestOrHeader) {

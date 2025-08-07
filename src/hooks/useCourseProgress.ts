@@ -75,6 +75,8 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
       return;
     }
 
+    console.log('🔄 [HOOK] Cargando progreso para curso:', courseId);
+
     // Solo resetear valores por defecto si es la primera carga
     if (!hasLoadedOnce) {
       setProgress(prev => ({
@@ -88,31 +90,40 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
     }
 
     try {
-      // Obtener token del localStorage solo en el cliente
-      const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
+      // Usar cookies para autenticación en lugar de localStorage
+      console.log('🔑 [HOOK] Usando autenticación por cookies');
       
       const response = await fetch(`/api/courses/progress?courseId=${courseId}`, {
+        method: 'GET',
+        credentials: 'include', // Incluir cookies automáticamente
         headers: {
-          'Content-Type': 'application/json',
-          ...(token && { 'Authorization': `Bearer ${token}` })
+          'Content-Type': 'application/json'
         }
       });
       
+      console.log('📡 [HOOK] Respuesta de API:', response.status, response.statusText);
+      
       if (response.ok) {
         const data = await response.json();
+        console.log('✅ [HOOK] Datos recibidos de API:', data);
         
         // Asegurar que currentLesson no exceda el número de lecciones disponibles
         const totalLessons = getTotalLessons(courseId);
         const maxLessonIndex = totalLessons - 1;
         const safeCurrentLesson = Math.min(data.currentLesson || 0, maxLessonIndex);
         
-        setProgress({
+        const updatedProgress = {
           ...data,
           currentLesson: safeCurrentLesson,
           totalLessons: totalLessons
-        });
+        };
+        
+        console.log('📊 [HOOK] Progreso actualizado:', updatedProgress);
+        
+        setProgress(updatedProgress);
         setHasLoadedOnce(true);
       } else {
+        console.log('❌ [HOOK] API falló, usando fallback');
         // Fallback a localStorage si la API falla (solo en cliente)
         if (typeof window !== 'undefined') {
           const localStorageKey = `course-progress-${courseId}`;
@@ -155,7 +166,7 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
         }
       }
     } catch (error) {
-      console.error('Error cargando progreso:', error);
+      console.error('❌ [HOOK] Error cargando progreso:', error);
       setError('Error al cargar el progreso');
     } finally {
       setIsLoading(false);
@@ -178,14 +189,14 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
       const lessonToSave = currentLesson ?? currentProgress.currentLesson;
       const lessonsToSave = completedLessons ?? currentProgress.completedLessons;
       
-      // Obtener token del localStorage solo en el cliente
-      const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
+      // Usar cookies para autenticación
+      console.log('🔑 [HOOK] Guardando progreso con autenticación por cookies');
       
       const response = await fetch('/api/courses/progress', {
         method: 'POST',
+        credentials: 'include', // Incluir cookies automáticamente
         headers: {
-          'Content-Type': 'application/json',
-          ...(token && { 'Authorization': `Bearer ${token}` })
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           courseId,
@@ -272,16 +283,29 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
   })();
 
   useEffect(() => {
-    if (!hasLoadedOnce) {
-      if (isEnrolled) {
-        loadProgress();
-      } else {
-        // Si no está inscrito, establecer isLoading en false inmediatamente
-        setIsLoading(false);
-        setHasLoadedOnce(true);
-      }
+    if (isEnrolled) {
+      // Recargar progreso cada vez que el usuario esté inscrito
+      loadProgress();
+    } else {
+      // Si no está inscrito, establecer isLoading en false inmediatamente
+      setIsLoading(false);
+      setHasLoadedOnce(true);
     }
-  }, [courseId, isEnrolled, hasLoadedOnce, loadProgress]);
+  }, [courseId, isEnrolled, loadProgress]);
+
+  // Efecto adicional para recargar progreso cuando el usuario regresa al curso
+  useEffect(() => {
+    if (isEnrolled && hasLoadedOnce) {
+      // Recargar progreso cuando el usuario regresa al curso
+      const handleFocus = () => {
+        console.log('🔄 [HOOK] Usuario regresó al curso, recargando progreso...');
+        loadProgress();
+      };
+
+      window.addEventListener('focus', handleFocus);
+      return () => window.removeEventListener('focus', handleFocus);
+    }
+  }, [isEnrolled, hasLoadedOnce, loadProgress]);
 
   return {
     progress,

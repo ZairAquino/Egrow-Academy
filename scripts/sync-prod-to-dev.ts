@@ -1,15 +1,9 @@
 import { PrismaClient } from '@prisma/client';
 import fs from 'fs';
 
-// Fuente: backup JSON
-const BACKUP_PATH = process.argv[2] || 'backups/production-backup-2025-08-07T20-12-32-294Z/production-backup.json';
-
-// Destino: BD de desarrollo
+const BACKUP_PATH = process.argv[2] || '';
 const devDatabaseUrl = process.env.DATABASE_URL_DEV || undefined;
-
-if (devDatabaseUrl) {
-  process.env.DATABASE_URL = devDatabaseUrl;
-}
+if (devDatabaseUrl) process.env.DATABASE_URL = devDatabaseUrl;
 
 const prisma = new PrismaClient();
 
@@ -20,24 +14,54 @@ async function sync() {
   try {
     await prisma.$connect();
 
-    // Limpiar destino en orden seguro (FK)
+    // Limpieza total de destino en orden seguro (FKs)
     await prisma.lessonProgress.deleteMany({});
     await prisma.courseProgress.deleteMany({});
     await prisma.enrollment.deleteMany({});
     await prisma.lesson.deleteMany({});
     await prisma.course.deleteMany({});
+    await prisma.user.deleteMany({});
 
-    // Insertar cursos
+    // Restaurar usuarios primero
+    if (Array.isArray(data.users)) {
+      for (const u of data.users) {
+        await prisma.user.create({
+          data: {
+            id: u.id,
+            email: u.email,
+            passwordHash: u.passwordHash || null,
+            firstName: u.firstName || 'Usuario',
+            lastName: u.lastName || 'Prod',
+            username: u.username || null,
+            profileImage: u.profileImage || null,
+            bio: u.bio || null,
+            membershipLevel: u.membershipLevel || 'FREE',
+            isActive: u.isActive ?? true,
+            emailVerified: u.emailVerified ?? false,
+            createdAt: u.createdAt,
+            updatedAt: u.updatedAt,
+            lastLogin: u.lastLogin || null,
+            verificationCode: u.verificationCode || null,
+            stripeCustomerId: u.stripeCustomerId || null,
+            verificationCodeExpires: u.verificationCodeExpires || null,
+            country: u.country || null,
+            hasBeenPremium: u.hasBeenPremium ?? false,
+          },
+        });
+      }
+    }
+
+    // Cursos
     for (const c of data.courses) {
       await prisma.course.create({ data: { ...c } });
     }
 
-    // Insertar lecciones
+    // Lecciones
     for (const l of data.lessons) {
       await prisma.lesson.create({ data: { ...l } });
     }
 
-    // Insertar enrollments + progress + lessonProgress
+    // Enrollments + Progress + LessonProgress
     for (const e of data.enrollments) {
       await prisma.enrollment.create({
         data: {
@@ -93,7 +117,7 @@ async function sync() {
       }
     }
 
-    console.log('✅ Sincronización prod → dev completada');
+    console.log('✅ Sincronización prod → dev completada (wipe & restore exacto)');
   } catch (e) {
     console.error('❌ Error sincronizando:', e);
     process.exit(1);
