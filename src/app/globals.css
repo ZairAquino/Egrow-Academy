@@ -7776,55 +7776,6 @@ input:checked + .toggle-slider:before {
   }
 }
 
-/* Estilos específicos para las cards del carrusel */
-.carousel-course-card {
-  min-height: 322px; /* Altura aumentada 15% desde 280px */
-}
 
-.carousel-course-card .course-content-new {
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-}
-
-.carousel-course-card .course-title-new {
-  font-size: 1.1rem;
-  line-height: 1.3;
-  margin-bottom: 0.75rem;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.carousel-course-card .course-link {
-  margin-top: auto;
-  padding-top: 0.75rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
-/* Mobile optimizaciones para las cards del carrusel */
-@media (max-width: 768px) {
-  .carousel-course-card {
-    min-height: 276px; /* Altura aumentada 15% desde 240px */
-  }
-  
-  .carousel-course-card .course-content-new {
-    padding: 0.875rem;
-  }
-  
-  .carousel-course-card .course-title-new {
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-  }
-  
-  .carousel-course-card .course-link {
-    font-size: 0.85rem;
-    padding-top: 0.5rem;
-  }
-}
 
 
