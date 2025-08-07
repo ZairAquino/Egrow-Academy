@@ -2002,22 +2002,29 @@ export default function ContenidoVideosProfesionalesIAPage() {
                 </div>
               </div>
 
-              <div className="content-sidebar">
-                <div className="lessons-navigation">
-                  <div className="navigation-header">
-                    <h3>Lecciones del Curso</h3>
-                    <div className="progress-indicator">
-                      <span className="progress-text">
-                        {progress.completedLessons.length} de {courseData.lessons.length} completadas
-                      </span>
-                      <div className="progress-bar">
-                        <div 
-                          className="progress-fill" 
-                          style={{ width: `${(progress.completedLessons.length / courseData.lessons.length) * 100}%` }}
-                        ></div>
-                      </div>
+              <div className="course-sidebar">
+                <div className="progress-section">
+                  <div className="progress-header">
+                    <h3>Progreso del Curso</h3>
+                    <span className="progress-percentage">{Math.round((progress.completedLessons.length / courseData.lessons.length) * 100)}%</span>
+                  </div>
+                  <div className="progress-bar">
+                    <div 
+                      className="progress-fill" 
+                      style={{ width: `${(progress.completedLessons.length / courseData.lessons.length) * 100}%` }}
+                    ></div>
+                  </div>
+                  <div className="progress-stats">
+                    <div className="stat">
+                      <span className="stat-number">{progress.completedLessons.length}</span>
+                      <span className="stat-label">Completadas</span>
+                    </div>
+                    <div className="stat">
+                      <span className="stat-number">{courseData.lessons.length}</span>
+                      <span className="stat-label">Total</span>
                     </div>
                   </div>
+                </div>
                   {isEnrolled && (
                     <div className="course-guidance">
                       <p className="guidance-text">
@@ -2137,6 +2144,29 @@ export default function ContenidoVideosProfesionalesIAPage() {
       </main>
 
       <Footer />
+
+      {/* Notificaciones de logros */}
+      {showModuleNotification && (
+        <AchievementNotification
+          isVisible={showModuleNotification}
+          type={achievementData.type}
+          title={achievementData.title}
+          message={achievementData.message}
+          stats={achievementData.stats}
+          onClose={() => setShowModuleNotification(false)}
+        />
+      )}
+
+      {showCourseNotification && (
+        <AchievementNotification
+          isVisible={showCourseNotification}
+          type={achievementData.type}
+          title={achievementData.title}
+          message={achievementData.message}
+          stats={achievementData.stats}
+          onClose={() => setShowCourseNotification(false)}
+        />
+      )}
 
       <style jsx>{`
         .enrollment-required {

@@ -8,12 +8,27 @@ import Navbar from '@/components/layout/Navbar';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCourseProgress } from '@/hooks/useCourseProgress';
 import VideoPlayer from '@/components/courses/VideoPlayer';
+import AchievementNotification from '@/components/ui/AchievementNotification';
 
 export default function ContenidoCursoPage() {
   
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isCheckingEnrollment, setIsCheckingEnrollment] = useState(true);
+  
+  // Estados para notificaciones de logros
+  const [showModuleNotification, setShowModuleNotification] = useState(false);
+  const [showCourseNotification, setShowCourseNotification] = useState(false);
+  const [achievementData, setAchievementData] = useState({
+    type: 'module' as 'module' | 'course',
+    title: '',
+    message: '',
+    stats: {
+      completed: 0,
+      total: 0,
+      percentage: 0
+    }
+  });
   const { user } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
@@ -419,7 +434,7 @@ function Counter() {
     console.log('🔍 [DEBUG] handleMarkLessonComplete llamado con lessonId:', lessonId);
     
     // Obtener el índice actual de la lección
-    const currentLessonIndex = courseData.lessons.findIndex(lesson => lesson.id === lessonId);
+    const currentLessonIndex = courseData.lessons.findIndex(lesson => lesson.id.toString() === lessonId);
     const currentLesson = courseData.lessons[currentLessonIndex];
     
     console.log('🔍 [DEBUG] currentLessonIndex:', currentLessonIndex);
@@ -442,6 +457,23 @@ function Counter() {
       5 // 5 minutos por completar una lección
     );
     
+    // Verificar si se completó el curso
+    if (newCompletedLessons.length === courseData.lessons.length) {
+      const courseProgress = {
+        completed: newCompletedLessons.length,
+        total: courseData.lessons.length,
+        percentage: (newCompletedLessons.length / courseData.lessons.length) * 100
+      };
+
+      setAchievementData({
+        type: 'course',
+        title: `¡Curso Completado!`,
+        message: `¡Felicidades! Has completado exitosamente el curso "Desarrollo Web Fullstack"`,
+        stats: courseProgress
+      });
+      setShowCourseNotification(true);
+    }
+
     // Avanzar a la siguiente lección si no es la última
     if (currentLessonIndex < courseData.lessons.length - 1) {
       console.log('🔍 [DEBUG] Avanzando a lección:', currentLessonIndex + 1);
@@ -465,7 +497,7 @@ function Counter() {
     
     // Verificar si todas las lecciones están completadas
     const allLessonsCompleted = courseData.lessons.every(lesson => 
-      progress.completedLessons.includes(lesson.id)
+      progress.completedLessons.includes(lesson.id.toString())
     );
     
     if (!allLessonsCompleted) {
@@ -534,7 +566,7 @@ function Counter() {
 
   const areAllLessonsCompleted = () => {
     return courseData.lessons.every(lesson => 
-      progress.completedLessons.includes(lesson.id)
+      progress.completedLessons.includes(lesson.id.toString())
     );
   };
 
@@ -682,7 +714,7 @@ function Counter() {
                       </button>
                       <button 
                         className="btn btn-primary"
-                        onClick={() => handleMarkLessonComplete(currentLesson.id)}
+                        onClick={() => handleMarkLessonComplete(currentLesson.id.toString())}
                       >
                         ✅ Marcar como completada
                       </button>
@@ -713,7 +745,7 @@ function Counter() {
                     {courseData.lessons.map((lesson, index) => (
                       <div 
                         key={lesson.id} 
-                        className={`lesson-item ${index === currentLessonIndex ? 'active' : ''} ${isLessonCompleted(lesson.id) ? 'completed' : ''}`}
+                        className={`lesson-item ${index === currentLessonIndex ? 'active' : ''} ${isLessonCompleted(lesson.id.toString()) ? 'completed' : ''}`}
                         onClick={() => {
                           if (isLessonAccessible(index)) {
                             handleManualLessonChange(index);
@@ -729,7 +761,7 @@ function Counter() {
                           </div>
                         </div>
                         <div className="lesson-status">
-                          {getLessonStatus(index, lesson.id)}
+                          {getLessonStatus(index, lesson.id.toString())}
                         </div>
                       </div>
                     ))}
@@ -777,6 +809,29 @@ function Counter() {
       </main>
 
       <Footer />
+
+      {/* Notificaciones de logros */}
+      {showModuleNotification && (
+        <AchievementNotification
+          isVisible={showModuleNotification}
+          type={achievementData.type}
+          title={achievementData.title}
+          message={achievementData.message}
+          stats={achievementData.stats}
+          onClose={() => setShowModuleNotification(false)}
+        />
+      )}
+
+      {showCourseNotification && (
+        <AchievementNotification
+          isVisible={showCourseNotification}
+          type={achievementData.type}
+          title={achievementData.title}
+          message={achievementData.message}
+          stats={achievementData.stats}
+          onClose={() => setShowCourseNotification(false)}
+        />
+      )}
 
       <style jsx>{`
         .enrollment-required {

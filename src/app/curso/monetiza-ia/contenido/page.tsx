@@ -8,11 +8,26 @@ import Navbar from '@/components/layout/Navbar';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCourseProgress } from '@/hooks/useCourseProgress';
 import VideoPlayer from '@/components/courses/VideoPlayer';
+import AchievementNotification from '@/components/ui/AchievementNotification';
 
 export default function ContenidoMonetizaIAPage() {
   
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  
+  // Estados para notificaciones de logros
+  const [showModuleNotification, setShowModuleNotification] = useState(false);
+  const [showCourseNotification, setShowCourseNotification] = useState(false);
+  const [achievementData, setAchievementData] = useState({
+    type: 'module' as 'module' | 'course',
+    title: '',
+    message: '',
+    stats: {
+      completed: 0,
+      total: 0,
+      percentage: 0
+    }
+  });
   const [isCheckingEnrollment, setIsCheckingEnrollment] = useState(true);
   const { user } = useAuth();
   const router = useRouter();
@@ -593,6 +608,47 @@ Estrategias para aumentar RPH:
       'complete',
       5
     );
+
+    // Verificar si se completó un módulo
+    const moduleId = currentLesson.moduleId;
+    const moduleLessons = courseData.lessons.filter(lesson => lesson.moduleId === moduleId);
+    const completedInModule = moduleLessons.filter(lesson => 
+      newCompletedLessons.includes(lesson.id)
+    );
+
+    // Si se completó el módulo, mostrar notificación
+    if (completedInModule.length === moduleLessons.length) {
+      const moduleProgress = {
+        completed: completedInModule.length,
+        total: moduleLessons.length,
+        percentage: (completedInModule.length / moduleLessons.length) * 100
+      };
+
+      setAchievementData({
+        type: 'module',
+        title: `¡Módulo Completado!`,
+        message: `Has completado exitosamente el módulo "${getModuleTitle(moduleId)}"`,
+        stats: moduleProgress
+      });
+      setShowModuleNotification(true);
+    }
+
+    // Verificar si se completó el curso
+    if (newCompletedLessons.length === courseData.lessons.length) {
+      const courseProgress = {
+        completed: newCompletedLessons.length,
+        total: courseData.lessons.length,
+        percentage: (newCompletedLessons.length / courseData.lessons.length) * 100
+      };
+
+      setAchievementData({
+        type: 'course',
+        title: `¡Curso Completado!`,
+        message: `¡Felicidades! Has completado exitosamente el curso "Monetiza con IA"`,
+        stats: courseProgress
+      });
+      setShowCourseNotification(true);
+    }
     
     if (currentLessonIndex < courseData.lessons.length - 1) {
       setTimeout(() => {
@@ -683,6 +739,17 @@ Estrategias para aumentar RPH:
     return courseData.lessons.every(lesson => 
       progress.completedLessons.includes(lesson.id)
     );
+  };
+
+  // Función para obtener el título del módulo
+  const getModuleTitle = (moduleId: number): string => {
+    const moduleTitles: Record<number, string> = {
+      1: 'Fundamentos de Monetización',
+      2: 'Estrategias Avanzadas',
+      3: 'Herramientas y Automatización',
+      4: 'Escalabilidad y Optimización'
+    };
+    return moduleTitles[moduleId] || `Módulo ${moduleId}`;
   };
 
   if (!user || isLoading || isCheckingEnrollment) {
@@ -899,9 +966,32 @@ Estrategias para aumentar RPH:
         </section>
       </main>
 
-      <Footer />
+                <Footer />
 
-      <style jsx>{`
+          {/* Notificaciones de logros */}
+          {showModuleNotification && (
+            <AchievementNotification
+              isVisible={showModuleNotification}
+              type={achievementData.type}
+              title={achievementData.title}
+              message={achievementData.message}
+              stats={achievementData.stats}
+              onClose={() => setShowModuleNotification(false)}
+            />
+          )}
+
+          {showCourseNotification && (
+            <AchievementNotification
+              isVisible={showCourseNotification}
+              type={achievementData.type}
+              title={achievementData.title}
+              message={achievementData.message}
+              stats={achievementData.stats}
+              onClose={() => setShowCourseNotification(false)}
+            />
+          )}
+
+          <style jsx>{`
         .enrollment-required {
           display: flex;
           flex-direction: column;

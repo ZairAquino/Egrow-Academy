@@ -431,6 +431,25 @@ export default function ContenidoVibeCodingClaudeCursorPage() {
     }
   };
 
+  // Nueva función para completar una lección individual
+  const handleCompleteCurrentLesson = async () => {
+    const currentLesson = courseData.lessons[progress.currentLesson];
+    await handleMarkLessonComplete(currentLesson.id);
+  };
+
+  // Función para verificar si se puede mostrar el botón de completar módulo
+  const shouldShowCompleteModuleButton = (moduleId: number) => {
+    const currentLesson = courseData.lessons[progress.currentLesson];
+    const moduleLessons = courseData.lessons.filter(lesson => lesson.moduleId === moduleId);
+    const isLastInModule = moduleLessons[moduleLessons.length - 1].id === currentLesson.id;
+    const moduleProgress = getModuleProgress(moduleId);
+    
+    // Verificar si todas las lecciones del módulo menos la actual están completadas
+    const allOtherLessonsCompleted = moduleProgress.completed === moduleProgress.total - 1;
+    
+    return isLastInModule && allOtherLessonsCompleted && !progress.completedLessons.includes(currentLesson.id);
+  };
+
   const handleMarkLessonComplete = async (lessonId: string) => {
     if (isCourseCompleted()) {
       return;
@@ -473,6 +492,20 @@ export default function ContenidoVibeCodingClaudeCursorPage() {
   const getLessonIcon = (lessonIndex: number) => {
     const lesson = courseData.lessons[lessonIndex];
     if (progress.completedLessons.includes(lesson.id)) {
+      return '✅';
+    } else if (lessonIndex === progress.currentLesson) {
+      return '▶️';
+    } else {
+      return '📖';
+    }
+  };
+
+  const getLessonStatus = (lessonIndex: number, lessonId: string) => {
+    if (isLessonCompleted(lessonId)) {
+      // Si el curso está completado, mostrar estado de revisión
+      if (isCourseCompleted()) {
+        return '📖';
+      }
       return '✅';
     } else if (lessonIndex === progress.currentLesson) {
       return '▶️';
@@ -652,6 +685,63 @@ export default function ContenidoVibeCodingClaudeCursorPage() {
     );
   };
 
+  const areAllLessonsCompleted = () => {
+    return courseData.lessons.every(lesson => 
+      progress.completedLessons.includes(lesson.id)
+    );
+  };
+
+  const handleCompleteCourse = async () => {
+    if (!isEnrolled) return;
+    
+    // Si el curso ya está completado, mostrar mensaje
+    if (isCourseCompleted()) {
+      alert('Este curso ya está completado. Puedes revisar el contenido cuando quieras.');
+      return;
+    }
+    
+    // Verificar si todas las lecciones están completadas
+    const allLessonsCompleted = courseData.lessons.every(lesson => 
+      progress.completedLessons.includes(lesson.id)
+    );
+    
+    if (!allLessonsCompleted) {
+      alert('Debes completar todas las lecciones antes de poder terminar el curso.');
+      return;
+    }
+    
+    setIsSaving(true);
+    try {
+      const response = await fetch('/api/courses/complete-course', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          courseSlug: 'vibe-coding-claude-cursor'
+        })
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('✅ Curso marcado como completado:', result);
+        
+        // Redirigir a la página de inicio del curso
+        router.push('/curso/vibe-coding-claude-cursor');
+      } else {
+        const error = await response.json();
+        console.error('❌ Error al completar curso:', error);
+        alert('Error al completar el curso. Por favor, intenta de nuevo.');
+      }
+    } catch (error) {
+      console.error('❌ Error al completar curso:', error);
+      alert('Error de conexión. Por favor, intenta de nuevo.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   if (isCheckingEnrollment || isLoading) {
     return (
       <div className="loading-container">
@@ -742,46 +832,40 @@ export default function ContenidoVibeCodingClaudeCursorPage() {
 
             <div className="lesson-actions">
               <div className="lesson-buttons">
-                <button
+                <button 
                   className="btn btn-primary"
                   onClick={handlePreviousLesson}
                   disabled={progress.currentLesson === 0}
                 >
-                  ← Anterior
+                  ← Lección Anterior
                 </button>
-
+                
+                {/* Botón siguiente - navegación libre */}
+                {progress.currentLesson < courseData.lessons.length - 1 && (
+                  <button 
+                    className="btn btn-primary"
+                    onClick={handleNextLesson}
+                  >
+                    Siguiente lección →
+                  </button>
+                )}
+                
                 {/* Lógica de botones basada en si es la última lección del módulo */}
                 {(() => {
                   const currentLesson = courseData.lessons[progress.currentLesson];
                   const currentModuleId = currentLesson.moduleId;
-                  const isLastLesson = isLastLessonOfModule(currentLesson.id, currentModuleId);
+                  const isLastLesson = shouldShowCompleteModuleButton(currentModuleId);
                   const isCurrentLessonCompleted = progress.completedLessons.includes(currentLesson.id);
                   const isModuleAlreadyCompleted = isModuleCompleted(currentModuleId);
                   
                   if (isModuleAlreadyCompleted) {
                     // Módulo ya completado - no mostrar botones de completar
-                    return (
-                      <button
-                        className={`btn ${
-                          isLessonCompleted(courseData.lessons[progress.currentLesson]?.id)
-                            ? 'btn-success'
-                            : 'btn-primary'
-                        }`}
-                        onClick={() => handleMarkLessonComplete(courseData.lessons[progress.currentLesson]?.id)}
-                        disabled={isSaving}
-                      >
-                        {isSaving ? 'Guardando...' : 
-                         isLessonCompleted(courseData.lessons[progress.currentLesson]?.id) 
-                           ? '✓ Completada' 
-                           : 'Marcar como Completada'
-                        }
-                      </button>
-                    );
+                    return null;
                   }
                   
                   if (isLastLesson) {
                     // Última lección del módulo - solo mostrar botón "Completar Módulo"
-                    const canComplete = canCompleteModuleWithPrerequisites(currentModuleId);
+                    const canComplete = canCompleteModule(currentModuleId);
                     return (
                       <button 
                         className={`btn btn-large ${canComplete ? 'btn-success' : 'btn-secondary'}`}
@@ -795,7 +879,7 @@ export default function ContenidoVibeCodingClaudeCursorPage() {
                         }}
                         title={canComplete ? 'Completar módulo' : 'Completa todas las lecciones anteriores del módulo primero'}
                       >
-                        🏆 Completar {getModuleTitle(currentModuleId).split(':')[0]}
+                        🏆 Completar Módulo {currentModuleId}
                       </button>
                     );
                   } else {
@@ -832,66 +916,99 @@ export default function ContenidoVibeCodingClaudeCursorPage() {
           </div>
           </div>
 
-          <div className="lessons-navigation">
-            <div className="navigation-header">
-              <h3>Lecciones del Curso</h3>
-              <div className="progress-indicator">
-                <span className="progress-text">
-                  Progreso: {progress.completedLessons.length} de {courseData.lessons.length} lecciones
-                </span>
-                <div className="progress-bar">
-                  <div 
-                    className="progress-fill" 
-                    style={{ width: `${progressPercentage}%` }}
-                  ></div>
+          <div className="course-sidebar">
+            <div className="progress-section">
+              <div className="progress-header">
+                <h3>Progreso del Curso</h3>
+                <span className="progress-percentage">{Math.round(progressPercentage)}%</span>
+              </div>
+              <div className="progress-bar">
+                <div 
+                  className="progress-fill" 
+                  style={{ width: `${progressPercentage}%` }}
+                ></div>
+              </div>
+              <div className="progress-stats">
+                <div className="stat">
+                  <span className="stat-number">{progress.completedLessons.length}</span>
+                  <span className="stat-label">Completadas</span>
+                </div>
+                <div className="stat">
+                  <span className="stat-number">{courseData.lessons.length}</span>
+                  <span className="stat-label">Total</span>
                 </div>
               </div>
             </div>
+            
+            {isEnrolled && (
+              <div className="course-guidance">
+                <p className="guidance-text">
+                  💡 <strong>Navegación Libre:</strong> Puedes navegar entre todas las lecciones. Para completar el curso, debes marcar como completadas todas las lecciones de todos los módulos.
+                </p>
+              </div>
+            )}
+            
+            <div className="lessons-list">
 
             <div className="lessons-list">
-              {Array.from(new Set(courseData.lessons.map(lesson => lesson.moduleId))).map(moduleId => {
+              {[1, 2, 3, 4, 5].map(moduleId => {
                 const moduleLessons = courseData.lessons.filter(lesson => lesson.moduleId === moduleId);
-                const isExpanded = expandedModules.has(moduleId);
+                const moduleProgress = getModuleProgress(moduleId);
+                const isModuleComplete = isModuleCompleted(moduleId);
                 
                 return (
                   <div key={moduleId} className="module-group">
                     <div 
-                      className={`module-header ${isExpanded ? 'expanded' : ''}`}
+                      className={`module-header ${isModuleComplete ? 'completed' : ''} ${expandedModules.has(moduleId) ? 'expanded' : ''}`}
                       onClick={() => toggleModuleExpansion(moduleId)}
+                      style={{ cursor: 'pointer' }}
                     >
                       <div className="module-title">
-                        <span className="module-icon">📁</span>
-                        <span>Módulo {moduleId}</span>
+                        <span className="module-icon">
+                          {isModuleComplete ? '✅' : '📚'}
+                        </span>
+                        <span>MÓDULO {moduleId}</span>
+                        <span className="expand-icon">
+                          {expandedModules.has(moduleId) ? '▼' : '▶'}
+                        </span>
                       </div>
-                      <div className="expand-icon">
-                        {isExpanded ? '▼' : '▶'}
+                      <div className="module-progress">
+                        <span className="progress-text">
+                          {moduleProgress.completed}/{moduleProgress.total}
+                        </span>
+                        <div className="progress-bar-mini">
+                          <div 
+                            className="progress-fill-mini" 
+                            style={{ width: `${moduleProgress.percentage}%` }}
+                          ></div>
+                        </div>
                       </div>
                     </div>
                     
-                    {isExpanded && (
+                    {expandedModules.has(moduleId) && (
                       <div className="module-lessons">
                         {moduleLessons.map((lesson, index) => {
                           const globalIndex = courseData.lessons.findIndex(l => l.id === lesson.id);
                           return (
                             <div
                               key={lesson.id}
-                              className={`lesson-item ${
-                                globalIndex === progress.currentLesson ? 'active' : ''
-                              } ${
-                                isLessonCompleted(lesson.id) ? 'completed' : ''
-                              }`}
-                              onClick={() => handleLessonClick(globalIndex)}
+                              className={`lesson-item ${globalIndex === progress.currentLesson ? 'current' : ''} ${isLessonCompleted(lesson.id) ? 'completed' : ''}`}
+                              onClick={() => {
+                                if (isLessonAccessible(globalIndex)) {
+                                  handleManualLessonChange(globalIndex);
+                                }
+                              }}
                             >
                               <div className="lesson-number">{moduleId}.{index + 1}</div>
                               <div className="lesson-content">
                                 <h4>{lesson.title}</h4>
                                 <div className="lesson-meta">
-                                  <span>{lesson.type}</span>
-                                  <span>{lesson.duration}</span>
+                                  <span className="lesson-type">{lesson.type}</span>
+                                  <span className="lesson-duration">{lesson.duration}</span>
                                 </div>
                               </div>
                               <div className="lesson-status">
-                                {getLessonIcon(globalIndex)}
+                                {getLessonStatus(globalIndex, lesson.id)}
                               </div>
                             </div>
                           );
@@ -903,17 +1020,41 @@ export default function ContenidoVibeCodingClaudeCursorPage() {
               })}
             </div>
 
-            {isCourseCompleted() && (
-              <div className="course-completed-message">
-                <div className="completion-badge">
-                  <span className="completion-icon">🎉</span>
-                  <span className="completion-text">¡Curso Completado!</span>
+            </div>
+            
+            <div className="complete-course-section">
+              {isCourseCompleted() ? (
+                <div className="course-completed-message">
+                  <div className="completion-badge">
+                    <span className="completion-icon">🏆</span>
+                    <span className="completion-text">¡Curso Completado!</span>
+                  </div>
+                  <p className="completion-info">
+                    Has completado exitosamente este curso. Puedes revisar el contenido cuando quieras.
+                  </p>
+                  <div className="completion-stats">
+                    <span>📊 Progreso: 100%</span>
+                    <span>✅ Lecciones: {courseData.lessons.length}/{courseData.lessons.length}</span>
+                  </div>
                 </div>
-                <p className="completion-info">
-                  Has completado todas las lecciones del curso.
-                </p>
-              </div>
-            )}
+              ) : (
+                <>
+                  <button 
+                    className={`btn btn-complete-course ${!areAllLessonsCompleted() ? 'disabled' : ''}`}
+                    onClick={handleCompleteCourse}
+                    disabled={isSaving || !areAllLessonsCompleted()}
+                  >
+                    {isSaving ? '🔄 Procesando...' : '🏆 Terminar Curso'}
+                  </button>
+                  <p className="complete-course-info">
+                    {areAllLessonsCompleted() 
+                      ? '¡Felicidades! Has completado todas las lecciones. Puedes terminar el curso.'
+                      : `Completa todas las lecciones (${progress.completedLessons.length}/${courseData.lessons.length}) para poder terminar el curso`
+                    }
+                  </p>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>
