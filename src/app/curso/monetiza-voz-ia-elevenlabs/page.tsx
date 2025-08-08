@@ -899,17 +899,17 @@ export default function MonetizaVozIAElevenLabsPage() {
                 </div>
               </div>
               
-              <div className="course-card" onClick={() => router.push('/curso/desarrollo-web-fullstack')}>
+              <div className="course-card" onClick={() => router.push('/curso/vibe-coding-claude-cursor')}>
                 <div className="course-image-wrapper">
-                  <img src="/images/17.png" alt="Desarrollo Web Full Stack" className="course-image" />
+                  <img src="/images/17.png" alt="Vibe Coding con Claude Code" className="course-image" />
                   <span className="course-badge">Premium</span>
                 </div>
                 <div className="course-content">
-                  <h3 className="course-title">Desarrollo Web Full Stack</h3>
-                  <p className="course-description">Aprende a desarrollar aplicaciones completas desde frontend hasta backend</p>
+                  <h3 className="course-title">Vibe Coding con Claude Code</h3>
+                  <p className="course-description">Aprende a programar de forma eficiente utilizando Claude Code y herramientas de IA</p>
                   <div className="course-meta">
-                    <span className="course-duration">⏱️ 8 horas</span>
-                    <span className="course-level">📊 Avanzado</span>
+                    <span className="course-duration">⏱️ 5 horas</span>
+                    <span className="course-level">📊 Intermedio</span>
                   </div>
                   <button className="course-btn">Ver Curso</button>
                 </div>
