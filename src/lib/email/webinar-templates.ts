@@ -338,6 +338,224 @@ export function getWebinarFiveHourReminderEmail(data: WebinarEmailData) {
 }
 
 /**
+ * Plantilla para email de recordatorio (30 minutos antes)
+ */
+export function getWebinarThirtyMinuteReminderEmail(data: WebinarEmailData) {
+  const { webinar, registration, userName, userEmail } = data;
+  
+  return {
+    subject: `🚨 ¡ATENCIÓN! Tu clase comienza en 30 minutos`,
+    html: `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Recordatorio 30 Minutos - eGrow Academy</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333333;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+          }
+          .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          }
+          .header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eeeeee;
+            margin-bottom: 20px;
+          }
+          .header h1 {
+            color: #0D47A1;
+            font-size: 24px;
+            margin: 0;
+          }
+          .alarm-box {
+            background: linear-gradient(135deg, #FF5252, #F44336);
+            color: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 22px;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 12px rgba(255, 82, 82, 0.3);
+            animation: pulse 2s infinite;
+          }
+          @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 6px 12px rgba(255, 82, 82, 0.3); }
+            50% { transform: scale(1.02); box-shadow: 0 8px 16px rgba(255, 82, 82, 0.4); }
+            100% { transform: scale(1); box-shadow: 0 6px 12px rgba(255, 82, 82, 0.3); }
+          }
+          .whatsapp-section {
+            text-align: center;
+            margin-top: 30px;
+            padding: 30px 20px;
+            background-color: #E8F5E9;
+            border-radius: 8px;
+            border: 2px solid #25D366;
+          }
+          .whatsapp-section h2 {
+            color: #0D47A1;
+            font-size: 24px;
+            margin-bottom: 10px;
+          }
+          .whatsapp-button {
+            display: inline-block;
+            background-color: #25D366;
+            color: #ffffff !important;
+            padding: 15px 30px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 18px;
+            margin: 15px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+          }
+          .whatsapp-button:hover {
+            background-color: #128C7E;
+          }
+          .footer {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #eeeeee;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #777777;
+          }
+          .schedule-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 10px;
+          }
+          .schedule-box {
+            background-color: #ffffff;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 150px;
+            color: #ffffff;
+          }
+          .box-blue { background-color: #2196F3; }
+          .box-purple { background-color: #9C27B0; }
+          .box-orange { background-color: #FF9800; }
+          .box-red { background-color: #E53935; }
+          .box-green { background-color: #4CAF50; }
+          .box-pink { background-color: #E91E63; }
+          .box-teal { background-color: #009688; }
+          .schedule-box h4 {
+            margin: 0 0 5px 0;
+            font-size: 14px;
+          }
+          .schedule-box p {
+            margin: 0;
+            font-size: 18px;
+            font-weight: bold;
+          }
+          .access-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 25px 0;
+          }
+          .access-box a {
+            color: #FFE082 !important;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 18px;
+          }
+          .checklist {
+            background: #FFF3E0;
+            border: 1px solid #FFB74D;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+          }
+          .checklist h3 {
+            color: #E65100;
+            margin-top: 0;
+          }
+          .checklist ul {
+            color: #BF360C;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>¡Tu clase de eGrow Academy está a la vuelta de la esquina!</h1>
+          </div>
+          
+          <div class="alarm-box">
+              🚨 ¡ALERTA! Tu clase interactiva comienza en <strong>30 MINUTOS</strong>
+              <br>Asegúrate de tener tu equipo listo
+          </div>
+
+          <p>Hola ${userName},</p>
+
+          <p>¡Prepárate! Faltan <strong>solo 30 minutos</strong> para el inicio de nuestra clase gratuita. El momento de aprender a crear videos profesionales con IA ha llegado.</p>
+          
+          <p style="font-size: 22px; font-weight: bold; color: #E91E63; margin-bottom: 5px; text-align: center;">
+            🎥 Aprende a crear videos profesionales con IA
+          </p>
+          
+          <div class="access-box">
+            <h3 style="margin-top: 0;">🔗 ACCESO DIRECTO A LA CLASE</h3>
+            <p style="margin-bottom: 10px;">Google Meet:</p>
+            <a href="https://meet.google.com/ido-wvhw-zaj">https://meet.google.com/ido-wvhw-zaj</a>
+            <p style="margin-top: 15px; font-size: 14px;">📅 ${formatWebinarDate(webinar.dateTime)}</p>
+          </div>
+
+          <div class="checklist">
+            <h3>✅ CHECKLIST DE ÚLTIMOS MINUTOS:</h3>
+            <ul>
+              <li><strong>Verifica tu conexión a internet</strong> - Haz una prueba rápida</li>
+              <li><strong>Cierra otras aplicaciones</strong> - Para mejor rendimiento</li>
+              <li><strong>Ten listos papel y lápiz</strong> - Para tomar notas importantes</li>
+              <li><strong>Silencia notificaciones</strong> - Para máxima concentración</li>
+              <li><strong>Únete 5-10 minutos antes</strong> - Para evitar problemas técnicos</li>
+            </ul>
+          </div>
+
+          <p style="text-align: center; font-size: 18px; color: #E91E63; font-weight: bold;">
+            🎯 ¡No te pierdas esta oportunidad única de aprender!
+          </p>
+
+          <div class="whatsapp-section">
+              <h2>🚀 ¡Última llamada! Únete a nuestra comunidad de WhatsApp</h2>
+              <p style="font-size: 16px; color: #333333;">Este es el momento perfecto para conectarte con otros <strong>profesionistas y freelancers</strong>. Comparte tus ideas y obtén apoyo de la comunidad. ¡Te esperamos en el grupo!</p>
+              <a href="https://chat.whatsapp.com/F2syDYAv6WS1ADYdUi7hxT" class="whatsapp-button">Unirte al Grupo de WhatsApp</a>
+          </div>
+
+          <div class="footer">
+            <p>¡Nos vemos en unos minutos!<br>
+            <strong>Equipo de eGrow Academy</strong><br>
+            <a href="https://www.egrowacademy.com" style="color: #007bff; text-decoration: none;">www.egrowacademy.com</a></p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `
+  };
+}
+
+/**
  * Plantilla para email de recordatorio (15 minutos antes)
  */
 export function getWebinarReminderEmail(data: WebinarEmailData) {
