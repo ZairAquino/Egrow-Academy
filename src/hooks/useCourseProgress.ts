@@ -37,7 +37,7 @@ export const useCourseProgress = (courseId: string, isEnrolled: boolean) => {
     switch (courseId) {
       case 'asistentes-virtuales-ia': return 22; // ✅ Correcto
       case 'vibe-coding-claude-cursor': return 7; // Corregido: de 6 a 7
-      case 'videos-profesionales-ia': return 22; // ✅ Correcto
+      case 'videos-profesionales-ia': return 11; // ✅ Correcto - 11 lecciones reales
       case 'mockup-cero': return 9; // ✅ Correcto
       case 'monetiza-ia': return 9; // Corregido: de 8 a 9
       case 'guiones-videos-promocionales-ia': return 21; // Corregido: de 15 a 21 lecciones reales
