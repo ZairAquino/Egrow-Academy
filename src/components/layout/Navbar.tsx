@@ -256,7 +256,7 @@ const NavbarContent: React.FC<NavbarProps> = ({ hideSidebar = false }) => {
 
   return (
     <>
-      <nav className="w-full bg-white/80 backdrop-blur-sm border-b border-gray-200/80 fixed top-0 z-50 flex items-center justify-between px-4 py-1 md:py-2 shadow-sm h-14 md:h-auto relative">
+      <nav className="w-full bg-white border-b border-gray-200/80 fixed top-0 z-50 flex items-center justify-between px-4 py-1 md:py-2 shadow-sm h-14 md:h-auto relative">
         {/* Lado izquierdo: Botón de sidebar + Buscador */}
         <div className="flex items-center space-x-4">
           {/* Botón de sidebar - solo mostrar si no está oculto */}
@@ -318,7 +318,7 @@ const NavbarContent: React.FC<NavbarProps> = ({ hideSidebar = false }) => {
 const Navbar: React.FC<NavbarProps> = (props) => {
   return (
     <ClientOnly fallback={
-      <nav className="w-full bg-white/80 backdrop-blur-sm border-b border-gray-200/80 fixed top-0 z-50 flex items-center justify-between px-4 py-1 md:py-2 shadow-sm h-14 md:h-auto relative">
+      <nav className="w-full bg-white border-b border-gray-200/80 fixed top-0 z-50 flex items-center justify-between px-4 py-1 md:py-2 shadow-sm h-14 md:h-auto relative">
         <div className="flex items-center">
           {!props.hideSidebar && (
             <div className="p-2 rounded-md">

@@ -857,6 +857,66 @@ export default function MonetizaVozIAElevenLabsPage() {
             </div>
           </div>
         </section>
+
+        {/* Featured Courses Section */}
+        <section className="featured-courses-section">
+          <div className="container">
+            <div className="featured-courses-header">
+              <h2>Cursos que también te pueden interesar</h2>
+              <p>Expande tus conocimientos con estos cursos populares</p>
+            </div>
+            
+            <div className="courses-grid">
+              <div className="course-card" onClick={() => router.push('/curso/videos-profesionales-ia')}>
+                <div className="course-image-wrapper">
+                  <img src="/images/15.png" alt="Videos Profesionales con IA" className="course-image" />
+                  <span className="course-badge">Premium</span>
+                </div>
+                <div className="course-content">
+                  <h3 className="course-title">Videos Profesionales con IA</h3>
+                  <p className="course-description">Crea videos de alta calidad usando herramientas de inteligencia artificial</p>
+                  <div className="course-meta">
+                    <span className="course-duration">⏱️ 6 horas</span>
+                    <span className="course-level">📊 Intermedio</span>
+                  </div>
+                  <button className="course-btn">Ver Curso</button>
+                </div>
+              </div>
+              
+              <div className="course-card" onClick={() => router.push('/curso/vibe-coding-claude-cursor')}>
+                <div className="course-image-wrapper">
+                  <img src="/images/16.png" alt="Vibe Coding con Claude & Cursor" className="course-image" />
+                  <span className="course-badge">Premium</span>
+                </div>
+                <div className="course-content">
+                  <h3 className="course-title">Vibe Coding con Claude & Cursor</h3>
+                  <p className="course-description">Aprende a programar con IA usando Claude y Cursor de manera eficiente</p>
+                  <div className="course-meta">
+                    <span className="course-duration">⏱️ 5 horas</span>
+                    <span className="course-level">📊 Intermedio</span>
+                  </div>
+                  <button className="course-btn">Ver Curso</button>
+                </div>
+              </div>
+              
+              <div className="course-card" onClick={() => router.push('/curso/desarrollo-web-fullstack')}>
+                <div className="course-image-wrapper">
+                  <img src="/images/17.png" alt="Desarrollo Web Full Stack" className="course-image" />
+                  <span className="course-badge">Premium</span>
+                </div>
+                <div className="course-content">
+                  <h3 className="course-title">Desarrollo Web Full Stack</h3>
+                  <p className="course-description">Aprende a desarrollar aplicaciones completas desde frontend hasta backend</p>
+                  <div className="course-meta">
+                    <span className="course-duration">⏱️ 8 horas</span>
+                    <span className="course-level">📊 Avanzado</span>
+                  </div>
+                  <button className="course-btn">Ver Curso</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
 
       <Footer />
@@ -872,10 +932,15 @@ export default function MonetizaVozIAElevenLabsPage() {
         }
 
         .hero-section {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          padding: 1rem 0;
-          margin-top: 0;
+          background: linear-gradient(to right, #f0f9ff, #faf5ff);
+          color: #1e293b;
+          padding: 0;
+          margin-top: 50px !important;
+          padding-top: 2rem !important;
+          padding-bottom: 4rem;
+          min-height: 70vh;
+          display: flex;
+          align-items: center;
         }
 
         .course-hero {
@@ -1436,6 +1501,152 @@ export default function MonetizaVozIAElevenLabsPage() {
           margin-right: 0.5rem;
         }
 
+        /* Featured Courses Section */
+        .featured-courses-section {
+          background: #ffffff;
+          padding: 4rem 0;
+          border-top: 1px solid #e5e7eb;
+        }
+
+        .featured-courses-header {
+          text-align: center;
+          margin-bottom: 3rem;
+        }
+
+        .featured-courses-header h2 {
+          font-size: 2.25rem;
+          font-weight: 700;
+          color: #1f2937;
+          margin: 0 0 1rem 0;
+        }
+
+        .featured-courses-header p {
+          font-size: 1.125rem;
+          color: #6b7280;
+          margin: 0;
+        }
+
+        .courses-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+          gap: 2rem;
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+
+        .course-card {
+          background: #ffffff;
+          border: 1px solid #e5e7eb;
+          border-radius: 16px;
+          overflow: hidden;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+          transition: all 0.3s ease;
+          cursor: pointer;
+          display: flex;
+          flex-direction: column;
+          height: 100%;
+        }
+
+        .course-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+          border-color: #f59e0b;
+        }
+
+        .course-image-wrapper {
+          position: relative;
+          height: 200px;
+          overflow: hidden;
+          background: #f8fafc;
+        }
+
+        .course-image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.3s ease;
+        }
+
+        .course-card:hover .course-image {
+          transform: scale(1.05);
+        }
+
+        .course-badge {
+          position: absolute;
+          top: 12px;
+          right: 12px;
+          background: linear-gradient(135deg, #f59e0b, #d97706);
+          color: white;
+          padding: 6px 12px;
+          border-radius: 20px;
+          font-size: 12px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        .course-content {
+          padding: 24px;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          flex: 1;
+        }
+
+        .course-title {
+          font-size: 20px;
+          font-weight: 700;
+          color: #1f2937;
+          margin: 0;
+          line-height: 1.3;
+        }
+
+        .course-description {
+          color: #6b7280;
+          font-size: 15px;
+          line-height: 1.6;
+          margin: 0;
+          flex: 1;
+        }
+
+        .course-meta {
+          display: flex;
+          gap: 16px;
+          font-size: 14px;
+          color: #6b7280;
+          margin: 12px 0;
+        }
+
+        .course-duration,
+        .course-level {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          background: #f1f5f9;
+          padding: 6px 12px;
+          border-radius: 20px;
+          font-weight: 500;
+        }
+
+        .course-btn {
+          background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+          color: white;
+          padding: 12px 24px;
+          border: none;
+          border-radius: 8px;
+          font-weight: 600;
+          font-size: 15px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          margin-top: auto;
+        }
+
+        .course-btn:hover {
+          background: linear-gradient(135deg, #1d4ed8, #1e40af);
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
         @media (max-width: 768px) {
           .course-hero {
             grid-template-columns: 1fr;
@@ -1688,6 +1899,56 @@ export default function MonetizaVozIAElevenLabsPage() {
 
           .course-meta {
             margin-top: 0.75rem;
+          }
+
+          /* Featured Courses Mobile */
+          .featured-courses-section {
+            padding: 3rem 0;
+          }
+
+          .featured-courses-header h2 {
+            font-size: 1.875rem !important;
+          }
+
+          .featured-courses-header p {
+            font-size: 1rem !important;
+          }
+
+          .courses-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            padding: 0 1rem;
+          }
+
+          .course-card {
+            max-width: 400px;
+            margin: 0 auto;
+          }
+
+          .course-image-wrapper {
+            height: 180px;
+          }
+
+          .course-content {
+            padding: 20px;
+          }
+
+          .course-title {
+            font-size: 18px;
+          }
+
+          .course-description {
+            font-size: 14px;
+          }
+
+          .course-meta {
+            gap: 12px;
+            font-size: 13px;
+          }
+
+          .course-btn {
+            padding: 10px 20px;
+            font-size: 14px;
           }
         }
       `}</style>
