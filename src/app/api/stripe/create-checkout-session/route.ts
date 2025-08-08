@@ -78,21 +78,37 @@ export async function POST(request: NextRequest) {
       console.log('✅ [CHECKOUT] Usando customer existente:', stripeCustomerId);
     }
 
-    // Calcular precio con descuento si aplica
-    let finalPrice = plan.price;
+    // Descuentos: usar cupones/promotion codes para que solo apliquen al primer mes
     let discountDescription = '';
-    
+    let subscriptionDiscounts: any[] = [];
     if (discountData && discountData.code && discountData.discount) {
-      // Validar códigos de descuento permitidos
-      const validCodes = {
-        'WEBINAR50': { discount: 0.5, planId: 'monthly' }
-      };
-      
+      const validCodes = { 'WEBINAR50': { discount: 0.5, planId: 'monthly' as const } };
       const validCode = validCodes[discountData.code as keyof typeof validCodes];
       if (validCode && validCode.planId === planId) {
-        finalPrice = plan.price * (1 - validCode.discount);
-        discountDescription = ` (${Math.round(validCode.discount * 100)}% desc. - ${discountData.code})`;
-        console.log('🎯 [CHECKOUT] Descuento aplicado:', discountData.code, `Precio original: $${plan.price} -> Precio final: $${finalPrice}`);
+        discountDescription = ` (${Math.round(validCode.discount * 100)}% desc. - ${discountData.code} 1er mes)`;
+
+        try {
+          // Buscar promotion code existente en Stripe
+          const promoList = await stripe.promotionCodes.list({ code: discountData.code, limit: 1, active: true });
+          let promotionCodeId = promoList.data[0]?.id;
+
+          if (!promotionCodeId) {
+            // Crear cupón de 50% por una sola vez (solo primer ciclo)
+            const coupon = await stripe.coupons.create({
+              percent_off: Math.round(validCode.discount * 100),
+              duration: 'once',
+              name: `${discountData.code}-first-month-${Math.round(validCode.discount * 100)}%`,
+            });
+            const promotionCode = await stripe.promotionCodes.create({ coupon: coupon.id, code: discountData.code, active: true });
+            promotionCodeId = promotionCode.id;
+          }
+
+          if (promotionCodeId) {
+            subscriptionDiscounts = [{ promotion_code: promotionCodeId }];
+          }
+        } catch (e) {
+          console.warn('⚠️ [CHECKOUT] No se pudo preparar el promotion code, se continuará sin descuento automático:', e);
+        }
       }
     }
 
@@ -106,7 +122,7 @@ export async function POST(request: NextRequest) {
               name: `${plan.name}${discountDescription}`,
               description: `Suscripción ${plan.interval === 'month' ? 'mensual' : 'anual'} a eGrow Academy${discountDescription}`,
             },
-            unit_amount: Math.round(finalPrice * 100), // Stripe usa centavos
+            unit_amount: Math.round(plan.price * 100), // Precio original; descuento se aplica vía coupon solo al 1er mes
             recurring: {
               interval: plan.interval as 'month' | 'year',
             },
@@ -142,8 +158,9 @@ export async function POST(request: NextRequest) {
           ...(discountData?.code && { discountCode: discountData.code }),
           ...(discountData?.discount && { discountAmount: discountData.discount.toString() }),
           originalPrice: plan.price.toString(),
-          finalPrice: finalPrice.toString(),
+          finalPrice: plan.price.toString(),
         },
+        ...(subscriptionDiscounts.length > 0 ? { discounts: subscriptionDiscounts } : {}),
       },
     };
 
