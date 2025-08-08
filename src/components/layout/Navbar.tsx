@@ -22,27 +22,28 @@ const StreakBadgeMini: React.FC = () => {
     const fetchData = async () => {
       if (!user) return;
       
-      const token = localStorage.getItem('authToken');
-      
       try {
         // Fetch streak stats
         const streakResponse = await fetch('/api/streaks', {
+          credentials: 'include', // Use cookies for authentication
           headers: {
-            'Content-Type': 'application/json',
-            ...(token && { 'Authorization': `Bearer ${token}` })
+            'Content-Type': 'application/json'
           }
         });
 
         if (streakResponse.ok) {
           const streakData = await streakResponse.json();
           setStats(streakData.data);
+        } else if (streakResponse.status === 401) {
+          console.warn('⚠️ [NAVBAR] Unauthorized access to streaks');
+          setStats(null);
         }
 
         // Fetch badge customization
         const badgeResponse = await fetch('/api/profile/badge-customization', {
+          credentials: 'include', // Use cookies for authentication
           headers: {
-            'Content-Type': 'application/json',
-            ...(token && { 'Authorization': `Bearer ${token}` })
+            'Content-Type': 'application/json'
           }
         });
 
@@ -50,6 +51,9 @@ const StreakBadgeMini: React.FC = () => {
           const badgeData = await badgeResponse.json();
           setBadgeCustomization(badgeData.badgeCustomization);
           console.log('🎨 [NAVBAR] Badge customization loaded:', badgeData.badgeCustomization);
+        } else if (badgeResponse.status === 401) {
+          console.warn('⚠️ [NAVBAR] Unauthorized access to badge customization');
+          setBadgeCustomization(null);
         }
       } catch (err) {
         console.error('Error fetching navbar data:', err);

@@ -88,7 +88,8 @@
       "Bash(cleanup-scripts.bat)",
       "Bash(tsx scripts/send-reminders-direct.ts:*)",
       "Bash(tsx scripts/send-urgent-reminders-NOW.ts:*)",
-      "Bash(tsx scripts/send-live-now-reminders.ts:*)"
+      "Bash(tsx scripts/send-live-now-reminders.ts:*)",
+      "Bash(tsx scripts/test-streaks-debug.ts:*)"
     ],
     "deny": []
   }

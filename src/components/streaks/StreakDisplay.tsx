@@ -91,8 +91,13 @@ export default function StreakDisplay({ compact = false }: StreakDisplayProps) {
         setLastUpdate(new Date());
         console.log('✅ [STREAKS] Estadísticas actualizadas:', data.data);
       } else if (response.status === 401) {
-        console.warn('⚠️ [STREAKS] Unauthorized, user may not be logged in');
-        setError('Sesión expirada');
+        console.warn('⚠️ [STREAKS] Unauthorized, checking auth status...');
+        // Don't show error immediately, give auth context a chance to refresh
+        setTimeout(() => {
+          if (!isAuthenticated) {
+            setError('Sesión expirada');
+          }
+        }, 2000);
       } else {
         console.error('❌ [STREAKS] Error fetching stats:', response.status);
         setError('Error al cargar estadísticas');
@@ -107,8 +112,11 @@ export default function StreakDisplay({ compact = false }: StreakDisplayProps) {
 
   // Cargar estadísticas y preferencias al montar el componente
   useEffect(() => {
-    fetchStreakStats();
-    fetchBadgeCustomization();
+    if (isAuthenticated) {
+      setError(null); // Clear any previous errors
+      fetchStreakStats();
+      fetchBadgeCustomization();
+    }
   }, [isAuthenticated]);
 
   // Auto-refresh cada 30 segundos
