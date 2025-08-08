@@ -80,4 +80,4 @@ Después de la limpieza, el proyecto mantiene:
 
 *Limpieza realizada por: Claude Code*  
 *Aprobado por: Usuario*  
-*Estado: Completado ✅*
+*Estado: Completado ✅*\n- ? Eliminados: docker-compose.yml, Dockerfile.dev y scripts docker:* de package.json
