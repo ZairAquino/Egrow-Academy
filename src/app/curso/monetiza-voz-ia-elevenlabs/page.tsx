@@ -973,12 +973,9 @@ export default function MonetizaVozIAElevenLabsPage() {
 
         /* Banner promocional */
         .promo-banner {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          z-index: 60;
-          background: linear-gradient(135deg, #f59e0b, #d97706);
+          position: relative;
+          width: 100%;
+          background: linear-gradient(135deg, #3b82f6, #1d4ed8);
           box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
           animation: slideDown 0.5s ease-out;
         }
@@ -1041,7 +1038,7 @@ export default function MonetizaVozIAElevenLabsPage() {
 
         .promo-banner-cta {
           background: white;
-          color: #d97706;
+          color: #1d4ed8;
           padding: 8px 16px;
           border-radius: 20px;
           font-weight: 700;
@@ -1062,7 +1059,7 @@ export default function MonetizaVozIAElevenLabsPage() {
           background: linear-gradient(to right, #f0f9ff, #faf5ff);
           color: #1e293b;
           padding: 0;
-          margin-top: 100px !important;
+          margin-top: 56px !important;
           padding-top: 2rem !important;
           padding-bottom: 4rem;
           min-height: 70vh;
