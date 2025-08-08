@@ -3,6 +3,7 @@ import { Webinar, WebinarRegistration } from '@/types/webinar';
 import { 
   getWebinarConfirmationEmail, 
   getWebinarReminderEmail, 
+  getWebinarFiveHourReminderEmail,
   getWebinarRecordingEmail,
   WebinarEmailData 
 } from './webinar-templates';
@@ -55,6 +56,54 @@ export async function sendWebinarConfirmationEmail(
     return true;
   } catch (error) {
     console.error('❌ Error enviando email de confirmación:', error);
+    console.error('❌ Detalles del error:', {
+      message: error.message,
+      code: error.code,
+      statusCode: error.statusCode
+    });
+    return false;
+  }
+}
+
+/**
+ * Envía email de recordatorio (5 horas antes)
+ */
+export async function sendWebinarFiveHourReminderEmail(
+  webinar: Webinar, 
+  registration: WebinarRegistration
+): Promise<boolean> {
+  try {
+    const userName = `${registration.firstName} ${registration.lastName}`.trim();
+    const userEmail = registration.email;
+
+    console.log('📧 Preparando email de 5h para:', userEmail);
+    console.log('📧 Webinar:', webinar.title);
+
+    const emailData: WebinarEmailData = {
+      webinar,
+      registration,
+      userName,
+      userEmail
+    };
+
+    const emailContent = getWebinarFiveHourReminderEmail(emailData);
+
+    const fromEmail = process.env.RESEND_FROM_EMAIL || 'noreply@egrowacademy.com';
+    console.log('📧 API Key configurada:', !!process.env.RESEND_API_KEY);
+    console.log('📧 Remitente:', `eGrow Academy <${fromEmail}>`);
+    console.log('📧 Destinatario:', userEmail);
+
+    const result = await resend.emails.send({
+      from: `eGrow Academy <${fromEmail}>`,
+      to: [userEmail],
+      subject: emailContent.subject,
+      html: emailContent.html,
+    });
+
+    console.log('✅ Email de recordatorio de 5 horas enviado:', result);
+    return true;
+  } catch (error) {
+    console.error('❌ Error enviando email de recordatorio de 5 horas:', error);
     console.error('❌ Detalles del error:', {
       message: error.message,
       code: error.code,
