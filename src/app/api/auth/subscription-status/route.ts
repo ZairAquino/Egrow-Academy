@@ -1,13 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { verifyToken, extractTokenFromHeader } from '@/lib/auth';
+import { verifyToken, extractTokenFromHeader, verifySession } from '@/lib/auth';
 
 export async function GET(request: NextRequest) {
   try {
     console.log('🔍 [SUBSCRIPTION-STATUS] Iniciando verificación...');
     
-    // Obtener el token de las cookies
-    const token = request.cookies.get('auth-token')?.value;
+    // Obtener el token de las cookies (priorizar 'session') o header
+    const token =
+      request.cookies.get('session')?.value ||
+      request.cookies.get('auth-token')?.value ||
+      extractTokenFromHeader(request);
     console.log('🔍 [SUBSCRIPTION-STATUS] Token encontrado:', !!token);
     
     if (!token) {
@@ -20,17 +23,23 @@ export async function GET(request: NextRequest) {
 
     // Verificar el token
     console.log('🔍 [SUBSCRIPTION-STATUS] Verificando token...');
-    let decoded;
-    try {
-      decoded = verifyToken(token);
-    } catch (error) {
-      console.log('❌ [SUBSCRIPTION-STATUS] Token inválido');
-      return NextResponse.json(
-        { error: 'Token inválido' },
-        { status: 401 }
-      );
+    // Aceptar tanto sesiones en BD como JWT
+    let userId: string | null = null;
+    const sessionUser = await verifySession(token);
+    if (sessionUser) {
+      userId = sessionUser.userId;
+    } else {
+      try {
+        const decoded = verifyToken(token);
+        userId = decoded.userId;
+      } catch (error) {
+        console.log('❌ [SUBSCRIPTION-STATUS] Token inválido');
+        return NextResponse.json(
+          { error: 'Token inválido' },
+          { status: 401 }
+        );
+      }
     }
-    const userId = decoded.userId;
     console.log('🔍 [SUBSCRIPTION-STATUS] Token verificado, userId:', userId);
 
     // Obtener información del usuario

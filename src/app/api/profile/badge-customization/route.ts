@@ -1,20 +1,28 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { verifyToken, extractTokenFromHeader } from '@/lib/auth'
+import { verifyToken, extractTokenFromHeader, verifySession } from '@/lib/auth'
 
 // Temporary solution using in-memory storage until DB migration is complete
 const badgeCustomizations = new Map<string, any>();
 
 export async function GET(request: NextRequest) {
   try {
-    const cookieToken = request.cookies.get('auth-token')?.value
+    const sessionCookie = request.cookies.get('session')?.value
+    const legacyCookie = request.cookies.get('auth-token')?.value
     const headerToken = extractTokenFromHeader(request)
-    const token = cookieToken || headerToken
+    const token = sessionCookie || legacyCookie || headerToken
 
     if (!token) {
       return NextResponse.json({ error: 'Token no proporcionado' }, { status: 401 })
     }
 
-    const { userId } = verifyToken(token)
+    // Soportar sesiones en BD y JWT
+    let userId: string
+    const sessionUser = await verifySession(token)
+    if (sessionUser) {
+      userId = sessionUser.userId
+    } else {
+      ({ userId } = verifyToken(token))
+    }
     
     const badgeCustomization = badgeCustomizations.get(userId) || {
       preferredBadgeStyle: 'emoji',
@@ -40,15 +48,22 @@ export async function GET(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
-    const cookieToken = request.cookies.get('auth-token')?.value
+    const sessionCookie = request.cookies.get('session')?.value
+    const legacyCookie = request.cookies.get('auth-token')?.value
     const headerToken = extractTokenFromHeader(request)
-    const token = cookieToken || headerToken
+    const token = sessionCookie || legacyCookie || headerToken
 
     if (!token) {
       return NextResponse.json({ error: 'Token no proporcionado' }, { status: 401 })
     }
 
-    const { userId } = verifyToken(token)
+    let userId: string
+    const sessionUser = await verifySession(token)
+    if (sessionUser) {
+      userId = sessionUser.userId
+    } else {
+      ({ userId } = verifyToken(token))
+    }
     const body = await request.json()
 
     console.log('💾 [BADGE CUSTOMIZATION] Saving for user:', userId, body);

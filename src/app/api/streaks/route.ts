@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyToken } from '@/lib/auth';
+import { verifyToken, verifySession } from '@/lib/auth';
 import { getUserStreakStats } from '@/lib/streaks';
 
 /**
@@ -8,22 +8,28 @@ import { getUserStreakStats } from '@/lib/streaks';
 export async function GET(request: NextRequest) {
   try {
     // Verificar token del usuario (buscar en cookies y headers)
-    const cookieToken = request.cookies.get('auth-token')?.value;
+    const sessionCookie = request.cookies.get('session')?.value; // principal
+    const legacyCookie = request.cookies.get('auth-token')?.value; // compatibilidad
     const headerToken = request.headers.get('authorization')?.replace('Bearer ', '');
-    const token = cookieToken || headerToken;
+    const token = sessionCookie || legacyCookie || headerToken;
     
     if (!token) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    let decoded;
-    try {
-      decoded = verifyToken(token);
-    } catch (tokenError) {
-      return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
+    // Soportar sesiones en BD y JWT
+    let userId: string | null = null;
+    const sessionUser = await verifySession(token);
+    if (sessionUser) {
+      userId = sessionUser.userId;
+    } else {
+      try {
+        const decoded = verifyToken(token);
+        userId = decoded.userId;
+      } catch (tokenError) {
+        return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
+      }
     }
-    
-    const userId = decoded.userId;
 
     // Obtener estadísticas de rachas
     const stats = await getUserStreakStats(userId);
