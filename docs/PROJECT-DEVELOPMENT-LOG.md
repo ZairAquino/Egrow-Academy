@@ -17,6 +17,15 @@
 - Mayor coherencia visual y de contenido entre páginas.
 - Promoción actualizada al curso más relevante sin afectar datos de usuarios ni la base de datos.
 
+### ✅ Fix de build en Vercel por BOM en package.json: 2025-08-08
+**Mensaje:** Eliminado carácter BOM al inicio de `package.json` que impedía el parseo JSON en Vercel.
+
+**Archivos Modificados:**
+- `package.json`
+
+**Impacto:**
+- El build de Vercel vuelve a ejecutarse correctamente.
+
 
 ### ✅ Fix de build en Vercel: 2025-08-07
 **Mensaje:** Corrección de sintaxis JSX que impedía el build de producción.
@@ -107,52 +116,6 @@ npx tsx scripts/test-safe-sync.ts
 - ✅ **Rollback automático** en caso de problemas
 - ✅ **Validación exhaustiva** de todos los campos de usuarios
 **Mensaje:** Implementación completa del sistema de sincronización segura para proteger datos de usuarios
-
-**Problema Resuelto:**
-- **CRÍTICO:** Pérdida de datos de usuarios durante sincronización desarrollo → producción
-- **Escenario:** Usuario se registra en producción, hace progreso, gana rachas → Sincronización completa borra todo
-
-**Solución Implementada:**
-- **Sincronización Inteligente:** Solo sincroniza contenido, respeta completamente datos de usuarios
-- **Backup Automático:** Crea backup completo antes de cada operación
-- **Validaciones Múltiples:** Verifica integridad pre y post-sync
-- **Rollback Automático:** Restaura desde backup si detecta problemas
-
-**Archivos Creados:**
-- `scripts/safe-sync-to-production.ts` - Sincronización segura principal
-- `scripts/validate-streaks-production.ts` - Validación del sistema de rachas
-- `scripts/test-safe-sync.ts` - Pruebas del sistema
-- `docs/SAFE-SYNC-GUIDE.md` - Documentación completa
-
-**Configuración de Tablas:**
-- **🟢 Safe to Sync:** courses, lessons, resources, events, promotions, products, prices
-- **🔴 NUNCA tocar:** users, enrollments, progress, payments, subscriptions, streaks, badges, points
-
-**Comandos Disponibles:**
-```bash
-# Comparar entornos
-npx tsx scripts/safe-sync-to-production.ts compare
-
-# Simulación sin cambios
-npx tsx scripts/safe-sync-to-production.ts dry-run
-
-# Sincronización real
-npx tsx scripts/safe-sync-to-production.ts sync
-
-# Validar sistema de rachas
-npx tsx scripts/validate-streaks-production.ts quick
-npx tsx scripts/validate-streaks-production.ts full
-
-# Probar sistema completo
-npx tsx scripts/test-safe-sync.ts
-```
-
-**Beneficios:**
-- ✅ **Cero riesgo** de pérdida de datos de usuarios
-- ✅ **Backup automático** antes de cada operación
-- ✅ **Validaciones múltiples** de integridad
-- ✅ **Sincronización selectiva** (solo contenido nuevo)
-- ✅ **Rollback automático** en caso de problemas
 
 ---
 
