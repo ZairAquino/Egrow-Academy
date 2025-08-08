@@ -89,7 +89,11 @@
       "Bash(tsx scripts/send-reminders-direct.ts:*)",
       "Bash(tsx scripts/send-urgent-reminders-NOW.ts:*)",
       "Bash(tsx scripts/send-live-now-reminders.ts:*)",
-      "Bash(tsx scripts/test-streaks-debug.ts:*)"
+      "Bash(tsx scripts/test-streaks-debug.ts:*)",
+      "Bash(tsx scripts/check-neon-branch-data.ts:*)",
+      "Bash(tsx scripts/send-live-webinar-NOW.ts:*)",
+      "Bash(tsx scripts/debug-webinar-users.ts:*)",
+      "Bash(tsx scripts/send-live-webinar-CORRECTED.ts:*)"
     ],
     "deny": []
   }

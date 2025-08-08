@@ -72,9 +72,15 @@ export default function StreakDisplay({ compact = false }: StreakDisplayProps) {
   };
 
   const fetchStreakStats = async () => {
-    if (!isAuthenticated) return;
+    console.log('📊 [STREAKS] fetchStreakStats llamado - isAuthenticated:', isAuthenticated, 'user:', !!user);
+    
+    if (!isAuthenticated) {
+      console.log('❌ [STREAKS] No autenticado, saliendo...');
+      return;
+    }
     
     try {
+      console.log('🔄 [STREAKS] Iniciando fetch...');
       setLoading(true);
       setError(null);
       
@@ -85,8 +91,11 @@ export default function StreakDisplay({ compact = false }: StreakDisplayProps) {
         }
       });
 
+      console.log('📡 [STREAKS] Response status:', response.status);
+
       if (response.ok) {
         const data = await response.json();
+        console.log('✅ [STREAKS] Datos recibidos:', data);
         setStats(data.data);
         setLastUpdate(new Date());
         console.log('✅ [STREAKS] Estadísticas actualizadas:', data.data);
@@ -106,18 +115,23 @@ export default function StreakDisplay({ compact = false }: StreakDisplayProps) {
       console.error('❌ [STREAKS] Error:', err);
       setError('Error de conexión');
     } finally {
+      console.log('🏁 [STREAKS] Fetch completado, setLoading(false)');
       setLoading(false);
     }
   };
 
   // Cargar estadísticas y preferencias al montar el componente
   useEffect(() => {
-    if (isAuthenticated) {
+    console.log('🔍 [STREAKS] useEffect disparado - isAuthenticated:', isAuthenticated, 'user:', !!user);
+    if (isAuthenticated && user) {
+      console.log('🚀 [STREAKS] Iniciando carga de estadísticas...');
       setError(null); // Clear any previous errors
       fetchStreakStats();
       fetchBadgeCustomization();
+    } else {
+      console.log('⚠️ [STREAKS] No autenticado o sin usuario - saltando carga');
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, user]);
 
   // Auto-refresh cada 30 segundos
   useEffect(() => {
@@ -162,12 +176,15 @@ export default function StreakDisplay({ compact = false }: StreakDisplayProps) {
     };
   }, []);
 
+  console.log('🖥️ [STREAKS] Renderizando - isAuthenticated:', isAuthenticated, 'loading:', loading, 'error:', error, 'stats:', !!stats);
+
   if (!isAuthenticated) {
+    console.log('❌ [STREAKS] No autenticado, no renderizando');
     return null;
   }
 
-
   if (loading && !stats) {
+    console.log('⏳ [STREAKS] Mostrando loading...');
     return (
       <div className="streak-display-loading">
         <div className="animate-pulse bg-gray-200 h-4 w-32 rounded"></div>
@@ -176,6 +193,7 @@ export default function StreakDisplay({ compact = false }: StreakDisplayProps) {
   }
 
   if (error) {
+    console.log('❌ [STREAKS] Mostrando error:', error);
     return (
       <div className="streak-display-error">
         <button 
@@ -189,12 +207,15 @@ export default function StreakDisplay({ compact = false }: StreakDisplayProps) {
   }
 
   if (!stats) {
+    console.log('📭 [STREAKS] Mostrando "Cargando rachas..." - loading:', loading, 'error:', error);
     return (
       <div className="streak-display-empty">
         <div className="text-gray-500 text-sm">Cargando rachas...</div>
       </div>
     );
   }
+
+  console.log('✅ [STREAKS] Mostrando componente completo con stats:', stats);
 
   const getStreakEmoji = (streak: number): string => {
     if (streak >= 52) return '🚀'; // 1 año
