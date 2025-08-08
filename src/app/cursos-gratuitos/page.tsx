@@ -50,7 +50,7 @@ export default function CursosGratuitosPage() {
       duration: '4 horas',
       level: 'Intermedio',
       price: 'Gratis',
-      image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=250&fit=crop&crop=center',
+      image: '/images/18.png',
       tag: 'eGrow Academy',
       instructor: 'eGrow Academy',
       source: 'eGrow Academy',

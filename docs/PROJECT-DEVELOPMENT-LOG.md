@@ -26,6 +26,14 @@
 **Impacto:**
 - El build de Vercel vuelve a ejecutarse correctamente.
 
+### ✅ Consistencia de imagen en cursos gratuitos: 2025-08-08
+**Mensaje:** Unificada la imagen del curso "Asistentes virtuales con IA" en la página de Cursos Gratuitos para usar `/images/18.png`, igual que en otras páginas.
+
+**Archivos Modificados:**
+- `src/app/cursos-gratuitos/page.tsx`
+
+**Impacto:**
+- Consistencia visual entre listados y páginas de curso.
 
 ### ✅ Fix de build en Vercel: 2025-08-07
 **Mensaje:** Corrección de sintaxis JSX que impedía el build de producción.
