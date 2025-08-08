@@ -137,6 +137,21 @@ export default function CoursesContent() {
     // Función para obtener cursos de fallback
     const getFallbackCourses = (): Course[] => [
       {
+        id: 'monetiza-voz-ia-elevenlabs',
+        title: 'Monetiza tu Voz con IA: ElevenLabs para anuncios, cursos y podcasts (sin curva técnica)',
+        description: 'Aprende a monetizar tu voz utilizando inteligencia artificial con ElevenLabs. Crea anuncios profesionales, cursos narrados y podcasts de alta calidad sin conocimientos técnicos. Desde la configuración básica hasta estrategias avanzadas de monetización.',
+        category: 'IA_PARA_EMPRENDER',
+        duration: '8 horas',
+        level: 'Principiante',
+        price: 'Premium',
+        image: '/images/21.png',
+        tag: 'Premium',
+        isFree: false,
+        requiresAuth: true,
+        priceId: 'price_monetiza_voz_ia',
+        link: '/curso/monetiza-voz-ia-elevenlabs'
+      },
+      {
         id: 'monetiza-ia',
         title: 'Monetiza con la IA',
         description: 'Descubre cómo generar ingresos utilizando inteligencia artificial. Aprende estrategias prácticas para monetizar herramientas de IA y crear fuentes de ingresos pasivos.',
