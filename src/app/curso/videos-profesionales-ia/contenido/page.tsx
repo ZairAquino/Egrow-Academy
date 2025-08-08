@@ -68,7 +68,47 @@ export default function ContenidoVideosProfesionalesIAPage() {
   return (
     <>
       <Navbar />
-      <main>
+      <main className="main-content">
+        {/* Header con breadcrumb y título */}
+        <section className="course-header pt-14 md:pt-[95px]">
+          <div className="container">
+            <div className="course-header-content">
+              <div className="course-breadcrumb">
+                <div className="breadcrumb-container">
+                  <a href="/" className="breadcrumb-item">
+                    <span className="breadcrumb-icon">🏠</span>
+                    <span className="breadcrumb-text">Inicio</span>
+                  </a>
+                  <span className="breadcrumb-separator">/</span>
+                  <a href="/cursos-gratuitos" className="breadcrumb-item">
+                    <span className="breadcrumb-icon">📚</span>
+                    <span className="breadcrumb-text">Cursos Gratuitos</span>
+                  </a>
+                  <span className="breadcrumb-separator">/</span>
+                  <a href="/curso/videos-profesionales-ia" className="breadcrumb-item">
+                    <span className="breadcrumb-icon">🎬</span>
+                    <span className="breadcrumb-text">Videos profesionales con IA</span>
+                  </a>
+                  <span className="breadcrumb-separator">/</span>
+                  <span className="breadcrumb-item active">
+                    <span className="breadcrumb-icon">📖</span>
+                    <span className="breadcrumb-text">Contenido</span>
+                  </span>
+                </div>
+              </div>
+              <div className="header-main">
+                <div className="header-content">
+                  <h1 className="course-title">{courseData.title}</h1>
+                  <p className="course-description">
+                    Domina las herramientas de IA para crear contenido audiovisual profesional. Aprende a generar videos, editar con inteligencia artificial y optimizar para diferentes plataformas.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Contenido principal */}
         <section>
           <div className="container mx-auto px-4 py-12">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -114,6 +154,25 @@ export default function ContenidoVideosProfesionalesIAPage() {
         </section>
       </main>
       <Footer />
+
+      {/* Estilos específicos recuperados del diseño anterior (resumen) */}
+      <style jsx>{`
+        .course-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; padding: 2rem 0; }
+        .course-header .container { max-width: 1200px; margin: 0 auto; }
+        .course-header-content { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+        .course-breadcrumb { margin-bottom: 2rem; font-size: 0.9rem; }
+        .breadcrumb-container { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+        .breadcrumb-item { display: flex; align-items: center; gap: .5rem; color: rgba(255,255,255,.9); text-decoration: none; padding: .5rem .75rem; border-radius: 8px; transition: all .3s ease; background: rgba(255,255,255,.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,.2); }
+        .breadcrumb-item:hover { color: #fff; background: rgba(255,255,255,.2); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,.1); }
+        .breadcrumb-item.active { color: #fff; background: rgba(255,255,255,.25); border-color: rgba(255,255,255,.4); font-weight: 600; }
+        .breadcrumb-icon { font-size: 1rem; }
+        .breadcrumb-separator { color: rgba(255,255,255,.6); font-weight: 600; margin: 0 .25rem; }
+        .header-main { display: flex; justify-content: flex-start; align-items: flex-start; gap: 2rem; }
+        .header-content { display: flex; flex-direction: column; align-items: flex-start; gap: 1rem; text-align: left; width: 100%; }
+        .course-title { font-size: 2rem; font-weight: 700; margin: 0; text-align: left; }
+        .course-description { margin: 0; opacity: .95; }
+        @media (max-width: 768px) { .header-main { flex-direction: column; gap: 1rem; } .course-title { font-size: 1.8rem; } }
+      `}</style>
     </>
   );
 }
