@@ -44,6 +44,45 @@ export default function ContenidoVideosProfesionalesIAPage() {
     setCurrentLesson
   } = useCourseProgress('videos-profesionales-ia', isEnrolled);
 
+  // Renderiza las acciones de lección evitando IIFE y patrones que confunden el parser en build
+  function renderLessonAction(): JSX.Element | null {
+    const currentLesson = courseData.lessons[progress.currentLesson];
+    const currentModuleId = currentLesson.moduleId;
+    const isLastLesson = isLastLessonOfModule(currentLesson.id, currentModuleId);
+    const isCurrentLessonCompleted = progress.completedLessons.includes(currentLesson.id);
+    const isModuleAlreadyCompleted = isModuleCompleted(currentModuleId);
+
+    if (isModuleAlreadyCompleted) {
+      return null;
+    }
+
+    if (isLastLesson) {
+      const canComplete = canCompleteModuleWithPrerequisites(currentModuleId);
+      return (
+        <button
+          className={`btn btn-large ${canComplete ? 'btn-success' : 'btn-secondary'}`}
+          onClick={() => handleCompleteModule(currentModuleId)}
+          disabled={!canComplete}
+          style={{
+            fontSize: '1.1em',
+            padding: '12px 24px',
+            opacity: canComplete ? 1 : 0.6,
+            cursor: canComplete ? 'pointer' : 'not-allowed'
+          }}
+          title={canComplete ? 'Completar módulo' : 'Completa todas las lecciones anteriores del módulo primero'}
+        >
+          🏆 Completar {getModuleTitle(currentModuleId).split(':')[0]}
+        </button>
+      );
+    }
+
+    return isCurrentLessonCompleted ? null : (
+      <button className="btn btn-primary" onClick={handleCompleteCurrentLesson}>
+        ✅ Completar Lección
+      </button>
+    );
+  }
+
   const courseData = {
     id: 'videos-profesionales-ia',
     title: 'Aprende a crear videos profesionales con IA',
@@ -1954,49 +1993,7 @@ export default function ContenidoVideosProfesionalesIAPage() {
                       )}
                       
                       {/* Lógica de botones basada en si es la última lección del módulo */}
-                      {(() => {
-                        const currentLesson = courseData.lessons[progress.currentLesson];
-                        const currentModuleId = currentLesson.moduleId;
-                        const isLastLesson = isLastLessonOfModule(currentLesson.id, currentModuleId);
-                        const isCurrentLessonCompleted = progress.completedLessons.includes(currentLesson.id);
-                        const isModuleAlreadyCompleted = isModuleCompleted(currentModuleId);
-                        
-                        if (isModuleAlreadyCompleted) {
-                          // Módulo ya completado - no mostrar botones de completar
-                          return null;
-                        }
-                        
-                        if (isLastLesson) {
-                          // Última lección del módulo - solo mostrar botón "Completar Módulo"
-                          const canComplete = canCompleteModuleWithPrerequisites(currentModuleId);
-                          return (
-                            <button 
-                              className={`btn btn-large ${canComplete ? 'btn-success' : 'btn-secondary'}`}
-                              onClick={() => handleCompleteModule(currentModuleId)}
-                              disabled={!canComplete}
-                              style={{ 
-                                fontSize: '1.1em', 
-                                padding: '12px 24px',
-                                opacity: canComplete ? 1 : 0.6,
-                                cursor: canComplete ? 'pointer' : 'not-allowed'
-                              }}
-                              title={canComplete ? 'Completar módulo' : 'Completa todas las lecciones anteriores del módulo primero'}
-                            >
-                              🏆 Completar {getModuleTitle(currentModuleId).split(':')[0]}
-                            </button>
-                          );
-                        } else {
-                          // Lección regular - mostrar botón "Completar Lección" si no está completada
-                          return !isCurrentLessonCompleted && (
-                            <button 
-                              className="btn btn-primary"
-                              onClick={handleCompleteCurrentLesson}
-                            >
-                              ✅ Completar Lección
-                            </button>
-                          );
-                        }
-                      })()}
+                      {renderLessonAction()}
                     </div>
                   </div>
                 </div>
@@ -2102,8 +2099,47 @@ export default function ContenidoVideosProfesionalesIAPage() {
                     })}
                   </div>
                   
-                  {/* Botón Terminar Curso (temporalmente deshabilitado para resolver error de build) */}
-                  <div className="complete-course-section"></div>
+                  {/* Botón Terminar Curso */}
+                  <div className="complete-course-section">
+                    {isCourseCompleted() ? (
+                      <div className="course-completed-message">
+                        <div className="completion-badge">
+                          <span className="completion-icon">🏆</span>
+                          <span className="completion-text">¡Curso Completado!</span>
+                        </div>
+                        <p className="completion-info">
+                          Has completado exitosamente este curso. Puedes revisar el contenido cuando quieras.
+                        </p>
+                        <div className="completion-stats">
+                          <span>📊 Progreso: 100%</span>
+                          <span>✅ Lecciones: {courseData.lessons.length}/{courseData.lessons.length}</span>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <button
+                          className={`btn btn-complete-course ${!areAllLessonsCompleted() ? 'disabled' : ''}`}
+                          onClick={handleCompleteCourse}
+                          disabled={isSaving || !areAllLessonsCompleted()}
+                        >
+                          {isSaving ? '🔄 Procesando...' : '🏆 Terminar Curso'}
+                        </button>
+                        <p className="complete-course-info">
+                          {areAllLessonsCompleted()
+                            ? '¡Felicidades! Has completado todas las lecciones. Puedes terminar el curso.'
+                            : (
+                                <>
+                                  Completa todas las lecciones
+                                  {' '}<strong>{progress.completedLessons.length}</strong>
+                                  /
+                                  <strong>{courseData.lessons.length}</strong>
+                                  {' '}para poder terminar el curso
+                                </>
+                              )}
+                        </p>
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
