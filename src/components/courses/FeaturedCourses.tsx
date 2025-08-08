@@ -3,14 +3,14 @@ import Link from 'next/link';
 
 const featuredCourses = [
   {
-    image: "/images/optimized/v-5.webp",
-    title: "Monetiza con la IA",
-    description: "Descubre cómo generar ingresos utilizando inteligencia artificial. Aprende estrategias prácticas para monetizar herramientas de IA y crear fuentes de ingresos pasivos.",
+    image: "/images/courses/monetiza-voz-ia.png",
+    title: "Monetiza tu Voz con IA: ElevenLabs para anuncios, cursos y podcasts (sin curva técnica)",
+    description: "Aprende a monetizar tu voz con IA usando ElevenLabs. Crea anuncios, cursos narrados y podcasts profesionales sin curva técnica.",
     tag: "⭐ Curso Destacado",
-    duration: "3 horas",
-    level: "Intermedio",
-    link: "/curso/monetiza-ia",
-    isFree: true
+    duration: "8 horas",
+    level: "Principiante",
+    link: "/curso/monetiza-voz-ia-elevenlabs",
+    isFree: false
   },
   {
     image: "/images/18.png",

@@ -95,10 +95,12 @@ export default function CoursesContent() {
           
           const formattedCourses: Course[] = (data.courses || []).map((course: any) => {
             console.log('🔄 Procesando curso:', course.title, 'Slug:', course.slug);
+            const shortGuionesDescription = 'Aprende a crear guiones efectivos para videos promocionales usando herramientas de IA como ChatGPT y Claude.';
+            const isGuionesCourse = course.slug === 'guiones-videos-promocionales-ia';
             return {
               id: course.id,
               title: course.title,
-              description: course.description || '',
+              description: isGuionesCourse ? shortGuionesDescription : (course.description || ''),
               category: course.category || 'OTRO',
               duration: course.durationHours ? `${course.durationHours} horas` : 'N/A',
               level: course.difficulty || 'N/A',

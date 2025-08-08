@@ -1,6 +1,22 @@
 # 📋 Log de Desarrollo - eGrow Academy
 
-## 🚀 Última Actualización: 2025-08-07
+## 🚀 Última Actualización: 2025-08-08
+
+### ✅ Actualizaciones de cursos: 2025-08-08
+**Mensaje:** Ajustes en cursos destacados de la página principal y consistencia de descripciones en el listado general de cursos.
+
+**Cambios Principales:**
+- Se reemplazó el curso destacado "Monetiza con la IA" por "Monetiza tu Voz con IA: ElevenLabs" en la sección "Cursos Destacados" de la página principal.
+- Se unificó la descripción del curso "Guiones para videos promocionales con IA" en la página de "Todos los cursos" para que coincida con la versión corta usada en "Cursos gratuitos".
+
+**Archivos Modificados:**
+- `src/components/courses/FeaturedCourses.tsx`
+- `src/components/CoursesContent.tsx`
+
+**Impacto:**
+- Mayor coherencia visual y de contenido entre páginas.
+- Promoción actualizada al curso más relevante sin afectar datos de usuarios ni la base de datos.
+
 
 ### ✅ Fix de build en Vercel: 2025-08-07
 **Mensaje:** Corrección de sintaxis JSX que impedía el build de producción.
