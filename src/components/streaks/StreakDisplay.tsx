@@ -46,6 +46,7 @@ export default function StreakDisplay({ compact = false }: StreakDisplayProps) {
   const [error, setError] = useState<string | null>(null);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
   const [badgeCustomization, setBadgeCustomization] = useState<BadgeCustomization | null>(null);
+  const [hasAttemptedLoad, setHasAttemptedLoad] = useState(false);
 
 
   const fetchBadgeCustomization = async () => {
@@ -126,8 +127,20 @@ export default function StreakDisplay({ compact = false }: StreakDisplayProps) {
     if (isAuthenticated && user) {
       console.log('🚀 [STREAKS] Iniciando carga de estadísticas...');
       setError(null); // Clear any previous errors
+      setHasAttemptedLoad(true);
       fetchStreakStats();
       fetchBadgeCustomization();
+    } else if (isAuthenticated && !user) {
+      // Caso especial: autenticado pero sin datos de usuario cargados
+      console.log('⏳ [STREAKS] Autenticado pero esperando datos de usuario...');
+      setHasAttemptedLoad(true);
+      // Intentar cargar después de un delay
+      setTimeout(() => {
+        if (isAuthenticated) {
+          fetchStreakStats();
+          fetchBadgeCustomization();
+        }
+      }, 1000);
     } else {
       console.log('⚠️ [STREAKS] No autenticado o sin usuario - saltando carga');
     }
@@ -207,10 +220,29 @@ export default function StreakDisplay({ compact = false }: StreakDisplayProps) {
   }
 
   if (!stats) {
-    console.log('📭 [STREAKS] Mostrando "Cargando rachas..." - loading:', loading, 'error:', error);
+    console.log('📭 [STREAKS] Mostrando "Cargando rachas..." - loading:', loading, 'error:', error, 'hasAttemptedLoad:', hasAttemptedLoad);
+    
+    if (!hasAttemptedLoad) {
+      return (
+        <div className="streak-display-empty">
+          <div className="text-gray-500 text-sm">Iniciando sistema de rachas...</div>
+        </div>
+      );
+    }
+    
     return (
       <div className="streak-display-empty">
         <div className="text-gray-500 text-sm">Cargando rachas...</div>
+        <button 
+          onClick={() => {
+            console.log('🔄 [STREAKS] Retry manual activado');
+            fetchStreakStats();
+            fetchBadgeCustomization();
+          }}
+          className="text-blue-500 hover:text-blue-700 text-xs mt-1"
+        >
+          Reintentar
+        </button>
       </div>
     );
   }
