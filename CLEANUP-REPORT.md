@@ -83,3 +83,4 @@ DespuÃ©s de la limpieza, el proyecto mantiene:
 *Estado: Completado âœ…*\n- ? Eliminados: docker-compose.yml, Dockerfile.dev y scripts docker:* de package.json
 
 - ?? Archivos raíz reubicados en .archive\cleanup-20250808-132201; respaldos movidos a backups/ y auditoría a security/.
+\n- ? Eliminados definitivamente: scripts sueltos no referenciados y carpeta .archive/cleanup-20250808-132201
