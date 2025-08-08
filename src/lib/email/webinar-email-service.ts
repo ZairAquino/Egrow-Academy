@@ -247,6 +247,17 @@ export async function sendWebinarRecordingEmail(
 }
 
 /**
+ * Envía email de recordatorio genérico (usa el de 30 minutos por defecto)
+ */
+export async function sendWebinarReminderEmail(
+  webinar: Webinar, 
+  registration: WebinarRegistration
+): Promise<boolean> {
+  // Por ahora usa el recordatorio de 30 minutos
+  return await sendWebinarThirtyMinuteReminderEmail(webinar, registration);
+}
+
+/**
  * Envía recordatorios masivos para un webinar
  */
 export async function sendBulkWebinarReminders(webinarId: string): Promise<{ success: number; failed: number }> {
