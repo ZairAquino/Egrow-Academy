@@ -2,7 +2,7 @@ import { Resend } from 'resend';
 import { Webinar, WebinarRegistration } from '@/types/webinar';
 import { 
   getWebinarConfirmationEmail, 
-  getWebinarReminderEmail, 
+  getWebinarLiveNowEmail, 
   getWebinarFiveHourReminderEmail,
   getWebinarThirtyMinuteReminderEmail,
   getWebinarRecordingEmail,
@@ -163,15 +163,18 @@ export async function sendWebinarThirtyMinuteReminderEmail(
 }
 
 /**
- * Envía email de recordatorio (15 minutos antes)
+ * Envía email cuando el webinar está EN VIVO (justo al comenzar)
  */
-export async function sendWebinarReminderEmail(
+export async function sendWebinarLiveNowEmail(
   webinar: Webinar, 
   registration: WebinarRegistration
 ): Promise<boolean> {
   try {
     const userName = `${registration.firstName} ${registration.lastName}`.trim();
     const userEmail = registration.email;
+
+    console.log('📧 Preparando email EN VIVO para:', userEmail);
+    console.log('📧 Webinar:', webinar.title);
 
     const emailData: WebinarEmailData = {
       webinar,
@@ -180,9 +183,13 @@ export async function sendWebinarReminderEmail(
       userEmail
     };
 
-    const emailContent = getWebinarReminderEmail(emailData);
+    const emailContent = getWebinarLiveNowEmail(emailData);
 
     const fromEmail = process.env.RESEND_FROM_EMAIL || 'noreply@egrowacademy.com';
+    console.log('📧 API Key configurada:', !!process.env.RESEND_API_KEY);
+    console.log('📧 Remitente:', `eGrow Academy <${fromEmail}>`);
+    console.log('📧 Destinatario:', userEmail);
+
     const result = await resend.emails.send({
       from: `eGrow Academy <${fromEmail}>`,
       to: [userEmail],
@@ -190,10 +197,15 @@ export async function sendWebinarReminderEmail(
       html: emailContent.html,
     });
 
-    console.log('✅ Email de recordatorio enviado:', result);
+    console.log('✅ Email EN VIVO enviado:', result);
     return true;
   } catch (error) {
-    console.error('❌ Error enviando email de recordatorio:', error);
+    console.error('❌ Error enviando email EN VIVO:', error);
+    console.error('❌ Detalles del error:', {
+      message: error.message,
+      code: error.code,
+      statusCode: error.statusCode
+    });
     return false;
   }
 }

@@ -91,23 +91,31 @@ export default function CoursesContent() {
         if (response.ok) {
           const data = await response.json();
           console.log('✅ Cursos obtenidos exitosamente:', data.courses?.length || 0);
+          console.log('📊 Datos de cursos:', data.courses);
           
-          const formattedCourses: Course[] = (data.courses || []).map((course: any) => ({
-            id: course.id,
-            title: course.title,
-            description: course.description || '',
-            category: course.category || 'OTRO',
-            duration: course.durationHours ? `${course.durationHours} horas` : 'N/A',
-            level: course.difficulty || 'N/A',
-            price: course.isFree ? 'Gratis' : 'Premium',
-            image: course.imageUrl || '/images/courses/default.jpg',
-            tag: course.isFree ? 'Gratis' : 'Premium',
-            isFree: course.isFree || false,
-            requiresAuth: course.requiresAuth || true,
-            link: `/curso/${course.slug}`
-          }));
+          const formattedCourses: Course[] = (data.courses || []).map((course: any) => {
+            console.log('🔄 Procesando curso:', course.title, 'Slug:', course.slug);
+            return {
+              id: course.id,
+              title: course.title,
+              description: course.description || '',
+              category: course.category || 'OTRO',
+              duration: course.durationHours ? `${course.durationHours} horas` : 'N/A',
+              level: course.difficulty || 'N/A',
+              price: course.isFree ? 'Gratis' : 'Premium',
+              image: course.imageUrl || '/images/courses/default.jpg',
+              tag: course.isFree ? 'Gratis' : 'Premium',
+              isFree: course.isFree || false,
+              requiresAuth: course.requiresAuth || true,
+              link: `/curso/${course.slug}`
+            };
+          });
+          
+          console.log('📋 Cursos formateados:', formattedCourses.length);
+          console.log('📋 Lista de cursos formateados:', formattedCourses.map(c => ({ title: c.title, slug: c.link })));
           
           if (formattedCourses.length > 0) {
+            console.log('✅ Usando cursos de la base de datos');
             setCourses(formattedCourses);
           } else {
             console.log('⚠️ No se encontraron cursos en la base de datos, usando fallback');

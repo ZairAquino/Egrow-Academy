@@ -556,78 +556,234 @@ export function getWebinarThirtyMinuteReminderEmail(data: WebinarEmailData) {
 }
 
 /**
- * Plantilla para email de recordatorio (15 minutos antes)
+ * Plantilla para email cuando el webinar está EN VIVO (justo al comenzar)
  */
-export function getWebinarReminderEmail(data: WebinarEmailData) {
+export function getWebinarLiveNowEmail(data: WebinarEmailData) {
   const { webinar, registration, userName, userEmail } = data;
   
   return {
-    subject: `⏰ ¡El webinar comienza en 15 minutos! - "${webinar.title}"`,
+    subject: `🚀 ¡Ya estamos en vivo! Tu clase gratuita de eGrow Academy ha comenzado`,
     html: `
       <!DOCTYPE html>
       <html>
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Recordatorio de Webinar - eGrow Academy</title>
+        <title>¡Clase en Vivo Ahora! - eGrow Academy</title>
         <style>
-          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-          .content { background: #f9f9f9; padding: 30px; }
-          .footer { background: #333; color: white; padding: 20px; text-align: center; border-radius: 0 0 10px 10px; }
-          .button { display: inline-block; background: #ff6b6b; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; }
-          .info-box { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #ff6b6b; }
-          .urgent { background: #ffeaa7; padding: 15px; border-radius: 5px; margin: 15px 0; border: 2px solid #fdcb6e; }
+          body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333333;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+          }
+          .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          }
+          .header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eeeeee;
+            margin-bottom: 20px;
+          }
+          .header h1 {
+            color: #0D47A1;
+            font-size: 24px;
+            margin: 0;
+          }
+          .live-box {
+            background: linear-gradient(135deg, #FF5252, #D32F2F);
+            color: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 22px;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 16px rgba(255, 82, 82, 0.4);
+            animation: liveGlow 1.5s infinite alternate;
+            border: 3px solid #FFCDD2;
+          }
+          @keyframes liveGlow {
+            from { 
+              box-shadow: 0 6px 16px rgba(255, 82, 82, 0.4);
+              transform: scale(1);
+            }
+            to { 
+              box-shadow: 0 8px 24px rgba(255, 82, 82, 0.6);
+              transform: scale(1.01);
+            }
+          }
+          .join-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            color: #ffffff !important;
+            padding: 20px 40px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 20px;
+            margin: 25px 0;
+            box-shadow: 0 6px 12px rgba(76, 175, 80, 0.3);
+            animation: buttonPulse 2s infinite;
+          }
+          @keyframes buttonPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+          }
+          .join-button:hover {
+            background: linear-gradient(135deg, #66BB6A, #388E3C);
+            transform: scale(1.05);
+          }
+          .whatsapp-section {
+            text-align: center;
+            margin-top: 30px;
+            padding: 30px 20px;
+            background-color: #E8F5E9;
+            border-radius: 8px;
+            border: 2px solid #25D366;
+          }
+          .whatsapp-section h2 {
+            color: #0D47A1;
+            font-size: 24px;
+            margin-bottom: 10px;
+          }
+          .whatsapp-button {
+            display: inline-block;
+            background-color: #25D366;
+            color: #ffffff !important;
+            padding: 15px 30px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 18px;
+            margin: 15px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+          }
+          .whatsapp-button:hover {
+            background-color: #128C7E;
+          }
+          .footer {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #eeeeee;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #777777;
+          }
+          .live-indicator {
+            background: #FF1744;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 15px 0;
+            animation: blink 1s infinite;
+          }
+          @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.5; }
+          }
+          .urgent-info {
+            background: linear-gradient(135deg, #FFF3E0, #FFE0B2);
+            border: 2px solid #FF9800;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+          }
+          .urgent-info h3 {
+            color: #E65100;
+            margin-top: 0;
+            font-size: 20px;
+          }
+          .meet-link {
+            background: #E3F2FD;
+            border: 2px solid #2196F3;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+          }
+          .meet-link a {
+            color: #1976D2 !important;
+            font-weight: bold;
+            font-size: 18px;
+            text-decoration: none;
+          }
+          .meet-link a:hover {
+            text-decoration: underline;
+          }
         </style>
       </head>
       <body>
         <div class="container">
           <div class="header">
-            <h1>⏰ ¡El webinar comienza en 15 minutos!</h1>
-            <p>No te pierdas esta oportunidad única</p>
+            <h1>¡Únete ahora! La clase ha comenzado</h1>
           </div>
           
-          <div class="content">
-            <h2>Hola ${userName},</h2>
-            
-            <div class="urgent">
-              <h3>🚨 ¡URGENTE!</h3>
-              <p>El webinar <strong>"${webinar.title}"</strong> comienza en <strong>15 minutos</strong>.</p>
-            </div>
-            
-            <div class="info-box">
-              <h3>🔗 Link de Acceso Directo</h3>
-              <p><strong>Google Meet:</strong> <a href="https://meet.google.com/ido-wvhw-zaj">https://meet.google.com/ido-wvhw-zaj</a></p>
-              <p><strong>Hora de inicio:</strong> ${formatWebinarDate(webinar.dateTime)}</p>
-            </div>
-            
-            <h3>📋 Prepárate:</h3>
-            <ul>
-              <li>✅ Ten tu computadora lista</li>
-              <li>✅ Verifica tu conexión a internet</li>
-              <li>✅ Usa auriculares para mejor audio</li>
-              <li>✅ Ten papel y lápiz para notas</li>
-              <li>✅ Únete 5 minutos antes</li>
-            </ul>
-            
-            <div style="text-align: center; margin: 30px 0;">
-              <a href="https://meet.google.com/ido-wvhw-zaj" class="button">
-                🚀 Unirse Ahora al Webinar
-              </a>
-            </div>
-            
-            <p><strong>¿No puedes asistir?</strong> No te preocupes, te enviaremos la grabación por email después del evento.</p>
-            
-            <p>¡Nos vemos en el webinar!</p>
-            
-            <p>Saludos,<br>
-            <strong>El equipo de eGrow Academy</strong></p>
+          <div class="live-indicator">
+            🔴 EN VIVO AHORA
           </div>
           
+          <div class="live-box">
+              🚀 ¡LA CLASE ESTÁ EN VIVO AHORA! 🚀
+              <br>No te pierdas ni un minuto. Únete de inmediato.
+          </div>
+
+          <p>Hola ${userName},</p>
+
+          <p>¡El momento ha llegado! Nuestra clase gratuita sobre cómo crear videos profesionales con IA <strong>acaba de empezar</strong>. Estamos en vivo y esperándote.</p>
+          
+          <p style="font-size: 22px; font-weight: bold; color: #E91E63; margin-bottom: 5px; text-align: center;">
+            🎥 Aprende a crear videos profesionales con IA
+          </p>
+
+          <div class="urgent-info">
+            <h3>⚡ ¡ÚNETE INMEDIATAMENTE!</h3>
+            <p style="margin-bottom: 0; color: #BF360C; font-size: 16px;">
+              La clase ya comenzó. Cada segundo cuenta para no perderte el contenido valioso.
+            </p>
+          </div>
+
+          <div class="meet-link">
+            <p style="margin-bottom: 10px; color: #1976D2; font-weight: bold;">📅 ${formatWebinarDate(webinar.dateTime)}</p>
+            <p style="margin-bottom: 10px; color: #1976D2;">🔗 Acceso directo:</p>
+            <a href="https://meet.google.com/ido-wvhw-zaj">https://meet.google.com/ido-wvhw-zaj</a>
+          </div>
+
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="https://meet.google.com/ido-wvhw-zaj" class="join-button">
+              🚀 UNIRSE AHORA A LA CLASE EN VIVO
+            </a>
+          </div>
+
+          <p style="text-align: center; font-size: 18px; color: #D32F2F; font-weight: bold;">
+            ¡Te esperamos dentro! No dejes pasar esta oportunidad única.
+          </p>
+
+          <div class="whatsapp-section">
+              <h2>🚀 Únete a nuestra comunidad de WhatsApp</h2>
+              <p style="font-size: 16px; color: #333333;">Si aún no eres parte de nuestro grupo, únete para conectar con otros <strong>profesionistas y freelancers</strong>. ¡No te quedes fuera de la conversación!</p>
+              <a href="https://chat.whatsapp.com/F2syDYAv6WS1ADYdUi7hxT" class="whatsapp-button">Unirte al Grupo de WhatsApp</a>
+          </div>
+
           <div class="footer">
-            <p>© 2024 eGrow Academy. Todos los derechos reservados.</p>
-            <p>Si tienes problemas para unirte, contacta soporte@egrow-academy.com</p>
+            <p>Nos vemos dentro,<br>
+            <strong>Equipo de eGrow Academy</strong><br>
+            <a href="https://www.egrowacademy.com" style="color: #007bff; text-decoration: none;">www.egrowacademy.com</a></p>
           </div>
         </div>
       </body>

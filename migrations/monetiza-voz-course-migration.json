@@ -1,0 +1,125 @@
+{
+  "course": {
+    "id": "cme30lnzr0001e5lk928moflk",
+    "title": "Monetiza tu Voz con IA: ElevenLabs para anuncios, cursos y podcasts (sin curva técnica)",
+    "slug": "monetiza-voz-ia-elevenlabs",
+    "description": "Aprende a monetizar tu voz utilizando inteligencia artificial con ElevenLabs. Crea anuncios profesionales, cursos narrados y podcasts de alta calidad sin conocimientos técnicos. Desde la configuración básica hasta estrategias avanzadas de monetización.",
+    "price": "97",
+    "imageUrl": "/images/courses/monetiza-voz-ia.png",
+    "createdAt": "2025-08-08T16:02:52.214Z",
+    "updatedAt": "2025-08-08T17:03:13.746Z"
+  },
+  "lessons": [
+    {
+      "id": "cme32go3u0001e5jk05eq8352",
+      "title": "1.1 Origen de ElevenLabs (story breve)",
+      "content": "## Origen de ElevenLabs\n\n### Fundadores y motivación\nFundada en 2022 por Mati Staniszewski y Piotr Dobkowski; la inspiración vino de crecer con doblajes monótonos y querer voces sintéticas realistas. \n\n### Significado del nombre\n\"Eleven\" alude al:\n- 11 (divisibilidad matemática)\n- Apollo 11 (exploración espacial)  \n- \"Turn it up to 11\" (referencia cultural)\n\n### Momentum empresarial\n- Modelo propio de IA\n- Locuciones naturales de alta calidad\n- En dos años alcanzó ~$100M ARR\n\n### Por qué importa\n- 30+ idiomas soportados\n- Velocidad de procesamiento\n- Coste bajo por palabra\n- Accesibilidad global\n- Ronda Serie B de ~$80M\n\n### Entregable\nCrear un mini-pitch (3 frases) de cómo usarás ElevenLabs en tu proyecto personal o empresarial.",
+      "videoUrl": "https://www.youtube.com/watch?v=ejemplo-1-1",
+      "duration": 25,
+      "order": 1,
+      "courseId": "cme30lnzr0001e5lk928moflk",
+      "createdAt": "2025-08-08T16:54:58.314Z",
+      "updatedAt": "2025-08-08T16:54:58.314Z"
+    },
+    {
+      "id": "cme32goam0003e5jk3mkyp4ee",
+      "title": "1.2 Alcances y límites (ética y uso responsable)",
+      "content": "## Alcances y límites de ElevenLabs\n\n### Alcances principales\n- **Clonación de voz** para identidad de marca\n- **Doblaje exprés multilingüe** para contenido global\n- **Asistentes con emoción** para mejor UX\n- **Storytelling inmersivo** para audiencias cautivadas\n\n### Límites importantes\n- **Deepfakes/fraude**: Riesgo de uso malintencionado\n- **Derechos de autor/contratos**: Consideraciones legales\n- **Costo de tiempo real**: Limitaciones económicas\n- **Emociones extremas**: Aún imperfectas tecnológicamente\n\n### Principio ético clave\n> \"Amplifica tu mensaje, no reemplaces tu humanidad.\"\n\n### Entregable\nCrear una política breve de uso ético para tu marca usando la plantilla incluida en el curso.",
+      "videoUrl": "https://www.youtube.com/watch?v=ejemplo-1-2",
+      "duration": 30,
+      "order": 2,
+      "courseId": "cme30lnzr0001e5lk928moflk",
+      "createdAt": "2025-08-08T16:54:58.559Z",
+      "updatedAt": "2025-08-08T16:54:58.559Z"
+    },
+    {
+      "id": "cme32goey0005e5jkpt31edta",
+      "title": "1.3 Panorama TTS (comparativa rápida)",
+      "content": "## Panorama de Text-to-Speech (TTS)\n\n### Quién es quién\n- **Amazon Polly**: Enfocado en precio competitivo\n- **Google TTS Neural**: Versatilidad y ecosistema\n- **ElevenLabs**: Realismo y control emocional\n\n### Niveles de calidad\n- **Nivel A**: Correcto pero robótico\n- **Nivel B**: Entonación natural\n- **Nivel C**: Timbre y respiración realistas\n\n### Facilidad de uso\n- **AWS Polly**: Requiere IAM y configuración técnica\n- **Google TTS**: UI sencilla e intuitiva\n- **ElevenLabs**: Dashboard no-code + SDK avanzado\n\n### Costos aproximados (por 1M caracteres)\n- **Amazon**: ~$16 neural (~$4 estándar)\n- **Google**: ~$12–17 según configuración\n- **ElevenLabs**: Premium por realismo, con modo turbo\n\n### Casos de uso recomendados\n- **IVR masivo**: Amazon Polly\n- **Micro-learning**: Google TTS\n- **Audiolibros/podcasts premium**: ElevenLabs\n\n### Entregable\nIdentificar qué herramienta usar según tu caso específico de negocio.",
+      "videoUrl": "https://www.youtube.com/watch?v=ejemplo-1-3",
+      "duration": 25,
+      "order": 3,
+      "courseId": "cme30lnzr0001e5lk928moflk",
+      "createdAt": "2025-08-08T16:54:58.714Z",
+      "updatedAt": "2025-08-08T16:54:58.714Z"
+    },
+    {
+      "id": "cme32lcta0001e5fgd5kgyuq0",
+      "title": "2.1 Introducción al flujo",
+      "content": "## Introducción al flujo de trabajo con ElevenLabs\n\n### Visión general del proceso\nEn esta lección obtendrás una vista panorámica de todo el flujo de trabajo que dominarás en este módulo, desde la configuración inicial hasta la producción final.\n\n### Funciones que cubriremos:\n1. **Text-to-Speech básico**: Conversión de texto a voz\n2. **Configuración de parámetros**: Ajuste de velocidad, tono y emoción\n3. **Postproducción**: Efectos y mejoras de calidad\n4. **Exportación**: Formatos y configuraciones óptimas\n5. **Integración**: Uso en diferentes plataformas y proyectos\n\n### Metodología paso a paso\n- **Paso 1**: Preparación del texto y selección de voz\n- **Paso 2**: Configuración de parámetros básicos\n- **Paso 3**: Generación y revisión inicial\n- **Paso 4**: Ajustes y refinamientos\n- **Paso 5**: Postproducción y exportación final\n\n### Casos de uso principales:\n- Anuncios publicitarios\n- Cursos online y e-learning\n- Podcasts y contenido de audio\n- Videos promocionales\n- Asistentes virtuales\n\n### Entregable\nCrear tu propio flujo de 5 pasos personalizado para tu proyecto específico usando la plantilla proporcionada.",
+      "videoUrl": "https://www.youtube.com/watch?v=ejemplo-2-1",
+      "duration": 25,
+      "order": 4,
+      "courseId": "cme30lnzr0001e5lk928moflk",
+      "createdAt": "2025-08-08T16:58:36.958Z",
+      "updatedAt": "2025-08-08T16:58:36.958Z"
+    },
+    {
+      "id": "cme32ld000003e5fgq9w1ydfu",
+      "title": "2.2 Text-to-Speech (TTS) base",
+      "content": "## Text-to-Speech: Fundamentos prácticos\n\n### Generación de voz desde texto\nAprende a convertir texto en voz natural y profesional, y cómo integrarla efectivamente en videos promocionales.\n\n### Práctica guiada paso a paso:\n\n#### 1. Preparación del guión\n- Redacción para voz (60-90 segundos)\n- Puntuación y pausas estratégicas\n- Marcas de énfasis y emoción\n\n#### 2. Configuración en ElevenLabs\n- Selección de voz apropiada\n- Ajuste de velocidad y tono\n- Preview y refinamiento\n\n#### 3. Generación y exportación\n- **Formatos disponibles**: MP3, WAV, FLAC\n- **Configuraciones de calidad**: 44.1kHz, 48kHz\n- **Optimización por uso**: web, broadcast, móvil\n\n#### 4. Montaje en editor de video\n- Sincronización con imagen\n- Ajuste de niveles de audio\n- Corrección de timing\n\n### Herramientas recomendadas para montaje:\n- **Gratuitas**: DaVinci Resolve, Audacity\n- **Profesionales**: Adobe Premiere, Final Cut Pro\n- **Online**: Kapwing, InVideo\n\n### Consejos pro:\n- Usa formato WAV para máxima calidad\n- Exporta siempre un backup en MP3\n- Ajusta el volumen a -12dB para broadcast\n\n### Entregable\nVideo promocional corto (60-90s) con voice-over generado por TTS, completamente terminado y listo para publicar.",
+      "videoUrl": "https://www.youtube.com/watch?v=ejemplo-2-2",
+      "duration": 35,
+      "order": 5,
+      "courseId": "cme30lnzr0001e5lk928moflk",
+      "createdAt": "2025-08-08T16:58:37.200Z",
+      "updatedAt": "2025-08-08T16:58:37.200Z"
+    },
+    {
+      "id": "cme32ld4f0005e5fgde8rgcq0",
+      "title": "2.3 Mejora, cambio y traducción de voz",
+      "content": "## Personalización avanzada de la voz\n\n### Cambio de timbre y características\nAprende a modificar las características de la voz para diferentes contextos y audiencias.\n\n#### Ajustes de timbre:\n- **Grave/Agudo**: Para diferentes demografías\n- **Calidez**: Más personal vs más corporativo\n- **Claridad**: Optimización para diferentes medios\n\n### Ajuste emocional\nControl fino de las emociones y estados de ánimo en la voz:\n\n#### Emociones disponibles:\n- **Neutral**: Presentaciones formales\n- **Entusiasta**: Marketing y promociones  \n- **Calmada**: Meditación y relajación\n- **Urgente**: Llamadas a la acción\n- **Amigable**: Atención al cliente\n\n### Traducción multilenguaje\n\n#### Práctica guiada: ES → EN/PR\nTomaremos el mismo spot creado en la lección anterior y lo adaptaremos:\n\n1. **Versión en inglés**:\n   - Traducción cultural (no literal)\n   - Ajuste de timing para diferencias de idioma\n   - Selección de voz en inglés apropiada\n\n2. **Versión en portugués**:\n   - Adaptación para mercado brasileño\n   - Consideraciones culturales específicas\n   - Optimización de pronunciación\n\n### Proceso de localización:\n- **Paso 1**: Traducción y adaptación cultural\n- **Paso 2**: Ajuste de duración y timing\n- **Paso 3**: Selección de voz nativa\n- **Paso 4**: Generación y refinamiento\n- **Paso 5**: Sincronización con video original\n\n### Consideraciones técnicas:\n- Diferentes idiomas tienen diferentes velocidades naturales\n- Ajustar pausas entre frases\n- Mantener la energía del mensaje original\n\n### Entregable\n2 variantes del mismo video en diferentes idiomas (inglés y portugués), optimizadas para sus respectivos mercados.",
+      "videoUrl": "https://www.youtube.com/watch?v=ejemplo-2-3",
+      "duration": 40,
+      "order": 6,
+      "courseId": "cme30lnzr0001e5lk928moflk",
+      "createdAt": "2025-08-08T16:58:37.359Z",
+      "updatedAt": "2025-08-08T16:58:37.359Z"
+    },
+    {
+      "id": "cme32ld8u0007e5fgx1xvewoa",
+      "title": "2.4 Postproducción (toques pro)",
+      "content": "## Postproducción profesional para calidad broadcast\n\n### Técnicas de postproducción avanzada\nTransforma tu audio generado por IA en contenido con calidad profesional de emisión comercial.\n\n### Pipeline de postproducción:\n\n#### 1. Normalización de audio\n- **Niveles óptimos**: -23 LUFS para broadcast, -16 LUFS para streaming\n- **Peak limiting**: Evitar distorsión\n- **Consistencia**: Volumen uniforme en todo el proyecto\n\n#### 2. EQ (Ecualización)\n- **Frecuencias graves**: Limpieza de rumble (80Hz)\n- **Medios**: Claridad vocal (1-3kHz)\n- **Agudos**: Presencia y brillo (8-12kHz)\n\n#### 3. Compresión dinámica\n- **Ratio**: 3:1 a 4:1 para voz\n- **Attack/Release**: Naturales pero controlados\n- **Makeup gain**: Compensación de nivel\n\n#### 4. Efectos broadcast:\n- **De-esser**: Control de sibilantes\n- **Gate/Expander**: Eliminar ruido de fondo\n- **Limiter**: Protección contra picos\n\n### Herramientas profesionales:\n- **Plugins recomendados**: FabFilter, Waves, iZotope\n- **DAW profesionales**: Pro Tools, Logic Pro, Cubase\n- **Alternativas gratuitas**: Reaper, Audacity con plugins\n\n### Estándares de calidad:\n\n#### Para diferentes medios:\n- **Radio comercial**: -12 LUFS, procesado pesado\n- **Podcast**: -16 LUFS, procesado moderado\n- **Audiolibros**: -18 LUFS, procesado mínimo\n- **Streaming**: -14 LUFS, procesado dinámico\n\n### Checklist de calidad broadcast:\n- ✅ Sin clipping ni distorsión\n- ✅ Niveles consistentes\n- ✅ EQ balanceado\n- ✅ Compresión apropiada\n- ✅ Sin ruido de fondo\n- ✅ Transiciones suaves\n- ✅ Formato y sample rate correctos\n\n### Entregable final\nAudio postproducido con calidad broadcast professional, listo para usar en cualquier medio comercial.",
+      "videoUrl": "https://www.youtube.com/watch?v=ejemplo-2-4",
+      "duration": 20,
+      "order": 7,
+      "courseId": "cme30lnzr0001e5lk928moflk",
+      "createdAt": "2025-08-08T16:58:37.518Z",
+      "updatedAt": "2025-08-08T16:58:37.518Z"
+    },
+    {
+      "id": "cme32r9vf0001e5oomp7hne2b",
+      "title": "3.1 Casos de la vida real",
+      "content": "## Casos de la vida real con ElevenLabs\n\n### Aplicaciones prácticas concretas\n\nEn esta lección transformaremos los conceptos teóricos en prácticas reales que puedes implementar inmediatamente en tu día a día o negocio.\n\n### 1. Grabación en casa - Mejora de voz personal\n\n#### Problemas comunes:\n- **Audio casero con ruido de fondo**\n- **Calidad de micrófono limitada**\n- **Nerviosismo al grabar**\n- **Inconsistencia en la energía**\n\n#### Solución con ElevenLabs:\n1. **Clona tu voz** con muestras de tu mejor grabación\n2. **Genera el contenido** con calidad consistente\n3. **Elimina imperfecciones** automáticamente\n4. **Mantén tu personalidad** pero mejorada\n\n### 2. Traducción de audios existentes\n\n#### Casos de uso:\n- **Podcasts multiidioma** sin regrabar\n- **Cursos en línea** para mercados internacionales\n- **Testimonios de clientes** localizados\n- **Contenido de marketing** globalizado\n\n#### Proceso paso a paso:\n1. Transcribir audio original\n2. Traducir manteniendo el tono\n3. Generar con voz similar al original\n4. Ajustar timing y pausas\n5. Sincronizar con video si es necesario\n\n### 3. Creación de audiolibros\n\n#### Ventajas de ElevenLabs:\n- **Consistencia** en largas grabaciones\n- **Control emocional** según el contenido\n- **Velocidad de producción** exponencial\n- **Costos reducidos** vs narrador profesional\n\n#### Flujo de trabajo:\n- Preparar manuscrito con marcas emocionales\n- Dividir por capítulos\n- Generar con voz apropiada\n- Postproducir cada sección\n- Compilar en formato final\n\n### 4. Accesibilidad digital\n\n#### Impacto social:\n- **Contenido web** accesible para personas con discapacidad visual\n- **Navegación por voz** en aplicaciones\n- **Documentos** convertidos a audio\n- **Subtítulos hablados** para contenido multimedia\n\n### 5. Contenidos cortos para redes sociales\n\n#### Formatos optimizados:\n- **TikTok/Reels**: 15-60 segundos, alta energía\n- **YouTube Shorts**: Storytelling rápido\n- **Instagram Stories**: Mensajes directos\n- **Twitter Spaces**: Intervenciones precisas\n\n### Práctica guiada: Tu proyecto específico\n\n#### Selecciona tu caso:\n1. **Emprendedor**: Mejorar presentaciones de pitch\n2. **Creador de contenido**: Automatizar narración\n3. **Empresa**: Crear IVR personalizado\n4. **Educador**: Generar material accesible\n5. **Podcaster**: Expandir a otros idiomas\n\n### Técnicas de postproducción para cada caso:\n\n#### EQ/Compresión ligera:\n- **High-pass filter** a 80Hz para limpieza\n- **Compresión suave** 2:1 ratio\n- **EQ boost** ligero en 2-5kHz para claridad\n\n#### Gestión de pausas:\n- **Pausas cortas**: 0.5 segundos entre frases\n- **Pausas largas**: 1.5 segundos entre ideas\n- **Respiraciones**: Añadir naturalidad\n\n#### Ambience sutil:\n- **Room tone** muy bajo (-40dB)\n- **Reverb** mínimo para calidez\n- **Noise floor** consistente\n\n### Entregable del módulo\nCrear un caso aplicado específicamente a tu nicho:\n- **Opción A**: 1 video promocional completo (60-90s)\n- **Opción B**: 1 audio/podcast optimizado (3-5min)\n\n### Plantillas incluidas:\n- ✅ **Preset de audio** para diferentes casos de uso\n- ✅ **Plantilla replicable** de postproducción\n- ✅ **Checklist de calidad** por tipo de proyecto\n- ✅ **Guía de timing** para diferentes formatos",
+      "videoUrl": "https://www.youtube.com/watch?v=ejemplo-3-1",
+      "duration": 40,
+      "order": 8,
+      "courseId": "cme30lnzr0001e5lk928moflk",
+      "createdAt": "2025-08-08T17:03:13.082Z",
+      "updatedAt": "2025-08-08T17:03:13.082Z"
+    },
+    {
+      "id": "cme32ra2o0003e5ooh7f4rnci",
+      "title": "3.2 ElevenLabs como negocio",
+      "content": "## Monetizando ElevenLabs: Tu negocio de voz IA\n\n### Estructura de ofertas comerciales\n\nConvierte tu conocimiento de ElevenLabs en un negocio rentable con ofertas específicas y precios competitivos.\n\n### 1. Servicios principales que puedes ofrecer\n\n#### A) Doblaje exprés\n**Propuesta de valor**: \"Doblaje profesional en 24-48h vs 2-4 semanas tradicional\"\n\n**Casos de uso:**\n- Videos corporativos urgentes\n- Campañas de marketing con deadline apretado\n- Localización rápida para lanzamientos\n- Corrección de errores en producciones\n\n**Precio sugerido**: $25-50 por minuto de audio final\n\n#### B) \"Podcast en 3 idiomas\"\n**Propuesta de valor**: \"Expande tu audiencia 300% manteniendo tu voz y personalidad\"\n\n**Proceso:**\n1. Grabar episodio original en español\n2. Transcribir y traducir culturalmente\n3. Generar en inglés y portugués con tu voz clonada\n4. Postproducir manteniendo el estilo original\n\n**Precio sugerido**: $200-400 por episodio de 20-30min\n\n#### C) IVR con marca\n**Propuesta de valor**: \"Sistema telefónico que suena como tu equipo, 24/7\"\n\n**Incluye:**\n- Clonación de voz del CEO/representante\n- Grabación de menús y mensajes\n- Variantes emocionales según el contexto\n- Updates ilimitados por 6 meses\n\n**Precio sugerido**: $800-1,500 setup + $100/mes mantenimiento\n\n#### D) Packs para cursos online\n**Propuesta de valor**: \"Curso completo narrado en tiempo récord\"\n\n**Paquetes:**\n- **Básico**: Hasta 2h de contenido, 1 voz\n- **Estándar**: Hasta 5h, 2 voces, intro/outro\n- **Premium**: Hasta 10h, múltiples voces, música\n\n**Precio sugerido**: $500 / $1,200 / $2,500\n\n### 2. Costeo y estructura financiera\n\n#### Costos base (mensual):\n- **ElevenLabs Pro**: ~$22/mes (100k caracteres)\n- **ElevenLabs Creator**: ~$99/mes (500k caracteres) \n- **Herramientas de edición**: $20-50/mes\n- **Tiempo de trabajo**: Tu tarifa horaria\n\n#### Cálculo por minuto generado:\n- **1 minuto de audio** ≈ 150-200 palabras ≈ 900-1,200 caracteres\n- **Costo ElevenLabs**: $0.02-0.05 por minuto\n- **Tu margen objetivo**: 300-500% sobre costos\n\n### 3. Tiempos de entrega realistas\n\n#### Proyectos estándar:\n- **Hasta 5 minutos**: 24-48 horas\n- **5-15 minutos**: 2-3 días laborales\n- **15-30 minutos**: 1 semana\n- **Más de 30 minutos**: 2+ semanas\n\n#### Factores que afectan tiempo:\n- Complejidad del guión\n- Número de revisiones incluidas\n- Postproducción requerida\n- Traducción/localización\n\n### 4. Aspectos legales y consentimiento\n\n#### Cláusulas esenciales para contratos:\n\n**Uso de voz clonada:**\n- Consentimiento explícito por escrito\n- Limitaciones de uso específicas\n- Derechos de distribución clarificados\n- Cláusula de no uso malicioso\n\n**Plantilla de consentimiento:**\n```\n\"Autorizo el uso de mi voz para generar contenido sintético exclusivamente para:\n- [Propósito específico]\n- [Duración del permiso]  \n- [Territorios/idiomas autorizados]  \n- [Limitaciones expresas]\"\n```\n\n### 5. Estrategia de precios inicial\n\n#### Estructura de 3 niveles:\n\n**Nivel 1 - Básico ($):**\n- Voz estándar\n- 1 revisión incluida\n- Entrega en 5 días\n\n**Nivel 2 - Profesional ($$):**\n- Voz clonada personalizada\n- 3 revisiones incluidas\n- Entrega en 3 días\n- Postproducción básica\n\n**Nivel 3 - Premium ($$$):**\n- Múltiples voces\n- Revisiones ilimitadas\n- Entrega express (24-48h)\n- Postproducción avanzada\n- Soporte prioritario\n\n### 6. Página de oferta - Elementos clave\n\n#### Headline poderoso:\n\"Transforma tu contenido con IA de voz en 24-48 horas\"\n\n#### Propuesta de valor clara:\n- Antes: 2-4 semanas, $500-2000\n- Después: 24-48 horas, $200-800\n\n#### Casos de éxito:\n- Testimonios con resultados específicos\n- Antes/después audibles\n- Métricas de satisfacción\n\n#### Call to action directo:\n\"Reserva tu consulta gratuita de 15 minutos\"\n\n### Entregables de esta lección:\n1. **Página de oferta completa** con tu propuesta de valor\n2. **Tabla de precios detallada** con 3 niveles de servicio\n3. **Contratos y cláusulas** de uso responsable\n4. **Calculadora de costos** para tus proyectos",
+      "videoUrl": "https://www.youtube.com/watch?v=ejemplo-3-2",
+      "duration": 35,
+      "order": 9,
+      "courseId": "cme30lnzr0001e5lk928moflk",
+      "createdAt": "2025-08-08T17:03:13.345Z",
+      "updatedAt": "2025-08-08T17:03:13.345Z"
+    },
+    {
+      "id": "cme32ra740005e5oo1x58gr72",
+      "title": "3.3 Conclusión y siguientes pasos",
+      "content": "## Conclusión: Tu camino hacia la monetización con IA de voz\n\n### Recapitulación de conceptos clave\n\n¡Felicidades! Has completado un viaje transformador que te lleva desde los fundamentos de ElevenLabs hasta la creación de un negocio rentable con IA de voz.\n\n### Lo que has dominado:\n\n#### MÓDULO 1 - Fundamentos sólidos:\n- ✅ **Origen y contexto** de ElevenLabs en el mercado\n- ✅ **Ética y uso responsable** de la tecnología\n- ✅ **Panorama competitivo** vs Amazon Polly y Google TTS\n\n#### MÓDULO 2 - Habilidades técnicas:\n- ✅ **Flujo de trabajo** completo y optimizado\n- ✅ **Text-to-Speech profesional** con postproducción\n- ✅ **Traducción multiidioma** manteniendo la esencia\n- ✅ **Calidad broadcast-ready** para medios comerciales\n\n#### MÓDULO 3 - Aplicación práctica:\n- ✅ **Casos de uso reales** en diferentes industrias\n- ✅ **Estructura de negocio** con precios competitivos\n- ✅ **Aspectos legales** y consentimiento responsable\n\n### Tu checklist final de implementación\n\n#### Checklist técnico:\n- [ ] Cuenta ElevenLabs configurada (Pro o Creator)\n- [ ] Herramientas de postproducción instaladas\n- [ ] Templates y presets guardados\n- [ ] Flujo de trabajo documentado\n- [ ] Calidad de audio validada\n\n#### Checklist de negocio:\n- [ ] Servicios principales definidos\n- [ ] Estructura de precios establecida\n- [ ] Página de oferta publicada\n- [ ] Contratos y cláusulas preparadas\n- [ ] Primeros clientes identificados\n\n#### Checklist legal/ético:\n- [ ] Políticas de uso responsable escritas\n- [ ] Formularios de consentimiento listos\n- [ ] Limitaciones de uso clarificadas\n- [ ] Casos de uso prohibidos identificados\n\n### Plan de acción: Próximos 30 días\n\n#### Semana 1: Validación\n- **Días 1-3**: Perfecciona tu caso de uso principal\n- **Días 4-7**: Crea 2-3 ejemplos de tu trabajo\n\n#### Semana 2: Construcción\n- **Días 8-10**: Finaliza tu página de oferta\n- **Días 11-14**: Establece precios y paquetes\n\n#### Semana 3: Lanzamiento suave\n- **Días 15-17**: Comparte con tu red cercana\n- **Días 18-21**: Refina basado en feedback inicial\n\n#### Semana 4: Escalamiento\n- **Días 22-24**: Lanza públicamente\n- **Días 25-30**: Optimiza y documenta lecciones aprendidas\n\n### Recursos adicionales incluidos\n\n#### Plantillas descargables:\n1. **📋 Política de uso responsable** - Template completo\n2. **📊 Matriz de plataformas** - Especificaciones técnicas\n3. **🔄 Flujo TTS optimizado** - Paso a paso visual\n4. **💼 Página de oferta** - Template con copy probado\n\n#### Herramientas recomendadas:\n- **Edición de audio**: Audacity (gratis), Reaper ($60)\n- **Gestión de proyectos**: Notion, Trello\n- **Pagos**: Stripe, PayPal Business\n- **Comunicación**: Calendly, Zoom\n\n### Comunidad y soporte continuo\n\n#### Próximos pasos para seguir creciendo:\n1. **Únete a nuestra comunidad** de estudiantes\n2. **Comparte tus resultados** y casos de éxito\n3. **Solicita feedback** en proyectos específicos\n4. **Mantente actualizado** con nuevas funcionalidades\n\n### Mensaje final\n\nLa IA de voz no es solo una herramienta tecnológica; es una oportunidad de **democratizar la comunicación** y **amplificar voces** que antes tenían barreras técnicas o económicas.\n\nRecuerda nuestro principio fundamental:\n> **\"Amplifica tu mensaje, no reemplaces tu humanidad.\"**\n\n### Tu entregable final:\n\nCrea tu **plan de acción personalizado** que incluya:\n- [ ] Tu nicho específico elegido\n- [ ] Servicios principales que ofrecerás\n- [ ] Primeros 3 clientes potenciales identificados\n- [ ] Timeline de lanzamiento (30-60-90 días)\n- [ ] Métricas de éxito definidas\n\n### ¡Es hora de monetizar tu voz con IA!\n\nEl futuro de la comunicación está en tus manos. Tienes las herramientas, el conocimiento y la estructura para construir un negocio exitoso.\n\n**Tu próxima acción**: Implementa tu primer caso de uso en las próximas 48 horas.\n\n¡Esperamos ver tus resultados! 🎙️✨",
+      "videoUrl": "https://www.youtube.com/watch?v=ejemplo-3-3",
+      "duration": 15,
+      "order": 10,
+      "courseId": "cme30lnzr0001e5lk928moflk",
+      "createdAt": "2025-08-08T17:03:13.504Z",
+      "updatedAt": "2025-08-08T17:03:13.504Z"
+    }
+  ],
+  "resources": []
+}
