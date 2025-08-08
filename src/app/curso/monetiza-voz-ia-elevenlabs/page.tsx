@@ -525,8 +525,48 @@ export default function MonetizaVozIAElevenLabsPage() {
   });
   console.log('🔍 [DEBUG] Condición del botón (isUserAuthenticated && completedLessons.length > 0):', isUserAuthenticated && completedLessons.length > 0);
   
+  // Función para determinar si mostrar el banner
+  const shouldShowBanner = () => {
+    // Mostrar banner si el usuario no está logueado
+    if (!user || status === 'unauthenticated') {
+      return true;
+    }
+    
+    // Mostrar banner si el usuario está logueado pero no tiene acceso premium
+    if (user && !hasPremiumAccess) {
+      return true;
+    }
+    
+    // No mostrar banner si tiene acceso premium
+    return false;
+  };
+
+  const handleBannerClick = () => {
+    router.push('/subscription');
+  };
+
   return (
     <>
+      {/* Banner promocional para usuarios no premium */}
+      {shouldShowBanner() && (
+        <div className="promo-banner">
+          <div className="promo-banner-content" onClick={handleBannerClick}>
+            <div className="promo-banner-text">
+              <span className="promo-banner-emoji">🚀</span>
+              <span className="promo-banner-message">
+                {!user 
+                  ? "¡Únete a eGrow Academy Premium y accede a todos los cursos!" 
+                  : "¡Actualiza a Premium y desbloquea todos los cursos!"
+                }
+              </span>
+            </div>
+            <div className="promo-banner-cta">
+              {!user ? "Regístrate Ahora" : "Actualizar Plan"}
+            </div>
+          </div>
+        </div>
+      )}
+      
       <Navbar />
       
       <main className="main-content">
@@ -931,11 +971,98 @@ export default function MonetizaVozIAElevenLabsPage() {
           gap: 1rem;
         }
 
+        /* Banner promocional */
+        .promo-banner {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          z-index: 60;
+          background: linear-gradient(135deg, #f59e0b, #d97706);
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+          animation: slideDown 0.5s ease-out;
+        }
+
+        @keyframes slideDown {
+          from {
+            transform: translateY(-100%);
+          }
+          to {
+            transform: translateY(0);
+          }
+        }
+
+        .promo-banner-content {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 12px 20px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+
+        .promo-banner-content:hover {
+          background: rgba(255, 255, 255, 0.1);
+          transform: scale(1.02);
+        }
+
+        .promo-banner-text {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          flex: 1;
+        }
+
+        .promo-banner-emoji {
+          font-size: 20px;
+          animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+          0%, 20%, 50%, 80%, 100% {
+            transform: translateY(0);
+          }
+          40% {
+            transform: translateY(-8px);
+          }
+          60% {
+            transform: translateY(-4px);
+          }
+        }
+
+        .promo-banner-message {
+          color: white;
+          font-weight: 600;
+          font-size: 14px;
+          line-height: 1.4;
+        }
+
+        .promo-banner-cta {
+          background: white;
+          color: #d97706;
+          padding: 8px 16px;
+          border-radius: 20px;
+          font-weight: 700;
+          font-size: 13px;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          transition: all 0.3s ease;
+          flex-shrink: 0;
+          margin-left: 16px;
+        }
+
+        .promo-banner-cta:hover {
+          background: #f3f4f6;
+          transform: scale(1.05);
+        }
+
         .hero-section {
           background: linear-gradient(to right, #f0f9ff, #faf5ff);
           color: #1e293b;
           padding: 0;
-          margin-top: 50px !important;
+          margin-top: 100px !important;
           padding-top: 2rem !important;
           padding-bottom: 4rem;
           min-height: 70vh;
@@ -1648,6 +1775,30 @@ export default function MonetizaVozIAElevenLabsPage() {
         }
 
         @media (max-width: 768px) {
+          /* Banner promocional móvil */
+          .promo-banner-content {
+            padding: 10px 16px;
+            flex-direction: column;
+            gap: 8px;
+            text-align: center;
+          }
+
+          .promo-banner-text {
+            gap: 8px;
+            justify-content: center;
+          }
+
+          .promo-banner-message {
+            font-size: 13px;
+            line-height: 1.3;
+          }
+
+          .promo-banner-cta {
+            margin-left: 0;
+            font-size: 12px;
+            padding: 6px 14px;
+          }
+
           .course-hero {
             grid-template-columns: 1fr;
             gap: 1rem;
