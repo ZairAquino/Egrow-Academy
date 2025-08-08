@@ -1,14 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
-import { verifyToken } from '@/lib/auth';
+import { verifyToken, extractTokenFromHeader } from '@/lib/auth';
 import { SUBSCRIPTION_PLANS } from '@/lib/stripe';
 import { prisma } from '@/lib/prisma';
 
 export async function POST(request: NextRequest) {
   console.log('🔧 [CHECKOUT] Iniciando creación de sesión de checkout...');
   try {
-    // Verificar autenticación
-    const token = request.cookies.get('auth-token')?.value;
+    // Verificar autenticación (aceptar cookie 'session' o legado 'auth-token', y header Authorization)
+    const token =
+      request.cookies.get('session')?.value ||
+      request.cookies.get('auth-token')?.value ||
+      extractTokenFromHeader(request);
     console.log('🔧 [CHECKOUT] Token encontrado:', token ? 'Sí' : 'No');
     if (!token) {
       return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
@@ -21,9 +24,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Token inválido' }, { status: 401 });
     }
 
-    const { planId, trackingData } = await request.json();
+    const { planId, trackingData, discountData } = await request.json();
     console.log('🔧 [CHECKOUT] Plan solicitado:', planId);
     console.log('🔧 [CHECKOUT] Tracking data:', trackingData);
+    console.log('🔧 [CHECKOUT] Discount data:', discountData);
 
     // Validar el plan
     const plan = SUBSCRIPTION_PLANS[planId as keyof typeof SUBSCRIPTION_PLANS];
@@ -74,6 +78,24 @@ export async function POST(request: NextRequest) {
       console.log('✅ [CHECKOUT] Usando customer existente:', stripeCustomerId);
     }
 
+    // Calcular precio con descuento si aplica
+    let finalPrice = plan.price;
+    let discountDescription = '';
+    
+    if (discountData && discountData.code && discountData.discount) {
+      // Validar códigos de descuento permitidos
+      const validCodes = {
+        'WEBINAR50': { discount: 0.5, planId: 'monthly' }
+      };
+      
+      const validCode = validCodes[discountData.code as keyof typeof validCodes];
+      if (validCode && validCode.planId === planId) {
+        finalPrice = plan.price * (1 - validCode.discount);
+        discountDescription = ` (${Math.round(validCode.discount * 100)}% desc. - ${discountData.code})`;
+        console.log('🎯 [CHECKOUT] Descuento aplicado:', discountData.code, `Precio original: $${plan.price} -> Precio final: $${finalPrice}`);
+      }
+    }
+
     // Crear sesión de checkout
     const sessionConfig: any = {
       line_items: [
@@ -81,10 +103,10 @@ export async function POST(request: NextRequest) {
           price_data: {
             currency: 'usd',
             product_data: {
-              name: plan.name,
-              description: `Suscripción ${plan.interval === 'month' ? 'mensual' : 'anual'} a eGrow Academy`,
+              name: `${plan.name}${discountDescription}`,
+              description: `Suscripción ${plan.interval === 'month' ? 'mensual' : 'anual'} a eGrow Academy${discountDescription}`,
             },
-            unit_amount: Math.round(plan.price * 100), // Stripe usa centavos
+            unit_amount: Math.round(finalPrice * 100), // Stripe usa centavos
             recurring: {
               interval: plan.interval as 'month' | 'year',
             },
@@ -105,13 +127,22 @@ export async function POST(request: NextRequest) {
         ...(trackingData?.pageUrl && { pageUrl: trackingData.pageUrl }),
         ...(trackingData?.referrer && { referrer: trackingData.referrer }),
         ...(trackingData?.userAgent && { userAgent: trackingData.userAgent }),
+        // Agregar datos de descuento si existen
+        ...(discountData?.code && { discountCode: discountData.code }),
+        ...(discountData?.discount && { discountAmount: discountData.discount.toString() }),
         planName: plan.name,
+        originalPrice: plan.price.toString(),
+        finalPrice: finalPrice.toString(),
       },
       subscription_data: {
         metadata: {
           userId: decoded.userId,
           planId: plan.id,
           planName: plan.name,
+          ...(discountData?.code && { discountCode: discountData.code }),
+          ...(discountData?.discount && { discountAmount: discountData.discount.toString() }),
+          originalPrice: plan.price.toString(),
+          finalPrice: finalPrice.toString(),
         },
       },
     };

@@ -2,6 +2,22 @@
 
 ## 🚀 Última Actualización: 2025-08-08
 
+### ✅ Fix de autenticación en checkout de suscripción: 2025-08-08
+**Mensaje:** Corregido error de "Sesión expirada" al iniciar el pago de suscripción con cupón.
+
+**Cambios Principales:**
+- Endpoint `POST /api/stripe/create-checkout-session` ahora acepta token desde cookie `session` (principal), mantiene compatibilidad con `auth-token` y también desde header Authorization.
+- La página `src/app/subscription/page.tsx` envía cookies con `credentials: 'include'` al crear la sesión de checkout.
+
+**Archivos Modificados:**
+- `src/app/api/stripe/create-checkout-session/route.ts`
+- `src/app/subscription/page.tsx`
+
+**Impacto:**
+- El flujo de suscripción funciona para usuarios autenticados sin errores de sesión.
+- El cupón `WEBINAR50` para el plan mensual aplica 50% y se refleja en Stripe Checkout.
+
+
 ### ✅ Limpieza masiva del proyecto: 2025-08-08
 **Mensaje:** Limpieza exhaustiva de scripts innecesarios y reorganización de la estructura del proyecto.
 

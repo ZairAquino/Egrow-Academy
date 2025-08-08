@@ -244,6 +244,7 @@ export default function SubscriptionPage() {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({ 
           planId,
           discountData,

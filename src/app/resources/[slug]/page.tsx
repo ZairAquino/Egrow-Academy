@@ -758,6 +758,31 @@ export default function ResourcePage() {
                         🎥 Ver Promp Mágico VEO 3
                       </button>
                     )}
+
+                    {slug === 'ebook-crea-videos-profesionales-ia' && (
+                      <button 
+                        onClick={() => window.open('https://3o0p1lzj4n.ufs.sh/f/P2bnXUoat3Wf009oYi3zH8OinDQ0vfu7r9b4CGqgU2Kl1WpF', '_blank')}
+                        className="resource-button"
+                        style={{
+                          width: '100%',
+                          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                          color: 'white',
+                          padding: '1rem',
+                          borderRadius: '0.75rem',
+                          fontSize: '1rem',
+                          fontWeight: 'bold',
+                          border: 'none',
+                          cursor: 'pointer',
+                          marginBottom: '1rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '0.5rem'
+                        }}
+                      >
+                        📖 Ver Ebook
+                      </button>
+                    )}
                   </div>
 
                 </div>
