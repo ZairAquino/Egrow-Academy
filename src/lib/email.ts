@@ -193,7 +193,7 @@ export async function sendWelcomeEmail(
             </div>
             
             <div style="text-align: center; margin: 30px 0;">
-              <a href="${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/courses" 
+              <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://egrowacademy.com'}/courses" 
                  style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">
                 🎯 Explorar Cursos
               </a>

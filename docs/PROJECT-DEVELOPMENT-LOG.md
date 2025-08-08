@@ -2,6 +2,21 @@
 
 ## 🚀 Última Actualización: 2025-08-08
 
+### ✅ Correcciones de enlaces en emails: 2025-08-08
+**Mensaje:** Unificados los enlaces en los correos para que apunten al dominio correcto `https://egrowacademy.com` y evitar 404 o redirecciones a `localhost`.
+
+**Cambios Principales:**
+- Email de bienvenida: botón principal ahora usa `${NEXT_PUBLIC_APP_URL || 'https://egrowacademy.com'}/courses`.
+- Plantillas de webinars: reemplazados `https://www.egrowacademy.com` y `https://egrow-academy.com` por `https://egrowacademy.com`; corrección de email de soporte a `soporte@egrowacademy.com`.
+
+**Archivos Modificados:**
+- `src/lib/email.ts`
+- `src/lib/email/webinar-templates.ts`
+
+**Impacto:**
+- Redirecciones consistentes al dominio oficial.
+- Prevención de errores 404 desde botones de correo.
+
 ### ✅ Fix de autenticación en checkout de suscripción: 2025-08-08
 **Mensaje:** Corregido error de "Sesión expirada" al iniciar el pago de suscripción con cupón.
 

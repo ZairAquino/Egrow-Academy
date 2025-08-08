@@ -81,7 +81,7 @@ export function getWebinarConfirmationEmail(data: WebinarEmailData) {
             </ul>
             
             <div style="text-align: center; margin: 30px 0;">
-              <a href="https://egrow-academy.com/webinar/${webinar.slug}" class="button">
+              <a href="https://egrowacademy.com/webinar/${webinar.slug}" class="button">
                 Ver Detalles del Webinar
               </a>
             </div>
@@ -328,7 +328,7 @@ export function getWebinarFiveHourReminderEmail(data: WebinarEmailData) {
           <div class="footer">
             <p>¡Te esperamos en la clase!<br>
             <strong>Equipo de eGrow Academy</strong><br>
-            <a href="https://www.egrowacademy.com" style="color: #007bff; text-decoration: none;">www.egrowacademy.com</a></p>
+            <a href="https://egrowacademy.com" style="color: #007bff; text-decoration: none;">egrowacademy.com</a></p>
           </div>
         </div>
       </body>
@@ -546,7 +546,7 @@ export function getWebinarThirtyMinuteReminderEmail(data: WebinarEmailData) {
           <div class="footer">
             <p>¡Nos vemos en unos minutos!<br>
             <strong>Equipo de eGrow Academy</strong><br>
-            <a href="https://www.egrowacademy.com" style="color: #007bff; text-decoration: none;">www.egrowacademy.com</a></p>
+            <a href="https://egrowacademy.com" style="color: #007bff; text-decoration: none;">egrowacademy.com</a></p>
           </div>
         </div>
       </body>
@@ -783,7 +783,7 @@ export function getWebinarLiveNowEmail(data: WebinarEmailData) {
           <div class="footer">
             <p>Nos vemos dentro,<br>
             <strong>Equipo de eGrow Academy</strong><br>
-            <a href="https://www.egrowacademy.com" style="color: #007bff; text-decoration: none;">www.egrowacademy.com</a></p>
+              <a href="https://egrowacademy.com" style="color: #007bff; text-decoration: none;">egrowacademy.com</a></p>
           </div>
         </div>
       </body>
@@ -844,7 +844,7 @@ export function getWebinarRecordingEmail(data: WebinarEmailData) {
             </ul>
             
             <div style="text-align: center; margin: 30px 0;">
-              <a href="https://egrow-academy.com/courses" class="button">
+              <a href="https://egrowacademy.com/courses" class="button">
                 🎓 Ver Más Cursos
               </a>
             </div>
@@ -857,7 +857,7 @@ export function getWebinarRecordingEmail(data: WebinarEmailData) {
           
           <div class="footer">
             <p>© 2024 eGrow Academy. Todos los derechos reservados.</p>
-            <p>¿Tienes preguntas? Contacta soporte@egrow-academy.com</p>
+            <p>¿Tienes preguntas? Contacta soporte@egrowacademy.com</p>
           </div>
         </div>
       </body>
