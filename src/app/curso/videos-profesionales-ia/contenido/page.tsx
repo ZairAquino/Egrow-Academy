@@ -2150,7 +2150,7 @@ export default function ContenidoVideosProfesionalesIAPage() {
       <Footer />
 
       {/* Notificaciones de logros */}
-      {showModuleNotification && (
+      {showModuleNotification ? (
         <AchievementNotification
           isVisible={showModuleNotification}
           type={achievementData.type}
@@ -2159,9 +2159,9 @@ export default function ContenidoVideosProfesionalesIAPage() {
           stats={achievementData.stats}
           onClose={() => setShowModuleNotification(false)}
         />
-      )}
+      ) : null}
 
-      {showCourseNotification && (
+      {showCourseNotification ? (
         <AchievementNotification
           isVisible={showCourseNotification}
           type={achievementData.type}
@@ -2170,7 +2170,7 @@ export default function ContenidoVideosProfesionalesIAPage() {
           stats={achievementData.stats}
           onClose={() => setShowCourseNotification(false)}
         />
-      )}
+      ) : null}
 
       <style jsx>{`
         .enrollment-required {
