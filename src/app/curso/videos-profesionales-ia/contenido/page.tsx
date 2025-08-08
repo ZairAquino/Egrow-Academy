@@ -1983,14 +1983,14 @@ export default function ContenidoVideosProfesionalesIAPage() {
                       </button>
                       
                       {/* Botón siguiente - navegación libre */}
-                      {progress.currentLesson < courseData.lessons.length - 1 && (
-                        <button 
+                      {progress.currentLesson < courseData.lessons.length - 1 ? (
+                        <button
                           className="btn btn-primary"
                           onClick={handleNextLesson}
                         >
                           Siguiente lección →
                         </button>
-                      )}
+                      ) : null}
                       
                       {/* Lógica de botones basada en si es la última lección del módulo */}
                       {renderLessonAction()}
@@ -2022,13 +2022,13 @@ export default function ContenidoVideosProfesionalesIAPage() {
                     </div>
                   </div>
                 </div>
-                  {isEnrolled && (
+                  {isEnrolled ? (
                     <div className="course-guidance">
                       <p className="guidance-text">
                         💡 <strong>Navegación Libre:</strong> Puedes navegar entre todas las lecciones. Para completar el curso, debes marcar como completadas todas las lecciones de todos los módulos.
                       </p>
                     </div>
-                  )}
+                  ) : null}
                   <div className="lessons-list">
                     {[1, 2, 3, 4, 5].map(moduleId => {
                       const moduleLessons = courseData.lessons.filter(lesson => lesson.moduleId === moduleId);
@@ -2064,7 +2064,7 @@ export default function ContenidoVideosProfesionalesIAPage() {
                             </div>
                           </div>
                           
-                          {expandedModules.has(moduleId) && (
+                          {expandedModules.has(moduleId) ? (
                             <div className="module-lessons">
                               {moduleLessons.map((lesson, index) => {
                               const globalIndex = courseData.lessons.findIndex(l => l.id === lesson.id);
@@ -2093,7 +2093,7 @@ export default function ContenidoVideosProfesionalesIAPage() {
                               );
                             })}
                             </div>
-                          )}
+                          ) : null}
                         </div>
                       );
                     })}
