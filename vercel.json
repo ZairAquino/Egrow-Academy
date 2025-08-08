@@ -12,8 +12,16 @@
   },
   "crons": [
     {
-      "path": "/api/cron/webinar-reminders",
-      "schedule": "* * * * *"
+      "path": "/api/cron/webinar-5hour-reminders",
+      "schedule": "0 * * * *"
+    },
+    {
+      "path": "/api/cron/webinar-30min-reminders",
+      "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/cron/webinar-live-notifications",
+      "schedule": "*/2 * * * *"
     }
   ]
 } 
