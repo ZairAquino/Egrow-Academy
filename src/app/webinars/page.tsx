@@ -14,6 +14,9 @@ export const metadata: Metadata = {
   description: 'Descubre nuestros webinars gratuitos sobre IA, emprendimiento, desarrollo web y más. Aprende de expertos en tiempo real.',
 };
 
+// Fuerza runtime Node para usar Prisma correctamente
+export const runtime = 'nodejs';
+
 export default async function WebinarsPage() {
   // Obtener todos los tipos de webinars
   const [featuredWebinars, upcomingWebinars, pastWebinars, allWebinars] = await Promise.all([

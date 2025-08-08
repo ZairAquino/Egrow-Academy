@@ -57,7 +57,10 @@
     "setup-recommendations": "tsx scripts/setup-recommendations-db.ts",
     "setup-achievements": "tsx scripts/setup-achievements-db.ts",
     "update-courses-categories": "tsx scripts/update-courses-categories.ts",
-    "generate-social-urls": "tsx scripts/generate-social-urls.ts"
+    "generate-social-urls": "tsx scripts/generate-social-urls.ts",
+    "cleanup-webinars:dry": "tsx scripts/cleanup-webinars.ts --dry-run --keep-slug=videos-profesionales-ia",
+    "cleanup-webinars": "tsx scripts/cleanup-webinars.ts --keep-slug=videos-profesionales-ia",
+    "check-webinars": "tsx scripts/check-webinars.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/inspector": "^0.16.2",

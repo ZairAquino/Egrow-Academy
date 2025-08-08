@@ -388,62 +388,7 @@ export default function ResourcePage() {
               </div>
               
               
-              {/* CTA Button */}
-              <div>
-                {!isAuthenticated && resource.requiresAuth ? (
-                  <button 
-                    onClick={handleLoginRedirect}
-                    style={{
-                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                      color: 'white',
-                      padding: '1rem 2rem',
-                      borderRadius: '0.75rem',
-                      fontSize: '1.125rem',
-                      fontWeight: 'bold',
-                      border: '2px solid rgba(255, 255, 255, 0.3)',
-                      cursor: 'pointer',
-                      transition: 'all 0.3s ease',
-                      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
-                    }}
-                    onMouseOver={(e) => {
-                      e.currentTarget.style.transform = 'scale(1.05)';
-                      e.currentTarget.style.boxShadow = '0 12px 40px rgba(0, 0, 0, 0.4)';
-                    }}
-                    onMouseOut={(e) => {
-                      e.currentTarget.style.transform = 'scale(1)';
-                      e.currentTarget.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.3)';
-                    }}
-                  >
-                    🔓 Iniciar Sesión para Acceder
-                  </button>
-                ) : hasAccess || !resource.requiresAuth ? (
-                  <button 
-                    onClick={handleDownload}
-                    style={{
-                      background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                      color: 'white',
-                      padding: '1rem 2rem',
-                      borderRadius: '0.75rem',
-                      fontSize: '1.125rem',
-                      fontWeight: 'bold',
-                      border: '2px solid rgba(255, 255, 255, 0.3)',
-                      cursor: 'pointer',
-                      transition: 'all 0.3s ease',
-                      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
-                    }}
-                    onMouseOver={(e) => {
-                      e.currentTarget.style.transform = 'scale(1.05)';
-                      e.currentTarget.style.boxShadow = '0 12px 40px rgba(0, 0, 0, 0.4)';
-                    }}
-                    onMouseOut={(e) => {
-                      e.currentTarget.style.transform = 'scale(1)';
-                      e.currentTarget.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.3)';
-                    }}
-                  >
-                    {resource.type === 'LINK' ? '🔗 Abrir Enlace' : '📥 Descargar Recurso'}
-                  </button>
-                ) : null}
-              </div>
+              {/* CTA en hero removido a petición: los accesos quedan en el contenido/sidebar */}
             </div>
           </div>
         </section>
@@ -714,6 +659,31 @@ export default function ResourcePage() {
                       </button>
                     )}
                     
+                    {slug === 'base-prompts-publicidad-ia' && (
+                      <button 
+                        onClick={() => window.open('https://3o0p1lzj4n.ufs.sh/f/P2bnXUoat3Wf19gNCEQM9nSueGgY57l4tshCfzyKDB3XWdkj', '_blank')}
+                        className="resource-button"
+                        style={{
+                          width: '100%',
+                          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                          color: 'white',
+                          padding: '1rem',
+                          borderRadius: '0.75rem',
+                          fontSize: '1rem',
+                          fontWeight: 'bold',
+                          border: 'none',
+                          cursor: 'pointer',
+                          marginBottom: '1rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '0.5rem'
+                        }}
+                      >
+                        📄 Ver Base de Prompts
+                      </button>
+                    )}
+                    
                     {slug === 'ebook-disenadores-vs-ia' && (
                       <button 
                         onClick={() => window.open('https://3o0p1lzj4n.ufs.sh/f/P2bnXUoat3Wf3UBAVBmMmxDjlZNJ8Lw2dfBuWHpOr96TbCFt', '_blank')}
@@ -736,6 +706,56 @@ export default function ResourcePage() {
                         }}
                       >
                         📖 Descargar Ebook
+                      </button>
+                    )}
+
+                    {slug === 'base-prompts-videos-sora' && (
+                      <button 
+                        onClick={() => window.open('https://3o0p1lzj4n.ufs.sh/f/P2bnXUoat3WfdLgTeToy4Supo1nji5c23mtlJAQCh9PNELZV', '_blank')}
+                        className="resource-button"
+                        style={{
+                          width: '100%',
+                          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                          color: 'white',
+                          padding: '1rem',
+                          borderRadius: '0.75rem',
+                          fontSize: '1rem',
+                          fontWeight: 'bold',
+                          border: 'none',
+                          cursor: 'pointer',
+                          marginBottom: '1rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '0.5rem'
+                        }}
+                      >
+                        🎬 Ver Base de Prompts Sora
+                      </button>
+                    )}
+
+                    {slug === 'promp-magico-veo-3' && (
+                      <button 
+                        onClick={() => window.open('https://3o0p1lzj4n.ufs.sh/f/P2bnXUoat3WfCnehABUdaWlSVx5UpNGs8y7ucRKXzLg4rF9A', '_blank')}
+                        className="resource-button"
+                        style={{
+                          width: '100%',
+                          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                          color: 'white',
+                          padding: '1rem',
+                          borderRadius: '0.75rem',
+                          fontSize: '1rem',
+                          fontWeight: 'bold',
+                          border: 'none',
+                          cursor: 'pointer',
+                          marginBottom: '1rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '0.5rem'
+                        }}
+                      >
+                        🎥 Ver Promp Mágico VEO 3
                       </button>
                     )}
                   </div>

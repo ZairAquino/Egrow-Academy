@@ -82,7 +82,10 @@
       "Bash(then echo \"Rick.png exists\")",
       "Bash(else echo \"Rick.png not found\")",
       "Bash(fi)",
-      "Bash(sed:*)"
+      "Bash(sed:*)",
+      "Bash(true)",
+      "Bash(move:*)",
+      "Bash(cleanup-scripts.bat)"
     ],
     "deny": []
   }

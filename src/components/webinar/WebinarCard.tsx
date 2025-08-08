@@ -1,7 +1,7 @@
 'use client';
 
 import { Webinar } from '@/types/webinar';
-import { formatWebinarDate, getTimeUntilWebinar } from '@/lib/webinar';
+import { formatWebinarDate, getTimeUntilWebinar } from '@/lib/webinar-utils';
 import Link from 'next/link';
 import Image from 'next/image';
 

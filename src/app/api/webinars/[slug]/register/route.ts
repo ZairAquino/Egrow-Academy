@@ -6,6 +6,8 @@ interface WebinarRegisterParams {
   params: { slug: string };
 }
 
+export const runtime = 'nodejs';
+
 // POST /api/webinars/[slug]/register - Registrar a un webinar
 export async function POST(request: NextRequest, { params }: WebinarRegisterParams) {
   try {

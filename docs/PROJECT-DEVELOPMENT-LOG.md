@@ -2,6 +2,33 @@
 
 ## 🚀 Última Actualización: 2025-08-08
 
+### ✅ Limpieza masiva del proyecto: 2025-08-08
+**Mensaje:** Limpieza exhaustiva de scripts innecesarios y reorganización de la estructura del proyecto.
+
+**Cambios Principales:**
+- **Scripts reducidos de 195 a 25**: Eliminados scripts de testing, debugging, verificación y duplicados que no afectaban la funcionalidad de la plataforma.
+- **Backups limpiados**: Eliminados backups redundantes y antiguos, conservando solo los esenciales.
+- **Estructura reorganizada**: Movidos archivos de documentación al directorio `docs/` para mejor organización.
+- **Archivos temporales eliminados**: Limpiados archivos cache y temporales del directorio raíz.
+
+**Scripts conservados (críticos):**
+- Scripts referenciados en `package.json` (init-stripe, backup-database, fix-typescript-errors, etc.)
+- Scripts de mantenimiento esencial (backup-config, security-audit, cleanup-webinars)
+- Scripts en desarrollo activo según git status
+- Scripts de configuración de base de datos (setup-recommendations, setup-achievements)
+
+**Archivos Eliminados/Movidos:**
+- ~170 scripts de testing/debugging/verificación
+- Archivos temporales (nul, tsconfig.tsbuildinfo, scriptsarchive/)
+- READMEs específicos movidos a docs/
+- Backups redundantes y antiguos
+
+**Impacto:**
+- **Proyecto más limpio y mantenible**
+- **Reducción significativa de archivos innecesarios**
+- **Mejor organización de la documentación**
+- **Sin afectación al frontend, backend o base de datos**
+
 ### ✅ Actualizaciones de cursos: 2025-08-08
 **Mensaje:** Ajustes en cursos destacados de la página principal y consistencia de descripciones en el listado general de cursos.
 

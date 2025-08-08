@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-import { verifyToken, extractTokenFromHeader, createSafeUser } from '@/lib/auth';
+import { verifyToken, extractTokenFromHeader } from '@/lib/auth';
+import { prisma } from '@/lib/prisma';
 
-const prisma = new PrismaClient();
+export const runtime = 'nodejs';
 
 export async function GET(request: NextRequest) {
   try {
+    await prisma.$connect();
     // Verificar token desde cookies o headers
     const cookieToken = request.cookies.get('auth-token')?.value
     const headerToken = extractTokenFromHeader(request)
@@ -76,7 +77,5 @@ export async function GET(request: NextRequest) {
       { error: 'Error interno del servidor' },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 } 

@@ -10,6 +10,9 @@ interface WebinarPageProps {
   params: { slug: string };
 }
 
+// Asegurar runtime Node (Prisma no soporta edge)
+export const runtime = 'nodejs';
+
 // Generar metadata dinámica para SEO
 export async function generateMetadata({ params }: WebinarPageProps): Promise<Metadata> {
   const webinar = await getWebinarBySlug(params.slug);

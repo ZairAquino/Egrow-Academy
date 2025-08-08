@@ -5,6 +5,8 @@ interface WebinarSlugParams {
   params: { slug: string };
 }
 
+export const runtime = 'nodejs';
+
 // GET /api/webinars/[slug] - Obtener un webinar específico
 export async function GET(request: NextRequest, { params }: WebinarSlugParams) {
   try {

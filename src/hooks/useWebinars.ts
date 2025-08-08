@@ -48,16 +48,27 @@ export function useWebinars() {
     }
 
     try {
-      const response = await fetch('/api/webinars/user-registrations');
+      const response = await fetch('/api/webinars/user-registrations', {
+        credentials: 'include',
+        cache: 'no-store'
+      });
       
+      if (response.status === 401) {
+        setUserRegistrations([]);
+        return;
+      }
+
       if (!response.ok) {
-        throw new Error('Error al cargar registros de webinars');
+        console.warn('Webinar registrations request failed with status', response.status);
+        setUserRegistrations([]);
+        return;
       }
       
       const data = await response.json();
       setUserRegistrations(data.registrations || []);
     } catch (err) {
       console.error('Error cargando registros de webinars:', err);
+      setUserRegistrations([]);
     }
   };
 

@@ -47,22 +47,22 @@ export default function ResourcesPage() {
 
   const featuredResources = [
     {
-      title: 'Guía de Prompts para ChatGPT',
-      description: 'Una guía completa y práctica para crear prompts efectivos en ChatGPT con técnicas avanzadas y ejemplos reales',
+      title: 'Base de Prompts para Publicidad con IA',
+      description: 'Colección de prompts para anuncios: premium, minimalista, retro, storytelling y surrealista',
       category: 'Manual',
-      url: '/resources/guia-prompts-chatgpt'
+      url: '/resources/base-prompts-publicidad-ia'
     },
     {
-      title: 'Ebook: Diseñadores vs IA',
-      description: 'Estrategias para que diseñadores colaboren exitosamente con IA y mantengan relevancia en el mercado',
-      category: 'Ebook',
-      url: '/resources/ebook-disenadores-vs-ia'
+      title: 'Base de Prompts para Videos en Sora',
+      description: 'Prompts para generar videos en Sora: planos, estilo, ritmo, transiciones e iluminación',
+      category: 'Manual',
+      url: '/resources/base-prompts-videos-sora'
     },
     {
-      title: 'Prompts para diseños y anuncios básicos',
-      description: 'Más de 200 prompts profesionales para crear diseños y anuncios con IA generativa',
+      title: 'Promp mágico VEO 3',
+      description: 'Prompt cinematográfico fotorrealista: transformación de habitación con montaje rápido y sin texto',
       category: 'Manual',
-      url: '/resources/prompts-disenos-anuncios-basicos'
+      url: '/resources/promp-magico-veo-3'
     }
   ];
 
