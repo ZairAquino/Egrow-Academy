@@ -166,8 +166,8 @@ export async function POST(request: NextRequest) {
           originalPrice: plan.price.toString(),
           finalPrice: finalPrice.toString(),
         },
-        ...(subscriptionDiscounts.length > 0 ? { discounts: subscriptionDiscounts } : {}),
       },
+      ...(subscriptionDiscounts.length > 0 ? { discounts: subscriptionDiscounts } : {}),
     };
 
     const session = await stripe.checkout.sessions.create(sessionConfig);
