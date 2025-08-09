@@ -81,10 +81,13 @@ export async function POST(request: NextRequest) {
     // Descuentos: usar cupones/promotion codes para que solo apliquen al primer mes
     let discountDescription = '';
     let subscriptionDiscounts: any[] = [];
+    // Valor de descuento aplicado (0-1) para efectos informativos/metadata
+    let discountApplied = 0;
     if (discountData && discountData.code && discountData.discount) {
       const validCodes = { 'WEBINAR50': { discount: 0.5, planId: 'monthly' as const } };
       const validCode = validCodes[discountData.code as keyof typeof validCodes];
       if (validCode && validCode.planId === planId) {
+        discountApplied = validCode.discount;
         discountDescription = ` (${Math.round(validCode.discount * 100)}% desc. - ${discountData.code} 1er mes)`;
 
         try {
@@ -111,6 +114,9 @@ export async function POST(request: NextRequest) {
         }
       }
     }
+
+    // Calcular precio final solo para referencia/metadata (Stripe calcula con el coupon)
+    const finalPrice = Number((plan.price * (1 - discountApplied)).toFixed(2));
 
     // Crear sesión de checkout
     const sessionConfig: any = {
@@ -158,7 +164,7 @@ export async function POST(request: NextRequest) {
           ...(discountData?.code && { discountCode: discountData.code }),
           ...(discountData?.discount && { discountAmount: discountData.discount.toString() }),
           originalPrice: plan.price.toString(),
-          finalPrice: plan.price.toString(),
+          finalPrice: finalPrice.toString(),
         },
         ...(subscriptionDiscounts.length > 0 ? { discounts: subscriptionDiscounts } : {}),
       },

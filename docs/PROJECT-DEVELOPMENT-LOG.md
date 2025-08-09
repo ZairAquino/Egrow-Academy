@@ -32,7 +32,6 @@
 - El flujo de suscripción funciona para usuarios autenticados sin errores de sesión.
 - El cupón `WEBINAR50` para el plan mensual aplica 50% y se refleja en Stripe Checkout.
 
-
 ### ✅ Limpieza masiva del proyecto: 2025-08-08
 **Mensaje:** Limpieza exhaustiva de scripts innecesarios y reorganización de la estructura del proyecto.
 
@@ -1519,3 +1518,15 @@ npx tsx scripts/setup-stripe-products.ts
 
 #### 📝 **Archivos Modificados**
 - `src/app/globals.css` - min-height agregado a .hero.
+
+### ✅ Fix Stripe: sesión de checkout sin cupón (2025-08-08)
+**Mensaje:** Corregido error 500 al crear `Checkout Session` cuando el usuario no ingresa código de descuento.
+
+**Cambios Principales:**
+- Se calcula siempre `finalPrice` y se agrega a metadatos; se usa `unit_amount` con el precio original y el descuento se aplica solo mediante `promotion_code` cuando existe.
+
+**Archivo Modificado:**
+- `src/app/api/stripe/create-checkout-session/route.ts`
+
+**Impacto:**
+- El pago se procesa correctamente tanto con código de descuento válido como sin código.
