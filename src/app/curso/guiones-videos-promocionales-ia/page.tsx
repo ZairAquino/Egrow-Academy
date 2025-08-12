@@ -1055,6 +1055,7 @@ export default function GuionesVideosPromocionalesIAPage() {
 
         .course-action-continue:hover {
           background: linear-gradient(135deg, #1d4ed8, #1e40af);
+          transform: translateY(-2px);
           box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
         }
 
@@ -1502,36 +1503,6 @@ export default function GuionesVideosPromocionalesIAPage() {
           gap: 2rem;
         }
 
-        .mobile-instructor-section {
-          display: none;
-          padding: 2rem 0;
-          background: #f9fafb;
-        }
-
-        .mobile-prerequisites-section {
-          display: none;
-          padding: 2rem 0;
-          background: #f3f4f6;
-        }
-
-        .mobile-curriculum-section {
-          display: none;
-          padding: 2rem 0;
-          background: #ffffff;
-        }
-
-        .mobile-learning-section {
-          display: none;
-          padding: 2rem 0;
-          background: #f9fafb;
-        }
-
-        .mobile-tools-section {
-          display: none;
-          padding: 2rem 0;
-          background: #ffffff;
-        }
-
         .instructor-card, .prerequisites-card {
           background: white;
           padding: 2rem;
@@ -1671,6 +1642,10 @@ export default function GuionesVideosPromocionalesIAPage() {
           }
 
           .mobile-prerequisites-section {
+            display: block;
+          }
+
+          .mobile-pricing-section {
             display: block;
           }
 

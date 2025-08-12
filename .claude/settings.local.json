@@ -93,7 +93,8 @@
       "Bash(tsx scripts/check-neon-branch-data.ts:*)",
       "Bash(tsx scripts/send-live-webinar-NOW.ts:*)",
       "Bash(tsx scripts/debug-webinar-users.ts:*)",
-      "Bash(tsx scripts/send-live-webinar-CORRECTED.ts:*)"
+      "Bash(tsx scripts/send-live-webinar-CORRECTED.ts:*)",
+      "WebFetch(domain:localhost)"
     ],
     "deny": []
   }

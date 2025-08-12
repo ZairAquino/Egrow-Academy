@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Montserrat } from "next/font/google";
+import { Geist } from "next/font/google";
 import "./critical.css";
 import "./globals.css";
 import "./premium-logo.css";
@@ -21,13 +21,11 @@ import StreakSynchronizer from '@/components/streaks/StreakSynchronizer';
 import StreakSystemInitializer from '@/components/streaks/StreakSystemInitializer';
 import MetaPixelTest from '@/components/analytics/MetaPixelTest';
 
-const montserrat = Montserrat({ 
+const geist = Geist({
   subsets: ["latin"],
   display: 'swap',
-  variable: '--font-montserrat',
-  preload: true,
-  fallback: ['system-ui', 'arial'],
-  adjustFontFallback: true,
+  variable: '--font-geist',
+  weight: ['400','500','600','700','800','900'],
 });
 
 export const metadata: Metadata = baseSEOConfig;
@@ -103,7 +101,7 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
         <link rel="dns-prefetch" href="//fonts.gstatic.com" />
       </head>
-      <body className={montserrat.className}>
+      <body className={geist.className}>
         <Providers>
           <NotificationSystem>
             <BehaviorTrackingWrapper>

@@ -2,8 +2,9 @@
 
 import { usePromotions } from '@/hooks/usePromotions';
 import ElegantPromotionBanner from './ElegantPromotionBanner';
+import CountdownPromotionBanner from './CountdownPromotionBanner';
 
-export default function PromotionBannerWrapper({ skipDelay = false }: { skipDelay?: boolean }) {
+export default function PromotionBannerWrapper({ skipDelay = false, useCountdown = false }: { skipDelay?: boolean; useCountdown?: boolean }) {
   const { 
     activePromotion, 
     isLoading, 
@@ -16,8 +17,10 @@ export default function PromotionBannerWrapper({ skipDelay = false }: { skipDela
     return null;
   }
 
+  const BannerComponent = useCountdown ? CountdownPromotionBanner : ElegantPromotionBanner;
+
   return (
-    <ElegantPromotionBanner
+    <BannerComponent
       promotion={activePromotion}
       skipDelay={skipDelay}
       onClose={handleBannerClose}
@@ -30,6 +33,7 @@ export default function PromotionBannerWrapper({ skipDelay = false }: { skipDela
           handleBannerClose();
         }
       }}
+      {...(useCountdown ? { endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) } : {})}
     />
   );
 } 
