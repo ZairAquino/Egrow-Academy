@@ -182,4 +182,70 @@ export const getSocialTrackingUrls = (platform: keyof typeof SOCIAL_TRACKING_URL
   });
   
   return urls;
+};
+
+// URLs UTM específicas para la campaña "Monetiza tu Voz con IA"
+export const COURSE_LAUNCH_UTM_URLS = {
+  linkedin: {
+    curso_principal: '/curso/monetiza-voz-ia-elevenlabs?utm_source=linkedin&utm_medium=cpc&utm_campaign=curso_lanzamiento_2025',
+    landing_page: '/curso/monetiza-voz-ia-elevenlabs?utm_source=linkedin&utm_medium=cpc&utm_campaign=curso_lanzamiento_2025&utm_content=landing',
+    checkout: '/curso/monetiza-voz-ia-elevenlabs?utm_source=linkedin&utm_medium=cpc&utm_campaign=curso_lanzamiento_2025&utm_content=checkout',
+  },
+  meta: {
+    curso_principal: '/curso/monetiza-voz-ia-elevenlabs?utm_source=meta&utm_medium=paid_social&utm_campaign=curso_lanzamiento_2025',
+    landing_page: '/curso/monetiza-voz-ia-elevenlabs?utm_source=meta&utm_medium=paid_social&utm_campaign=curso_lanzamiento_2025&utm_content=landing',
+    checkout: '/curso/monetiza-voz-ia-elevenlabs?utm_source=meta&utm_medium=paid_social&utm_campaign=curso_lanzamiento_2025&utm_content=checkout',
+  },
+  google: {
+    curso_principal: '/curso/monetiza-voz-ia-elevenlabs?utm_source=google&utm_medium=cpc&utm_campaign=curso_lanzamiento_2025',
+    landing_page: '/curso/monetiza-voz-ia-elevenlabs?utm_source=google&utm_medium=cpc&utm_campaign=curso_lanzamiento_2025&utm_content=landing',
+    checkout: '/curso/monetiza-voz-ia-elevenlabs?utm_source=google&utm_medium=cpc&utm_campaign=curso_lanzamiento_2025&utm_content=checkout',
+  },
+  tiktok: {
+    curso_principal: '/curso/monetiza-voz-ia-elevenlabs?utm_source=tiktok&utm_medium=paid_social&utm_campaign=curso_lanzamiento_2025',
+    landing_page: '/curso/monetiza-voz-ia-elevenlabs?utm_source=tiktok&utm_medium=paid_social&utm_campaign=curso_lanzamiento_2025&utm_content=landing',
+    checkout: '/curso/monetiza-voz-ia-elevenlabs?utm_source=tiktok&utm_medium=paid_social&utm_campaign=curso_lanzamiento_2025&utm_content=checkout',
+  },
+};
+
+// Función para obtener todas las URLs de la campaña de lanzamiento con UTM
+export const getAllCourseLaunchUrls = (): Record<string, Record<string, string>> => {
+  const baseUrl = 'https://egrowacademy.com';
+  
+  const fullUrls: Record<string, Record<string, string>> = {};
+  
+  Object.entries(COURSE_LAUNCH_UTM_URLS).forEach(([platform, contentTypes]) => {
+    fullUrls[platform] = {};
+    Object.entries(contentTypes).forEach(([contentType, path]) => {
+      fullUrls[platform][contentType] = `${baseUrl}${path}`;
+    });
+  });
+  
+  return fullUrls;
+};
+
+// Función para generar URL UTM específica para la campaña
+export const generateCourseLaunchUrl = (
+  platform: keyof typeof COURSE_LAUNCH_UTM_URLS,
+  contentType: string,
+  additionalParams?: Record<string, string>
+): string => {
+  const baseUrl = 'https://egrowacademy.com';
+  const platformUrls = COURSE_LAUNCH_UTM_URLS[platform];
+  const path = platformUrls[contentType as keyof typeof platformUrls];
+  
+  if (!path) {
+    console.warn(`Content type "${contentType}" not found for platform "${platform}"`);
+    return baseUrl;
+  }
+  
+  let url = `${baseUrl}${path}`;
+  
+  // Agregar parámetros adicionales
+  if (additionalParams) {
+    const params = new URLSearchParams(additionalParams);
+    url += `&${params.toString()}`;
+  }
+  
+  return url;
 }; 

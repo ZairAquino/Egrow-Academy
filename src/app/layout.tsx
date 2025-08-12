@@ -19,7 +19,7 @@ import SocialTrackingWrapper from '@/components/social/SocialTrackingWrapper';
 import StreakNotifications from '@/components/notifications/StreakNotifications';
 import StreakSynchronizer from '@/components/streaks/StreakSynchronizer';
 import StreakSystemInitializer from '@/components/streaks/StreakSystemInitializer';
-import MetaPixelTest from '@/components/analytics/MetaPixelTest';
+import UTMTracker from '@/components/analytics/UTMTracker';
 
 // Fuente global: Geist Sans (Vercel)
 
@@ -176,8 +176,8 @@ export default function RootLayout({
           {/* Conversion Tracker */}
           <ConversionTracker />
           
-          {/* Meta Pixel Test Component (solo en desarrollo) */}
-          <MetaPixelTest />
+          {/* UTM Tracker */}
+          <UTMTracker />
         </Providers>
       </body>
     </html>
