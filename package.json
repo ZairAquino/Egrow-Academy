@@ -61,7 +61,8 @@
     "cleanup-webinars:dry": "tsx scripts/cleanup-webinars.ts --dry-run --keep-slug=videos-profesionales-ia",
     "cleanup-webinars": "tsx scripts/cleanup-webinars.ts --keep-slug=videos-profesionales-ia",
     "check-webinars": "tsx scripts/check-webinars.ts",
-    "test-utm-tracking": "tsx scripts/test-utm-tracking.ts"
+    "test-utm-tracking": "tsx scripts/test-utm-tracking.ts",
+    "get-social-analytics": "tsx scripts/get-social-analytics.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/inspector": "^0.16.2",
