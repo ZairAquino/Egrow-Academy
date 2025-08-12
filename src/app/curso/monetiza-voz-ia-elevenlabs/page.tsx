@@ -1152,16 +1152,12 @@ export default function MonetizaVozIAElevenLabsPage() {
                 <div className="tools-section">
                   <h2>Herramientas y Tecnologías</h2>
                   <div className="tools-grid">
-                    {courseData.tools.map((tool, index) => {
-                      const key = tool.toLowerCase();
-                      const Icon = toolIconMap[key] ?? <SiOpenai />;
-                      return (
+                    {courseData.tools.map((tool, index) => (
                       <div key={index} className="tool-item">
-                          <span className="tool-icon" aria-hidden>{Icon}</span>
+                          <span className="tool-icon" aria-hidden>🔧</span>
                           <span className="tool-name">{tool}</span>
                       </div>
-                      );
-                    })}
+                    ))}
                 </div>
               </div>
 
