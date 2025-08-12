@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, Suspense, useEffect, useRef, type ReactNode } from 'react';
+import { useState, Suspense, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 
@@ -11,8 +11,6 @@ import VideoPlayer from '@/components/courses/VideoPlayer';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
-import { SiAudacity, SiAdobe, SiCanva, SiOpenai, SiNotion, SiDiscord, SiYoutube, SiElevenlabs } from 'react-icons/si';
-import { FaXTwitter, FaInstagram, FaLinkedinIn, FaGlobe } from 'react-icons/fa6';
 
 
 // Lazy load components
@@ -37,17 +35,6 @@ export default function MonetizaVozIAElevenLabsPage() {
   const { user, status } = useAuth();
   const { hasPremiumAccess, isLoading: subscriptionLoading } = useSubscriptionStatus();
   const router = useRouter();
-
-  const toolIconMap: Record<string, ReactNode> = {
-    'elevenlabs pro': <SiElevenlabs />, // fallback if not available in your version, replace with SiAdobe or similar
-    'audacity': <SiAudacity />,
-    'adobe audition': <SiAdobe />,
-    'canva pro': <SiCanva />,
-    'chatgpt plus': <SiOpenai />,
-    'notion': <SiNotion />,
-    'discord': <SiDiscord />,
-    'youtube studio': <SiYoutube />
-  };
   
   
   console.log('🔍 [DEBUG] Estados iniciales:', { 
