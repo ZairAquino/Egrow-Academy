@@ -991,6 +991,7 @@ button, a, input, select, textarea {
     transition: margin-left 0.3s ease;
     margin: 0;
     padding: 0;
+    padding-top: 0 !important;
 }
 
 /* Asegurar que no hay espacios en blanco arriba del hero */
@@ -9231,6 +9232,8 @@ aside[class*="price-card"] {
   display: flex;
   align-items: center;
   padding: 0;
+  padding-top: 0 !important;
+  margin-top: 0 !important;
   background: linear-gradient(135deg, #f7f7f9 0%, #f8f6ff 100%);
 }
 

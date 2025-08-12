@@ -1084,13 +1084,6 @@ export default function MonetizaVozIAElevenLabsPage() {
                       className="preview-video"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
-                    <div className="play-button-overlay">
-                      <div className="play-button">
-                        <svg viewBox="0 0 24 24" fill="currentColor" className="play-icon">
-                          <path d="M8 5v14l11-7z"/>
-                        </svg>
-                      </div>
-                    </div>
                   </div>
                   {/* Stats a la derecha */}
                   <div className="hero-stats">
