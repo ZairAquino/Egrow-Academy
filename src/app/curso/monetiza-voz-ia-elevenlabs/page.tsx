@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, Suspense, useEffect } from 'react';
+import { useState, Suspense, useEffect, useRef, type ReactNode } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 
@@ -11,6 +11,9 @@ import VideoPlayer from '@/components/courses/VideoPlayer';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
+import { SiAudacity, SiAdobe, SiCanva, SiOpenai, SiNotion, SiDiscord, SiYoutube, SiElevenlabs } from 'react-icons/si';
+import { FaXTwitter, FaInstagram, FaLinkedinIn, FaGlobe } from 'react-icons/fa6';
+
 
 // Lazy load components
 const CompaniesMarquee = dynamic(() => import('@/components/ui/CompaniesMarquee'), {
@@ -27,9 +30,25 @@ export default function MonetizaVozIAElevenLabsPage() {
   const [progressPercentage, setProgressPercentage] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [expandedLessons, setExpandedLessons] = useState<number[]>([]);
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const [currentReviewSlide, setCurrentReviewSlide] = useState(0);
+  const reviewsTrackRef = useRef<HTMLDivElement | null>(null);
+  const reviewSlidesCount = 3; // 6 testimonios, 2 por slide
   const { user, status } = useAuth();
   const { hasPremiumAccess, isLoading: subscriptionLoading } = useSubscriptionStatus();
   const router = useRouter();
+
+  const toolIconMap: Record<string, ReactNode> = {
+    'elevenlabs pro': <SiElevenlabs />, // fallback if not available in your version, replace with SiAdobe or similar
+    'audacity': <SiAudacity />,
+    'adobe audition': <SiAdobe />,
+    'canva pro': <SiCanva />,
+    'chatgpt plus': <SiOpenai />,
+    'notion': <SiNotion />,
+    'discord': <SiDiscord />,
+    'youtube studio': <SiYoutube />
+  };
+  
   
   console.log('🔍 [DEBUG] Estados iniciales:', { 
     currentLesson, 
@@ -142,8 +161,8 @@ export default function MonetizaVozIAElevenLabsPage() {
     image: '/images/courses/monetiza-voz-ia.png',
     lessonsCount: 10,
     instructor: {
-      name: 'eGrow Academy',
-      title: 'Especialista en IA y Monetización con Voz - eGrow Academy',
+      name: 'Zair Aquino',
+      title: 'CEO de eGrow y especialista en IA',
       image: '/images/Zair.jpeg',
       bio: 'Experto en herramientas de IA para generación de contenido y monetización digital con más de 5 años de experiencia en ElevenLabs y tecnologías de voz.'
     },
@@ -321,6 +340,199 @@ export default function MonetizaVozIAElevenLabsPage() {
     }
   }, [user, status]);
 
+  // Función para verificar toda la estructura del grid y contenedores
+  const inspectGridStructure = () => {
+    console.log('🔍 [INSPECCIÓN GRID] Verificando estructura completa...');
+    
+    // Verificar el contenedor principal del grid
+    const contentLayout = document.querySelector('.content-layout');
+    if (contentLayout) {
+      const computedStyle = window.getComputedStyle(contentLayout);
+      console.log('🔍 [INSPECCIÓN GRID] .content-layout:', {
+        display: computedStyle.display,
+        gridTemplateColumns: computedStyle.gridTemplateColumns,
+        position: computedStyle.position,
+        overflow: computedStyle.overflow,
+        height: computedStyle.height,
+        minHeight: computedStyle.minHeight,
+        className: contentLayout.className,
+        children: contentLayout.children.length
+      });
+      
+      // Verificar todos los hijos del grid
+      Array.from(contentLayout.children).forEach((child, index) => {
+        const childStyle = window.getComputedStyle(child);
+        console.log(`🔍 [INSPECCIÓN GRID] Hijo ${index}:`, {
+          tagName: child.tagName,
+          className: child.className,
+          id: child.id,
+          display: childStyle.display,
+          position: childStyle.position,
+          overflow: childStyle.overflow,
+          height: childStyle.height,
+          minHeight: childStyle.minHeight,
+          gridColumn: childStyle.gridColumn,
+          gridRow: childStyle.gridRow
+        });
+      });
+    } else {
+      console.log('❌ [INSPECCIÓN GRID] No se encontró .content-layout');
+    }
+    
+    // Verificar el sidebar específicamente
+    const contentSidebar = document.querySelector('.content-sidebar');
+    if (contentSidebar) {
+      const computedStyle = window.getComputedStyle(contentSidebar);
+      console.log('🔍 [INSPECCIÓN GRID] .content-sidebar:', {
+        display: computedStyle.display,
+        position: computedStyle.position,
+        overflow: computedStyle.overflow,
+        height: computedStyle.height,
+        minHeight: computedStyle.minHeight,
+        top: computedStyle.top,
+        left: computedStyle.left,
+        right: computedStyle.right,
+        bottom: computedStyle.bottom,
+        transform: computedStyle.transform,
+        className: contentSidebar.className,
+        children: contentSidebar.children.length,
+        parentElement: contentSidebar.parentElement?.className
+      });
+      
+      // Verificar todos los hijos del sidebar
+      Array.from(contentSidebar.children).forEach((child, index) => {
+        const childStyle = window.getComputedStyle(child);
+        console.log(`🔍 [INSPECCIÓN GRID] Sidebar hijo ${index}:`, {
+          tagName: child.tagName,
+          className: child.className,
+          id: child.id,
+          display: childStyle.display,
+          position: childStyle.position,
+          overflow: childStyle.overflow,
+          height: childStyle.height,
+          minHeight: childStyle.minHeight,
+          top: childStyle.top,
+          left: childStyle.left,
+          right: childStyle.right,
+          bottom: childStyle.bottom,
+          transform: childStyle.transform
+        });
+      });
+    } else {
+      console.log('❌ [INSPECCIÓN GRID] No se encontró .content-sidebar');
+    }
+    
+    // Verificar si hay contenedores con overflow hidden
+    const allElements = document.querySelectorAll('*');
+    const overflowHiddenElements = Array.from(allElements).filter(el => {
+      const style = window.getComputedStyle(el);
+      return style.overflow === 'hidden' || style.overflowX === 'hidden' || style.overflowY === 'hidden';
+    });
+    
+    console.log('🔍 [INSPECCIÓN GRID] Elementos con overflow hidden:', overflowHiddenElements.map(el => ({
+      tagName: el.tagName,
+      className: el.className,
+      id: el.id,
+      overflow: window.getComputedStyle(el).overflow,
+      overflowX: window.getComputedStyle(el).overflowX,
+      overflowY: window.getComputedStyle(el).overflowY
+    })));
+    
+    // Verificar si hay contenedores con position fixed o sticky
+    const fixedStickyElements = Array.from(allElements).filter(el => {
+      const style = window.getComputedStyle(el);
+      return style.position === 'fixed' || style.position === 'sticky';
+    });
+    
+    console.log('🔍 [INSPECCIÓN GRID] Elementos con position fixed/sticky:', fixedStickyElements.map(el => ({
+      tagName: el.tagName,
+      className: el.className,
+      id: el.id,
+      position: window.getComputedStyle(el).position,
+      top: window.getComputedStyle(el).top,
+      left: window.getComputedStyle(el).left,
+      right: window.getComputedStyle(el).right,
+      bottom: window.getComputedStyle(el).bottom
+    })));
+  };
+
+  // Función para verificar CSS global que afecte el grid
+  const checkGridCSSRules = () => {
+    console.log('🔍 [INSPECCIÓN CSS GRID] Verificando CSS global del grid...');
+    
+    const allStylesheets = Array.from(document.styleSheets);
+    allStylesheets.forEach((stylesheet, index) => {
+      try {
+        const rules = Array.from(stylesheet.cssRules || stylesheet.rules || []);
+        rules.forEach((rule, ruleIndex) => {
+          if (rule instanceof CSSStyleRule && rule.selectorText && (
+            rule.selectorText.includes('content-layout') ||
+            rule.selectorText.includes('content-sidebar') ||
+            rule.selectorText.includes('main-content-area') ||
+            rule.selectorText.includes('grid') ||
+            rule.selectorText.includes('sidebar')
+          )) {
+            console.log('🚨 [ALERTA] Regla CSS del grid encontrada:', {
+              stylesheet: index,
+              rule: ruleIndex,
+              selector: rule.selectorText,
+              cssText: rule.cssText
+            });
+          }
+        });
+      } catch (e) {
+        console.log('⚠️ [INFO] No se puede acceder a las reglas del stylesheet', index, e);
+      }
+    });
+  };
+
+  // Contador de tiempo para la oferta (cuenta regresiva desde 1h 54m)
+  useEffect(() => {
+    const countdownMs = ((1 * 60) + 54) * 60 * 1000; // 1 hora y 54 minutos en milisegundos
+    const endDate = new Date(Date.now() + countdownMs);
+
+    const calculateTimeLeft = () => {
+      const diff = endDate.getTime() - Date.now();
+      if (diff <= 0) {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        return false;
+      }
+
+      const totalSeconds = Math.floor(diff / 1000);
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      setTimeLeft({ days: 0, hours, minutes, seconds });
+      return true;
+    };
+
+    const timer = window.setInterval(() => {
+      const stillRunning = calculateTimeLeft();
+      if (!stillRunning) {
+        window.clearInterval(timer);
+      }
+    }, 1000);
+
+    calculateTimeLeft();
+    return () => window.clearInterval(timer);
+  }, []);
+
+  // Auto-play del carrusel de opiniones
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      setCurrentReviewSlide((prev) => (prev + 1) % reviewSlidesCount);
+    }, 5000);
+    return () => window.clearInterval(id);
+  }, []);
+
+  // Aplicar transform al track cuando cambie el slide
+  useEffect(() => {
+    if (reviewsTrackRef.current) {
+      reviewsTrackRef.current.style.transform = `translateX(-${currentReviewSlide * 100}%)`;
+    }
+  }, [currentReviewSlide]);
+
   useEffect(() => {
     const handleFocus = () => {
       if (user && status === 'authenticated') {
@@ -340,6 +552,342 @@ export default function MonetizaVozIAElevenLabsPage() {
       }
     };
 
+    // Logs de diagnóstico para la tarjeta de precios
+    const logPriceCardStyles = () => {
+      const priceCard = document.querySelector('.price-card-scrollable');
+      const priceCardInner = document.querySelector('.price-card');
+      
+      if (priceCard) {
+        const computedStyle = window.getComputedStyle(priceCard);
+        const inlineStyle = (priceCard as HTMLElement).getAttribute('style');
+        console.log('🔍 [DIAGNÓSTICO] Estilos de .price-card-scrollable:', {
+          position: computedStyle.position,
+          top: computedStyle.top,
+          left: computedStyle.left,
+          right: computedStyle.right,
+          bottom: computedStyle.bottom,
+          transform: computedStyle.transform,
+          zIndex: computedStyle.zIndex,
+          className: priceCard.className,
+          id: priceCard.id,
+          inlineStyle: inlineStyle
+        });
+      } else {
+        console.log('❌ [DIAGNÓSTICO] No se encontró .price-card-scrollable');
+      }
+      
+      if (priceCardInner) {
+        const computedStyle = window.getComputedStyle(priceCardInner);
+        const inlineStyle = priceCardInner.getAttribute('style');
+        console.log('🔍 [DIAGNÓSTICO] Estilos de .price-card:', {
+          position: computedStyle.position,
+          top: computedStyle.top,
+          left: computedStyle.left,
+          right: computedStyle.right,
+          bottom: computedStyle.bottom,
+          transform: computedStyle.transform,
+          zIndex: computedStyle.zIndex,
+          className: priceCardInner.className,
+          inlineStyle: inlineStyle
+        });
+      } else {
+        console.log('❌ [DIAGNÓSTICO] No se encontró .price-card');
+      }
+    };
+
+    // Función para monitorear cambios en los estilos
+    const monitorPriceCardChanges = () => {
+      const priceCard = document.querySelector('.price-card-scrollable') as HTMLElement;
+      if (priceCard) {
+        // Crear un observer para detectar cambios en los atributos
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+              console.log('🚨 [ALERTA] Se detectó cambio en el atributo style:', {
+                target: mutation.target,
+                oldValue: mutation.oldValue,
+                newValue: (mutation.target as HTMLElement).getAttribute('style')
+              });
+            }
+          });
+        });
+
+        observer.observe(priceCard, {
+          attributes: true,
+          attributeOldValue: true,
+          attributeFilter: ['style', 'class']
+        });
+
+        console.log('✅ [MONITOREO] Observer configurado para .price-card-scrollable');
+        return observer;
+      }
+      return null;
+    };
+
+    // Función para verificar todos los estilos CSS aplicados
+    const checkAllCSSRules = () => {
+      console.log('🔍 [DIAGNÓSTICO] Verificando todas las reglas CSS...');
+      
+      // Verificar estilos inline
+      const priceCard = document.querySelector('.price-card-scrollable') as HTMLElement;
+      if (priceCard) {
+        console.log('🔍 [DIAGNÓSTICO] Estilos inline:', priceCard.getAttribute('style'));
+        console.log('🔍 [DIAGNÓSTICO] Clases CSS:', priceCard.className);
+      }
+      
+      // Verificar si hay estilos globales que coincidan
+      const allStylesheets = Array.from(document.styleSheets);
+      allStylesheets.forEach((stylesheet, index) => {
+        try {
+          const rules = Array.from(stylesheet.cssRules || stylesheet.rules || []);
+          rules.forEach((rule, ruleIndex) => {
+            if (rule instanceof CSSStyleRule && rule.selectorText && rule.selectorText.includes('price-card')) {
+              console.log('🚨 [ALERTA] Regla CSS global encontrada:', {
+                stylesheet: index,
+                rule: ruleIndex,
+                selector: rule.selectorText,
+                cssText: rule.cssText
+              });
+            }
+          });
+        } catch (e) {
+          console.log('⚠️ [INFO] No se puede acceder a las reglas del stylesheet', index, e);
+        }
+      });
+    };
+
+    // Función para forzar estilos con !important usando JavaScript
+    const forcePriceCardStyles = () => {
+      const priceCard = document.querySelector('.price-card-scrollable') as HTMLElement;
+      const priceCardInner = document.querySelector('.price-card') as HTMLElement;
+      
+      if (priceCard) {
+        // Forzar estilos usando setProperty con !important
+        priceCard.style.setProperty('position', 'relative', 'important');
+        priceCard.style.setProperty('top', 'auto', 'important');
+        priceCard.style.setProperty('left', 'auto', 'important');
+        priceCard.style.setProperty('right', 'auto', 'important');
+        priceCard.style.setProperty('bottom', 'auto', 'important');
+        priceCard.style.setProperty('transform', 'none', 'important');
+        priceCard.style.setProperty('will-change', 'auto', 'important');
+        priceCard.style.setProperty('z-index', '20', 'important');
+        priceCard.style.setProperty('float', 'none', 'important');
+        priceCard.style.setProperty('clear', 'none', 'important');
+        priceCard.style.setProperty('display', 'block', 'important');
+        priceCard.style.setProperty('inset', 'auto', 'important');
+        
+        console.log('✅ [FORZADO] Estilos aplicados a .price-card-scrollable usando setProperty');
+      }
+      
+      if (priceCardInner) {
+        // Forzar estilos usando setProperty con !important
+        priceCardInner.style.setProperty('position', 'relative', 'important');
+        priceCardInner.style.setProperty('top', 'auto', 'important');
+        priceCardInner.style.setProperty('left', 'auto', 'important');
+        priceCardInner.style.setProperty('right', 'auto', 'important');
+        priceCardInner.style.setProperty('bottom', 'auto', 'important');
+        priceCardInner.style.setProperty('transform', 'none', 'important');
+        priceCardInner.style.setProperty('will-change', 'auto', 'important');
+        priceCardInner.style.setProperty('z-index', '20', 'important');
+        priceCardInner.style.setProperty('float', 'none', 'important');
+        priceCardInner.style.setProperty('clear', 'none', 'important');
+        priceCardInner.style.setProperty('display', 'block', 'important');
+        priceCardInner.style.setProperty('inset', 'auto', 'important');
+        
+        console.log('✅ [FORZADO] Estilos aplicados a .price-card usando setProperty');
+      }
+    };
+
+    // Listener de scroll para mantener estilos forzados
+    const handleScroll = () => {
+      // Reforzar estilos cada cierto tiempo durante el scroll
+      forcePriceCardStyles();
+    };
+
+    // Función para forzar estilos constantemente
+    const forceStylesContinuously = () => {
+      const priceCard = document.querySelector('.price-card-scrollable') as HTMLElement;
+      const priceCardInner = document.querySelector('.price-card') as HTMLElement;
+      const sidebar = document.querySelector('.content-sidebar') as HTMLElement;
+      
+      if (priceCard) {
+        priceCard.style.setProperty('position', 'relative', 'important');
+        priceCard.style.setProperty('top', 'auto', 'important');
+        priceCard.style.setProperty('left', 'auto', 'important');
+        priceCard.style.setProperty('right', 'auto', 'important');
+        priceCard.style.setProperty('bottom', 'auto', 'important');
+        priceCard.style.setProperty('transform', 'none', 'important');
+        priceCard.style.setProperty('will-change', 'auto', 'important');
+        priceCard.style.setProperty('z-index', '20', 'important');
+        priceCard.style.setProperty('float', 'none', 'important');
+        priceCard.style.setProperty('clear', 'none', 'important');
+        priceCard.style.setProperty('display', 'block', 'important');
+        priceCard.style.setProperty('inset', 'auto', 'important');
+      }
+      
+      if (priceCardInner) {
+        priceCardInner.style.setProperty('position', 'relative', 'important');
+        priceCardInner.style.setProperty('top', 'auto', 'important');
+        priceCardInner.style.setProperty('left', 'auto', 'important');
+        priceCardInner.style.setProperty('right', 'auto', 'important');
+        priceCardInner.style.setProperty('bottom', 'auto', 'important');
+        priceCardInner.style.setProperty('transform', 'none', 'important');
+        priceCardInner.style.setProperty('will-change', 'auto', 'important');
+        priceCardInner.style.setProperty('z-index', '20', 'important');
+        priceCardInner.style.setProperty('float', 'none', 'important');
+        priceCardInner.style.setProperty('clear', 'none', 'important');
+        priceCardInner.style.setProperty('display', 'block', 'important');
+        priceCardInner.style.setProperty('inset', 'auto', 'important');
+      }
+      
+      if (sidebar) {
+        sidebar.style.setProperty('position', 'relative', 'important');
+        sidebar.style.setProperty('overflow', 'visible', 'important');
+        sidebar.style.setProperty('top', 'auto', 'important');
+        sidebar.style.setProperty('left', 'auto', 'important');
+        sidebar.style.setProperty('right', 'auto', 'important');
+        sidebar.style.setProperty('bottom', 'auto', 'important');
+        sidebar.style.setProperty('transform', 'none', 'important');
+        sidebar.style.setProperty('will-change', 'auto', 'important');
+      }
+    };
+
+    // Agregar listener de scroll
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    // Forzar estilos constantemente cada 100ms
+    const continuousStyleInterval = setInterval(forceStylesContinuously, 100);
+
+    // Forzar estilos inmediatamente al cargar
+    console.log('🚀 [INMEDIATO] Forzando estilos al cargar...');
+    forceStylesContinuously();
+    
+    // También forzar después de un pequeño delay para asegurar que el DOM esté listo
+    setTimeout(() => {
+      console.log('🚀 [RETRASADO] Forzando estilos después del delay...');
+      forceStylesContinuously();
+    }, 100);
+
+    // Ejecutar diagnóstico después de que el DOM esté listo
+    console.log('🔍 [DEBUG] Configurando setTimeout principal...');
+    setTimeout(() => {
+      console.log('🔍 [DEBUG] Iniciando diagnóstico completo...');
+      
+      logPriceCardStyles();
+      console.log('✅ [DEBUG] logPriceCardStyles completado');
+      
+      checkAllCSSRules();
+      console.log('✅ [DEBUG] checkAllCSSRules completado');
+      
+      console.log('🔍 [DEBUG] Ejecutando inspectGridStructure...');
+      inspectGridStructure(); // Agregar inspección del grid
+      console.log('✅ [DEBUG] inspectGridStructure completado');
+      
+      console.log('🔍 [DEBUG] Ejecutando checkGridCSSRules...');
+      checkGridCSSRules(); // Agregar verificación de CSS del grid
+      console.log('✅ [DEBUG] checkGridCSSRules completado');
+      
+      const observer = monitorPriceCardChanges();
+      console.log('✅ [DEBUG] monitorPriceCardChanges completado');
+      
+      // Guardar el observer para limpiarlo después
+      if (observer) {
+        (window as any).priceCardObserver = observer;
+      }
+      
+      // Forzar estilos después de un pequeño delay
+      setTimeout(() => {
+        console.log('🔍 [DEBUG] Ejecutando forcePriceCardStyles...');
+        forcePriceCardStyles();
+        console.log('✅ [DEBUG] forcePriceCardStyles completado');
+      }, 500);
+    }, 1000);
+
+    // Ejecutar inspección del grid inmediatamente también
+    console.log('🔍 [DEBUG] Ejecutando inspección inmediata del grid...');
+    setTimeout(() => {
+      console.log('🔍 [DEBUG] Ejecutando inspectGridStructure inmediato...');
+      inspectGridStructure();
+      console.log('🔍 [DEBUG] Ejecutando checkGridCSSRules inmediato...');
+      checkGridCSSRules();
+    }, 100);
+
+    // Ejecutar también después de que el componente se monte completamente
+    console.log('🔍 [DEBUG] Configurando ejecución post-mount...');
+    setTimeout(() => {
+      console.log('🔍 [DEBUG] Ejecutando inspección post-mount...');
+      inspectGridStructure();
+      checkGridCSSRules();
+    }, 2000);
+
+    // Ejecutar diagnóstico después de que el DOM esté listo
+    console.log('🔍 [DEBUG] Configurando setTimeout principal...');
+    setTimeout(() => {
+      console.log('🔍 [DEBUG] Iniciando diagnóstico completo...');
+      
+      logPriceCardStyles();
+      console.log('✅ [DEBUG] logPriceCardStyles completado');
+      
+      checkAllCSSRules();
+      console.log('✅ [DEBUG] checkAllCSSRules completado');
+      
+      console.log('🔍 [DEBUG] Ejecutando inspectGridStructure...');
+      inspectGridStructure(); // Agregar inspección del grid
+      console.log('✅ [DEBUG] inspectGridStructure completado');
+      
+      console.log('🔍 [DEBUG] Ejecutando checkGridCSSRules...');
+      checkGridCSSRules(); // Agregar verificación de CSS del grid
+      console.log('✅ [DEBUG] checkGridCSSRules completado');
+      
+      const observer = monitorPriceCardChanges();
+      console.log('✅ [DEBUG] monitorPriceCardChanges completado');
+      
+      // Guardar el observer para limpiarlo después
+      if (observer) {
+        (window as any).priceCardObserver = observer;
+      }
+      
+      // Forzar estilos después de un pequeño delay
+      setTimeout(() => {
+        console.log('🔍 [DEBUG] Ejecutando forcePriceCardStyles...');
+        forcePriceCardStyles();
+        console.log('✅ [DEBUG] forcePriceCardStyles completado');
+      }, 500);
+    }, 1000);
+
+    // Logs adicionales para detectar JavaScript que modifique estilos
+    console.log('🔍 [DIAGNÓSTICO] Verificando funciones globales...');
+    
+    // Verificar si hay funciones que modifiquen estilos
+    const originalSetAttribute = Element.prototype.setAttribute;
+    const originalStyleSetProperty = CSSStyleDeclaration.prototype.setProperty;
+    
+    Element.prototype.setAttribute = function(name, value) {
+      if (name === 'style' && this.classList.contains('price-card-scrollable')) {
+        console.log('🚨 [ALERTA] setAttribute llamado en price-card-scrollable:', {
+          element: this,
+          name: name,
+          value: value,
+          stack: new Error().stack
+        });
+      }
+      return originalSetAttribute.call(this, name, value);
+    };
+    
+    CSSStyleDeclaration.prototype.setProperty = function(property, value, priority) {
+      if (this.parentRule && (this.parentRule as any).selectorText && (this.parentRule as any).selectorText.includes('price-card')) {
+        console.log('🚨 [ALERTA] setProperty llamado en CSS de price-card:', {
+          property: property,
+          value: value,
+          priority: priority,
+          stack: new Error().stack
+        });
+      }
+      return originalStyleSetProperty.call(this, property, value, priority);
+    };
+    
+    console.log('✅ [MONITOREO] Hooks instalados para detectar cambios de estilos');
+
     window.addEventListener('focus', handleFocus);
     document.addEventListener('visibilitychange', handleVisibilityChange);
     window.addEventListener('popstate', handlePopState);
@@ -347,7 +895,10 @@ export default function MonetizaVozIAElevenLabsPage() {
     return () => {
       window.removeEventListener('focus', handleFocus);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
-      window.removeEventListener('popstate', handlePopState);
+      document.removeEventListener('popstate', handlePopState);
+      document.removeEventListener('visibilitychange', logPriceCardStyles);
+      window.removeEventListener('scroll', handleScroll);
+      clearInterval(continuousStyleInterval);
     };
   }, [user, status]);
 
@@ -388,65 +939,20 @@ export default function MonetizaVozIAElevenLabsPage() {
   }, []);
 
   const loadUserProgress = async () => {
-    console.log('🔍 [DEBUG] loadUserProgress iniciado');
-    console.log('🔍 [DEBUG] Usuario:', { user: !!user, userId: user?.id, status });
+    if (!user?.id) return;
     
-    if (!user || status !== 'authenticated') {
-      console.log('🔍 [DEBUG] Usuario no autenticado, saliendo de loadUserProgress');
-      setIsLoading(false);
-      return;
-    }
-
     try {
-      console.log('🔍 [DEBUG] Enviando request de progreso a /api/courses/progress');
-      const response = await fetch(`/api/courses/progress?courseId=${courseData.id}`, {
-        credentials: 'include',
-      });
-
-      console.log('🔍 [DEBUG] Respuesta de progreso:', { 
-        status: response.status, 
-        ok: response.ok,
-        statusText: response.statusText 
-      });
-
+      const response = await fetch(`/api/user/progress?userId=${user.id}`);
       if (response.ok) {
         const data = await response.json();
-        console.log('🔍 [DEBUG] Datos de progreso recibidos:', data);
-        console.log('🔍 [DEBUG] Actualizando estados locales...');
-        
-        const newCurrentLesson = data.currentLesson || 0;
-        const newCompletedLessons = data.completedLessons || [];
-        const newProgressPercentage = data.progressPercentage || 0;
-        
-        setCurrentLesson(newCurrentLesson);
-        setCompletedLessons(newCompletedLessons);
-        setProgressPercentage(newProgressPercentage);
-        
-        console.log('🔍 [DEBUG] Estados actualizados:', {
-          currentLesson: newCurrentLesson,
-          completedLessonsLength: newCompletedLessons.length,
-          progressPercentage: newProgressPercentage
-        });
-        
-        // Verificar si debería mostrar "Continuar"
-        const shouldShowContinue = newCompletedLessons.length > 0;
-        console.log('🔍 [DEBUG] Debería mostrar "Continuar":', shouldShowContinue);
-        
-      } else if (response.status === 404) {
-        console.log('🔍 [DEBUG] Usuario no inscrito (404), estableciendo valores por defecto');
-        setCurrentLesson(0);
-        setCompletedLessons([]);
-        setProgressPercentage(0);
-      } else {
-        console.log('🔍 [DEBUG] Error en respuesta de progreso:', response.status);
-        const errorText = await response.text();
-        console.log('🔍 [DEBUG] Error details:', errorText);
+        setCompletedLessons(data.completedLessons || []);
+        setCurrentLesson(data.currentLesson || 0);
+        setProgressPercentage(data.progressPercentage || 0);
       }
     } catch (error) {
-      console.error('❌ Error al cargar el progreso:', error);
+      console.error('Error loading user progress:', error);
     } finally {
       setIsLoading(false);
-      console.log('🔍 [DEBUG] loadUserProgress completado, isLoading = false');
     }
   };
 
@@ -547,21 +1053,18 @@ export default function MonetizaVozIAElevenLabsPage() {
 
   return (
     <>
-      {/* Banner promocional para usuarios no premium */}
+      {/* Banner promocional exclusivo de esta página */}
       {shouldShowBanner() && (
-        <div className="promo-banner">
-          <div className="promo-banner-content" onClick={handleBannerClick}>
-            <div className="promo-banner-text">
-              <span className="promo-banner-emoji">🚀</span>
-              <span className="promo-banner-message">
-                {!user 
-                  ? "¡Únete a eGrow Academy Premium y accede a todos los cursos!" 
-                  : "¡Actualiza a Premium y desbloquea todos los cursos!"
-                }
-              </span>
-            </div>
-            <div className="promo-banner-cta">
-              {!user ? "Regístrate Ahora" : "Actualizar Plan"}
+        <div className="promo-banner" role="button" onClick={handleBannerClick}>
+          <div className="promo-banner-content">
+            <span className="promo-banner-message">
+              Accede a todos nuestros cursos con Suscripción Plus por solo $12.49 USD/mes – ¡Oferta por tiempo limitado!
+            </span>
+            <div className="promo-banner-timer" aria-label="Tiempo restante de la oferta">
+              {/* Si hay días, se muestran como horas acumuladas para un look compacto */}
+              <span className="timer-chip">{String(timeLeft.days * 24 + timeLeft.hours).padStart(2, '0')}h</span>
+              <span className="timer-chip">{String(timeLeft.minutes).padStart(2, '0')}m</span>
+              <span className="timer-chip">{String(timeLeft.seconds).padStart(2, '0')}s</span>
             </div>
           </div>
         </div>
@@ -570,81 +1073,49 @@ export default function MonetizaVozIAElevenLabsPage() {
       <Navbar />
       
       <main className="main-content">
-        {/* Hero Section */}
-        <section className="hero-section">
+        {/* Hero Section - Diseño replicado */}
+        <section className={`hero-section ${shouldShowBanner() ? 'with-promo' : ''}`}>
           <div className="container">
-            <div className="course-hero">
-              <div className="course-info">
-                <div className="course-badges">
-                  <span className="badge badge-premium">Premium - $97</span>
-                  <span className="badge badge-level">{courseData.level}</span>
-                  <span className="badge badge-duration">Duración: {courseData.duration}</span>
+            <div className="hero-card">
+              <div className="hero-grid">
+                <div className="hero-left">
+                  <h1 className="hero-title-big">
+                    Convierte tu voz en<br />
+                    ingresos con IA —<br />
+                    Domina ElevenLabs<br />
+                    sin experiencia previa
+                  </h1>
+                  <p className="hero-subtext">
+                    Crea audios profesionales en minutos, sin equipo costoso ni
+                    conocimientos técnicos, y empieza a venderlos en anuncios,...
+                  </p>
+                  <button className="hero-cta" onClick={goToCourseContent}>
+                    Iniciar Sesión para Comenzar
+                  </button>
                 </div>
-                
-                <h1 className="course-title-large">{courseData.title}</h1>
-                <p className="course-description course-description-dark">{courseData.description}</p>
-                
-                {/* Video solo para móvil - entre descripción y botón */}
-                <div className="mobile-video-preview">
-                  <VideoPlayer
-                    videoUrl="https://youtu.be/UHSVRqgZcSs"
-                    title="Monetiza tu Voz con IA - Preview"
-                    className="mobile-preview-video"
-                  />
-                </div>
-                
-                {/* Botón nuevo completamente desde cero */}
-                <div className="new-course-actions">
-                  {isUserAuthenticated && completedLessons.length > 0 ? (
-                    <div className="progress-section-new">
-                      <div className="progress-info-new">
-                        <p className="progress-text-new">
-                          📚 <strong>Progreso actual:</strong> Lección {currentLesson + 1} de {courseData.lessonsCount}
-                        </p>
-                        <div className="progress-bar-new">
-                          <div className="progress-fill-new" style={{ width: `${Math.round(progressPercentage)}%` }}></div>
-                        </div>
-                        <p className="progress-detail-new">
-                          {completedLessons.length} lecciones completadas • {Math.round(progressPercentage)}% del curso
-                        </p>
-                      </div>
-                      <div 
-                        className="course-action-button course-action-continue"
-                        onClick={goToCourseContent}
-                      >
-                        🚀 Continuar con el curso
-                      </div>
+                <div className="hero-right">
+                  <div className="preview-box">
+                    <video
+                      className="preview-video"
+                      src="https://3o0p1lzj4n.ufs.sh/f/P2bnXUoat3Wf204HLGPQbPfwompytjDs9F6n0B7Hx4aShOGI"
+                      poster="/images/courses/curso_elevenlabs.png"
+                      playsInline
+                      controls
+                      preload="metadata"
+                    >
+                      Tu navegador no soporta la reproducción de video.
+                    </video>
+                  </div>
+                  {/* Stats a la derecha */}
+                  <div className="hero-stats">
+                    <div className="stars" aria-label="Calificación 4.8 de 5">
+                      <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
                     </div>
-                  ) : (
-                    <div className="start-section-new">
-                      <div 
-                        className="course-action-button course-action-start"
-                        onClick={goToCourseContent}
-                      >
-                        {isUserAuthenticated 
-                          ? (hasPremiumAccess ? '🎯 Comenzar Curso Premium' : '🔒 Obtener Acceso Premium')
-                          : '🔐 Iniciar Sesión para Comenzar'}
-                      </div>
-                    </div>
-                  )}
-                </div>
-                
-                <div className="course-meta">
-                  <div className="course-badges-secondary">
-                    <span className="badge badge-language">🌍 {courseData.language}</span>
-                    <span className="badge badge-includes">💻 Modalidad Online</span>
-                    <span className="badge badge-access">🏆 Certificado Digital Incluido</span>
+                    <span className="rating">4.8 <span className="muted">(450 valoraciones)</span></span>
+                    <span className="dot" />
+                    <span className="students"><span className="student-icon">👥</span> 2,863 estudiantes</span>
                   </div>
                 </div>
-              </div>
-              
-              <div className="course-preview">
-                <VideoPlayer
-                  videoUrl="https://youtu.be/UHSVRqgZcSs"
-                  title="Monetiza tu Voz con IA - Preview"
-                  className="desktop-preview-video"
-                />
-                
               </div>
             </div>
           </div>
@@ -656,7 +1127,58 @@ export default function MonetizaVozIAElevenLabsPage() {
             <div className="content-layout">
               {/* Main Content - Desktop */}
               <div className="main-content-area desktop-content">
-                {/* Curriculum */}
+                {/* Descripción del Curso (card + diseño minimal interno) */}
+                <div className="course-overview-card">
+                  <h2 className="desc-title">Descripción del Curso</h2>
+                  <p className="desc-lead">
+                    Convierte tu voz en una fuente de ingresos con la inteligencia artificial más realista del mundo. En este curso práctico, aprenderás a dominar ElevenLabs, la tecnología líder en clonación y creación de voz, para producir audios que venden, conectan y emocionan… sin curva técnica.
+                  </p>
+                  <div className="desc-separator" />
+                  <div className="desc-body">
+                    <p className="desc-paragraph">Descubrirás el poder de tu voz y cómo amplificarla con IA para anuncios, cursos, podcasts y doblajes multilenguaje.</p>
+                    <p className="desc-paragraph">Aplicarás técnicas profesionales para generar, traducir y mejorar locuciones que suenan listas para radio o TV.</p>
+                    <p className="desc-paragraph">Diseñarás ofertas rentables para vender tu servicio de voz y llegar a clientes en cualquier parte del mundo.</p>
+                    <p className="desc-paragraph">Aprenderás paso a paso con ejercicios reales, plantillas y un enfoque ético para proteger tu identidad vocal y la de tus clientes.</p>
+                    <p className="desc-closure">Al terminar, no solo dominarás ElevenLabs: tendrás tu portafolio listo y tu plan para empezar a monetizar al día siguiente.</p>
+                  </div>
+                </div>
+
+                {/* What You'll Learn */}
+                <div className="learning-objectives">
+                  <div className="objectives-header">
+                    <span className="section-badge">Objetivos</span>
+                    <h2 className="objectives-title">Lo que vas a conseguir con este curso</h2>
+                    <p className="section-lead">Enfocado en resultados reales: dominio técnico, flujo de trabajo claro y aplicabilidad inmediata.</p>
+                  </div>
+
+                  <div className="objectives-grid refined">
+                    {courseData.whatYouWillLearn.map((objective, index) => (
+                      <div key={index} className="objective-card">
+                        <div className="objective-index">{index + 1}</div>
+                        <p className="objective-text">{objective}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Tools and Technologies */}
+                <div className="tools-section">
+                  <h2>Herramientas y Tecnologías</h2>
+                  <div className="tools-grid">
+                    {courseData.tools.map((tool, index) => {
+                      const key = tool.toLowerCase();
+                      const Icon = toolIconMap[key] ?? <SiOpenai />;
+                      return (
+                      <div key={index} className="tool-item">
+                          <span className="tool-icon" aria-hidden>{Icon}</span>
+                          <span className="tool-name">{tool}</span>
+                      </div>
+                      );
+                    })}
+                </div>
+              </div>
+
+                {/* Contenido del Curso */}
                 <div className="curriculum-section">
                   <h2>Contenido del Curso</h2>
                   <div className="curriculum-stats">
@@ -673,9 +1195,8 @@ export default function MonetizaVozIAElevenLabsPage() {
                       <span className="stat-label">Nivel</span>
                     </div>
                   </div>
-                  
                   <div className="lessons-list">
-                    <div className="lessons-grid">
+                    <div className="lessons-grid timeline">
                       {courseData.lessons.map((lesson, index) => (
                         <div key={lesson.id} className={`lesson-card ${isModuleCompleted(lesson.id) ? 'completed' : ''}`}>
                           <div className="lesson-header">
@@ -697,66 +1218,28 @@ export default function MonetizaVozIAElevenLabsPage() {
                     </div>
                   </div>
                 </div>
-
-                {/* What You'll Learn */}
-                <div className="learning-objectives">
-                  <h2>Objetivo del Curso</h2>
-                  
-                  <div className="course-introduction">
-                    <p>
-                      <strong>Al finalizar este curso, el estudiante será capaz de:</strong>
-                    </p>
-                    
-                    <ul className="course-objectives-list">
-                      <li>Dominar ElevenLabs para crear voces artificiales de calidad profesional</li>
-                      <li>Monetizar su voz artificial en diferentes industrias y plataformas digitales</li>
-                    </ul>
-                  </div>
-                  
-                  <div className="objectives-grid">
-                    {courseData.whatYouWillLearn.map((objective, index) => (
-                      <div key={index} className="objective-item">
-                        <span className="objective-check">✓</span>
-                        <span>{objective}</span>
+                
+                {/* Tu Instructor */}
+                <div className="instructor-section presentation">
+                  <h2 className="section-title">Tu Instructor</h2>
+                  <div className="instructor-header">
+                    <img src={courseData.instructor.image} alt={courseData.instructor.name} className="instructor-photo" />
+                    <div className="header-main">
+                      <div className="name-row">
+                        <h3 className="instructor-name">{courseData.instructor.name}</h3>
                       </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Tools and Technologies */}
-                <div className="tools-section">
-                  <h2>Herramientas y Tecnologías</h2>
-                  <div className="tools-grid">
-                    {courseData.tools.map((tool, index) => (
-                      <div key={index} className="tool-item">
-                        <span className="tool-icon">🎙️</span>
-                        <span>{tool}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Sidebar - Desktop Only */}
-              <div className="content-sidebar">
-                {/* Instructor */}
-                <div className="instructor-card">
-                  <h3>Tu Instructor</h3>
-                  <div className="instructor-info">
-                    <div className="instructor-avatar-container">
-                      <img src={courseData.instructor.image} alt={courseData.instructor.name} className="instructor-avatar" />
-                    </div>
-                    <div className="instructor-details">
-                      <h4>{courseData.instructor.name}</h4>
-                      <p className="instructor-title">{courseData.instructor.title}</p>
-                      <p className="instructor-bio">{courseData.instructor.bio}</p>
+                      <div className="instructor-role">{courseData.instructor.title}</div>
+                      
                     </div>
                   </div>
+                  <div className="instructor-description">
+                    <p>{courseData.instructor.bio}</p>
+                  </div>
                 </div>
 
-                {/* Prerequisites */}
-                <div className="prerequisites-card">
-                  <h3>Prerrequisitos</h3>
+                {/* Prerrequisitos */}
+                <div className="prerequisites-section">
+                  <h2>Prerrequisitos</h2>
                   <ul className="prerequisites-list">
                     {courseData.prerequisites.map((prereq, index) => (
                       <li key={index}>{prereq}</li>
@@ -764,134 +1247,163 @@ export default function MonetizaVozIAElevenLabsPage() {
                   </ul>
                 </div>
               </div>
+
+              {/* Sidebar - Desktop Only */}
+              <div className="content-sidebar">
+                {/* Price Card (scrollable) */}
+                <div className="price-card-scrollable">
+                  <div className="price-card">
+                    {/* Opción Destacada - e Plus */}
+                    <div className="price-option highlight">
+                      <div className="price-option-header">
+                        <h3 className="price-option-title">Acceso al curso</h3>
+                        <div className="price-badges">
+                          <span className="price-badge plus">e Plus</span>
             </div>
           </div>
-        </section>
-
-        {/* Mobile Curriculum Section */}
-        <section className="mobile-curriculum-section">
-          <div className="container">
-            <div className="curriculum-section">
-              <h2>Contenido del Curso</h2>
-              <div className="curriculum-stats">
-                <div className="stat-item">
-                  <span className="stat-number">{courseData.lessonsCount}</span>
-                  <span className="stat-label">Lecciones</span>
+                      
+                      <div className="price-display">
+                        <div className="price-radio">
+                          <input type="radio" name="pricing" id="plus-option" defaultChecked />
+                          <label htmlFor="plus-option"></label>
                 </div>
-                <div className="stat-item">
-                  <span className="stat-number">{totalDuration}</span>
-                  <span className="stat-label">Minutos</span>
+                        <div className="price-main">
+                          <span className="price-currency">$</span>
+                          <span className="price-amount">12</span>
+                          <span className="price-cents">.49</span>
+                          <span className="price-period">USD/mes</span>
                 </div>
-                <div className="stat-item">
-                  <span className="stat-number">{courseData.level}</span>
-                  <span className="stat-label">Nivel</span>
                 </div>
+                      
+                      <div className="price-discount">
+                        <span className="discount-text">Accede a todos los cursos de eGrow Academy mientras mantengas tu suscripción.</span>
               </div>
               
-              <div className="lessons-list">
-                <div className="lessons-horizontal">
-                  {courseData.lessons.map((lesson, index) => (
-                    <div key={lesson.id} className={`lesson-item-horizontal ${isModuleCompleted(lesson.id) ? 'completed' : ''}`}>
-                      <div className="lesson-header-horizontal" onClick={() => toggleLesson(index)}>
-                        <div className="lesson-number-horizontal">{index + 1}</div>
-                        <div className="lesson-title-horizontal">{lesson.title}</div>
-                        <div className="lesson-status-horizontal">
-                          {isModuleCompleted(lesson.id) ? '✓' : '○'}
+                      <button className="price-cta primary" type="button">
+                        Empezar con e Plus
+                      </button>
+                      
+                      <div className="price-benefits">
+                        <div className="benefit-item">
+                          <span className="benefit-icon">✓</span>
+                          <span className="benefit-text">Acceso ilimitado a todos los cursos de la plataforma</span>
                         </div>
-                        <div className="lesson-toggle">
-                          {expandedLessons.includes(index) ? '−' : '+'}
+                        <div className="benefit-item">
+                          <span className="benefit-icon">✓</span>
+                          <span className="benefit-text">Actualizaciones continuas y nuevo contenido</span>
                         </div>
                       </div>
-                      {expandedLessons.includes(index) && (
-                        <div className="lesson-description-expanded">
-                          <p className="lesson-description-text">{lesson.description}</p>
-                          <div className="lesson-meta-horizontal">
-                            <span className="lesson-type-horizontal">{lesson.type}</span>
-                            <span className="lesson-duration-horizontal">{lesson.duration}min</span>
                           </div>
+                    
+                    {/* Opción Regular */}
+                    <div className="price-option regular">
+                      <div className="price-option-header">
+                        <h3 className="price-option-title">Acceso individual</h3>
                         </div>
-                      )}
+                      
+                      <div className="price-display">
+                        <div className="price-radio">
+                          <input type="radio" name="pricing" id="regular-option" />
+                          <label htmlFor="regular-option"></label>
+                </div>
+                        <div className="price-main">
+                          <span className="price-currency">$</span>
+                          <span className="price-amount">4</span>
+                          <span className="price-cents">.00</span>
+                          <span className="price-period">USD</span>
+                </div>
+              </div>
+                      
+                      <div className="price-description">
+                        <span className="description-text">Pago único para este curso. Acceso permanente al contenido del curso.</span>
+            </div>
+                      
+                      <button className="price-cta" type="button">
+                        Comprar este curso
+                      </button>
+              </div>
+                  </div>
+              </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Reviews Section (ubicado arriba de los cursos relacionados) */}
+        <section className="reviews-section">
+          <div className="container">
+            <h2 className="reviews-title">Opiniones</h2>
+            <p className="reviews-subtitle">Lo que dicen nuestros estudiantes</p>
+
+            <div className="reviews-stats-card">
+              <div className="stat"><span className="stat-icon">👥</span><span className="stat-value">2,863</span><span className="stat-label">Estudiantes</span></div>
+              <div className="stat"><span className="stat-icon">💬</span><span className="stat-value">450</span><span className="stat-label">Opiniones</span></div>
+              <div className="stat"><span className="stat-icon">👍</span><span className="stat-value stat-good">99%</span><span className="stat-label">Valoraciones positivas</span></div>
+            </div>
+
+            {/* Carrusel auto-avanzable con 2 tarjetas por slide */}
+            <div className="reviews-carousel">
+              <div className="reviews-track" ref={reviewsTrackRef}>
+                {/* Slide 1 */}
+                <div className="review-slide">
+                  <div className="review-grid2">
+                    <div className="testimonial-card">
+                      <div className="testimonial-body">
+                        <p className="testimonial-text">Implementé mi primer anuncio con voz en 24 horas. El flujo es claro, sin relleno y con ejemplos que realmente funcionan.</p>
+                        <div className="testimonial-author">- Laura M.</div>
+                      </div>
                     </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Mobile Instructor Section */}
-        <section className="mobile-instructor-section">
-          <div className="container">
-            <div className="instructor-card">
-              <h3>Tu Instructor</h3>
-              <div className="instructor-info">
-                <div className="instructor-avatar-container">
-                  <img src={courseData.instructor.image} alt={courseData.instructor.name} className="instructor-avatar" />
-                </div>
-                <div className="instructor-details">
-                  <h4>{courseData.instructor.name}</h4>
-                  <p className="instructor-title">{courseData.instructor.title}</p>
-                  <p className="instructor-bio">{courseData.instructor.bio}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Mobile Prerequisites Section */}
-        <section className="mobile-prerequisites-section">
-          <div className="container">
-            <div className="prerequisites-card">
-              <h3>Prerrequisitos</h3>
-              <ul className="prerequisites-list">
-                {courseData.prerequisites.map((prereq, index) => (
-                  <li key={index}>{prereq}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        {/* Mobile Learning Objectives Section */}
-        <section className="mobile-learning-section">
-          <div className="container">
-            <div className="learning-objectives">
-              <h2>Objetivo del Curso</h2>
-              
-              <div className="course-introduction">
-                <p>
-                  <strong>Al finalizar este curso, el estudiante será capaz de:</strong>
-                </p>
-                
-                <ul className="course-objectives-list">
-                  <li>Dominar ElevenLabs para crear voces artificiales de calidad profesional</li>
-                  <li>Monetizar su voz artificial en diferentes industrias y plataformas digitales</li>
-                </ul>
-              </div>
-              
-              <div className="objectives-grid">
-                {courseData.whatYouWillLearn.map((objective, index) => (
-                  <div key={index} className="objective-item">
-                    <span className="objective-check">✓</span>
-                    <span>{objective}</span>
+                    <div className="testimonial-card">
+                      <div className="testimonial-body">
+                        <p className="testimonial-text">El módulo de negocio me ayudó a empaquetar mi oferta. En una semana cerré mi primer cliente para spots de radio.</p>
+                        <div className="testimonial-author">- Diego P.</div>
+                      </div>
+                    </div>
                   </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Mobile Tools Section */}
-        <section className="mobile-tools-section">
-          <div className="container">
-            <div className="tools-section">
-              <h2>Herramientas y Tecnologías</h2>
-              <div className="tools-grid">
-                {courseData.tools.map((tool, index) => (
-                  <div key={index} className="tool-item">
-                    <span className="tool-icon">🎙️</span>
-                    <span>{tool}</span>
+                </div>
+                {/* Slide 2 */}
+                <div className="review-slide">
+                  <div className="review-grid2">
+                    <div className="testimonial-card">
+                      <div className="testimonial-body">
+                        <p className="testimonial-text">Zair Aquino explica directo al grano. Con su guía monté un pipeline para cursos narrados con ElevenLabs en dos tardes.</p>
+                        <div className="testimonial-author">- José L.</div>
+                      </div>
+                    </div>
+                    <div className="testimonial-card">
+                      <div className="testimonial-body">
+                        <p className="testimonial-text">Zair Aquino no se guarda nada: tips de grabación, presets y cómo cobrar. Salí con un plan de precios listo.</p>
+                        <div className="testimonial-author">- Sandra T.</div>
+                      </div>
+                    </div>
                   </div>
+                </div>
+                {/* Slide 3 */}
+                <div className="review-slide">
+                  <div className="review-grid2">
+                    <div className="testimonial-card">
+                      <div className="testimonial-body">
+                        <p className="testimonial-text">Pasé mis cursos a 3 idiomas en una tarde. El capítulo de traducción y mejora de voz es oro puro.</p>
+                        <div className="testimonial-author">- Valeria G.</div>
+                      </div>
+                    </div>
+                    <div className="testimonial-card">
+                      <div className="testimonial-body">
+                        <p className="testimonial-text">No soy locutor y mis audios suenan profesionales. Las plantillas y checklists me ahorraron horas.</p>
+                        <div className="testimonial-author">- Marco R.</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="reviews-dots" aria-label="Paginación de testimonios">
+                {[0,1,2].map((i) => (
+                  <button
+                    key={i}
+                    className={`dot ${currentReviewSlide === i ? 'active' : ''}`}
+                    onClick={() => setCurrentReviewSlide(i)}
+                    aria-label={`Ir al slide ${i + 1}`}
+                  />
                 ))}
               </div>
             </div>
@@ -910,7 +1422,7 @@ export default function MonetizaVozIAElevenLabsPage() {
               <div className="course-card" onClick={() => router.push('/curso/videos-profesionales-ia')}>
                 <div className="course-image-wrapper">
                   <img src="/images/15.png" alt="Videos Profesionales con IA" className="course-image" />
-                  <span className="course-badge">Premium</span>
+                  <span className="course-badge eplus">e Plus</span>
                 </div>
                 <div className="course-content">
                   <h3 className="course-title">Videos Profesionales con IA</h3>
@@ -926,7 +1438,7 @@ export default function MonetizaVozIAElevenLabsPage() {
               <div className="course-card" onClick={() => router.push('/curso/vibe-coding-claude-cursor')}>
                 <div className="course-image-wrapper">
                   <img src="/images/16.png" alt="Vibe Coding con Claude & Cursor" className="course-image" />
-                  <span className="course-badge">Premium</span>
+                  <span className="course-badge eplus">e Plus</span>
                 </div>
                 <div className="course-content">
                   <h3 className="course-title">Vibe Coding con Claude & Cursor</h3>
@@ -942,7 +1454,7 @@ export default function MonetizaVozIAElevenLabsPage() {
               <div className="course-card" onClick={() => router.push('/curso/vibe-coding-claude-cursor')}>
                 <div className="course-image-wrapper">
                   <img src="/images/17.png" alt="Vibe Coding con Claude Code" className="course-image" />
-                  <span className="course-badge">Premium</span>
+                  <span className="course-badge eplus">e Plus</span>
                 </div>
                 <div className="course-content">
                   <h3 className="course-title">Vibe Coding con Claude Code</h3>
@@ -957,1149 +1469,234 @@ export default function MonetizaVozIAElevenLabsPage() {
             </div>
           </div>
         </section>
+        
+        {/* FAQ Section (debajo de cursos relacionados) */}
+        <section className="faq-section">
+          <div className="container">
+            <h2 className="faq-title">Preguntas frecuentes</h2>
+            <div className="faq-list">
+              <details className="faq-item">
+                <summary className="faq-question">¿Qué incluye la Suscripción Premium de eGrow Academy?</summary>
+                <div className="faq-answer">
+                  Acceso a todos los cursos actuales y futuros mientras mantengas tu suscripción, actualizaciones permanentes, plantillas descargables, soporte prioritario por email y certificado digital al completar los cursos compatibles.
+                </div>
+              </details>
+              <details className="faq-item">
+                <summary className="faq-question">¿Cuándo empiezan y cuándo acaban los cursos?</summary>
+                <div className="faq-answer">
+                  Comienzan cuando tú quieras. Son 100% a tu ritmo, con acceso bajo demanda desde cualquier dispositivo. Puedes pausar y retomar sin perder tu progreso.
+                </div>
+              </details>
+              <details className="faq-item">
+                <summary className="faq-question">¿Obtengo certificado digital?</summary>
+                <div className="faq-answer">
+                  Sí. Al completar el contenido marcado como obligatorio en cada curso podrás descargar un certificado digital con tu nombre desde tu perfil.
+                </div>
+              </details>
+              <details className="faq-item">
+                <summary className="faq-question">¿Necesito experiencia previa o equipo especial?</summary>
+                <div className="faq-answer">
+                  No. Los cursos están pensados para principiantes. Solo requieres una computadora con internet. Recomendamos auriculares y micrófono básico para mejores resultados.
+                </div>
+              </details>
+              <details className="faq-item">
+                <summary className="faq-question">¿Puedo usar comercialmente las voces generadas con ElevenLabs?</summary>
+                <div className="faq-answer">
+                  Sí, siempre que cuentes con la licencia adecuada y permisos de uso de voz cuando corresponda. En el curso incluimos una guía práctica de buenas prácticas y ética.
+                </div>
+              </details>
+              <details className="faq-item">
+                <summary className="faq-question">¿Cómo obtengo soporte si me trabo?</summary>
+                <div className="faq-answer">
+                  Desde tu cuenta puedes abrir un ticket de soporte o escribirnos a soporte@egrow-academy.com. También encontrarás guías rápidas y preguntas frecuentes dentro de cada módulo.
+                </div>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        {/* Pricing Section */}
+        <section className="pricing-section">
+          <div className="container">
+            <div className="pricing-header">
+              <h2 className="pricing-title">Elige tu Plan de Suscripción</h2>
+              <p className="pricing-subtitle">Desbloquea todo el potencial de eGrow Academy con acceso ilimitado a nuestros cursos especializados</p>
+            </div>
+            
+            <div className="pricing-grid">
+              {/* Plan Gratuito */}
+              <div className="pricing-card">
+                <div className="pricing-card-content">
+                  <div className="pricing-header-card">
+                    <h3 className="pricing-plan-name">Plan Gratuito</h3>
+                    <div className="pricing-plan-price">
+                      $0
+                      <span className="pricing-interval">/mes</span>
+                    </div>
+                  </div>
+
+                  <ul className="pricing-features">
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Acceso a cursos públicos gratuitos</span>
+                    </li>
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Sistema básico de rachas</span>
+                    </li>
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Comunidad básica</span>
+                    </li>
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Soporte por email estándar</span>
+                    </li>
+                    <li className="pricing-feature not-included">
+                      <span className="pricing-feature-icon not-included-icon">✕</span>
+                      <span className="pricing-feature-text not-included-text">Acceso a cursos especializados premium</span>
+                    </li>
+                    <li className="pricing-feature not-included">
+                      <span className="pricing-feature-icon not-included-icon">✕</span>
+                      <span className="pricing-feature-text not-included-text">Certificados de finalización</span>
+                    </li>
+                    <li className="pricing-feature not-included">
+                      <span className="pricing-feature-icon not-included-icon">✕</span>
+                      <span className="pricing-feature-text not-included-text">Badge visible en navbar</span>
+                    </li>
+                    <li className="pricing-feature not-included">
+                      <span className="pricing-feature-icon not-included-icon">✕</span>
+                      <span className="pricing-feature-text not-included-text">Personalización de badges y rachas</span>
+                    </li>
+                  </ul>
+
+                  <button className="pricing-button secondary">
+                    Registrarse Gratis
+                  </button>
+                </div>
+              </div>
+
+              {/* Plan Mensual */}
+              <div className="pricing-card popular">
+                <div className="pricing-popular-badge">
+                  ⭐ Más Popular
+                </div>
+                
+                <div className="pricing-card-content">
+                  <div className="pricing-header-card">
+                    <h3 className="pricing-plan-name">Plan Mensual</h3>
+                    <div className="pricing-plan-price">
+                      $12.49
+                      <span className="pricing-interval">/mes</span>
+                    </div>
+                  </div>
+
+                  <ul className="pricing-features">
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Acceso a todos los cursos especializados</span>
+                    </li>
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Contenido actualizado mensualmente</span>
+                    </li>
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Certificados de finalización</span>
+                    </li>
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Sistema completo de rachas</span>
+                    </li>
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Badge visible en navbar</span>
+                    </li>
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Personalización de badges y rachas</span>
+                    </li>
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Soporte técnico prioritario</span>
+                    </li>
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Acceso a la comunidad exclusiva</span>
+                    </li>
+                  </ul>
+
+                  <button className="pricing-button primary">
+                    Suscribirse por $12.49
+                  </button>
+                </div>
+              </div>
+
+              {/* Plan Anual */}
+              <div className="pricing-card popular yearly-popular">
+                <div className="pricing-popular-badge yearly-badge">
+                  🏆 Ahorra Más
+                </div>
+                
+                <div className="pricing-card-content">
+                  <div className="pricing-header-card">
+                    <h3 className="pricing-plan-name">Plan Anual</h3>
+                    <div className="pricing-plan-price">
+                      $149.99
+                      <span className="pricing-interval">/año</span>
+                    </div>
+                    <p className="pricing-monthly-price">
+                      $12.50/mes facturado anualmente
+                    </p>
+                  </div>
+
+                  <ul className="pricing-features">
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Todo lo del plan mensual</span>
+                    </li>
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">2 meses gratis</span>
+                    </li>
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Personalización completa de badges y rachas</span>
+                    </li>
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Badge visible en barra de navegación</span>
+                    </li>
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Acceso anticipado a nuevos cursos</span>
+                    </li>
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Mentorías grupales mensuales</span>
+                    </li>
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Recursos premium adicionales</span>
+                    </li>
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Garantía de satisfacción de 30 días</span>
+                    </li>
+                  </ul>
+
+                  <button className="pricing-button primary">
+                    Suscribirse por $149.99
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        
       </main>
 
       <Footer />
-
-      <style jsx>{`
-        .loading-container {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          min-height: 60vh;
-          gap: 1rem;
-        }
-
-        /* Banner promocional */
-        .promo-banner {
-          position: relative;
-          width: 100%;
-          background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-          animation: slideDown 0.5s ease-out;
-        }
-
-        @keyframes slideDown {
-          from {
-            transform: translateY(-100%);
-          }
-          to {
-            transform: translateY(0);
-          }
-        }
-
-        .promo-banner-content {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 12px 20px;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          max-width: 1200px;
-          margin: 0 auto;
-        }
-
-        .promo-banner-content:hover {
-          background: rgba(255, 255, 255, 0.1);
-          transform: scale(1.02);
-        }
-
-        .promo-banner-text {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          flex: 1;
-        }
-
-        .promo-banner-emoji {
-          font-size: 20px;
-          animation: bounce 2s infinite;
-        }
-
-        @keyframes bounce {
-          0%, 20%, 50%, 80%, 100% {
-            transform: translateY(0);
-          }
-          40% {
-            transform: translateY(-8px);
-          }
-          60% {
-            transform: translateY(-4px);
-          }
-        }
-
-        .promo-banner-message {
-          color: white;
-          font-weight: 600;
-          font-size: 14px;
-          line-height: 1.4;
-        }
-
-        .promo-banner-cta {
-          background: white;
-          color: #1d4ed8;
-          padding: 8px 16px;
-          border-radius: 20px;
-          font-weight: 700;
-          font-size: 13px;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-          transition: all 0.3s ease;
-          flex-shrink: 0;
-          margin-left: 16px;
-        }
-
-        .promo-banner-cta:hover {
-          background: #f3f4f6;
-          transform: scale(1.05);
-        }
-
-        .hero-section {
-          background: linear-gradient(to right, #f0f9ff, #faf5ff);
-          color: #1e293b;
-          padding: 0;
-          margin-top: 56px !important;
-          padding-top: 2rem !important;
-          padding-bottom: 4rem;
-          min-height: 70vh;
-          display: flex;
-          align-items: center;
-        }
-
-        .course-hero {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 1.5rem;
-          align-items: start;
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 0 1rem;
-          position: relative;
-        }
-
-        .course-badges {
-          display: flex;
-          gap: 0.4rem;
-          margin-bottom: 0.5rem;
-          flex-wrap: wrap;
-        }
-
-        .badge {
-          padding: 0.25rem 0.75rem;
-          border-radius: 20px;
-          font-size: 0.75rem;
-          font-weight: 600;
-          text-transform: uppercase;
-        }
-
-        .badge-premium {
-          background: linear-gradient(135deg, #f59e0b, #d97706);
-          color: white;
-        }
-
-        .badge-level {
-          background: rgba(255, 255, 255, 0.2);
-          color: white;
-          border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .badge-duration {
-          background: rgba(255, 255, 255, 0.2);
-          color: white;
-          border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .course-title-large {
-          font-size: 2.5rem;
-          font-weight: 700;
-          margin: 0 0 0.6rem 0;
-          line-height: 1.2;
-        }
-
-        .course-description {
-          font-size: 1rem;
-          line-height: 1.5;
-          margin: 0 0 1rem 0;
-          opacity: 0.9;
-        }
-
-        .course-actions {
-          margin-bottom: 2rem;
-        }
-
-        .new-course-actions {
-          margin-bottom: 1.5rem;
-        }
-
-        /* Ocultar video móvil en desktop */
-        .mobile-video-preview {
-          display: none;
-        }
-        
-        /* Estilos para videos de preview */
-        .mobile-preview-video {
-          margin: 1.5rem 0;
-          border-radius: 12px;
-          overflow: hidden;
-          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
-        
-        .desktop-preview-video {
-          margin: 0;
-          border-radius: 12px;
-          overflow: hidden;
-          box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-        }
-
-        .progress-section-new {
-          display: flex;
-          flex-direction: column;
-          gap: 1rem;
-          width: 100%;
-        }
-
-        .progress-info-new {
-          background: rgba(255, 255, 255, 0.1);
-          padding: 1rem;
-          border-radius: 8px;
-          border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .progress-text-new {
-          margin: 0 0 0.5rem 0;
-          font-weight: 600;
-        }
-
-        .progress-detail-new {
-          margin: 0;
-          font-size: 0.9rem;
-          opacity: 0.8;
-        }
-
-        .progress-bar-new {
-          width: 100%;
-          height: 6px;
-          background: rgba(255, 255, 255, 0.2);
-          border-radius: 3px;
-          overflow: hidden;
-          margin: 0.5rem 0;
-        }
-
-        .progress-fill-new {
-          height: 100%;
-          background: linear-gradient(135deg, #f59e0b, #d97706);
-          transition: width 0.3s ease;
-          border-radius: 3px;
-        }
-
-        .start-section-new {
-          display: flex;
-          flex-direction: column;
-          gap: 1rem;
-          align-items: flex-start;
-        }
-
-        .course-meta {
-          margin-top: 0.75rem;
-        }
-
-        .course-badges-secondary {
-          display: flex;
-          gap: 0.5rem;
-          flex-wrap: wrap;
-        }
-
-        .badge-language, .badge-includes, .badge-access {
-          background: rgba(255, 255, 255, 0.1);
-          color: white;
-          border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-
-        .course-action-button {
-          padding: 1rem 2rem;
-          border-radius: 8px;
-          font-weight: 600;
-          font-size: 1rem;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          border: none;
-          text-decoration: none;
-          display: inline-flex;
-          align-items: center;
-          gap: 0.5rem;
-          width: 100%;
-          justify-content: center;
-        }
-
-        .course-action-start {
-          background: linear-gradient(135deg, #f59e0b, #d97706);
-          color: white;
-        }
-
-        .course-action-start:hover {
-          background: linear-gradient(135deg, #d97706, #b45309);
-          transform: translateY(-2px);
-          box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
-        }
-
-        .course-action-continue {
-          background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-          color: white;
-        }
-
-        .course-action-continue:hover {
-          background: linear-gradient(135deg, #1d4ed8, #1e40af);
-          box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
-        }
-
-        .course-action-resume {
-          background: linear-gradient(135deg, #f59e0b, #d97706);
-          color: white;
-          margin-top: 1rem;
-        }
-
-        .course-action-resume:hover {
-          background: linear-gradient(135deg, #d97706, #b45309);
-          box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
-        }
-
-        .course-content {
-          padding: 4rem 0;
-          background: #f9fafb;
-        }
-
-        .content-layout {
-          display: grid;
-          grid-template-columns: 2fr 1fr;
-          gap: 3rem;
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 0 1rem;
-        }
-
-        .curriculum-section, .learning-objectives, .tools-section {
-          background: white;
-          padding: 2rem;
-          border-radius: 12px;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-          margin-bottom: 2rem;
-        }
-
-        .curriculum-section h2, .learning-objectives h2, .tools-section h2 {
-          margin: 0 0 1.5rem 0;
-          color: #1f2937;
-          font-size: 1.5rem;
-          font-weight: 700;
-        }
-
-        .curriculum-stats {
-          display: flex;
-          gap: 2rem;
-          margin-bottom: 2rem;
-        }
-
-        .stat-item {
-          text-align: center;
-        }
-
-        .stat-number {
-          display: block;
-          font-size: 2rem;
-          font-weight: 700;
-          color: #f59e0b;
-        }
-
-        .stat-label {
-          font-size: 0.9rem;
-          color: #6b7280;
-        }
-
-        .lessons-list {
-          display: flex;
-          flex-direction: column;
-          gap: 1rem;
-        }
-
-        .lessons-grid {
-          display: grid;
-          grid-template-columns: 1fr;
-          gap: 1rem;
-          max-width: 800px;
-          margin: 0 auto;
-        }
-
-        .lessons-horizontal {
-          display: none;
-        }
-
-        .lesson-card {
-          background: white;
-          border: 1px solid #e5e7eb;
-          border-radius: 8px;
-          padding: 1rem;
-          transition: all 0.3s ease;
-          display: flex;
-          flex-direction: row;
-          gap: 1rem;
-          align-items: flex-start;
-          width: 100%;
-          min-height: 140px;
-          box-sizing: border-box;
-        }
-
-        .lesson-card:hover {
-          border-color: #f59e0b;
-          box-shadow: 0 2px 8px rgba(245, 158, 11, 0.1);
-          transform: translateY(-2px);
-        }
-
-        .lesson-card.completed {
-          background: #fef3c7;
-          border-color: #f59e0b;
-        }
-
-        .lesson-card.completed:hover {
-          background: #fde68a;
-        }
-
-        .lesson-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          flex-shrink: 0;
-        }
-
-        .lesson-number {
-          width: 32px;
-          height: 32px;
-          background: #f59e0b;
-          color: white;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-weight: 600;
-          font-size: 0.9rem;
-        }
-
-        .lesson-status {
-          font-size: 1.2rem;
-          font-weight: 700;
-          color: #f59e0b;
-        }
-
-        .lesson-content {
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
-          flex: 1;
-        }
-
-        .lesson-title {
-          margin: 0;
-          font-size: 0.9rem;
-          font-weight: 600;
-          color: #1f2937;
-          line-height: 1.3;
-        }
-
-        .lesson-description {
-          margin: 0;
-          font-size: 0.75rem;
-          color: #6b7280;
-          line-height: 1.4;
-        }
-
-        .lesson-meta {
-          display: flex;
-          gap: 0.5rem;
-          margin-top: 0.5rem;
-        }
-
-        .lesson-type, .lesson-duration {
-          font-size: 0.65rem;
-          color: #6b7280;
-          background: #f3f4f6;
-          padding: 0.2rem 0.4rem;
-          border-radius: 4px;
-          font-weight: 500;
-        }
-
-        .course-introduction {
-          margin-bottom: 2rem;
-        }
-
-        .course-introduction p {
-          margin: 0 0 1rem 0;
-          line-height: 1.6;
-          color: #4b5563;
-        }
-
-        .course-objectives-list {
-          list-style: none;
-          padding: 0;
-          margin: 1rem 0;
-        }
-
-        .course-objectives-list li {
-          display: flex;
-          align-items: flex-start;
-          gap: 0.75rem;
-          padding: 0.75rem 0;
-          border-bottom: 1px solid #e5e7eb;
-          color: #4b5563;
-          line-height: 1.6;
-        }
-
-        .course-objectives-list li:last-child {
-          border-bottom: none;
-        }
-
-        .course-objectives-list li::before {
-          content: "🎯";
-          font-size: 1.2rem;
-          flex-shrink: 0;
-          margin-top: 0.1rem;
-        }
-
-        .objectives-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-          gap: 1rem;
-        }
-
-        .objective-item {
-          display: flex;
-          align-items: flex-start;
-          gap: 0.75rem;
-          padding: 1rem;
-          background: #f9fafb;
-          border-radius: 8px;
-          border-left: 4px solid #f59e0b;
-        }
-
-        .objective-check {
-          color: #f59e0b;
-          font-weight: 700;
-          font-size: 1.2rem;
-          flex-shrink: 0;
-        }
-
-        .tools-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-          gap: 1rem;
-        }
-
-        .tool-item {
-          display: flex;
-          align-items: center;
-          gap: 0.75rem;
-          padding: 1rem;
-          background: #f9fafb;
-          border-radius: 8px;
-          border: 1px solid #e5e7eb;
-        }
-
-        .tool-icon {
-          font-size: 1.5rem;
-        }
-
-        .content-sidebar {
-          display: flex;
-          flex-direction: column;
-          gap: 2rem;
-        }
-
-        .mobile-instructor-section,
-        .mobile-prerequisites-section,
-        .mobile-curriculum-section,
-        .mobile-learning-section,
-        .mobile-tools-section {
-          display: none;
-          padding: 2rem 0;
-        }
-
-        .mobile-curriculum-section {
-          background: #ffffff;
-        }
-
-        .mobile-learning-section {
-          background: #f9fafb;
-        }
-
-        .mobile-tools-section {
-          background: #ffffff;
-        }
-
-        .mobile-instructor-section {
-          background: #f9fafb;
-        }
-
-        .mobile-prerequisites-section {
-          background: #f3f4f6;
-        }
-
-        .instructor-card, .prerequisites-card {
-          background: white;
-          padding: 2rem;
-          border-radius: 12px;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .instructor-card h3, .prerequisites-card h3 {
-          margin: 0 0 1.5rem 0;
-          color: #1f2937;
-          font-size: 1.25rem;
-          font-weight: 700;
-        }
-
-        .instructor-info {
-          display: flex;
-          flex-direction: column;
-          gap: 1.5rem;
-          align-items: center;
-          text-align: center;
-        }
-
-        .instructor-avatar-container {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        .instructor-avatar {
-          width: 180px;
-          height: 180px;
-          border-radius: 50%;
-          object-fit: cover;
-          flex-shrink: 0;
-          border: 4px solid #f3f4f6;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .instructor-details h4 {
-          margin: 0 0 0.5rem 0;
-          color: #1f2937;
-          font-size: 1.25rem;
-          font-weight: 700;
-        }
-
-        .instructor-title {
-          margin: 0 0 0.75rem 0;
-          color: #f59e0b;
-          font-weight: 600;
-          font-size: 1rem;
-        }
-
-        .instructor-bio {
-          margin: 0;
-          font-size: 0.95rem;
-          line-height: 1.6;
-          color: #6b7280;
-          max-width: 280px;
-        }
-
-        .prerequisites-list {
-          list-style: none;
-          padding: 0;
-          margin: 0;
-        }
-
-        .prerequisites-list li {
-          padding: 0.5rem 0;
-          border-bottom: 1px solid #e5e7eb;
-          color: #4b5563;
-        }
-
-        .prerequisites-list li:last-child {
-          border-bottom: none;
-        }
-
-        .prerequisites-list li::before {
-          content: "✓";
-          color: #f59e0b;
-          font-weight: 700;
-          margin-right: 0.5rem;
-        }
-
-        /* Featured Courses Section */
-        .featured-courses-section {
-          background: #ffffff;
-          padding: 4rem 0;
-          border-top: 1px solid #e5e7eb;
-        }
-
-        .featured-courses-header {
-          text-align: center;
-          margin-bottom: 3rem;
-        }
-
-        .featured-courses-header h2 {
-          font-size: 2.25rem;
-          font-weight: 700;
-          color: #1f2937;
-          margin: 0 0 1rem 0;
-        }
-
-        .featured-courses-header p {
-          font-size: 1.125rem;
-          color: #6b7280;
-          margin: 0;
-        }
-
-        .courses-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-          gap: 2rem;
-          max-width: 1200px;
-          margin: 0 auto;
-        }
-
-        .course-card {
-          background: #ffffff;
-          border: 1px solid #e5e7eb;
-          border-radius: 16px;
-          overflow: hidden;
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-          transition: all 0.3s ease;
-          cursor: pointer;
-          display: flex;
-          flex-direction: column;
-          height: 100%;
-        }
-
-        .course-card:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
-          border-color: #f59e0b;
-        }
-
-        .course-image-wrapper {
-          position: relative;
-          height: 200px;
-          overflow: hidden;
-          background: #f8fafc;
-        }
-
-        .course-image {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.3s ease;
-        }
-
-        .course-card:hover .course-image {
-          transform: scale(1.05);
-        }
-
-        .course-badge {
-          position: absolute;
-          top: 12px;
-          right: 12px;
-          background: linear-gradient(135deg, #f59e0b, #d97706);
-          color: white;
-          padding: 6px 12px;
-          border-radius: 20px;
-          font-size: 12px;
-          font-weight: 600;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-        }
-
-        .course-content {
-          padding: 24px;
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-          flex: 1;
-        }
-
-        .course-title {
-          font-size: 20px;
-          font-weight: 700;
-          color: #1f2937;
-          margin: 0;
-          line-height: 1.3;
-        }
-
-        .course-description {
-          color: #6b7280;
-          font-size: 15px;
-          line-height: 1.6;
-          margin: 0;
-          flex: 1;
-        }
-
-        .course-meta {
-          display: flex;
-          gap: 16px;
-          font-size: 14px;
-          color: #6b7280;
-          margin: 12px 0;
-        }
-
-        .course-duration,
-        .course-level {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          background: #f1f5f9;
-          padding: 6px 12px;
-          border-radius: 20px;
-          font-weight: 500;
-        }
-
-        .course-btn {
-          background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-          color: white;
-          padding: 12px 24px;
-          border: none;
-          border-radius: 8px;
-          font-weight: 600;
-          font-size: 15px;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          margin-top: auto;
-        }
-
-        .course-btn:hover {
-          background: linear-gradient(135deg, #1d4ed8, #1e40af);
-          transform: translateY(-1px);
-          box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
-        }
-
-        @media (max-width: 768px) {
-          /* Banner promocional móvil */
-          .promo-banner-content {
-            padding: 10px 16px;
-            flex-direction: column;
-            gap: 8px;
-            text-align: center;
-          }
-
-          .promo-banner-text {
-            gap: 8px;
-            justify-content: center;
-          }
-
-          .promo-banner-message {
-            font-size: 13px;
-            line-height: 1.3;
-          }
-
-          .promo-banner-cta {
-            margin-left: 0;
-            font-size: 12px;
-            padding: 6px 14px;
-          }
-
-          .course-hero {
-            grid-template-columns: 1fr;
-            gap: 1rem;
-          }
-
-          .course-preview {
-            display: none;
-          }
-
-          .mobile-video-preview {
-            display: block;
-            margin: 1.5rem 0;
-          }
-
-          .mobile-preview-video {
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-          }
-
-          .content-layout {
-            grid-template-columns: 1fr;
-            gap: 2rem;
-            justify-items: center;
-          }
-
-          .desktop-content {
-            display: none;
-          }
-
-          .content-sidebar {
-            display: none;
-          }
-
-          .mobile-curriculum-section,
-          .mobile-learning-section,
-          .mobile-tools-section,
-          .mobile-instructor-section,
-          .mobile-prerequisites-section {
-            display: block;
-          }
-
-          .curriculum-stats {
-            flex-direction: column;
-            gap: 1rem;
-          }
-
-          .objectives-grid, .tools-grid {
-            grid-template-columns: 1fr;
-          }
-
-          .course-title-large {
-            font-size: 1.4rem;
-            line-height: 1.2;
-            margin-bottom: 0.5rem;
-          }
-
-          .course-description {
-            font-size: 0.85rem;
-            line-height: 1.3;
-            margin-bottom: 0.75rem;
-          }
-
-          .course-badges {
-            gap: 0.25rem;
-            margin-bottom: 0.5rem;
-            flex-wrap: wrap;
-          }
-
-          .badge {
-            padding: 0.15rem 0.5rem;
-            font-size: 0.7rem;
-            border-radius: 6px;
-          }
-
-          .course-badges-secondary {
-            gap: 0.3rem;
-            flex-wrap: wrap;
-          }
-
-          .badge-language, .badge-includes, .badge-access {
-            font-size: 0.65rem;
-            padding: 0.1rem 0.4rem;
-          }
-
-          .course-action-button {
-            font-size: 0.85rem;
-            padding: 0.7rem 1.2rem;
-            border-radius: 8px;
-          }
-
-          .progress-info-new {
-            padding: 0.8rem;
-            border-radius: 6px;
-          }
-
-          .progress-text-new {
-            font-size: 0.85rem;
-            margin-bottom: 0.4rem;
-          }
-
-          .progress-detail-new {
-            font-size: 0.75rem;
-          }
-
-          .lessons-horizontal {
-            display: flex !important;
-            flex-direction: column;
-            gap: 0.5rem;
-            max-width: 100%;
-            margin: 0 auto;
-          }
-
-          .lessons-grid {
-            display: none;
-          }
-
-          .lesson-item-horizontal {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-          }
-
-          .lesson-item-horizontal:hover {
-            border-color: #f59e0b;
-            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.1);
-          }
-
-          .lesson-item-horizontal.completed {
-            background: #fef3c7;
-            border-color: #f59e0b;
-          }
-
-          .lesson-header-horizontal {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-          }
-
-          .lesson-header-horizontal:hover {
-            background-color: #f9fafb;
-          }
-
-          .lesson-number-horizontal {
-            width: 28px;
-            height: 28px;
-            background: #f59e0b;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            font-size: 0.8rem;
-            flex-shrink: 0;
-          }
-
-          .lesson-title-horizontal {
-            flex: 1;
-            font-weight: 600;
-            color: #1f2937;
-            font-size: 0.85rem;
-          }
-
-          .lesson-status-horizontal {
-            font-size: 1rem;
-            font-weight: 700;
-            color: #f59e0b;
-            flex-shrink: 0;
-          }
-
-          .lesson-toggle {
-            width: 20px;
-            height: 20px;
-            background: #f3f4f6;
-            color: #6b7280;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            flex-shrink: 0;
-          }
-
-          .lesson-toggle:hover {
-            background: #e5e7eb;
-            color: #374151;
-          }
-
-          .lesson-description-expanded {
-            padding: 0.75rem;
-            background: #f9fafb;
-            border-top: 1px solid #e5e7eb;
-            animation: slideDown 0.3s ease;
-          }
-
-          @keyframes slideDown {
-            from {
-              opacity: 0;
-              max-height: 0;
-            }
-            to {
-              opacity: 1;
-              max-height: 200px;
-            }
-          }
-
-          .lesson-description-text {
-            margin: 0 0 0.5rem 0;
-            color: #6b7280;
-            line-height: 1.4;
-            font-size: 0.8rem;
-          }
-
-          .lesson-meta-horizontal {
-            display: flex;
-            gap: 0.4rem;
-          }
-
-          .lesson-type-horizontal, .lesson-duration-horizontal {
-            font-size: 0.7rem;
-            color: #6b7280;
-            background: #f3f4f6;
-            padding: 0.2rem 0.4rem;
-            border-radius: 4px;
-            font-weight: 500;
-          }
-
-          .hero-section {
-            padding: 0.75rem 0;
-          }
-
-          .course-hero {
-            gap: 0.75rem;
-            padding: 0.5rem 0;
-          }
-
-          .container {
-            padding: 0 1rem;
-          }
-
-          .course-meta {
-            margin-top: 0.75rem;
-          }
-
-          /* Featured Courses Mobile */
-          .featured-courses-section {
-            padding: 3rem 0;
-          }
-
-          .featured-courses-header h2 {
-            font-size: 1.875rem !important;
-          }
-
-          .featured-courses-header p {
-            font-size: 1rem !important;
-          }
-
-          .courses-grid {
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-            padding: 0 1rem;
-          }
-
-          .course-card {
-            max-width: 400px;
-            margin: 0 auto;
-          }
-
-          .course-image-wrapper {
-            height: 180px;
-          }
-
-          .course-content {
-            padding: 20px;
-          }
-
-          .course-title {
-            font-size: 18px;
-          }
-
-          .course-description {
-            font-size: 14px;
-          }
-
-          .course-meta {
-            gap: 12px;
-            font-size: 13px;
-          }
-
-          .course-btn {
-            padding: 10px 20px;
-            font-size: 14px;
-          }
-        }
-      `}</style>
     </>
   );
 }
