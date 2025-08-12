@@ -6184,6 +6184,17 @@ nav .flex.items-center.space-x-1 {
     color: var(--gray-500);
 }
 
+.lesson-video {
+    margin-top: 1rem;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.lesson-video-player {
+    width: 100%;
+    max-height: 300px;
+}
+
 .lesson-type {
     background: linear-gradient(135deg, var(--primary-blue), #1d4ed8);
     color: white;

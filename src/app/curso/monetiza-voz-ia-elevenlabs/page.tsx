@@ -1190,6 +1190,15 @@ export default function MonetizaVozIAElevenLabsPage() {
                               <span className="lesson-type">{lesson.type}</span>
                               <span className="lesson-duration">{lesson.duration}min</span>
                             </div>
+                            {lesson.videoUrl && (
+                              <div className="lesson-video">
+                                <VideoPlayer 
+                                  videoUrl={lesson.videoUrl} 
+                                  title={lesson.title}
+                                  className="lesson-video-player"
+                                />
+                              </div>
+                            )}
                           </div>
                         </div>
                       ))}
