@@ -9231,7 +9231,7 @@ aside[class*="price-card"] {
   display: flex;
   align-items: center;
   padding: 0;
-  background: linear-gradient(135deg, #e6f7f9 0%, #ffffff 100%);
+  background: linear-gradient(135deg, #f7f7f9 0%, #f8f6ff 100%);
 }
 
 .hero-section .container {
