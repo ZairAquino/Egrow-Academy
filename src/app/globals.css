@@ -988,11 +988,22 @@ button, a, input, select, textarea {
   }
 
 .main-content {
-    transition: margin-left 0.3s ease;
+    transition: margin-left 0.3s ease, padding-top 0.3s ease;
     margin: 0;
     padding: 0;
     padding-top: 0 !important;
     margin-top: 0 !important;
+}
+
+/* Ajuste del contenido cuando aparece la navbar sticky */
+.main-content.with-sticky-navbar {
+    padding-top: 144px !important;
+}
+
+@media (max-width: 768px) {
+  .main-content.with-sticky-navbar {
+    padding-top: 112px !important;
+  }
 }
 
 /* Asegurar que no hay espacios en blanco arriba del hero */
@@ -1453,7 +1464,7 @@ button, a, input, select, textarea {
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
+  right: 16px;
   bottom: 0;
   display: flex;
   align-items: center;
@@ -6471,10 +6482,10 @@ nav .flex.items-center.space-x-1 {
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    position: sticky;
-    top: 2rem;
+    position: static;
     align-self: flex-start;
     height: fit-content;
+    transition: all 0.3s ease-in-out;
 }
 
 .instructor-card,
@@ -8443,11 +8454,45 @@ input:checked + .toggle-slider:before {
 
 /* Sidebar del contenido */
 .content-sidebar {
-  position: sticky !important;
-  top: 2rem !important;
-  align-self: flex-start !important;
-  height: fit-content !important;
-  overflow: visible !important;
+  position: static;
+  align-self: flex-start;
+  height: fit-content;
+  overflow: visible;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Modo sticky del sidebar con efecto de aparición */
+.content-sidebar.sidebar-sticky-mode {
+  transform: translateY(-10px);
+  opacity: 0;
+  animation: sidebarAppear 0.3s ease-in-out forwards;
+}
+
+@keyframes sidebarAppear {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Efecto inverso cuando se desancla */
+.content-sidebar:not(.sidebar-sticky-mode) {
+  animation: sidebarDisappear 0.3s ease-in-out forwards;
+}
+
+@keyframes sidebarDisappear {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 /* Tarjeta de precios - STICKY BEHAVIOR */
@@ -8464,6 +8509,491 @@ input:checked + .toggle-slider:before {
 }
 
 /* Eliminar reglas que interfieren con sticky behavior */
+
+/* Sticky Course Navbar - estilo Domestika */
+.sticky-course-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(10px);
+  z-index: 100;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  animation: slideDownFade 0.3s ease-out;
+  height: auto;
+  min-height: 3rem;
+  overflow: visible;
+}
+
+@keyframes slideDownFade {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.sticky-navbar-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 6rem;
+  width: 100%;
+}
+
+.sticky-course-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 0 0 auto;
+  max-width: 400px;
+  padding: 12px 0;
+}
+
+.sticky-video-thumbnail {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.sticky-video-thumbnail:hover {
+  transform: scale(1.05);
+}
+
+.sticky-video-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sticky-play-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+.sticky-course-title h3 {
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 300px;
+}
+
+.sticky-course-rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.sticky-course-rating .stars {
+  color: #fbbf24;
+  font-size: 14px;
+}
+
+.sticky-course-rating span:last-child {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+}
+
+.sticky-pricing {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+/* Tarjeta de precios en navbar sticky - mismo diseño que la original */
+.price-card-sticky {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e5e7eb;
+  width: 400px;
+  max-width: 400px;
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 16px;
+  z-index: 101;
+  transform: none;
+}
+
+/* Responsivo: evitar desbordes en pantallas medianas/pequeñas */
+@media (max-width: 1200px) {
+  .sticky-navbar-content {
+    padding: 10px 16px;
+  }
+  .price-card-sticky {
+    width: 100%;
+    max-width: 380px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .sticky-pricing {
+    display: none;
+  }
+  .sticky-course-info {
+    max-width: 100%;
+  }
+}
+
+.price-card-sticky .price-option {
+  border: none;
+  background: none;
+  padding: 0;
+}
+
+.price-card-sticky .price-option.highlight {
+  background: none;
+}
+
+.price-card-sticky .price-option-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.price-card-sticky .price-option-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin: 0;
+}
+
+.price-card-sticky .price-badge.plus {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: #ffffff;
+  border: 1px solid rgba(255,255,255,0.35);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,0.45), rgba(255,255,255,0) 60%),
+    radial-gradient(rgba(255,255,255,0.22) 1px, rgba(255,255,255,0) 2px),
+    linear-gradient(180deg, #8fc9f6 0%, #88bbf4 52%, #5e94ed 100%);
+  background-size: auto, 10px 10px, 100% 100%;
+  background-position: center, 0 0, 0 0;
+  background-blend-mode: screen, overlay, normal;
+  box-shadow:
+    4px 6px 12px rgba(46, 91, 173, 0.18),
+    inset 0 -6px 10px rgba(0,0,0,0.08);
+  backdrop-filter: saturate(110%);
+}
+
+.price-card-sticky .price-display {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.price-card-sticky .price-radio input {
+  margin: 0;
+}
+
+.price-card-sticky .price-main {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+}
+
+.price-card-sticky .price-currency {
+  font-size: 16px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.price-card-sticky .price-amount {
+  font-size: 24px;
+  font-weight: 800;
+  color: #111827;
+}
+
+.price-card-sticky .price-cents {
+  font-size: 16px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.price-card-sticky .price-period {
+  font-size: 14px;
+  font-weight: 500;
+  color: #6b7280;
+  margin-left: 4px;
+}
+
+.price-card-sticky .price-cta {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  border: none;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform .2s ease, filter .2s ease, box-shadow .2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.price-card-sticky .price-cta.primary {
+  background: linear-gradient(180deg, #8fc9f6 0%, #88bbf4 52%, #5e94ed 100%);
+  color: #ffffff;
+  border: 1px solid rgba(255,255,255,0.45);
+  box-shadow:
+    0 14px 28px rgba(46, 91, 173, 0.25),
+    inset 0 1px 0 rgba(255,255,255,0.75),
+    inset 0 12px 22px rgba(255,255,255,0.45),
+    inset 0 -12px 20px rgba(0,0,0,0.12);
+  position: relative;
+  overflow: hidden;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.1);
+}
+
+.price-card-sticky .price-cta.primary::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 42%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.7), rgba(255,255,255,0));
+  pointer-events: none;
+}
+
+.price-card-sticky .price-cta.primary:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+  box-shadow:
+    12px 16px 28px rgba(46, 91, 173, 0.28),
+    -10px -10px 18px rgba(255, 255, 255, 0.8),
+    inset 0 12px 22px rgba(255,255,255,0.5),
+    inset 0 -12px 20px rgba(0,0,0,0.14);
+}
+
+/* Botón regular (no primary) para sticky card */
+.price-card-sticky .price-cta:not(.primary) {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.price-card-sticky .price-cta:not(.primary):hover {
+  background: #e5e7eb;
+  transform: translateY(-1px);
+}
+
+/* Elementos adicionales de la tarjeta sticky */
+.price-card-sticky .price-discount {
+  margin: 12px 0;
+}
+
+.price-card-sticky .discount-text {
+  font-size: 12px;
+  color: #6b7280;
+  line-height: 1.4;
+}
+
+.price-card-sticky .price-benefits {
+  margin: 12px 0 0 0;
+}
+
+.price-card-sticky .benefit-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.price-card-sticky .benefit-icon {
+  color: #10b981;
+  font-weight: 600;
+  font-size: 12px;
+  margin-top: 1px;
+}
+
+.price-card-sticky .benefit-text {
+  font-size: 12px;
+  color: #6b7280;
+  line-height: 1.4;
+}
+
+/* Opción regular del curso individual */
+.price-card-sticky .price-option.regular {
+  border-top: 1px solid #e5e7eb;
+  margin-top: 16px;
+  padding-top: 16px;
+}
+
+.price-card-sticky .price-description {
+  margin: 12px 0;
+}
+
+.price-card-sticky .description-text {
+  font-size: 12px;
+  color: #6b7280;
+  line-height: 1.4;
+}
+
+.price-card-sticky .price-cta {
+  width: 100%;
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.price-card-sticky .price-cta:hover {
+  background: #e5e7eb;
+  transform: translateY(-1px);
+}
+
+.sticky-price-options {
+  display: flex;
+  gap: 16px;
+}
+
+.sticky-price-item {
+  text-align: center;
+}
+
+.sticky-price-item.highlight {
+  background: rgba(59, 130, 246, 0.2);
+  border: 1px solid #3b82f6;
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.sticky-price-label {
+  display: block;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 11px;
+  margin-bottom: 2px;
+}
+
+.sticky-price-value {
+  display: block;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.sticky-price-item.highlight .sticky-price-label,
+.sticky-price-item.highlight .sticky-price-value {
+  color: white;
+}
+
+.sticky-cta-button {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sticky-cta-button:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sticky-navbar-content {
+    padding: 10px 16px;
+    gap: 16px;
+  }
+  
+  .sticky-course-title h3 {
+    font-size: 14px;
+  }
+  
+  .sticky-price-options {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .sticky-pricing {
+    gap: 12px;
+  }
+  
+  .sticky-cta-button {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sticky-course-info {
+    gap: 12px;
+  }
+  
+  .sticky-video-thumbnail {
+    width: 40px;
+    height: 24px;
+  }
+  
+  .sticky-course-title h3 {
+    font-size: 12px;
+  }
+  
+  .sticky-course-rating {
+    display: none;
+  }
+  
+  .sticky-price-options {
+    display: none;
+  }
+}
 
 /* Comportamiento sticky para la tarjeta de precios */
 

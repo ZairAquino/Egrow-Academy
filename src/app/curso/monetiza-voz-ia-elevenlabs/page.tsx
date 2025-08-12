@@ -34,7 +34,12 @@ export default function MonetizaVozIAElevenLabsPage() {
   const [currentReviewSlide, setCurrentReviewSlide] = useState(0);
   const [showMainVideo, setShowMainVideo] = useState(false);
   const [videoCurrentTime, setVideoCurrentTime] = useState(0);
+  const [showStickyNavbar, setShowStickyNavbar] = useState(false);
+  const [stickyOpacity, setStickyOpacity] = useState(0);
+  const stickyTriggerRef = useRef<HTMLDivElement | null>(null);
+  const reviewsRef = useRef<HTMLElement | null>(null);
   const reviewsTrackRef = useRef<HTMLDivElement | null>(null);
+  const heroSectionRef = useRef<HTMLElement | null>(null);
   const reviewSlidesCount = 3; // 6 testimonios, 2 por slide
   const { user, status } = useAuth();
   const { hasPremiumAccess, isLoading: subscriptionLoading } = useSubscriptionStatus();
@@ -524,6 +529,55 @@ export default function MonetizaVozIAElevenLabsPage() {
     }
   }, [currentReviewSlide]);
 
+  // Mostrar navbar sticky a partir de Objetivos y desvanecer antes de Opiniones
+  useEffect(() => {
+    const handleScroll = () => {
+      const trigger = stickyTriggerRef.current;
+      if (!trigger) {
+        console.log('🚨 [STICKY DEBUG] No trigger found');
+        return;
+      }
+      const triggerTop = trigger.getBoundingClientRect().top;
+      const passedObjectives = triggerTop <= 0;
+
+      const reviewsEl = reviewsRef.current;
+      let opacity = 0;
+      if (passedObjectives) {
+        // Calcular desvanecimiento al acercarse a Opiniones
+        const reviewsTop = reviewsEl ? reviewsEl.getBoundingClientRect().top : Number.POSITIVE_INFINITY;
+        const fadeStart = 240; // px antes de llegar a Opiniones
+        const fadeEnd = 40;    // px del tope donde ya debe estar casi oculto
+        if (reviewsTop === Number.POSITIVE_INFINITY) {
+          opacity = 1;
+        } else if (reviewsTop <= fadeEnd) {
+          opacity = 0;
+        } else if (reviewsTop < fadeStart) {
+          opacity = Math.max(0, Math.min(1, (reviewsTop - fadeEnd) / (fadeStart - fadeEnd)));
+        } else {
+          opacity = 1;
+        }
+      }
+
+      console.log('🔍 [STICKY DEBUG]', {
+        triggerTop,
+        passedObjectives,
+        opacity,
+        showStickyNavbar: passedObjectives && opacity > 0.01
+      });
+
+      setStickyOpacity(opacity);
+      setShowStickyNavbar(passedObjectives && opacity > 0.01);
+    };
+
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true } as any);
+    window.addEventListener('resize', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, []);
+
   useEffect(() => {
     const handleFocus = () => {
       if (user && status === 'authenticated') {
@@ -695,69 +749,10 @@ export default function MonetizaVozIAElevenLabsPage() {
       forcePriceCardStyles();
     };
 
-    // Función para forzar estilos constantemente
-    const forceStylesContinuously = () => {
-      const priceCard = document.querySelector('.price-card-scrollable') as HTMLElement;
-      const priceCardInner = document.querySelector('.price-card') as HTMLElement;
-      const sidebar = document.querySelector('.content-sidebar') as HTMLElement;
-      
-      if (priceCard) {
-        priceCard.style.setProperty('position', 'relative', 'important');
-        priceCard.style.setProperty('top', 'auto', 'important');
-        priceCard.style.setProperty('left', 'auto', 'important');
-        priceCard.style.setProperty('right', 'auto', 'important');
-        priceCard.style.setProperty('bottom', 'auto', 'important');
-        priceCard.style.setProperty('transform', 'none', 'important');
-        priceCard.style.setProperty('will-change', 'auto', 'important');
-        priceCard.style.setProperty('z-index', '20', 'important');
-        priceCard.style.setProperty('float', 'none', 'important');
-        priceCard.style.setProperty('clear', 'none', 'important');
-        priceCard.style.setProperty('display', 'block', 'important');
-        priceCard.style.setProperty('inset', 'auto', 'important');
-      }
-      
-      if (priceCardInner) {
-        priceCardInner.style.setProperty('position', 'relative', 'important');
-        priceCardInner.style.setProperty('top', 'auto', 'important');
-        priceCardInner.style.setProperty('left', 'auto', 'important');
-        priceCardInner.style.setProperty('right', 'auto', 'important');
-        priceCardInner.style.setProperty('bottom', 'auto', 'important');
-        priceCardInner.style.setProperty('transform', 'none', 'important');
-        priceCardInner.style.setProperty('will-change', 'auto', 'important');
-        priceCardInner.style.setProperty('z-index', '20', 'important');
-        priceCardInner.style.setProperty('float', 'none', 'important');
-        priceCardInner.style.setProperty('clear', 'none', 'important');
-        priceCardInner.style.setProperty('display', 'block', 'important');
-        priceCardInner.style.setProperty('inset', 'auto', 'important');
-      }
-      
-      if (sidebar) {
-        sidebar.style.setProperty('position', 'relative', 'important');
-        sidebar.style.setProperty('overflow', 'visible', 'important');
-        sidebar.style.setProperty('top', 'auto', 'important');
-        sidebar.style.setProperty('left', 'auto', 'important');
-        sidebar.style.setProperty('right', 'auto', 'important');
-        sidebar.style.setProperty('bottom', 'auto', 'important');
-        sidebar.style.setProperty('transform', 'none', 'important');
-        sidebar.style.setProperty('will-change', 'auto', 'important');
-      }
-    };
 
     // Agregar listener de scroll
     window.addEventListener('scroll', handleScroll, { passive: true });
     
-    // Forzar estilos constantemente cada 100ms
-    const continuousStyleInterval = setInterval(forceStylesContinuously, 100);
-
-    // Forzar estilos inmediatamente al cargar
-    console.log('🚀 [INMEDIATO] Forzando estilos al cargar...');
-    forceStylesContinuously();
-    
-    // También forzar después de un pequeño delay para asegurar que el DOM esté listo
-    setTimeout(() => {
-      console.log('🚀 [RETRASADO] Forzando estilos después del delay...');
-      forceStylesContinuously();
-    }, 100);
 
     // Ejecutar diagnóstico después de que el DOM esté listo
     console.log('🔍 [DEBUG] Configurando setTimeout principal...');
@@ -889,7 +884,6 @@ export default function MonetizaVozIAElevenLabsPage() {
       document.removeEventListener('popstate', handlePopState);
       document.removeEventListener('visibilitychange', logPriceCardStyles);
       window.removeEventListener('scroll', handleScroll);
-      clearInterval(continuousStyleInterval);
     };
   }, [user, status]);
 
@@ -1042,6 +1036,15 @@ export default function MonetizaVozIAElevenLabsPage() {
     router.push('/subscription');
   };
 
+  const handleStickyThumbnailClick = () => {
+    if (heroSectionRef.current) {
+      heroSectionRef.current.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  };
+
   return (
     <>
       {/* Banner promocional exclusivo de esta página */}
@@ -1063,9 +1066,111 @@ export default function MonetizaVozIAElevenLabsPage() {
       
       <Navbar />
       
-      <main className="main-content">
+      {/* Sticky Course Navbar - aparece al hacer scroll */}
+      {showStickyNavbar && (
+        <div className="sticky-course-navbar" style={{ opacity: stickyOpacity, transition: 'opacity 180ms ease-out' }}>
+          <div className="sticky-navbar-content">
+            <div className="sticky-course-info">
+              <div className="sticky-video-thumbnail" onClick={handleStickyThumbnailClick}>
+                <img 
+                  src="/images/courses/curso_elevenlabs.png" 
+                  alt="Curso ElevenLabs"
+                />
+                <div className="sticky-play-icon">
+                  <svg width="12" height="14" viewBox="0 0 20 24" fill="none">
+                    <path d="M0 2.4C0 1.07 1.34 0.16 2.5 0.83L18.5 11.43C19.66 12.1 19.66 13.9 18.5 14.57L2.5 23.17C1.34 23.84 0 22.93 0 21.6V2.4Z" fill="currentColor"/>
+                  </svg>
+                </div>
+              </div>
+              <div className="sticky-course-title">
+                <h3>Monetiza tu Voz con IA</h3>
+                <div className="sticky-course-rating">
+                  <span className="stars">★★★★★</span>
+                  <span>4.8 (450)</span>
+                </div>
+              </div>
+            </div>
+            <div className="sticky-pricing">
+              {/* Replicar exactamente la tarjeta de precios original completa */}
+              <div className="price-card-sticky">
+                {/* Opción Destacada - e Plus */}
+                <div className="price-option highlight">
+                  <div className="price-option-header">
+                    <h3 className="price-option-title">Acceso al curso</h3>
+                    <div className="price-badges">
+                      <span className="price-badge plus">e Plus</span>
+                    </div>
+                  </div>
+                  
+                  <div className="price-display">
+                    <div className="price-radio">
+                      <input type="radio" name="pricing-sticky" id="plus-option-sticky" defaultChecked />
+                      <label htmlFor="plus-option-sticky"></label>
+                    </div>
+                    <div className="price-main">
+                      <span className="price-currency">$</span>
+                      <span className="price-amount">12</span>
+                      <span className="price-cents">.49</span>
+                      <span className="price-period">USD/mes</span>
+                    </div>
+                  </div>
+                  
+                  <div className="price-discount">
+                    <span className="discount-text">Accede a todos los cursos de eGrow Academy mientras mantengas tu suscripción.</span>
+                  </div>
+                  
+                  <button className="price-cta primary" type="button">
+                    Empezar con e Plus
+                  </button>
+                  
+                  <div className="price-benefits">
+                    <div className="benefit-item">
+                      <span className="benefit-icon">✓</span>
+                      <span className="benefit-text">Acceso ilimitado a todos los cursos de la plataforma</span>
+                    </div>
+                    <div className="benefit-item">
+                      <span className="benefit-icon">✓</span>
+                      <span className="benefit-text">Actualizaciones continuas y nuevo contenido</span>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Opción Regular - Curso Individual */}
+                <div className="price-option regular">
+                  <div className="price-option-header">
+                    <h3 className="price-option-title">Acceso individual</h3>
+                  </div>
+                  
+                  <div className="price-display">
+                    <div className="price-radio">
+                      <input type="radio" name="pricing-sticky" id="regular-option-sticky" />
+                      <label htmlFor="regular-option-sticky"></label>
+                    </div>
+                    <div className="price-main">
+                      <span className="price-currency">$</span>
+                      <span className="price-amount">4</span>
+                      <span className="price-cents">.00</span>
+                      <span className="price-period">USD</span>
+                    </div>
+                  </div>
+                  
+                  <div className="price-description">
+                    <span className="description-text">Pago único para este curso. Acceso permanente al contenido del curso.</span>
+                  </div>
+                  
+                  <button className="price-cta" type="button">
+                    Comprar este curso
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      <main className={`main-content ${showStickyNavbar ? 'with-sticky-navbar' : ''}`}>
         {/* Hero Section - Diseño replicado */}
-        <section className={`hero-section ${shouldShowBanner() ? 'with-promo' : ''}`}>
+        <section className={`hero-section ${shouldShowBanner() ? 'with-promo' : ''}`} ref={heroSectionRef}>
           <div className="container">
             <div className="hero-card">
               <div className="hero-grid">
@@ -1151,6 +1256,9 @@ export default function MonetizaVozIAElevenLabsPage() {
                     <p className="desc-closure">Al terminar, no solo dominarás ElevenLabs: tendrás tu portafolio listo y tu plan para empezar a monetizar al día siguiente.</p>
                   </div>
                 </div>
+
+                {/* Trigger para activar navbar sticky a partir de Objetivos */}
+                <div ref={stickyTriggerRef} aria-hidden style={{ height: 1 }} />
 
                 {/* What You'll Learn */}
                 <div className="learning-objectives">
@@ -1260,6 +1368,85 @@ export default function MonetizaVozIAElevenLabsPage() {
                     ))}
                   </ul>
                 </div>
+
+                {/* Reviews Section - Movido al contenido principal */}
+                <div className="reviews-section-main" ref={reviewsRef}>
+                  <h2 className="reviews-title">Opiniones</h2>
+                  <p className="reviews-subtitle">Lo que dicen nuestros estudiantes</p>
+
+                  <div className="reviews-stats-card">
+                    <div className="stat"><span className="stat-icon">{renderUiIcon('estudiantes')}</span><span className="stat-value">2,863</span><span className="stat-label">Estudiantes</span></div>
+                    <div className="stat"><span className="stat-icon">{renderUiIcon('opiniones')}</span><span className="stat-value">450</span><span className="stat-label">Opiniones</span></div>
+                    <div className="stat"><span className="stat-icon">{renderUiIcon('valoraciones positivas')}</span><span className="stat-value stat-good">99%</span><span className="stat-label">Valoraciones positivas</span></div>
+                  </div>
+
+                  {/* Carrusel auto-avanzable con 2 tarjetas por slide */}
+                  <div className="reviews-carousel">
+                    <div className="reviews-track" ref={reviewsTrackRef}>
+                      {/* Slide 1 */}
+                      <div className="review-slide">
+                        <div className="review-grid2">
+                          <div className="testimonial-card">
+                            <div className="testimonial-body">
+                              <p className="testimonial-text">Implementé mi primer anuncio con voz en 24 horas. El flujo es claro, sin relleno y con ejemplos que realmente funcionan.</p>
+                              <div className="testimonial-author">- Laura M.</div>
+                            </div>
+                          </div>
+                          <div className="testimonial-card">
+                            <div className="testimonial-body">
+                              <p className="testimonial-text">El módulo de negocio me ayudó a empaquetar mi oferta. En una semana cerré mi primer cliente para spots de radio.</p>
+                              <div className="testimonial-author">- Diego P.</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      {/* Slide 2 */}
+                      <div className="review-slide">
+                        <div className="review-grid2">
+                          <div className="testimonial-card">
+                            <div className="testimonial-body">
+                              <p className="testimonial-text">Zair Aquino explica directo al grano. Con su guía monté un pipeline para cursos narrados con ElevenLabs en dos tardes.</p>
+                              <div className="testimonial-author">- José L.</div>
+                            </div>
+                          </div>
+                          <div className="testimonial-card">
+                            <div className="testimonial-body">
+                              <p className="testimonial-text">Zair Aquino no se guarda nada: tips de grabación, presets y cómo cobrar. Salí con un plan de precios listo.</p>
+                              <div className="testimonial-author">- Sandra T.</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      {/* Slide 3 */}
+                      <div className="review-slide">
+                        <div className="review-grid2">
+                          <div className="testimonial-card">
+                            <div className="testimonial-body">
+                              <p className="testimonial-text">Pasé mis cursos a 3 idiomas en una tarde. El capítulo de traducción y mejora de voz es oro puro.</p>
+                              <div className="testimonial-author">- Valeria G.</div>
+                            </div>
+                          </div>
+                          <div className="testimonial-card">
+                            <div className="testimonial-body">
+                              <p className="testimonial-text">No soy locutor y mis audios suenan profesionales. Las plantillas y checklists me ahorraron horas.</p>
+                              <div className="testimonial-author">- Marco R.</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="reviews-dots" aria-label="Paginación de testimonios">
+                      {[0,1,2].map((i) => (
+                        <button
+                          key={i}
+                          className={`dot ${currentReviewSlide === i ? 'active' : ''}`}
+                          onClick={() => setCurrentReviewSlide(i)}
+                          aria-label={`Ir al slide ${i + 1}`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
               </div>
 
               {/* Sidebar - Desktop Only */}
@@ -1343,86 +1530,6 @@ export default function MonetizaVozIAElevenLabsPage() {
           </div>
         </section>
 
-        {/* Reviews Section (ubicado arriba de los cursos relacionados) */}
-        <section className="reviews-section">
-          <div className="container">
-            <h2 className="reviews-title">Opiniones</h2>
-            <p className="reviews-subtitle">Lo que dicen nuestros estudiantes</p>
-
-            <div className="reviews-stats-card">
-              <div className="stat"><span className="stat-icon">{renderUiIcon('estudiantes')}</span><span className="stat-value">2,863</span><span className="stat-label">Estudiantes</span></div>
-              <div className="stat"><span className="stat-icon">{renderUiIcon('opiniones')}</span><span className="stat-value">450</span><span className="stat-label">Opiniones</span></div>
-              <div className="stat"><span className="stat-icon">{renderUiIcon('valoraciones positivas')}</span><span className="stat-value stat-good">99%</span><span className="stat-label">Valoraciones positivas</span></div>
-            </div>
-
-            {/* Carrusel auto-avanzable con 2 tarjetas por slide */}
-            <div className="reviews-carousel">
-              <div className="reviews-track" ref={reviewsTrackRef}>
-                {/* Slide 1 */}
-                <div className="review-slide">
-                  <div className="review-grid2">
-                    <div className="testimonial-card">
-                      <div className="testimonial-body">
-                        <p className="testimonial-text">Implementé mi primer anuncio con voz en 24 horas. El flujo es claro, sin relleno y con ejemplos que realmente funcionan.</p>
-                        <div className="testimonial-author">- Laura M.</div>
-                      </div>
-                    </div>
-                    <div className="testimonial-card">
-                      <div className="testimonial-body">
-                        <p className="testimonial-text">El módulo de negocio me ayudó a empaquetar mi oferta. En una semana cerré mi primer cliente para spots de radio.</p>
-                        <div className="testimonial-author">- Diego P.</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                {/* Slide 2 */}
-                <div className="review-slide">
-                  <div className="review-grid2">
-                    <div className="testimonial-card">
-                      <div className="testimonial-body">
-                        <p className="testimonial-text">Zair Aquino explica directo al grano. Con su guía monté un pipeline para cursos narrados con ElevenLabs en dos tardes.</p>
-                        <div className="testimonial-author">- José L.</div>
-                      </div>
-                    </div>
-                    <div className="testimonial-card">
-                      <div className="testimonial-body">
-                        <p className="testimonial-text">Zair Aquino no se guarda nada: tips de grabación, presets y cómo cobrar. Salí con un plan de precios listo.</p>
-                        <div className="testimonial-author">- Sandra T.</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                {/* Slide 3 */}
-                <div className="review-slide">
-                  <div className="review-grid2">
-                    <div className="testimonial-card">
-                      <div className="testimonial-body">
-                        <p className="testimonial-text">Pasé mis cursos a 3 idiomas en una tarde. El capítulo de traducción y mejora de voz es oro puro.</p>
-                        <div className="testimonial-author">- Valeria G.</div>
-                      </div>
-                    </div>
-                    <div className="testimonial-card">
-                      <div className="testimonial-body">
-                        <p className="testimonial-text">No soy locutor y mis audios suenan profesionales. Las plantillas y checklists me ahorraron horas.</p>
-                        <div className="testimonial-author">- Marco R.</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="reviews-dots" aria-label="Paginación de testimonios">
-                {[0,1,2].map((i) => (
-                  <button
-                    key={i}
-                    className={`dot ${currentReviewSlide === i ? 'active' : ''}`}
-                    onClick={() => setCurrentReviewSlide(i)}
-                    aria-label={`Ir al slide ${i + 1}`}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
 
         {/* Featured Courses Section */}
         <section className="featured-courses-section">
