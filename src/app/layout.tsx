@@ -85,15 +85,12 @@ export default function RootLayout({
           }}
         />
         
-        {/* Preload critical resources */}
-        <link rel="preload" href="/images/optimized/logop.webp" as="image" type="image/webp" />
+        {/* Preload critical resources - only the most essential ones */}
         <link rel="preload" href="/images/eGrowAcademylogo.png" as="image" />
         
-        {/* Preload video background for faster loading */}
-        <link rel="preload" href="/videos/background.webm" as="video" type="video/webm" />
+        {/* Critical CSS is already included via import */}
         
-        {/* Preload critical CSS */}
-        <link rel="preload" href="/styles/critical.css" as="style" />
+        {/* Video and premium logo only preloaded on pages that use them */}
         
         {/* DNS Prefetch for external domains */}
         <link rel="dns-prefetch" href="//www.google-analytics.com" />
