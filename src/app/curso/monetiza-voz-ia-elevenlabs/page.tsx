@@ -32,6 +32,7 @@ export default function MonetizaVozIAElevenLabsPage() {
   const [expandedLessons, setExpandedLessons] = useState<number[]>([]);
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [currentReviewSlide, setCurrentReviewSlide] = useState(0);
+  const [showMainVideo, setShowMainVideo] = useState(false);
   const reviewsTrackRef = useRef<HTMLDivElement | null>(null);
   const reviewSlidesCount = 3; // 6 testimonios, 2 por slide
   const { user, status } = useAuth();
@@ -136,10 +137,15 @@ export default function MonetizaVozIAElevenLabsPage() {
     }
   };
 
+  const handleVideoPreviewClick = () => {
+    setShowMainVideo(true);
+  };
+
   const courseData = {
     id: 'monetiza-voz-ia-elevenlabs',
     title: 'Monetiza tu Voz con IA: ElevenLabs para anuncios, cursos y podcasts (sin curva técnica)',
     description: 'Aprende a monetizar tu voz utilizando inteligencia artificial con ElevenLabs. Crea anuncios profesionales, cursos narrados y podcasts de alta calidad sin conocimientos técnicos. Desde la configuración básica hasta estrategias avanzadas de monetización.',
+    mainVideoUrl: 'https://3o0p1lzj4n.ufs.sh/f/P2bnXUoat3Wf204HLGPQbPfwompytjDs9F6n0B7Hx4aShOGI',
     duration: '8 horas',
     level: 'Principiante',
     difficulty: 'Principiante',
@@ -182,7 +188,6 @@ export default function MonetizaVozIAElevenLabsPage() {
         description: 'Entender de dónde viene ElevenLabs, en qué destaca y dónde usarlo con responsabilidad.',
         duration: 80,
         type: 'Video',
-        videoUrl: 'https://www.youtube.com/watch?v=example1',
         lessonsCount: 3,
         subLessons: [
           {
@@ -220,7 +225,6 @@ export default function MonetizaVozIAElevenLabsPage() {
         description: 'Dominar las funciones esenciales y montar un flujo de trabajo completo.',
         duration: 120,
         type: 'Lab',
-        videoUrl: 'https://www.youtube.com/watch?v=example2',
         lessonsCount: 4,
         subLessons: [
           {
@@ -267,7 +271,6 @@ export default function MonetizaVozIAElevenLabsPage() {
         description: 'Bajar a tierra (vida diaria y empresa) y convertirlo en oferta vendible.',
         duration: 90,
         type: 'Project',
-        videoUrl: 'https://www.youtube.com/watch?v=example3',
         lessonsCount: 3,
         subLessons: [
           {
@@ -1077,13 +1080,30 @@ export default function MonetizaVozIAElevenLabsPage() {
                   </button>
                 </div>
                 <div className="hero-right">
-                  <div className="preview-box">
-                    <img 
-                      src="/images/courses/curso_elevenlabs.png" 
-                      alt="Vista previa del curso Monetiza tu Voz con IA"
-                      className="preview-video"
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    />
+                  <div className="preview-box" onClick={handleVideoPreviewClick} style={{ cursor: 'pointer' }}>
+                    {!showMainVideo ? (
+                      <>
+                        <img 
+                          src="/images/courses/curso_elevenlabs.png" 
+                          alt="Vista previa del curso Monetiza tu Voz con IA"
+                          className="preview-video"
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        />
+                        <div className="play-button-overlay">
+                          <div className="play-button">
+                            <svg viewBox="0 0 24 24" fill="currentColor" className="play-icon">
+                              <path d="M8 5v14l11-7z"/>
+                            </svg>
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <VideoPlayer 
+                        videoUrl={courseData.mainVideoUrl} 
+                        title={courseData.title}
+                        className="main-video-player"
+                      />
+                    )}
                   </div>
                   {/* Stats a la derecha */}
                   <div className="hero-stats">
