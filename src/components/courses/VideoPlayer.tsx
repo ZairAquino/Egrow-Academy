@@ -9,6 +9,7 @@ interface VideoPlayerProps {
   onProgress?: (currentTime: number, duration: number) => void;
   onComplete?: () => void;
   className?: string;
+  startTime?: number;
 }
 
 export default function VideoPlayer({
@@ -16,7 +17,8 @@ export default function VideoPlayer({
   title,
   onProgress,
   onComplete,
-  className = ''
+  className = '',
+  startTime = 0
 }: VideoPlayerProps) {
   // Validar que videoUrl sea válido
   if (!videoUrl || typeof videoUrl !== 'string') {
@@ -99,6 +101,11 @@ export default function VideoPlayer({
   const handleLoadedMetadata = () => {
     if (videoRef.current) {
       setDuration(videoRef.current.duration);
+      // Establecer el tiempo inicial si se proporciona
+      if (startTime > 0) {
+        videoRef.current.currentTime = startTime;
+        setCurrentTime(startTime);
+      }
     }
   };
 
@@ -300,6 +307,8 @@ export default function VideoPlayer({
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
         onClick={togglePlay}
+        autoPlay
+        playsInline
       />
 
       {/* Overlay de controles */}
@@ -308,26 +317,7 @@ export default function VideoPlayer({
           showControls ? 'opacity-100' : 'opacity-0'
         }`}
       >
-        {/* Título */}
-        {title && (
-          <div className="absolute top-4 left-4 text-white text-lg font-semibold">
-            {title}
-          </div>
-        )}
 
-        {/* Controles centrales */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <button
-            onClick={togglePlay}
-            className="bg-white/20 backdrop-blur-sm rounded-full p-4 hover:bg-white/30 transition-colors"
-          >
-            {isPlaying ? (
-              <Pause className="w-8 h-8 text-white" />
-            ) : (
-              <Play className="w-8 h-8 text-white ml-1" />
-            )}
-          </button>
-        </div>
 
         {/* Barra de progreso */}
         <div className="absolute bottom-16 left-4 right-4">

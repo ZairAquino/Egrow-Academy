@@ -33,6 +33,7 @@ export default function MonetizaVozIAElevenLabsPage() {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [currentReviewSlide, setCurrentReviewSlide] = useState(0);
   const [showMainVideo, setShowMainVideo] = useState(false);
+  const [videoCurrentTime, setVideoCurrentTime] = useState(0);
   const reviewsTrackRef = useRef<HTMLDivElement | null>(null);
   const reviewSlidesCount = 3; // 6 testimonios, 2 por slide
   const { user, status } = useAuth();
@@ -138,7 +139,11 @@ export default function MonetizaVozIAElevenLabsPage() {
   };
 
   const handleVideoPreviewClick = () => {
-    setShowMainVideo(true);
+    setShowMainVideo(!showMainVideo);
+  };
+
+  const handleVideoProgress = (currentTime: number, duration: number) => {
+    setVideoCurrentTime(currentTime);
   };
 
   const courseData = {
@@ -1089,10 +1094,10 @@ export default function MonetizaVozIAElevenLabsPage() {
                           className="preview-video"
                           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                         />
-                        <div className="play-button-overlay">
-                          <div className="play-button">
-                            <svg viewBox="0 0 24 24" fill="currentColor" className="play-icon">
-                              <path d="M8 5v14l11-7z"/>
+                        <div className="video-overlay">
+                          <div className="play-btn">
+                            <svg width="20" height="24" viewBox="0 0 20 24" fill="none">
+                              <path d="M0 2.4C0 1.07 1.34 0.16 2.5 0.83L18.5 11.43C19.66 12.1 19.66 13.9 18.5 14.57L2.5 23.17C1.34 23.84 0 22.93 0 21.6V2.4Z" fill="currentColor"/>
                             </svg>
                           </div>
                         </div>
@@ -1102,6 +1107,8 @@ export default function MonetizaVozIAElevenLabsPage() {
                         videoUrl={courseData.mainVideoUrl} 
                         title={courseData.title}
                         className="main-video-player"
+                        startTime={videoCurrentTime}
+                        onProgress={handleVideoProgress}
                       />
                     )}
                   </div>
