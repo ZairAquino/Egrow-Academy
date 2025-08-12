@@ -12,7 +12,9 @@ import FacebookPixelTracker from '@/components/analytics/FacebookPixelTracker';
 import { useFacebookPixel } from '@/hooks/useFacebookPixel';
 
 import { useAuth } from '@/contexts/AuthContext';
+import { renderToolIcon } from '@/lib/tool-icons';
 import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
+
 
 const CompaniesMarquee = dynamic(() => import('@/components/ui/CompaniesMarquee'), {
   loading: () => <LoadingSpinner />,
@@ -388,7 +390,7 @@ export default function VideosProfesionalesIAPage() {
                     <div className="progress-section-new">
                       <div className="progress-info-new">
                         <p className="progress-text-new">
-                          📚 <strong>Progreso actual:</strong> Lección {currentLesson + 1} de {courseData.lessonsCount}
+                          <strong>Progreso actual:</strong> Lección {currentLesson + 1} de {courseData.lessonsCount}
                         </p>
                         <div className="progress-bar-new">
                           <div className="progress-fill-new" style={{ width: `${Math.round(progressPercentage)}%` }}></div>
@@ -401,7 +403,7 @@ export default function VideosProfesionalesIAPage() {
                         className="course-action-button course-action-continue"
                         onClick={goToCourseContent}
                       >
-                        🚀 Continuar con el curso
+                        Continuar con el curso
                       </div>
                     </div>
                   ) : (
@@ -413,8 +415,8 @@ export default function VideosProfesionalesIAPage() {
                         {(status === 'loading' || subscriptionLoading) ? 
                           '⏳ Verificando acceso...' :
                           (isUserAuthenticated ? 
-                            (hasPremiumAccess ? '🎯 Comenzar Curso Premium' : '💳 Suscríbete para acceder') 
-                            : '🔐 Iniciar Sesión para Comenzar'
+                           (hasPremiumAccess ? 'Comenzar Curso Premium' : 'Suscríbete para acceder') 
+                           : 'Iniciar Sesión para Comenzar'
                           )
                         }
                       </div>
@@ -424,9 +426,9 @@ export default function VideosProfesionalesIAPage() {
                 
                 <div className="course-meta">
                   <div className="course-badges-secondary">
-                    <span className="badge badge-language">🌍 {courseData.language}</span>
-                    <span className="badge badge-includes">📦 Proyecto práctico incluido</span>
-                    <span className="badge badge-access">🔓 Acceso de por vida</span>
+                    <span className="badge badge-language">{courseData.language}</span>
+                    <span className="badge badge-includes">Proyecto práctico incluido</span>
+                    <span className="badge badge-access">Acceso de por vida</span>
                   </div>
                 </div>
               </div>
@@ -553,7 +555,7 @@ export default function VideosProfesionalesIAPage() {
                   <div className="tools-grid">
                     {courseData.tools.map((tool, index) => (
                       <div key={index} className="tool-item">
-                        <span className="tool-icon">🎬</span>
+                        <span className="tool-icon">{renderToolIcon(tool)}</span>
                         <span>{tool}</span>
                       </div>
                     ))}

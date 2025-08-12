@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist } from "next/font/google";
+import { GeistSans } from 'geist/font/sans';
 import "./critical.css";
 import "./globals.css";
 import "./premium-logo.css";
@@ -21,12 +21,7 @@ import StreakSynchronizer from '@/components/streaks/StreakSynchronizer';
 import StreakSystemInitializer from '@/components/streaks/StreakSystemInitializer';
 import MetaPixelTest from '@/components/analytics/MetaPixelTest';
 
-const geist = Geist({
-  subsets: ["latin"],
-  display: 'swap',
-  variable: '--font-geist',
-  weight: ['400','500','600','700','800','900'],
-});
+// Fuente global: Geist Sans (Vercel)
 
 export const metadata: Metadata = baseSEOConfig;
 
@@ -98,7 +93,7 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
         <link rel="dns-prefetch" href="//fonts.gstatic.com" />
       </head>
-      <body className={geist.className}>
+      <body className={GeistSans.className} style={{ '--font-geist': GeistSans.style.fontFamily } as React.CSSProperties}>
         <Providers>
           <NotificationSystem>
             <BehaviorTrackingWrapper>

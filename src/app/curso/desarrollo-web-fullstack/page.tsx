@@ -9,7 +9,9 @@ import Footer from '@/components/layout/Footer';
 import Navbar from '@/components/layout/Navbar';
 import VideoPlayer from '@/components/courses/VideoPlayer';
 import { useAuth } from '@/contexts/AuthContext';
+import { renderToolIcon } from '@/lib/tool-icons';
 import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
+
 // Eliminamos CourseActionButton para usar la lógica directa que funciona
 
 // Lazy load components
@@ -525,7 +527,7 @@ export default function DesarrolloWebFullStackPage() {
                   <div className="tools-grid">
                     {courseData.tools.map((tool, index) => (
                       <div key={index} className="tool-item">
-                        <span className="tool-icon">🛠️</span>
+                        <span className="tool-icon">{renderToolIcon(tool)}</span>
                         <span className="tool-name">{tool}</span>
                       </div>
                     ))}
@@ -658,12 +660,12 @@ export default function DesarrolloWebFullStackPage() {
             <div className="tools-section">
               <h2>Herramientas y Tecnologías</h2>
               <div className="tools-grid">
-                {courseData.tools.map((tool, index) => (
-                  <div key={index} className="tool-item">
-                    <span className="tool-icon">🔧</span>
-                    <span>{tool}</span>
-                  </div>
-                ))}
+                                      {courseData.tools.map((tool, index) => (
+                        <div key={index} className="tool-item">
+                        <span className="tool-icon">{renderToolIcon(tool)}</span>
+                          <span>{tool}</span>
+                        </div>
+                      ))}
               </div>
             </div>
           </div>

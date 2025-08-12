@@ -10,6 +10,8 @@ import Navbar from '@/components/layout/Navbar';
 import VideoPlayer from '@/components/courses/VideoPlayer';
 
 import { useAuth } from '@/contexts/AuthContext';
+import { renderToolIcon } from '@/lib/tool-icons';
+
 
 // Contador eliminado - ya no se necesita
 
@@ -442,7 +444,7 @@ export default function AsistentesVirtualesIAPage() {
                     <div className="progress-section-new">
                       <div className="progress-info-new">
                         <p className="progress-text-new">
-                          📚 <strong>Progreso actual:</strong> Lección {currentLesson + 1} de {courseData.lessonsCount}
+                          <strong>Progreso actual:</strong> Lección {currentLesson + 1} de {courseData.lessonsCount}
                         </p>
                         <div className="progress-bar-new">
                           <div className="progress-fill-new" style={{ width: `${Math.round(progressPercentage)}%` }}></div>
@@ -455,7 +457,7 @@ export default function AsistentesVirtualesIAPage() {
                         className="course-action-button course-action-continue"
                         onClick={goToCourseContent}
                       >
-                        🚀 Continuar con el curso
+                        Continuar con el curso
                       </div>
                     </div>
                   ) : (
@@ -464,7 +466,7 @@ export default function AsistentesVirtualesIAPage() {
                         className="course-action-button course-action-start"
                         onClick={goToCourseContent}
                       >
-                        {isUserAuthenticated ? '🎯 Comenzar Curso Gratis' : '🔐 Iniciar Sesión para Comenzar'}
+                        {isUserAuthenticated ? 'Comenzar Curso Gratis' : 'Iniciar Sesión para Comenzar'}
                       </div>
                       
                       {/* Contador eliminado */}
@@ -474,9 +476,9 @@ export default function AsistentesVirtualesIAPage() {
                 
                 <div className="course-meta">
                   <div className="course-badges-secondary">
-                    <span className="badge badge-language">🌍 {courseData.language}</span>
-                    <span className="badge badge-includes">📦 Proyecto práctico incluido</span>
-                    <span className="badge badge-access">🔓 Acceso de por vida</span>
+                    <span className="badge badge-language">{courseData.language}</span>
+                    <span className="badge badge-includes">Proyecto práctico incluido</span>
+                    <span className="badge badge-access">Acceso de por vida</span>
                   </div>
                 </div>
               </div>
@@ -580,12 +582,12 @@ export default function AsistentesVirtualesIAPage() {
                 <div className="tools-section">
                   <h2>Herramientas y Tecnologías</h2>
                   <div className="tools-grid">
-                    {courseData.tools.map((tool, index) => (
-                      <div key={index} className="tool-item">
-                        <span className="tool-icon">🤖</span>
-                        <span>{tool}</span>
-                      </div>
-                    ))}
+                                    {courseData.tools.map((tool, index) => (
+                  <div key={index} className="tool-item">
+                    <span className="tool-icon">{renderToolIcon(tool)}</span>
+                    <span>{tool}</span>
+                  </div>
+                ))}
                   </div>
                 </div>
               </div>
@@ -752,7 +754,7 @@ export default function AsistentesVirtualesIAPage() {
               <div className="tools-grid">
                 {courseData.tools.map((tool, index) => (
                   <div key={index} className="tool-item">
-                    <span className="tool-icon">🤖</span>
+                    <span className="tool-icon">{renderToolIcon(tool)}</span>
                     <span>{tool}</span>
                   </div>
                 ))}

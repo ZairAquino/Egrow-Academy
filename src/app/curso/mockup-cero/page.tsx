@@ -10,6 +10,8 @@ import Navbar from '@/components/layout/Navbar';
 import VideoPlayer from '@/components/courses/VideoPlayer';
 
 import { useAuth } from '@/contexts/AuthContext';
+import { renderToolIcon } from '@/lib/tool-icons';
+
 
 // Lazy load components
 const CompaniesMarquee = dynamic(() => import('@/components/ui/CompaniesMarquee'), {
@@ -472,7 +474,7 @@ export default function MockupCeroPage() {
                     <div className="progress-section-new">
                       <div className="progress-info-new">
                         <p className="progress-text-new">
-                          📚 <strong>Progreso actual:</strong> Lección {currentLesson + 1} de {courseData.lessonsCount}
+                          <strong>Progreso actual:</strong> Lección {currentLesson + 1} de {courseData.lessonsCount}
                         </p>
                         <div className="progress-bar-new">
                           <div className="progress-fill-new" style={{ width: `${Math.round(progressPercentage)}%` }}></div>
@@ -485,7 +487,7 @@ export default function MockupCeroPage() {
                         className="course-action-button course-action-continue"
                         onClick={goToCourseContent}
                       >
-                        🚀 Continuar con el curso
+                        Continuar con el curso
                       </div>
                     </div>
                   ) : (
@@ -494,7 +496,7 @@ export default function MockupCeroPage() {
                         className="course-action-button course-action-start"
                         onClick={goToCourseContent}
                       >
-                        {isUserAuthenticated ? '🎯 Comenzar Curso Gratis' : '🔐 Iniciar Sesión para Comenzar'}
+                        {isUserAuthenticated ? 'Comenzar Curso Gratis' : 'Iniciar Sesión para Comenzar'}
                       </div>
                     </div>
                   )}
@@ -502,8 +504,8 @@ export default function MockupCeroPage() {
                 
                 <div className="course-meta">
                   <div className="course-badges-secondary">
-                    <span className="badge badge-language">🌍 {courseData.language}</span>
-                    <span className="badge badge-includes">💻 Modalidad Online</span>
+                    <span className="badge badge-language">{courseData.language}</span>
+                    <span className="badge badge-includes">Modalidad Online</span>
                     <span className="badge badge-access">🏆 Certificado Digital Incluido</span>
                   </div>
                 </div>
@@ -598,12 +600,12 @@ export default function MockupCeroPage() {
                 <div className="tools-section">
                   <h2>Herramientas y Tecnologías</h2>
                   <div className="tools-grid">
-                    {courseData.tools.map((tool, index) => (
-                      <div key={index} className="tool-item">
-                        <span className="tool-icon">🎨</span>
-                        <span>{tool}</span>
-                      </div>
-                    ))}
+                                    {courseData.tools.map((tool, index) => (
+                  <div key={index} className="tool-item">
+                    <span className="tool-icon">{renderToolIcon(tool)}</span>
+                    <span>{tool}</span>
+                  </div>
+                ))}
                   </div>
                 </div>
               </div>
@@ -760,7 +762,7 @@ export default function MockupCeroPage() {
               <div className="tools-grid">
                 {courseData.tools.map((tool, index) => (
                   <div key={index} className="tool-item">
-                    <span className="tool-icon">🎨</span>
+                    <span className="tool-icon">{renderToolIcon(tool)}</span>
                     <span>{tool}</span>
                   </div>
                 ))}

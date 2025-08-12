@@ -3,16 +3,17 @@
 /* Tipografía global: Geist Sans */
 /* Fuerza el uso de Geist en todo el sitio y ajusta pesos solicitados */
 html, body, button, input, select, textarea {
-  font-family: var(--font-geist), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-family: 'Geist', var(--font-geist), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
 }
 
 /* Evitar que reglas heredadas de componentes cambien la fuente */
 *:where(:not(code, pre, kbd, samp)) {
-  font-family: var(--font-geist), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-family: 'Geist', var(--font-geist), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
 }
 
 /* Encabezados: H1 en Black/900 con tracking negativo leve */
 h1, .hero-title-big {
+  font-family: 'Geist', var(--font-geist), sans-serif !important;
   font-weight: 900 !important;
   letter-spacing: -0.02em !important;
   line-height: 1.1;
@@ -20,16 +21,18 @@ h1, .hero-title-big {
 
 /* Resto de headings mantienen Geist */
 h2, h3, h4, h5, h6 {
-  font-family: var(--font-geist), sans-serif !important;
+  font-family: 'Geist', var(--font-geist), sans-serif !important;
 }
 
-/* Párrafos y textos principales */
+/* Párrafos y textos principales con peso 500-600 */
 p, .lead, .hero-subtext, .course-description, .section-lead {
+  font-family: 'Geist', var(--font-geist), sans-serif !important;
   font-weight: 500;
 }
 
 /* Énfasis dentro de párrafos */
 p strong, .lead strong {
+  font-family: 'Geist', var(--font-geist), sans-serif !important;
   font-weight: 600;
 }
 
@@ -125,7 +128,7 @@ html {
 body {
     background: #ffffff;
     color: var(--foreground);
-    font-family: var(--font-geist), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Geist', var(--font-geist), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     line-height: 1.6;
     margin: 0;
     padding: 0;
@@ -140,7 +143,7 @@ body {
 
 /* Typography System - Geist Sans */
 h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-geist), sans-serif;
+    font-family: 'Geist', var(--font-geist), sans-serif;
     font-weight: 800;
     line-height: 1.2;
     margin: 0 0 1rem 0;
@@ -150,9 +153,9 @@ h1, h2, h3, h4, h5, h6 {
 /* Headlines */
 .headline-1, h1 {
     font-size: clamp(2.5rem, 5vw, 4rem);
-    font-weight: 800;
+    font-weight: 900; /* Black */
     line-height: 1.1;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.02em; /* tracking negativo leve */
 }
 
 .headline-2, h2 {
@@ -204,7 +207,7 @@ h1, h2, h3, h4, h5, h6 {
 /* Body Text */
 .body-1, p {
     font-size: 1rem;
-    font-weight: 500;
+    font-weight: 500; /* párrafos 500–600 */
     line-height: 1.6;
     margin: 0 0 1rem 0;
 }
@@ -2577,7 +2580,7 @@ button, a, input, select, textarea {
   color: var(--localhost-White, var(--color-white-solid, #FFF));
   text-align: center;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25), 0 2px 4px rgba(0, 0, 0, 0.25);
-  font-family: Montserrat;
+  font-family: 'Geist Sans', var(--font-geist-sans), sans-serif;
   font-size: 60px;
   font-style: normal;
   font-weight: 700;
@@ -2625,7 +2628,7 @@ button, a, input, select, textarea {
 .hero-description {
   color: var(--localhost-White, var(--color-white-solid, #FFF));
   text-align: center;
-  font-family: var(--font-montserrat), 'Montserrat', sans-serif;
+  font-family: var(--font-geist-sans), 'Geist Sans', sans-serif;
   font-size: 20px;
   font-style: normal;
   font-weight: var(--font-weight-400, 400);
@@ -9237,17 +9240,20 @@ aside[class*="price-card"] {
 
 
 .hero-title-big {
+  font-family: 'Geist', var(--font-geist), sans-serif !important;
   font-size: clamp(30px, 4.6vw, 48px);
   line-height: 1.1;
-  font-weight: 800;
+  font-weight: 900 !important;
   letter-spacing: -0.02em;
   color: #0f172a;
   margin: 0 0 22px 0;
 }
 
 .hero-subtext {
+  font-family: 'Geist', var(--font-geist), sans-serif !important;
   color: #475569;
   font-size: 16px;
+  font-weight: 500;
   line-height: 1.6;
   max-width: 700px;
   margin: 0 0 24px 0;

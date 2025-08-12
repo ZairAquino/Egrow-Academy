@@ -11,16 +11,8 @@ import VideoPlayer from '@/components/courses/VideoPlayer';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
-import { 
-  SiAdobeaudition, 
-  SiCanva, 
-  SiOpenai, 
-  SiNotion, 
-  SiDiscord, 
-  SiYoutube 
-} from 'react-icons/si';
-import { FaMicrophone, FaMusic } from 'react-icons/fa';
-import { TbBrandElevenlabs } from 'react-icons/tb';
+import { renderToolIcon, renderUiIcon } from '@/lib/tool-icons';
+import { IconStar, IconTrophy } from '@tabler/icons-react';
 
 
 // Lazy load components
@@ -68,7 +60,7 @@ export default function MonetizaVozIAElevenLabsPage() {
 
   // Función para inscribir e ir al contenido del curso
   const goToCourseContent = async () => {
-    console.log('🎯 [MONETIZA-VOZ-PAGE] Botón clickeado - Estado de autenticación:', { 
+  console.log('[MONETIZA-VOZ-PAGE] Botón clickeado - Estado de autenticación:', { 
       user: !!user, 
       status, 
       userEmail: user?.email,
@@ -85,7 +77,7 @@ export default function MonetizaVozIAElevenLabsPage() {
     if (!user || status === 'unauthenticated') {
       // Si el usuario no está logueado, redirigir al login con redirect
       const loginUrl = `/login?redirect=/curso/monetiza-voz-ia-elevenlabs/contenido`;
-      console.log(`🔐 [MONETIZA-VOZ-PAGE] Usuario no logueado - Redirigiendo a login: ${loginUrl}`);
+      console.log(`[MONETIZA-VOZ-PAGE] Usuario no logueado - Redirigiendo a login: ${loginUrl}`);
       
       if (typeof window !== 'undefined') {
         window.location.href = loginUrl;
@@ -95,13 +87,13 @@ export default function MonetizaVozIAElevenLabsPage() {
     
     if (!hasPremiumAccess) {
       // Si el usuario no tiene acceso premium, redirigir a suscripción
-      console.log(`🔒 [MONETIZA-VOZ-PAGE] Usuario no tiene acceso premium - Redirigiendo a suscripción`);
+      console.log(`[MONETIZA-VOZ-PAGE] Usuario no tiene acceso premium - Redirigiendo a suscripción`);
       router.push('/subscription');
       return;
     }
     
     // Si el usuario está logueado y tiene premium, inscribirlo automáticamente y redirigir
-    console.log(`✅ [MONETIZA-VOZ-PAGE] Usuario logueado con premium (${user.email}) - Inscribiendo y redirigiendo...`);
+    console.log(`[MONETIZA-VOZ-PAGE] Usuario logueado con premium (${user.email}) - Inscribiendo y redirigiendo...`);
     
     try {
       console.log('🔄 [MONETIZA-VOZ-PAGE] Iniciando inscripción automática...');
@@ -123,7 +115,7 @@ export default function MonetizaVozIAElevenLabsPage() {
       
       if (enrollResponse.ok) {
         const enrollData = await enrollResponse.json();
-        console.log('✅ [MONETIZA-VOZ-PAGE] Usuario inscrito automáticamente:', enrollData);
+        console.log('[MONETIZA-VOZ-PAGE] Usuario inscrito automáticamente:', enrollData);
       } else {
         const errorData = await enrollResponse.text();
         console.error('⚠️ [MONETIZA-VOZ-PAGE] Error al inscribir:', { 
@@ -181,13 +173,7 @@ export default function MonetizaVozIAElevenLabsPage() {
     ],
     tools: [
       'ElevenLabs Pro',
-      'Audacity',
-      'Adobe Audition',
-      'Canva Pro',
-      'ChatGPT Plus',
-      'Notion',
-      'Discord',
-      'YouTube Studio'
+      'Herramientas de edición de video'
     ],
     lessons: [
       {
@@ -1113,7 +1099,10 @@ export default function MonetizaVozIAElevenLabsPage() {
                     </div>
                     <span className="rating">4.8 <span className="muted">(450 valoraciones)</span></span>
                     <span className="dot" />
-                    <span className="students"><span className="student-icon">👥</span> 2,863 estudiantes</span>
+                    <span className="students" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem' }}>
+                      <span className="student-icon" style={{ display: 'inline-flex' }}>{renderUiIcon('estudiantes')}</span>
+                      <span>2,863 estudiantes</span>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -1165,28 +1154,13 @@ export default function MonetizaVozIAElevenLabsPage() {
                 <div className="tools-section">
                   <h2>Herramientas y Tecnologías</h2>
                   <div className="tools-grid">
-                    {courseData.tools.map((tool, index) => {
-                      const getToolIcon = (toolName: string) => {
-                        const name = toolName.toLowerCase();
-                        if (name.includes('elevenlabs')) return <TbBrandElevenlabs className="w-5 h-5" />;
-                        if (name.includes('audacity')) return <FaMusic className="w-5 h-5" />;
-                        if (name.includes('adobe')) return <SiAdobeaudition className="w-5 h-5" />;
-                        if (name.includes('canva')) return <SiCanva className="w-5 h-5" />;
-                        if (name.includes('chatgpt') || name.includes('gpt')) return <SiOpenai className="w-5 h-5" />;
-                        if (name.includes('notion')) return <SiNotion className="w-5 h-5" />;
-                        if (name.includes('discord')) return <SiDiscord className="w-5 h-5" />;
-                        if (name.includes('youtube')) return <SiYoutube className="w-5 h-5" />;
-                        return <FaMicrophone className="w-5 h-5" />;
-                      };
-                      
-                      return (
-                        <div key={index} className="tool-item">
-                            <span className="tool-icon" aria-hidden>{getToolIcon(tool)}</span>
-                            <span className="tool-name">{tool}</span>
-                        </div>
-                      );
-                    })}
-                </div>
+                      {courseData.tools.map((tool, index) => (
+                      <div key={index} className="tool-item">
+                          <span className="tool-icon" aria-hidden>{renderToolIcon(tool)}</span>
+                          <span className="tool-name">{tool}</span>
+                      </div>
+                    ))}
+                  </div>
               </div>
 
                 {/* Contenido del Curso */}
@@ -1347,9 +1321,9 @@ export default function MonetizaVozIAElevenLabsPage() {
             <p className="reviews-subtitle">Lo que dicen nuestros estudiantes</p>
 
             <div className="reviews-stats-card">
-              <div className="stat"><span className="stat-icon">👥</span><span className="stat-value">2,863</span><span className="stat-label">Estudiantes</span></div>
-              <div className="stat"><span className="stat-icon">💬</span><span className="stat-value">450</span><span className="stat-label">Opiniones</span></div>
-              <div className="stat"><span className="stat-icon">👍</span><span className="stat-value stat-good">99%</span><span className="stat-label">Valoraciones positivas</span></div>
+              <div className="stat"><span className="stat-icon">{renderUiIcon('estudiantes')}</span><span className="stat-value">2,863</span><span className="stat-label">Estudiantes</span></div>
+              <div className="stat"><span className="stat-icon">{renderUiIcon('opiniones')}</span><span className="stat-value">450</span><span className="stat-label">Opiniones</span></div>
+              <div className="stat"><span className="stat-icon">{renderUiIcon('valoraciones positivas')}</span><span className="stat-value stat-good">99%</span><span className="stat-label">Valoraciones positivas</span></div>
             </div>
 
             {/* Carrusel auto-avanzable con 2 tarjetas por slide */}
@@ -1439,8 +1413,14 @@ export default function MonetizaVozIAElevenLabsPage() {
                   <h3 className="course-title">Videos Profesionales con IA</h3>
                   <p className="course-description">Crea videos de alta calidad usando herramientas de inteligencia artificial</p>
                   <div className="course-meta">
-                    <span className="course-duration">⏱️ 6 horas</span>
-                    <span className="course-level">📊 Intermedio</span>
+                    <span className="course-duration" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem' }}>
+                      <span className="icon" style={{ display: 'inline-flex' }}>{renderUiIcon('duracion')}</span>
+                      <span>6 horas</span>
+                    </span>
+                    <span className="course-level" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem' }}>
+                      <span className="icon" style={{ display: 'inline-flex' }}>{renderUiIcon('nivel')}</span>
+                      <span>Intermedio</span>
+                    </span>
                   </div>
                   <button className="course-btn">Ver Curso</button>
                 </div>
@@ -1455,8 +1435,14 @@ export default function MonetizaVozIAElevenLabsPage() {
                   <h3 className="course-title">Vibe Coding con Claude & Cursor</h3>
                   <p className="course-description">Aprende a programar con IA usando Claude y Cursor de manera eficiente</p>
                   <div className="course-meta">
-                    <span className="course-duration">⏱️ 5 horas</span>
-                    <span className="course-level">📊 Intermedio</span>
+                    <span className="course-duration" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem' }}>
+                      <span className="icon" style={{ display: 'inline-flex' }}>{renderUiIcon('duracion')}</span>
+                      <span>5 horas</span>
+                    </span>
+                    <span className="course-level" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem' }}>
+                      <span className="icon" style={{ display: 'inline-flex' }}>{renderUiIcon('nivel')}</span>
+                      <span>Intermedio</span>
+                    </span>
                   </div>
                   <button className="course-btn">Ver Curso</button>
                 </div>
@@ -1471,8 +1457,14 @@ export default function MonetizaVozIAElevenLabsPage() {
                   <h3 className="course-title">Vibe Coding con Claude Code</h3>
                   <p className="course-description">Aprende a programar de forma eficiente utilizando Claude Code y herramientas de IA</p>
                   <div className="course-meta">
-                    <span className="course-duration">⏱️ 5 horas</span>
-                    <span className="course-level">📊 Intermedio</span>
+                    <span className="course-duration" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem' }}>
+                      <span className="icon" style={{ display: 'inline-flex' }}>{renderUiIcon('duracion')}</span>
+                      <span>5 horas</span>
+                    </span>
+                    <span className="course-level" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem' }}>
+                      <span className="icon" style={{ display: 'inline-flex' }}>{renderUiIcon('nivel')}</span>
+                      <span>Intermedio</span>
+                    </span>
                   </div>
                   <button className="course-btn">Ver Curso</button>
                 </div>
@@ -1590,7 +1582,10 @@ export default function MonetizaVozIAElevenLabsPage() {
               {/* Plan Mensual */}
               <div className="pricing-card popular">
                 <div className="pricing-popular-badge">
-                  ⭐ Más Popular
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                    <IconStar size={18} />
+                    <span>Más Popular</span>
+                  </span>
                 </div>
                 
                 <div className="pricing-card-content">
@@ -1646,7 +1641,10 @@ export default function MonetizaVozIAElevenLabsPage() {
               {/* Plan Anual */}
               <div className="pricing-card popular yearly-popular">
                 <div className="pricing-popular-badge yearly-badge">
-                  🏆 Ahorra Más
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                    <IconTrophy size={18} />
+                    <span>Ahorra Más</span>
+                  </span>
                 </div>
                 
                 <div className="pricing-card-content">
