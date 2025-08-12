@@ -11,6 +11,16 @@ import VideoPlayer from '@/components/courses/VideoPlayer';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
+import { 
+  SiAdobeaudition, 
+  SiCanva, 
+  SiOpenai, 
+  SiNotion, 
+  SiDiscord, 
+  SiYoutube 
+} from 'react-icons/si';
+import { FaMicrophone, FaMusic } from 'react-icons/fa';
+import { TbBrandElevenlabs } from 'react-icons/tb';
 
 
 // Lazy load components
@@ -1082,16 +1092,19 @@ export default function MonetizaVozIAElevenLabsPage() {
                 </div>
                 <div className="hero-right">
                   <div className="preview-box">
-                    <video
+                    <img 
+                      src="/images/courses/curso_elevenlabs.png" 
+                      alt="Vista previa del curso Monetiza tu Voz con IA"
                       className="preview-video"
-                      src="https://3o0p1lzj4n.ufs.sh/f/P2bnXUoat3Wf204HLGPQbPfwompytjDs9F6n0B7Hx4aShOGI"
-                      poster="/images/courses/curso_elevenlabs.png"
-                      playsInline
-                      controls
-                      preload="metadata"
-                    >
-                      Tu navegador no soporta la reproducción de video.
-                    </video>
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                    <div className="play-button-overlay">
+                      <div className="play-button">
+                        <svg viewBox="0 0 24 24" fill="currentColor" className="play-icon">
+                          <path d="M8 5v14l11-7z"/>
+                        </svg>
+                      </div>
+                    </div>
                   </div>
                   {/* Stats a la derecha */}
                   <div className="hero-stats">
@@ -1152,12 +1165,27 @@ export default function MonetizaVozIAElevenLabsPage() {
                 <div className="tools-section">
                   <h2>Herramientas y Tecnologías</h2>
                   <div className="tools-grid">
-                    {courseData.tools.map((tool, index) => (
-                      <div key={index} className="tool-item">
-                          <span className="tool-icon" aria-hidden>🔧</span>
-                          <span className="tool-name">{tool}</span>
-                      </div>
-                    ))}
+                    {courseData.tools.map((tool, index) => {
+                      const getToolIcon = (toolName: string) => {
+                        const name = toolName.toLowerCase();
+                        if (name.includes('elevenlabs')) return <TbBrandElevenlabs className="w-5 h-5" />;
+                        if (name.includes('audacity')) return <FaMusic className="w-5 h-5" />;
+                        if (name.includes('adobe')) return <SiAdobeaudition className="w-5 h-5" />;
+                        if (name.includes('canva')) return <SiCanva className="w-5 h-5" />;
+                        if (name.includes('chatgpt') || name.includes('gpt')) return <SiOpenai className="w-5 h-5" />;
+                        if (name.includes('notion')) return <SiNotion className="w-5 h-5" />;
+                        if (name.includes('discord')) return <SiDiscord className="w-5 h-5" />;
+                        if (name.includes('youtube')) return <SiYoutube className="w-5 h-5" />;
+                        return <FaMicrophone className="w-5 h-5" />;
+                      };
+                      
+                      return (
+                        <div key={index} className="tool-item">
+                            <span className="tool-icon" aria-hidden>{getToolIcon(tool)}</span>
+                            <span className="tool-name">{tool}</span>
+                        </div>
+                      );
+                    })}
                 </div>
               </div>
 

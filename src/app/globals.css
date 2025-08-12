@@ -1707,6 +1707,75 @@ button, a, input, select, textarea {
   }
 }
 
+/* Video preview with play button overlay */
+.preview-box {
+  position: relative;
+}
+
+.play-button-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: inherit;
+}
+
+.play-button-overlay:hover {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.play-button {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.play-button:hover {
+  background: white;
+  transform: scale(1.1);
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.3);
+}
+
+.play-icon {
+  width: 32px;
+  height: 32px;
+  color: #3b82f6;
+  margin-left: 4px; /* Slight offset to center visually */
+}
+
+/* Tools section icon styles */
+.tool-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #3b82f6;
+}
+
+@media (max-width: 768px) {
+  .play-button {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .play-icon {
+    width: 24px;
+    height: 24px;
+  }
+}
+
 /* Features & Stats Layout */
 .features-stats-layout {
   display: grid;
