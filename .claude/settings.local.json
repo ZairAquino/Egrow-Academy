@@ -95,7 +95,9 @@
       "Bash(tsx scripts/debug-webinar-users.ts:*)",
       "Bash(tsx scripts/send-live-webinar-CORRECTED.ts:*)",
       "WebFetch(domain:localhost)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(git fetch:*)",
+      "Bash(git pull:*)"
     ],
     "deny": []
   }
