@@ -99,7 +99,46 @@ export function useCourseForm() {
     });
   }, []);
 
-  // Función para validar un step específico
+  // Función para validar un step específico (sin efectos secundarios)
+  const isStepValid = useCallback((step: number): boolean => {
+    switch (step) {
+      case 1: // Información Básica
+        return !!(formData.title && formData.slug && 
+                 formData.description && formData.description.length >= 50 &&
+                 formData.shortDescription && formData.shortDescription.length >= 20 &&
+                 formData.price !== undefined && formData.price >= 0);
+
+      case 2: // Instructor
+        return !!(formData.instructor?.name && formData.instructor?.title && 
+                 formData.instructor?.bio && formData.instructor.bio.length >= 20);
+
+      case 3: // Objetivos y Contenido
+        return !!(formData.whatYouWillLearn && formData.whatYouWillLearn.length >= 6 &&
+                 formData.tools && formData.tools.length >= 1 &&
+                 formData.prerequisites && formData.prerequisites.length >= 1);
+
+      case 4: // Módulos y Lecciones
+        return !!(formData.modules && formData.modules.length >= 1 &&
+                 formData.modules.every(module => 
+                   module.title && module.lessons && module.lessons.length >= 1
+                 ));
+
+      case 5: // Testimonios (opcional)
+        return true; // Siempre válido ya que es opcional
+
+      case 6: // Precios (ya validado en step 1)
+        return true;
+
+      case 7: // Preview
+        const validation = validateCourseData(formData);
+        return validation.valid;
+
+      default:
+        return false;
+    }
+  }, [formData]);
+
+  // Función para validar un step específico con efectos secundarios (actualizar errores)
   const validateStep = useCallback((step: number): boolean => {
     const stepErrors: Record<string, string[]> = {};
 
@@ -308,6 +347,7 @@ export function useCourseForm() {
     saveAsDraft,
     publishCourse,
     validateStep,
+    isStepValid,
     resetForm
   };
 }

@@ -29,6 +29,7 @@ export default function CreateCoursePage() {
     saveAsDraft,
     publishCourse,
     validateStep,
+    isStepValid,
     resetForm
   } = useCourseForm();
 
@@ -179,7 +180,7 @@ export default function CreateCoursePage() {
               <FormSteps 
                 currentStep={currentStep} 
                 goToStep={goToStep}
-                validateStep={validateStep}
+                isStepValid={isStepValid}
                 stepTitles={stepTitles}
               />
             </div>

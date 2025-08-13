@@ -3,11 +3,11 @@
 interface FormStepsProps {
   currentStep: number;
   goToStep: (step: number) => void;
-  validateStep: (step: number) => boolean;
+  isStepValid: (step: number) => boolean;
   stepTitles: Record<number, string>;
 }
 
-export default function FormSteps({ currentStep, goToStep, validateStep, stepTitles }: FormStepsProps) {
+export default function FormSteps({ currentStep, goToStep, isStepValid, stepTitles }: FormStepsProps) {
   const steps = [
     { 
       number: 1, 
@@ -69,7 +69,7 @@ export default function FormSteps({ currentStep, goToStep, validateStep, stepTit
     
     // Para steps futuros, verificar que todos los steps anteriores sean válidos
     for (let i = 1; i < stepNumber; i++) {
-      if (!validateStep(i)) return false;
+      if (!isStepValid(i)) return false;
     }
     return true;
   };
