@@ -13,6 +13,7 @@ interface User {
   emailVerified: boolean
   isActive: boolean
   membershipLevel: string
+  role: 'USER' | 'ADMIN'
   lastLogin?: Date | null
   createdAt: Date
   updatedAt: Date

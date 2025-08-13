@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { CourseCategory, Difficulty } from '@prisma/client';
+import { getServerSession } from 'next-auth';
+import { prisma } from '@/lib/prisma';
 
 // Interfaz para los datos del preview (misma estructura que CourseFormData pero sin validaciones estrictas)
 interface PreviewData {
@@ -232,6 +234,29 @@ function fillDefaultData(data: PreviewData): any {
 export async function POST(request: NextRequest) {
   try {
     console.log('🔄 Generando preview del curso...');
+    
+    // Verificar autenticación y rol ADMIN
+    const session = await getServerSession();
+    if (!session || !session.user) {
+      return NextResponse.json(
+        { error: 'No autorizado' },
+        { status: 401 }
+      );
+    }
+
+    // Verificar que el usuario tenga rol ADMIN
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { role: true }
+    });
+
+    if (!user || user.role !== 'ADMIN') {
+      console.log(`❌ Acceso denegado: Usuario ${session.user.id} no es ADMIN (role: ${user?.role})`);
+      return NextResponse.json(
+        { error: 'Acceso denegado. Se requieren permisos de administrador.' },
+        { status: 403 }
+      );
+    }
     
     const data: PreviewData = await request.json();
     

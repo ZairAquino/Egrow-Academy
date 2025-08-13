@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { checkMaintenanceMode } from './middleware/maintenance';
+import { protectAdminRoutes } from './middleware/auth';
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -9,6 +10,12 @@ export function middleware(request: NextRequest) {
   const maintenanceResponse = checkMaintenanceMode(request);
   if (maintenanceResponse) {
     return maintenanceResponse;
+  }
+
+  // Proteger rutas admin
+  const adminProtectionResponse = protectAdminRoutes(request);
+  if (adminProtectionResponse) {
+    return adminProtectionResponse;
   }
 
   // Solo aplicar headers básicos sin restricciones

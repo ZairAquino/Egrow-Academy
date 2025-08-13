@@ -1,10 +1,35 @@
 import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import { getServerSession } from 'next-auth';
+import { prisma } from '@/lib/prisma';
 
 export async function GET(request: NextRequest) {
   try {
     console.log('🔍 [ADMIN-API] Obteniendo recursos locales...');
+
+    // Verificar autenticación y rol ADMIN
+    const session = await getServerSession();
+    if (!session || !session.user) {
+      return NextResponse.json(
+        { error: 'No autorizado' },
+        { status: 401 }
+      );
+    }
+
+    // Verificar que el usuario tenga rol ADMIN
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { role: true }
+    });
+
+    if (!user || user.role !== 'ADMIN') {
+      console.log(`❌ Acceso denegado: Usuario ${session.user.id} no es ADMIN (role: ${user?.role})`);
+      return NextResponse.json(
+        { error: 'Acceso denegado. Se requieren permisos de administrador.' },
+        { status: 403 }
+      );
+    }
 
     const resourcesDir = path.join(process.cwd(), 'public', 'resources');
     const resources: Array<{ name: string; size: number; path: string }> = [];
