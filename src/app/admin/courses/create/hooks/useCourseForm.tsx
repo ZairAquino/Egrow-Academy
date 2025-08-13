@@ -177,14 +177,21 @@ export function useCourseForm() {
 
     // Solo actualizar errores si han cambiado para evitar re-renders
     const stepKey = `step${step}`;
-    const currentStepErrors = errors[stepKey] || {};
+    const currentStepErrors = Object.fromEntries(
+      Object.entries(errors).filter(([key]) => key.startsWith(`${stepKey}.`))
+        .map(([key, value]) => [key.replace(`${stepKey}.`, ''), value])
+    );
     const hasChanged = JSON.stringify(currentStepErrors) !== JSON.stringify(stepErrors);
     
     if (hasChanged) {
-      setErrors(prev => ({
-        ...prev,
-        [stepKey]: stepErrors
-      }));
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        // Aplanar los errores del step
+        Object.entries(stepErrors).forEach(([key, errorArray]) => {
+          newErrors[`${stepKey}.${key}`] = errorArray;
+        });
+        return newErrors;
+      });
     }
 
     return Object.keys(stepErrors).length === 0;

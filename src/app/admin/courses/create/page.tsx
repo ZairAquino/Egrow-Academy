@@ -57,7 +57,7 @@ export default function CreateCoursePage() {
     try {
       const result = await publishCourse();
       if (result.success) {
-        router.push(`/curso/${result.course.slug}?preview=true`);
+        router.push(`/curso/${result.course?.slug}?preview=true`);
       }
     } catch (error) {
       console.error('Error publicando curso:', error);
