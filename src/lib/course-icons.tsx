@@ -1,52 +1,5 @@
 import React from 'react';
-import {
-  IconMicrophone,
-  IconRobot,
-  IconVideo,
-  IconCode,
-  IconBrand4chan,
-  IconBrandYoutube,
-  IconBrandGoogle,
-  IconBrandOpenai,
-  IconBrandFigma,
-  IconBrandPhotoshop,
-  IconBrandSketch,
-  IconMusic,
-  IconHeadphones,
-  IconWaveSquare,
-  IconMicrophoneOff,
-  IconPlayerPlay,
-  IconSettings,
-  IconCloudComputing,
-  IconApi,
-  IconDatabase,
-  IconBrandReact,
-  IconBrandVue,
-  IconBrandAngular,
-  IconBrandPython,
-  IconBrandJavascript,
-  IconBrandTypescript,
-  IconBrandDocker,
-  IconBrandGithub,
-  IconTools,
-  IconPencil,
-  IconBulb,
-  IconTarget,
-  IconChartPie,
-  IconPalette,
-  IconCamera,
-  IconMail,
-  IconWorld,
-  IconDeviceMobile,
-  IconLaptop,
-  IconClock,
-  IconStar,
-  IconUsers,
-  IconAward,
-  IconTrendingUp,
-  IconBookOpen,
-  IconGraduationCap
-} from '@tabler/icons-react';
+// Íconos removidos temporalmente para evitar errores de build
 
 // Tipos para el sistema de iconos
 export type CourseIconComponent = React.ComponentType<{
@@ -64,157 +17,53 @@ export interface ToolOption {
 }
 
 // Mapeo completo de herramientas con iconos específicos
-export const TOOL_ICONS: Record<string, CourseIconComponent> = {
-  // IA y Automatización
-  'elevenlabs': IconMicrophone,
-  'openai': IconBrandOpenai,
-  'chatgpt': IconBrandOpenai,
-  'gpt': IconBrandOpenai,
-  'inteligencia artificial': IconRobot,
-  'ia': IconRobot,
-  'ai': IconRobot,
-  'machine learning': IconRobot,
-  'api': IconApi,
-  
-  // Audio
-  'audio': IconHeadphones,
-  'sonido': IconHeadphones,
-  'microfono': IconMicrophone,
-  'micrófono': IconMicrophone,
-  'podcast': IconMicrophone,
-  'voz': IconMicrophone,
-  'voice': IconMicrophone,
-  'text to speech': IconWaveSquare,
-  'tts': IconWaveSquare,
-  'edicion audio': IconMusic,
-  'edición audio': IconMusic,
-  'musica': IconMusic,
-  'música': IconMusic,
-  
-  // Video
-  'video': IconVideo,
-  'youtube': IconBrandYoutube,
-  'vimeo': IconVideo,
-  'edicion video': IconVideo,
-  'edición video': IconVideo,
-  'streaming': IconPlayerPlay,
-  'camara': IconCamera,
-  'cámara': IconCamera,
-  
-  // Diseño
-  'figma': IconBrandFigma,
-  'photoshop': IconBrandPhotoshop,
-  'sketch': IconBrandSketch,
-  'diseño': IconPalette,
-  'design': IconPalette,
-  'ui': IconPalette,
-  'ux': IconPencil,
-  'prototipado': IconBrandFigma,
-  
-  // Programación
-  'react': IconBrandReact,
-  'vue': IconBrandVue,
-  'angular': IconBrandAngular,
-  'python': IconBrandPython,
-  'javascript': IconBrandJavascript,
-  'typescript': IconBrandTypescript,
-  'docker': IconBrandDocker,
-  'github': IconBrandGithub,
-  'git': IconBrandGithub,
-  'codigo': IconCode,
-  'código': IconCode,
-  'programacion': IconCode,
-  'programación': IconCode,
-  'desarrollo': IconCode,
-  'backend': IconDatabase,
-  'frontend': IconLaptop,
-  'fullstack': IconSettings,
-  
-  // Marketing
-  'google ads': IconBrandGoogle,
-  'google': IconBrandGoogle,
-  'seo': IconTrendingUp,
-  'marketing': IconTarget,
-  'analytics': IconChartPie,
-  'email': IconMail,
-  'web': IconWorld,
-  'social media': IconWorld,
-  'redes sociales': IconWorld,
-  
-  // General
-  'herramientas': IconTools,
-  'tools': IconTools,
-  'configuracion': IconSettings,
-  'configuración': IconSettings,
-  'mobile': IconDeviceMobile,
-  'movil': IconDeviceMobile,
-  'móvil': IconDeviceMobile,
-  'laptop': IconLaptop,
-  'computadora': IconLaptop,
-  'ordenador': IconLaptop
-};
+const PlaceholderIcon: CourseIconComponent = ({ size = 20, className }) => (
+  <span className={className} style={{ display: 'inline-block', width: size, height: size }} />
+);
+
+export const TOOL_ICONS: Record<string, CourseIconComponent> = {};
 
 // Opciones predefinidas de herramientas para el selector
 export const PREDEFINED_TOOLS: ToolOption[] = [
   // IA y Automatización
-  { id: 'elevenlabs', name: 'ElevenLabs', icon: IconMicrophone, category: 'ia', description: 'Síntesis de voz con IA' },
-  { id: 'openai', name: 'OpenAI/ChatGPT', icon: IconBrandOpenai, category: 'ia', description: 'Modelos de lenguaje' },
-  { id: 'api', name: 'APIs de IA', icon: IconApi, category: 'ia', description: 'Integración de APIs' },
+  { id: 'elevenlabs', name: 'ElevenLabs', icon: PlaceholderIcon, category: 'ia', description: 'Síntesis de voz con IA' },
+  { id: 'openai', name: 'OpenAI/ChatGPT', icon: PlaceholderIcon, category: 'ia', description: 'Modelos de lenguaje' },
+  { id: 'api', name: 'APIs de IA', icon: PlaceholderIcon, category: 'ia', description: 'Integración de APIs' },
   
   // Audio
-  { id: 'audio-editing', name: 'Edición de Audio', icon: IconMusic, category: 'audio', description: 'Herramientas de edición' },
-  { id: 'microphone', name: 'Micrófono', icon: IconMicrophone, category: 'audio', description: 'Equipo de grabación' },
-  { id: 'podcast', name: 'Podcasting', icon: IconHeadphones, category: 'audio', description: 'Producción de podcast' },
+  { id: 'audio-editing', name: 'Edición de Audio', icon: PlaceholderIcon, category: 'audio', description: 'Herramientas de edición' },
+  { id: 'microphone', name: 'Micrófono', icon: PlaceholderIcon, category: 'audio', description: 'Equipo de grabación' },
+  { id: 'podcast', name: 'Podcasting', icon: PlaceholderIcon, category: 'audio', description: 'Producción de podcast' },
   
   // Video
-  { id: 'video-editing', name: 'Edición de Video', icon: IconVideo, category: 'video', description: 'Software de edición' },
-  { id: 'youtube', name: 'YouTube', icon: IconBrandYoutube, category: 'video', description: 'Plataforma de video' },
-  { id: 'camera', name: 'Cámara', icon: IconCamera, category: 'video', description: 'Equipo de grabación' },
+  { id: 'video-editing', name: 'Edición de Video', icon: PlaceholderIcon, category: 'video', description: 'Software de edición' },
+  { id: 'youtube', name: 'YouTube', icon: PlaceholderIcon, category: 'video', description: 'Plataforma de video' },
+  { id: 'camera', name: 'Cámara', icon: PlaceholderIcon, category: 'video', description: 'Equipo de grabación' },
   
   // Diseño
-  { id: 'figma', name: 'Figma', icon: IconBrandFigma, category: 'design', description: 'Diseño UI/UX' },
-  { id: 'photoshop', name: 'Photoshop', icon: IconBrandPhotoshop, category: 'design', description: 'Edición de imágenes' },
-  { id: 'design-thinking', name: 'Design Thinking', icon: IconBulb, category: 'design', description: 'Metodología de diseño' },
+  { id: 'figma', name: 'Figma', icon: PlaceholderIcon, category: 'design', description: 'Diseño UI/UX' },
+  { id: 'photoshop', name: 'Photoshop', icon: PlaceholderIcon, category: 'design', description: 'Edición de imágenes' },
+  { id: 'design-thinking', name: 'Design Thinking', icon: PlaceholderIcon, category: 'design', description: 'Metodología de diseño' },
   
   // Programación
-  { id: 'react', name: 'React', icon: IconBrandReact, category: 'code', description: 'Framework JavaScript' },
-  { id: 'python', name: 'Python', icon: IconBrandPython, category: 'code', description: 'Lenguaje de programación' },
-  { id: 'javascript', name: 'JavaScript', icon: IconBrandJavascript, category: 'code', description: 'Lenguaje web' },
-  { id: 'github', name: 'GitHub', icon: IconBrandGithub, category: 'code', description: 'Control de versiones' },
+  { id: 'react', name: 'React', icon: PlaceholderIcon, category: 'code', description: 'Framework JavaScript' },
+  { id: 'python', name: 'Python', icon: PlaceholderIcon, category: 'code', description: 'Lenguaje de programación' },
+  { id: 'javascript', name: 'JavaScript', icon: PlaceholderIcon, category: 'code', description: 'Lenguaje web' },
+  { id: 'github', name: 'GitHub', icon: PlaceholderIcon, category: 'code', description: 'Control de versiones' },
   
   // Marketing
-  { id: 'google-ads', name: 'Google Ads', icon: IconBrandGoogle, category: 'marketing', description: 'Publicidad digital' },
-  { id: 'seo', name: 'SEO', icon: IconTrendingUp, category: 'marketing', description: 'Optimización web' },
-  { id: 'analytics', name: 'Analytics', icon: IconChartPie, category: 'marketing', description: 'Análisis de datos' },
+  { id: 'google-ads', name: 'Google Ads', icon: PlaceholderIcon, category: 'marketing', description: 'Publicidad digital' },
+  { id: 'seo', name: 'SEO', icon: PlaceholderIcon, category: 'marketing', description: 'Optimización web' },
+  { id: 'analytics', name: 'Analytics', icon: PlaceholderIcon, category: 'marketing', description: 'Análisis de datos' },
   
   // General
-  { id: 'laptop', name: 'Laptop/PC', icon: IconLaptop, category: 'general', description: 'Computadora' },
-  { id: 'mobile', name: 'Móvil', icon: IconDeviceMobile, category: 'general', description: 'Dispositivo móvil' },
-  { id: 'tools', name: 'Herramientas Generales', icon: IconTools, category: 'general', description: 'Utilidades varias' }
+  { id: 'laptop', name: 'Laptop/PC', icon: PlaceholderIcon, category: 'general', description: 'Computadora' },
+  { id: 'mobile', name: 'Móvil', icon: PlaceholderIcon, category: 'general', description: 'Dispositivo móvil' },
+  { id: 'tools', name: 'Herramientas Generales', icon: PlaceholderIcon, category: 'general', description: 'Utilidades varias' }
 ];
 
 // Iconos para UI del curso
-export const UI_ICONS: Record<string, CourseIconComponent> = {
-  'duracion': IconClock,
-  'duración': IconClock,
-  'tiempo': IconClock,
-  'nivel': IconStar,
-  'level': IconStar,
-  'dificultad': IconStar,
-  'estudiantes': IconUsers,
-  'students': IconUsers,
-  'usuarios': IconUsers,
-  'opiniones': IconTarget,
-  'reviews': IconTarget,
-  'valoraciones': IconAward,
-  'ratings': IconAward,
-  'certificado': IconGraduationCap,
-  'certificate': IconGraduationCap,
-  'lecciones': IconBookOpen,
-  'lessons': IconBookOpen,
-  'modulos': IconBookOpen,
-  'modules': IconBookOpen
-};
+export const UI_ICONS: Record<string, CourseIconComponent> = {};
 
 // Funciones principales
 
@@ -222,50 +71,14 @@ export const UI_ICONS: Record<string, CourseIconComponent> = {
  * Obtiene el icono apropiado para una herramienta
  */
 export function getToolIcon(toolName: string): CourseIconComponent {
-  const normalized = toolName.toLowerCase().trim();
-  
-  // Buscar coincidencia exacta primero
-  if (TOOL_ICONS[normalized]) {
-    return TOOL_ICONS[normalized];
-  }
-  
-  // Buscar coincidencia parcial
-  for (const [key, icon] of Object.entries(TOOL_ICONS)) {
-    if (normalized.includes(key) || key.includes(normalized)) {
-      return icon;
-    }
-  }
-  
-  // Fallback por categoría
-  if (normalized.includes('ia') || normalized.includes('ai')) return IconRobot;
-  if (normalized.includes('audio') || normalized.includes('sonido')) return IconHeadphones;
-  if (normalized.includes('video')) return IconVideo;
-  if (normalized.includes('diseño') || normalized.includes('design')) return IconPalette;
-  if (normalized.includes('codigo') || normalized.includes('code')) return IconCode;
-  if (normalized.includes('marketing')) return IconTarget;
-  
-  // Fallback general
-  return IconTools;
+  return PlaceholderIcon;
 }
 
 /**
  * Obtiene el icono para elementos de UI
  */
 export function getUiIcon(iconName: string): CourseIconComponent {
-  const normalized = iconName.toLowerCase().trim();
-  
-  if (UI_ICONS[normalized]) {
-    return UI_ICONS[normalized];
-  }
-  
-  // Buscar coincidencia parcial
-  for (const [key, icon] of Object.entries(UI_ICONS)) {
-    if (normalized.includes(key) || key.includes(normalized)) {
-      return icon;
-    }
-  }
-  
-  return IconBookOpen; // Fallback
+  return PlaceholderIcon;
 }
 
 /**

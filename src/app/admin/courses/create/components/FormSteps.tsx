@@ -9,48 +9,13 @@ interface FormStepsProps {
 
 export default function FormSteps({ currentStep, goToStep, isStepValid, stepTitles }: FormStepsProps) {
   const steps = [
-    { 
-      number: 1, 
-      title: 'Información Básica',
-      description: 'Título, descripción y detalles generales',
-      icon: '📝'
-    },
-    { 
-      number: 2, 
-      title: 'Instructor',
-      description: 'Información del instructor del curso',
-      icon: '👨‍🏫'
-    },
-    { 
-      number: 3, 
-      title: 'Objetivos',
-      description: 'Qué aprenderán, herramientas y prerrequisitos',
-      icon: '🎯'
-    },
-    { 
-      number: 4, 
-      title: 'Módulos',
-      description: 'Estructura de módulos y lecciones',
-      icon: '📚'
-    },
-    { 
-      number: 5, 
-      title: 'Testimonios',
-      description: 'Reviews y testimonios de estudiantes',
-      icon: '⭐'
-    },
-    { 
-      number: 6, 
-      title: 'Precios',
-      description: 'Configuración de precios y planes',
-      icon: '💰'
-    },
-    { 
-      number: 7, 
-      title: 'Preview',
-      description: 'Vista previa y publicación',
-      icon: '🚀'
-    }
+    { number: 1, title: 'Información Básica', description: 'Título, descripción y detalles generales', icon: '📝' },
+    { number: 2, title: 'Objetivos', description: 'Qué aprenderán, herramientas y prerrequisitos', icon: '🎯' },
+    { number: 3, title: 'Módulos', description: 'Estructura de módulos y lecciones', icon: '📚' },
+    { number: 4, title: 'Instructor', description: 'Información del instructor del curso', icon: '👨‍🏫' },
+    { number: 5, title: 'Testimonios', description: 'Reviews y testimonios de estudiantes', icon: '⭐' },
+    { number: 6, title: 'Precios', description: 'Configuración de precios y planes', icon: '💰' },
+    { number: 7, title: 'Preview', description: 'Vista previa y publicación', icon: '🚀' }
   ];
 
   const getStepStatus = (stepNumber: number) => {

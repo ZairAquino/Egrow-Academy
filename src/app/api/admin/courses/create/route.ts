@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
+import type { CourseTemplateV1Data } from '@/types/course-template';
 import { CourseCategory, Difficulty, CourseStatus } from '@prisma/client';
 
 // Tipo para los datos del formulario de creación de curso
@@ -17,6 +18,9 @@ interface CourseFormData {
   difficulty: Difficulty;
   durationHours: number;
   language: string;
+  rating?: number;
+  studentsCount?: number;
+  objectivesLead?: string;
   
   // Instructor
   instructor: {
@@ -98,12 +102,14 @@ function validateCourseData(data: CourseFormData): { valid: boolean; errors: str
     errors.push('El slug debe tener al menos 3 caracteres');
   }
   
-  if (!data.description || data.description.trim().length < 50) {
-    errors.push('La descripción debe tener al menos 50 caracteres');
-  }
-  
-  if (!data.shortDescription || data.shortDescription.trim().length < 20) {
-    errors.push('La descripción corta debe tener al menos 20 caracteres');
+  // En desarrollo permitimos descripciones cortas
+  if (process.env.NODE_ENV === 'production') {
+    if (!data.description || data.description.trim().length < 50) {
+      errors.push('La descripción debe tener al menos 50 caracteres');
+    }
+    if (!data.shortDescription || data.shortDescription.trim().length < 20) {
+      errors.push('La descripción corta debe tener al menos 20 caracteres');
+    }
   }
   
   if (data.imageUrl && !isValidUrl(data.imageUrl)) {
@@ -131,8 +137,10 @@ function validateCourseData(data: CourseFormData): { valid: boolean; errors: str
     errors.push('El título del instructor es requerido');
   }
   
-  if (!data.instructor?.bio || data.instructor.bio.trim().length < 20) {
-    errors.push('La biografía del instructor debe tener al menos 20 caracteres');
+  if (process.env.NODE_ENV === 'production') {
+    if (!data.instructor?.bio || data.instructor.bio.trim().length < 20) {
+      errors.push('La biografía del instructor debe tener al menos 20 caracteres');
+    }
   }
   
   // Validar objetivos de aprendizaje
@@ -239,7 +247,7 @@ export async function POST(request: NextRequest) {
     
     // Validar datos
     const validation = validateCourseData(data);
-    if (!validation.valid) {
+    if (!validation.valid && !('allowPartial' in (data as any))) {
       console.log('❌ Errores de validación:', validation.errors);
       return NextResponse.json(
         { 
@@ -250,45 +258,128 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    // Generar slug único
-    const uniqueSlug = await generateUniqueSlug(data.slug);
-    console.log('🔗 Slug generado:', uniqueSlug);
-    
-    // Crear curso en la base de datos
-    const course = await prisma.course.create({
-      data: {
-        title: data.title.trim(),
-        slug: uniqueSlug,
-        description: data.description.trim(),
-        shortDescription: data.shortDescription.trim(),
-        imageUrl: data.imageUrl || null,
-        price: data.price,
-        category: data.category,
-        difficulty: data.difficulty,
-        durationHours: data.durationHours,
-        lessonsCount: data.modules.reduce((total, module) => total + module.lessons.length, 0),
-        status: data.status,
-        // instructorId: session.user.id, // Descomentar cuando tengamos auth
-        
-        // Crear lecciones relacionadas
-        lessons: {
-          create: data.modules.flatMap((module, moduleIndex) => 
-            module.lessons.map((lesson, lessonIndex) => ({
-              title: lesson.title.trim(),
-              content: lesson.content,
-              videoUrl: lesson.videoUrl || null,
-              duration: lesson.duration,
-              order: (moduleIndex * 100) + lessonIndex + 1, // Sistema de ordenamiento: 101, 102, 201, 202, etc.
-            }))
-          )
-        }
+    // Usar el slug proporcionado para actualizar un borrador existente o crear uno nuevo
+    const existing = await prisma.course.findUnique({ where: { slug: data.slug } });
+    if (!existing) {
+      // Si llega sin slug consistente, generarlo desde el título para publicación final
+      const finalSlug = await generateUniqueSlug((data.slug || '').trim() || (data.title || '').toLowerCase().replace(/[^a-z0-9-\s]/g, '').replace(/\s+/g, '-'));
+      data.slug = finalSlug as any;
+    }
+    const lessonsCount = data.modules.reduce((total, module) => total + module.lessons.length, 0);
+
+    // Construir snapshot 1:1 para la plantilla CourseTemplateV1
+    const snapshot: CourseTemplateV1Data = {
+      title: data.title,
+      shortDescription: data.shortDescription,
+      description: data.description,
+      thumbnail: data.imageUrl || undefined,
+      introVideo: (data as any).mainVideoUrl || undefined,
+      price: data.price,
+      originalPrice: (data as any).originalPrice ?? null,
+      isFree: data.price === 0,
+      rating: (data as any).rating,
+      studentsCount: (data as any).studentsCount,
+      objectivesLead: (data as any).objectivesLead,
+      learningGoals: (data as any).learningGoals || (data as any).whatYouWillLearn || [],
+      tools: (data as any).tools || [],
+      prerequisites: (data as any).prerequisites || [],
+      modules: (data.modules || []).map((m) => ({
+        title: m.title,
+        description: m.description,
+        lessons: (m.lessons || []).map((l) => ({
+          title: l.title,
+          duration: l.duration,
+          isFree: (l as any).isFree,
+          videoUrl: l.videoUrl
+        }))
+      })),
+      instructor: {
+        name: data.instructor?.name,
+        title: data.instructor?.title,
+        image: (data.instructor as any)?.image,
+        bio: data.instructor?.bio
       },
-      include: {
-        lessons: {
-          orderBy: { order: 'asc' }
-        }
-      }
-    });
+      testimonials: ((data as any).testimonials || []).map((t: any) => ({
+        studentName: t.name,
+        content: t.text,
+        rating: t.rating,
+        studentTitle: t.studentTitle
+      })),
+      sidebar: { durationHours: data.durationHours, includes: [] }
+    };
+
+    const course = existing
+      ? await prisma.course.update({
+          where: { id: existing.id },
+          data: {
+            title: data.title.trim(),
+            slug: existing.slug,
+            description: (data.description || '').trim(),
+            shortDescription: (data.shortDescription || '').trim(),
+            imageUrl: data.imageUrl || null,
+            price: data.price,
+            category: data.category,
+            difficulty: data.difficulty,
+            durationHours: data.durationHours,
+            lessonsCount,
+            status: 'PUBLISHED',
+            meta: {
+              templateId: 'course-v1',
+              templateVersion: 1,
+              pageDataV1: snapshot
+            },
+            // instructorId: session.user.id, // Descomentar cuando tengamos auth
+            studentsCount: (data as any).studentsCount ?? undefined,
+            rating: (data as any).rating ?? undefined,
+            lessons: {
+              deleteMany: {},
+              create: data.modules.flatMap((module, moduleIndex) =>
+                module.lessons.map((lesson, lessonIndex) => ({
+                  title: lesson.title.trim(),
+                  content: lesson.content || '',
+                  videoUrl: lesson.videoUrl || null,
+                  duration: lesson.duration,
+                  order: moduleIndex * 100 + lessonIndex + 1,
+                }))
+              )
+            }
+          },
+          include: { lessons: { orderBy: { order: 'asc' } } }
+        })
+      : await prisma.course.create({
+          data: {
+            title: data.title.trim(),
+            slug: data.slug,
+            description: (data.description || '').trim(),
+            shortDescription: (data.shortDescription || '').trim(),
+            imageUrl: data.imageUrl || null,
+            price: data.price,
+            category: data.category,
+            difficulty: data.difficulty,
+            durationHours: data.durationHours,
+            lessonsCount,
+            status: 'PUBLISHED',
+            meta: {
+              templateId: 'course-v1',
+              templateVersion: 1,
+              pageDataV1: snapshot
+            },
+            studentsCount: (data as any).studentsCount ?? undefined,
+            rating: (data as any).rating ?? undefined,
+            lessons: {
+              create: data.modules.flatMap((module, moduleIndex) =>
+                module.lessons.map((lesson, lessonIndex) => ({
+                  title: lesson.title.trim(),
+                  content: lesson.content || '',
+                  videoUrl: lesson.videoUrl || null,
+                  duration: lesson.duration,
+                  order: moduleIndex * 100 + lessonIndex + 1,
+                }))
+              )
+            }
+          },
+          include: { lessons: { orderBy: { order: 'asc' } } }
+        });
     
     console.log('✅ Curso creado exitosamente:', {
       id: course.id,

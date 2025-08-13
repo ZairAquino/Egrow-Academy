@@ -72,9 +72,34 @@ export function useAutoSave(
 
   // Función para forzar un guardado inmediato
   const forceSave = useCallback(async () => {
-    if (saveStatus === 'saving') return;
-    await saveData();
-  }, [saveData, saveStatus]);
+    // Guardado forzado: siempre intenta guardar aunque no haya cambios
+    if (!isMountedRef.current) return { success: false } as any;
+    if (saveStatus === 'saving') return { success: false } as any;
+
+    const currentDataString = JSON.stringify(data);
+    setSaveStatus('saving');
+    try {
+      const result = await saveFunction();
+      if (!isMountedRef.current) return { success: false } as any;
+      if (result.success) {
+        setSaveStatus('saved');
+        setLastSaved(new Date());
+        lastDataRef.current = currentDataString; // sincroniza snapshot
+        setTimeout(() => {
+          if (isMountedRef.current) setSaveStatus('idle');
+        }, 2000);
+        return { success: true } as any;
+      }
+      setSaveStatus('error');
+      setTimeout(() => { if (isMountedRef.current) setSaveStatus('idle'); }, 5000);
+      return { success: false } as any;
+    } catch (error) {
+      if (!isMountedRef.current) return { success: false } as any;
+      setSaveStatus('error');
+      setTimeout(() => { if (isMountedRef.current) setSaveStatus('idle'); }, 5000);
+      return { success: false } as any;
+    }
+  }, [data, saveFunction, saveStatus]);
 
   // Función para habilitar/deshabilitar auto-guardado
   const enableAutoSave = useCallback(() => {

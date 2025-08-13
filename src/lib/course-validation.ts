@@ -67,6 +67,11 @@ export function isValidImageUrl(url: string): boolean {
   try {
     const urlObj = new URL(url);
     
+    // En desarrollo: aceptar cualquier URL http/https
+    if (process.env.NODE_ENV !== 'production') {
+      return urlObj.protocol === 'http:' || urlObj.protocol === 'https:';
+    }
+    
     // Verificar extensión de imagen
     const imageExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg'];
     const hasImageExtension = imageExtensions.some(ext => 
@@ -112,13 +117,17 @@ export function validateCourseData(data: Partial<CourseFormData>): ValidationRes
   }
   
   // Validar descripción
-  if (!data.description || data.description.trim().length < VALIDATION_RULES.description.minLength) {
-    errors.push(`La descripción debe tener al menos ${VALIDATION_RULES.description.minLength} caracteres`);
+  if (process.env.NODE_ENV === 'production') {
+    if (!data.description || data.description.trim().length < VALIDATION_RULES.description.minLength) {
+      errors.push(`La descripción debe tener al menos ${VALIDATION_RULES.description.minLength} caracteres`);
+    }
   }
   
   // Validar descripción corta
-  if (!data.shortDescription || data.shortDescription.trim().length < VALIDATION_RULES.shortDescription.minLength) {
-    errors.push(`La descripción corta debe tener al menos ${VALIDATION_RULES.shortDescription.minLength} caracteres`);
+  if (process.env.NODE_ENV === 'production') {
+    if (!data.shortDescription || data.shortDescription.trim().length < VALIDATION_RULES.shortDescription.minLength) {
+      errors.push(`La descripción corta debe tener al menos ${VALIDATION_RULES.shortDescription.minLength} caracteres`);
+    }
   }
   
   // Validar URLs
@@ -150,8 +159,10 @@ export function validateCourseData(data: Partial<CourseFormData>): ValidationRes
       errors.push('El título del instructor es requerido');
     }
     
-    if (!data.instructor.bio || data.instructor.bio.trim().length < VALIDATION_RULES.instructorBio.minLength) {
-      errors.push(`La biografía del instructor debe tener al menos ${VALIDATION_RULES.instructorBio.minLength} caracteres`);
+    if (process.env.NODE_ENV === 'production') {
+      if (!data.instructor.bio || data.instructor.bio.trim().length < VALIDATION_RULES.instructorBio.minLength) {
+        errors.push(`La biografía del instructor debe tener al menos ${VALIDATION_RULES.instructorBio.minLength} caracteres`);
+      }
     }
     
     if (data.instructor.image && !isValidImageUrl(data.instructor.image)) {

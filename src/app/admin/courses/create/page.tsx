@@ -15,6 +15,7 @@ import { useAutoSave } from './hooks/useAutoSave';
 
 export default function CreateCoursePage() {
   const router = useRouter();
+  const [publishInfo, setPublishInfo] = useState<null | { success: boolean; course?: { id: string; slug: string; url: string; lessonsCount: number; status: string }; error?: string; errors?: string[] }>(null);
   const {
     formData,
     currentStep,
@@ -48,28 +49,32 @@ export default function CreateCoursePage() {
   };
 
   const handleNext = async () => {
-    if (validateStep(currentStep)) {
-      await forceSave(); // Guardar antes de continuar
-      nextStep();
-    }
+    const res = await forceSave();
+    nextStep();
   };
 
   const handlePublish = async () => {
     try {
       const result = await publishCourse();
       if (result.success) {
-        router.push(`/curso/${result.course?.slug}?preview=true`);
+        setPublishInfo({ success: true, course: result.course });
+        if (process.env.NODE_ENV !== 'development' && result.course?.slug) {
+          router.push(`/curso/${result.course.slug}?preview=true`);
+        }
+      } else {
+        setPublishInfo({ success: false, error: result.error || 'No se pudo publicar', errors: result.errors });
       }
     } catch (error) {
       console.error('Error publicando curso:', error);
+      setPublishInfo({ success: false, error: 'Error de conexión al publicar' });
     }
   };
 
   const stepComponents = {
     1: <BasicInfo formData={formData} updateField={updateField} errors={errors} />,
-    2: <InstructorInfo formData={formData} updateField={updateField} errors={errors} />,
-    3: <LearningGoals formData={formData} updateField={updateField} errors={errors} />,
-    4: <ModulesLessons formData={formData} updateModule={updateModule} updateLesson={updateLesson} errors={errors} />,
+    2: <LearningGoals formData={formData} updateField={updateField} errors={errors} />,
+    3: <ModulesLessons formData={formData} updateModule={updateModule} updateLesson={updateLesson} errors={errors} />,
+    4: <InstructorInfo formData={formData} updateField={updateField} errors={errors} />,
     5: <Testimonials formData={formData} updateField={updateField} errors={errors} />,
     6: <PricingConfig formData={formData} updateField={updateField} errors={errors} />,
     7: <PreviewCourse formData={formData} onPublish={handlePublish} errors={errors} />
@@ -77,9 +82,9 @@ export default function CreateCoursePage() {
 
   const stepTitles = {
     1: 'Información Básica',
-    2: 'Información del Instructor', 
-    3: 'Objetivos y Contenido',
-    4: 'Módulos y Lecciones',
+    2: 'Objetivos y Contenido',
+    3: 'Módulos y Lecciones',
+    4: 'Información del Instructor', 
     5: 'Testimonios y Reviews',
     6: 'Configuración de Precios',
     7: 'Preview y Publicación'
@@ -88,6 +93,53 @@ export default function CreateCoursePage() {
   return (
     <>
       <div className="min-h-screen bg-gray-50">
+        {publishInfo && (
+          <div className={`border-b ${publishInfo.success ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-start justify-between gap-4">
+              <div>
+                <p className={`text-sm ${publishInfo.success ? 'text-green-800' : 'text-red-800'}`}>
+                  {publishInfo.success ? '✅ Curso creado exitosamente' : '❌ Error al publicar el curso'}
+                </p>
+                {publishInfo.success && publishInfo.course && (
+                  <p className="text-xs text-gray-700 mt-1">
+                    ID: {publishInfo.course.id} · Slug: {publishInfo.course.slug} · Lecciones: {publishInfo.course.lessonsCount}
+                  </p>
+                )}
+                {!publishInfo.success && publishInfo.errors && publishInfo.errors.length > 0 && (
+                  <ul className="mt-1 list-disc list-inside text-xs text-red-700">
+                    {publishInfo.errors.slice(0, 5).map((e, i) => (
+                      <li key={i}>{e}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+              <div className="flex items-center gap-2">
+                {publishInfo.success && publishInfo.course?.slug && (
+                  <>
+                    <button
+                      className="px-3 py-1 text-sm bg-blue-600 text-white rounded"
+                      onClick={() => router.push(`/curso/${publishInfo.course!.slug}`)}
+                    >
+                      Ver curso
+                    </button>
+                    <button
+                      className="px-3 py-1 text-sm bg-gray-800 text-white rounded"
+                      onClick={() => navigator.clipboard.writeText(`${window.location.origin}/curso/${publishInfo.course!.slug}`)}
+                    >
+                      Copiar URL
+                    </button>
+                  </>
+                )}
+                <button
+                  className="px-3 py-1 text-sm bg-gray-200 text-gray-700 rounded"
+                  onClick={() => setPublishInfo(null)}
+                >
+                  Cerrar
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
         {/* Header */}
         <div className="bg-white border-b border-gray-200 sticky top-0 z-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

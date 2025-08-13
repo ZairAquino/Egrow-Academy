@@ -97,6 +97,7 @@ model Course {
   lessons          Lesson[]
   payments         Payment[]
   ratings          Rating[]
+  meta             Json?
 
   @@index([status, createdAt])
   @@index([instructorId])

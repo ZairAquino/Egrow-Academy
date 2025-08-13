@@ -12,7 +12,7 @@ import VideoPlayer from '@/components/courses/VideoPlayer';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
 import { renderToolIcon, renderUiIcon } from '@/lib/tool-icons';
-import { IconStar, IconTrophy } from '@tabler/icons-react';
+// Íconos removidos temporalmente para evitar errores de build
 
 
 // Lazy load components
@@ -1719,7 +1719,8 @@ export default function MonetizaVozIAElevenLabsPage() {
               <div className="pricing-card popular">
                 <div className="pricing-popular-badge">
                   <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
-                    <IconStar size={18} />
+                    {/* icon placeholder */}
+                    <span style={{ width: 18, height: 18, display: 'inline-block' }} />
                     <span>Más Popular</span>
                   </span>
                 </div>
@@ -1778,7 +1779,8 @@ export default function MonetizaVozIAElevenLabsPage() {
               <div className="pricing-card popular yearly-popular">
                 <div className="pricing-popular-badge yearly-badge">
                   <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
-                    <IconTrophy size={18} />
+                    {/* icon placeholder */}
+                    <span style={{ width: 18, height: 18, display: 'inline-block' }} />
                     <span>Ahorra Más</span>
                   </span>
                 </div>

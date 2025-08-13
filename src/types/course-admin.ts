@@ -10,10 +10,14 @@ export interface CourseFormData {
   imageUrl: string;
   mainVideoUrl: string;
   price: number;
+  originalPrice?: number | null;
   category: CourseCategory;
   difficulty: Difficulty;
   durationHours: number;
   language: string;
+  studentsCount?: number;
+  rating?: number;
+  objectivesLead?: string;
   
   // Instructor
   instructor: {
@@ -24,7 +28,8 @@ export interface CourseFormData {
   };
   
   // Objetivos y Contenido
-  whatYouWillLearn: string[];
+  learningGoals?: string[]; // nuevo alias preferido en UI
+  whatYouWillLearn?: string[]; // compat para código existente
   tools: string[];
   prerequisites: string[];
   
@@ -52,11 +57,14 @@ export interface LessonFormData {
   duration: number; // en minutos
   type: 'video' | 'lab' | 'project' | 'reading';
   order: number;
+  isFree?: boolean;
 }
 
 export interface TestimonialData {
   name: string;
   text: string;
+  rating?: number;
+  studentTitle?: string;
 }
 
 // Tipos para validación

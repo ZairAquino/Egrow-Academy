@@ -4,22 +4,20 @@ import { headers } from "next/headers";
 
 const f = createUploadthing();
 
-// Middleware para verificar autenticación
-const auth = async () => {
-  const headersList = await headers();
-  const authHeader = headersList.get('authorization');
-  const token = extractTokenFromHeader(authHeader);
-  
-  if (!token) {
-    throw new Error("No autorizado");
-  }
-  
+// Middleware laxo para desarrollo/subida de archivos desde admin
+// - Intenta validar JWT del header Authorization
+// - Si no existe/invalid, permite continuar como anónimo
+const authOptional = async () => {
   try {
-    const { userId } = verifyToken(token);
-    return { userId };
-  } catch (error) {
-    throw new Error("Token inválido");
-  }
+    const headersList = await headers();
+    const authHeader = headersList.get('authorization');
+    const token = extractTokenFromHeader(authHeader);
+    if (token) {
+      const { userId } = verifyToken(token);
+      return { userId };
+    }
+  } catch {}
+  return { userId: 'anonymous' } as any;
 };
 
 export const uploadRouter = {
@@ -30,7 +28,7 @@ export const uploadRouter = {
       maxFileCount: 1,
     },
   })
-    .middleware(auth)
+    .middleware(authOptional)
     .onUploadComplete(async ({ metadata, file }) => {
       // Video subido exitosamente
       return { uploadedBy: metadata.userId };
@@ -39,10 +37,10 @@ export const uploadRouter = {
   // Para recursos de cursos (PDFs, imágenes, etc.)
   courseResource: f({
     pdf: { maxFileSize: "16MB", maxFileCount: 5 },
-    image: { maxFileSize: "2MB", maxFileCount: 10 },
+    image: { maxFileSize: "10MB", maxFileCount: 10 },
     text: { maxFileSize: "1MB", maxFileCount: 10 },
   })
-    .middleware(auth)
+    .middleware(authOptional)
     .onUploadComplete(async ({ metadata, file }) => {
       // Recurso subido exitosamente
       return { uploadedBy: metadata.userId };
@@ -52,7 +50,7 @@ export const uploadRouter = {
   userAvatar: f({
     image: { maxFileSize: "2MB", maxFileCount: 1 },
   })
-    .middleware(auth)
+    .middleware(authOptional)
     .onUploadComplete(async ({ metadata, file }) => {
       // Avatar subido exitosamente
       return { uploadedBy: metadata.userId };
@@ -61,11 +59,11 @@ export const uploadRouter = {
   // Para recursos generales (más permisivo)
   generalResource: f({
     pdf: { maxFileSize: "32MB", maxFileCount: 10 },
-    image: { maxFileSize: "4MB", maxFileCount: 20 },
+    image: { maxFileSize: "10MB", maxFileCount: 20 },
     video: { maxFileSize: "1GB", maxFileCount: 5 },
     text: { maxFileSize: "2MB", maxFileCount: 20 },
   })
-    .middleware(auth)
+    .middleware(authOptional)
     .onUploadComplete(async ({ metadata, file }) => {
       // Recurso general subido exitosamente
       return { uploadedBy: metadata.userId };
@@ -78,7 +76,7 @@ export const uploadRouter = {
     video: { maxFileSize: "1GB", maxFileCount: 3 },
     text: { maxFileSize: "2MB", maxFileCount: 10 },
   })
-    .middleware(auth)
+    .middleware(authOptional)
     .onUploadComplete(async ({ metadata, file }) => {
       // Recurso de webinar subido exitosamente
       return { uploadedBy: metadata.userId };

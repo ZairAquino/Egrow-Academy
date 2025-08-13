@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { CourseFormData, COURSE_CATEGORIES, DIFFICULTY_LEVELS, LANGUAGES } from '@/types/course-admin';
+import FileUpload from '@/components/ui/FileUpload';
 import { generateSlugFromTitle } from '@/lib/course-validation';
 
 interface BasicInfoProps {
@@ -12,12 +13,15 @@ interface BasicInfoProps {
 
 export default function BasicInfo({ formData, updateField, errors }: BasicInfoProps) {
   const [slugValidation, setSlugValidation] = useState<{ valid: boolean; message?: string }>({ valid: true });
+  const [softWarnings, setSoftWarnings] = useState<Record<string, string>>({});
   const [isValidatingSlug, setIsValidatingSlug] = useState(false);
 
-  // Auto-generar slug cuando cambia el título
+  // Auto-generar slug cuando cambia el título (bloqueado para edición manual)
   useEffect(() => {
-    if (formData.title && !formData.slug) {
-      const generatedSlug = generateSlugFromTitle(formData.title);
+    if (!formData.title) return;
+    const generatedSlug = generateSlugFromTitle(formData.title);
+    // Solo reasignar si aún no hay slug o si el slug actual es temporal tipo "draft-..."
+    if (!formData.slug || formData.slug.startsWith('draft-')) {
       updateField('slug', generatedSlug);
     }
   }, [formData.title, formData.slug, updateField]);
@@ -50,6 +54,24 @@ export default function BasicInfo({ formData, updateField, errors }: BasicInfoPr
     const timeoutId = setTimeout(validateSlug, 500); // Debounce
     return () => clearTimeout(timeoutId);
   }, [formData.slug]);
+
+  // Avisos suaves (sin bloquear) para campos clave del paso 1
+  useEffect(() => {
+    const warnings: Record<string, string> = {};
+    if (!formData.title || (formData.title?.length || 0) < 5) {
+      warnings.title = 'Recomendado: título de 5+ caracteres';
+    }
+    if (!formData.shortDescription || (formData.shortDescription?.length || 0) < 20) {
+      warnings.shortDescription = 'Recomendado: descripción corta de 20+ caracteres';
+    }
+    if (!formData.description || (formData.description?.length || 0) < 50) {
+      warnings.description = 'Recomendado: descripción de 50+ caracteres';
+    }
+    if (formData.price === undefined || formData.price < 0) {
+      warnings.price = 'Recomendado: precio >= 0';
+    }
+    setSoftWarnings(warnings);
+  }, [formData.title, formData.shortDescription, formData.description, formData.price]);
 
   return (
     <div className="space-y-8">
@@ -84,9 +106,11 @@ export default function BasicInfo({ formData, updateField, errors }: BasicInfoPr
             <span className="text-xs text-gray-500">
               {formData.title?.length || 0}/100 caracteres
             </span>
-            {errors.title && (
+            {errors.title ? (
               <span className="text-xs text-red-600">{errors.title[0]}</span>
-            )}
+            ) : softWarnings.title ? (
+              <span className="text-xs text-yellow-600">{softWarnings.title}</span>
+            ) : null}
           </div>
         </div>
 
@@ -103,12 +127,13 @@ export default function BasicInfo({ formData, updateField, errors }: BasicInfoPr
               type="text"
               id="slug"
               value={formData.slug || ''}
-              onChange={(e) => updateField('slug', e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
-              placeholder="monetiza-voz-ia-elevenlabs"
+              readOnly
+              placeholder="se genera automáticamente"
               className={`
-                flex-1 px-4 py-3 border rounded-r-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                flex-1 px-4 py-3 border rounded-r-lg bg-gray-50 text-gray-600 cursor-not-allowed
                 ${errors.slug ? 'border-red-300' : slugValidation.valid ? 'border-green-300' : 'border-yellow-300'}
               `}
+              aria-readonly
             />
           </div>
           <div className="mt-1 flex justify-between">
@@ -151,9 +176,11 @@ export default function BasicInfo({ formData, updateField, errors }: BasicInfoPr
             <span className="text-xs text-gray-500">
               {formData.shortDescription?.length || 0}/200 caracteres
             </span>
-            {errors.shortDescription && (
+            {errors.shortDescription ? (
               <span className="text-xs text-red-600">{errors.shortDescription[0]}</span>
-            )}
+            ) : softWarnings.shortDescription ? (
+              <span className="text-xs text-yellow-600">{softWarnings.shortDescription}</span>
+            ) : null}
           </div>
         </div>
 
@@ -178,9 +205,11 @@ export default function BasicInfo({ formData, updateField, errors }: BasicInfoPr
             <span className="text-xs text-gray-500">
               {formData.description?.length || 0}/2000 caracteres
             </span>
-            {errors.description && (
+            {errors.description ? (
               <span className="text-xs text-red-600">{errors.description[0]}</span>
-            )}
+            ) : softWarnings.description ? (
+              <span className="text-xs text-yellow-600">{softWarnings.description}</span>
+            ) : null}
           </div>
         </div>
 
@@ -242,9 +271,11 @@ export default function BasicInfo({ formData, updateField, errors }: BasicInfoPr
                 `}
               />
             </div>
-            {errors.price && (
+            {errors.price ? (
               <span className="text-xs text-red-600 mt-1">{errors.price[0]}</span>
-            )}
+            ) : softWarnings.price ? (
+              <span className="text-xs text-yellow-600 mt-1">{softWarnings.price}</span>
+            ) : null}
           </div>
 
           {/* Duración */}
@@ -279,6 +310,43 @@ export default function BasicInfo({ formData, updateField, errors }: BasicInfoPr
               ))}
             </select>
           </div>
+
+          {/* Rating (opcional) */}
+          <div>
+            <label htmlFor="rating" className="block text-sm font-medium text-gray-700 mb-2">
+              Rating (1–5) opcional
+            </label>
+            <input
+              type="number"
+              id="rating"
+              min="1"
+              max="5"
+              step="0.1"
+              value={(formData as any).rating ?? ''}
+              onChange={(e) => updateField('rating' as any, parseFloat(e.target.value) || 0)}
+              placeholder="4.8"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+            <p className="text-xs text-gray-500 mt-1">Si lo dejas vacío, se mostrará un valor por defecto.</p>
+          </div>
+
+          {/* Estudiantes (opcional) */}
+          <div>
+            <label htmlFor="studentsCount" className="block text-sm font-medium text-gray-700 mb-2">
+              Número de estudiantes (opcional)
+            </label>
+            <input
+              type="number"
+              id="studentsCount"
+              min="0"
+              step="1"
+              value={(formData as any).studentsCount ?? ''}
+              onChange={(e) => updateField('studentsCount' as any, parseInt(e.target.value) || 0)}
+              placeholder="2863"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+            <p className="text-xs text-gray-500 mt-1">Si lo dejas vacío, se derivará o se mostrará 0.</p>
+          </div>
         </div>
 
         {/* URLs de medios */}
@@ -290,17 +358,26 @@ export default function BasicInfo({ formData, updateField, errors }: BasicInfoPr
             <label htmlFor="imageUrl" className="block text-sm font-medium text-gray-700 mb-2">
               URL de imagen principal
             </label>
-            <input
-              type="url"
-              id="imageUrl"
-              value={formData.imageUrl || ''}
-              onChange={(e) => updateField('imageUrl', e.target.value)}
-              placeholder="https://ejemplo.com/imagen-curso.jpg"
-              className={`
-                w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-                ${errors.imageUrl ? 'border-red-300' : 'border-gray-300'}
-              `}
-            />
+            <div className="grid gap-3">
+              <input
+                type="url"
+                id="imageUrl"
+                value={formData.imageUrl || ''}
+                onChange={(e) => updateField('imageUrl', e.target.value)}
+                placeholder="https://ejemplo.com/imagen-curso.jpg"
+                className={`
+                  w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                  ${errors.imageUrl ? 'border-red-300' : 'border-gray-300'}
+                `}
+              />
+              <div>
+                <FileUpload
+                  endpoint="generalResource"
+                  acceptedTypes={["image/*"]}
+                  onUploadComplete={(url) => updateField('imageUrl', url)}
+                />
+              </div>
+            </div>
             {errors.imageUrl && (
               <span className="text-xs text-red-600 mt-1">{errors.imageUrl[0]}</span>
             )}
@@ -311,17 +388,26 @@ export default function BasicInfo({ formData, updateField, errors }: BasicInfoPr
             <label htmlFor="mainVideoUrl" className="block text-sm font-medium text-gray-700 mb-2">
               URL del video preview
             </label>
-            <input
-              type="url"
-              id="mainVideoUrl"
-              value={formData.mainVideoUrl || ''}
-              onChange={(e) => updateField('mainVideoUrl', e.target.value)}
-              placeholder="https://www.youtube.com/watch?v=..."
-              className={`
-                w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-                ${errors.mainVideoUrl ? 'border-red-300' : 'border-gray-300'}
-              `}
-            />
+            <div className="grid gap-3">
+              <input
+                type="url"
+                id="mainVideoUrl"
+                value={formData.mainVideoUrl || ''}
+                onChange={(e) => updateField('mainVideoUrl', e.target.value)}
+                placeholder="https://www.youtube.com/watch?v=..."
+                className={`
+                  w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                  ${errors.mainVideoUrl ? 'border-red-300' : 'border-gray-300'}
+                `}
+              />
+              <div>
+                <FileUpload
+                  endpoint="courseVideo"
+                  acceptedTypes={["video/*"]}
+                  onUploadComplete={(url) => updateField('mainVideoUrl', url)}
+                />
+              </div>
+            </div>
             {errors.mainVideoUrl && (
               <span className="text-xs text-red-600 mt-1">{errors.mainVideoUrl[0]}</span>
             )}

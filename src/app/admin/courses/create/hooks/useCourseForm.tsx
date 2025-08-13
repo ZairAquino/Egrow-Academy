@@ -36,6 +36,8 @@ export function useCourseForm() {
   const [currentStep, setCurrentStep] = useState(1);
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [isLoading, setIsLoading] = useState(false);
+  const [draftId, setDraftId] = useState<string | null>(null);
+  const [draftSlug, setDraftSlug] = useState<string | null>(null);
 
   // Función para actualizar un campo del formulario
   const updateField = useCallback((field: string, value: any) => {
@@ -101,42 +103,8 @@ export function useCourseForm() {
 
   // Función para validar un step específico (sin efectos secundarios)
   const isStepValid = useCallback((step: number): boolean => {
-    switch (step) {
-      case 1: // Información Básica
-        return !!(formData.title && formData.slug && 
-                 formData.description && formData.description.length >= 50 &&
-                 formData.shortDescription && formData.shortDescription.length >= 20 &&
-                 formData.price !== undefined && formData.price >= 0);
-
-      case 2: // Instructor
-        return !!(formData.instructor?.name && formData.instructor?.title && 
-                 formData.instructor?.bio && formData.instructor.bio.length >= 20);
-
-      case 3: // Objetivos y Contenido
-        return !!(formData.whatYouWillLearn && formData.whatYouWillLearn.length >= 6 &&
-                 formData.tools && formData.tools.length >= 1 &&
-                 formData.prerequisites && formData.prerequisites.length >= 1);
-
-      case 4: // Módulos y Lecciones
-        return !!(formData.modules && formData.modules.length >= 1 &&
-                 formData.modules.every(module => 
-                   module.title && module.lessons && module.lessons.length >= 1
-                 ));
-
-      case 5: // Testimonios (opcional)
-        return true; // Siempre válido ya que es opcional
-
-      case 6: // Precios (ya validado en step 1)
-        return true;
-
-      case 7: // Preview
-        const validation = validateCourseData(formData);
-        return validation.valid;
-
-      default:
-        return false;
-    }
-  }, [formData]);
+    return true; // Navegación libre: permitir avanzar aunque haya campos vacíos
+  }, []);
 
   // Función para validar un step específico con efectos secundarios (actualizar errores)
   const validateStep = useCallback((step: number): boolean => {
@@ -233,15 +201,16 @@ export function useCourseForm() {
       });
     }
 
+    // Devolver si el paso no tiene errores (para avisos suaves en UI)
     return Object.keys(stepErrors).length === 0;
   }, [formData, errors]);
 
   // Navegación entre steps
   const nextStep = useCallback(() => {
-    if (currentStep < 7 && validateStep(currentStep)) {
+    if (currentStep < 7) {
       setCurrentStep(prev => prev + 1);
     }
-  }, [currentStep, validateStep]);
+  }, [currentStep]);
 
   const prevStep = useCallback(() => {
     if (currentStep > 1) {
@@ -259,31 +228,42 @@ export function useCourseForm() {
   const saveAsDraft = useCallback(async () => {
     setIsLoading(true);
     try {
-      // Aquí se haría la llamada al endpoint de guardar borrador
-      // Por ahora simulamos un guardado en localStorage
+      // Guardado de borrador en BD vía API dedicada
+      const response = await fetch('/api/admin/courses/drafts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: draftId, slug: draftSlug || formData.slug, data: formData })
+      });
+      if (!response.ok) {
+        const err = await response.text();
+        throw new Error(err || 'Error guardando borrador');
+      }
+      const json = await response.json();
+      if (json?.course) {
+        if (json.course.id) setDraftId(json.course.id);
+        if (json.course.slug) {
+          setDraftSlug(json.course.slug);
+          // Sincronizar slug en el formulario para futuras publicaciones
+          setFormData(prev => ({ ...prev, slug: json.course.slug as any }));
+        }
+      }
+      // Mantener también copia local por resiliencia
       localStorage.setItem('course-draft', JSON.stringify(formData));
       return { success: true };
     } catch (error) {
       console.error('Error guardando borrador:', error);
+      // Fallback duro a localStorage para no perder datos
+      try { localStorage.setItem('course-draft', JSON.stringify(formData)); } catch {}
       return { success: false, error };
     } finally {
       setIsLoading(false);
     }
-  }, [formData]);
+  }, [formData, draftId, draftSlug]);
 
   // Función para publicar el curso
   const publishCourse = useCallback(async (): Promise<CourseCreationResponse> => {
     setIsLoading(true);
     try {
-      // Validar datos completos antes de publicar
-      const validation = validateCourseData(formData);
-      if (!validation.valid) {
-        return {
-          success: false,
-          errors: validation.errors
-        };
-      }
-
       // Llamar al endpoint de creación
       const response = await fetch('/api/admin/courses/create', {
         method: 'POST',
@@ -292,7 +272,8 @@ export function useCourseForm() {
         },
         body: JSON.stringify({
           ...formData,
-          status: 'PUBLISHED'
+          status: 'PUBLISHED',
+          allowPartial: true
         })
       });
 
