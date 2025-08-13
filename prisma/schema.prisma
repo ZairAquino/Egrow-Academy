@@ -91,13 +91,13 @@ model Course {
   updatedAt        DateTime       @updatedAt
   instructorId     String?
   category         CourseCategory @default(HABILIDADES_IRREMPLAZABLES)
+  meta             Json?
   comments         Comment[]
   instructor       User?          @relation("CourseInstructor", fields: [instructorId], references: [id])
   enrollments      Enrollment[]
   lessons          Lesson[]
   payments         Payment[]
   ratings          Rating[]
-  meta             Json?
 
   @@index([status, createdAt])
   @@index([instructorId])
