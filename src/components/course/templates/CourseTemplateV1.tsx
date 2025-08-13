@@ -158,9 +158,12 @@ export default function CourseTemplateV1({ course, onPrimaryAction }: Props) {
             <div className="hero-grid">
               <div className="hero-left">
                 <h1 className="hero-title-big">{course.title}</h1>
-                {course.description && (
-                  <p className="hero-subtext">{course.description}</p>
-                )}
+                {(() => {
+                  const shortDesc = (course as any).shortDescription as string | undefined;
+                  const desc = course.description as string | undefined;
+                  const text = shortDesc && desc && shortDesc.trim() === desc.trim() ? shortDesc : (shortDesc || desc);
+                  return text ? (<p className="hero-subtext">{text}</p>) : null;
+                })()}
                 <button className="hero-cta" onClick={onPrimaryAction}>
                   {course.isFree ? 'Acceder Gratis' : 'Iniciar Sesión para Comenzar'}
                 </button>
@@ -200,12 +203,20 @@ export default function CourseTemplateV1({ course, onPrimaryAction }: Props) {
               {/* Descripción */}
               <div className="course-overview-card">
                 <h2 className="desc-title">Descripción del Curso</h2>
-                { ((course as any).shortDescription || course.description) && (
-                  <p className="desc-lead">{(course as any).shortDescription || course.description}</p>
-                )}
+                {(() => {
+                  const shortDesc = (course as any).shortDescription as string | undefined;
+                  const desc = course.description as string | undefined;
+                  const text = shortDesc && desc && shortDesc.trim() === desc.trim() ? shortDesc : (shortDesc || desc);
+                  return text ? (<p className="desc-lead">{text}</p>) : null;
+                })()}
                 <div className="desc-separator" />
                 <div className="desc-body">
-                  {course.description && <p className="desc-paragraph">{course.description}</p>}
+                  {(() => {
+                    const shortDesc = (course as any).shortDescription as string | undefined;
+                    const desc = course.description as string | undefined;
+                    if (shortDesc && desc && shortDesc.trim() === desc.trim()) return null;
+                    return desc ? (<p className="desc-paragraph">{desc}</p>) : null;
+                  })()}
                 </div>
               </div>
 

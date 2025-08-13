@@ -5,6 +5,18 @@ export async function GET(request: NextRequest) {
   try {
     console.log('🔄 Obteniendo cursos de la base de datos...');
     
+    // Test database connection first
+    try {
+      await prisma.$queryRaw`SELECT 1`;
+    } catch (dbError) {
+      console.warn('⚠️ Database connection issue, returning empty courses list');
+      return NextResponse.json({ 
+        courses: [],
+        total: 0,
+        warning: 'Database temporarily unavailable'
+      });
+    }
+    
     const courses = await prisma.course.findMany({
       where: {
         status: 'PUBLISHED'
@@ -24,25 +36,12 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('❌ Error fetching courses:', error);
     
-    // Proporcionar información más detallada del error
-    const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
-    const errorCode = error instanceof Error && 'code' in error ? (error as any).code : 'UNKNOWN';
-    
-    console.error('❌ Error details:', {
-      message: errorMessage,
-      code: errorCode,
-      stack: error instanceof Error ? error.stack : undefined
+    // Return empty array instead of error to allow fallback
+    return NextResponse.json({ 
+      courses: [],
+      total: 0,
+      warning: 'Could not fetch courses from database'
     });
-    
-    return NextResponse.json(
-      { 
-        error: 'Error interno del servidor',
-        details: errorMessage,
-        code: errorCode,
-        timestamp: new Date().toISOString()
-      },
-      { status: 500 }
-    );
   } finally {
     // Prisma maneja automáticamente las conexiones en Next.js
     console.log('✅ Operación completada');

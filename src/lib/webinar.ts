@@ -7,7 +7,6 @@ import { Webinar, WebinarRegistration, CreateWebinarData, RegisterWebinarData } 
  */
 export async function getWebinarBySlug(slug: string): Promise<Webinar | null> {
   try {
-    await prisma.$connect();
     const webinar = await prisma.webinar.findUnique({
       where: { slug },
       include: {
@@ -39,7 +38,6 @@ export async function getWebinarBySlug(slug: string): Promise<Webinar | null> {
  */
 export async function getActiveWebinars(): Promise<Webinar[]> {
   try {
-    await prisma.$connect();
     const webinars = await prisma.webinar.findMany({
       where: { 
         isActive: true
@@ -62,7 +60,7 @@ export async function getActiveWebinars(): Promise<Webinar[]> {
       updatedAt: webinar.updatedAt
     }));
   } catch (error) {
-    console.error('Error getting active webinars:', error);
+    console.error('Error getting active webinars - Database may be unavailable:', error);
     return [];
   }
 }
@@ -72,7 +70,6 @@ export async function getActiveWebinars(): Promise<Webinar[]> {
  */
 export async function getUpcomingWebinars(): Promise<Webinar[]> {
   try {
-    await prisma.$connect();
     const now = new Date();
     const webinars = await prisma.webinar.findMany({
       where: { 
@@ -109,7 +106,6 @@ export async function getUpcomingWebinars(): Promise<Webinar[]> {
  */
 export async function getPastWebinars(): Promise<Webinar[]> {
   try {
-    await prisma.$connect();
     const now = new Date();
     const webinars = await prisma.webinar.findMany({
       where: { 
@@ -146,7 +142,6 @@ export async function getPastWebinars(): Promise<Webinar[]> {
  */
 export async function getFeaturedWebinars(): Promise<Webinar[]> {
   try {
-    await prisma.$connect();
     const now = new Date();
     const webinars = await prisma.webinar.findMany({
       where: { 
@@ -184,7 +179,6 @@ export async function getFeaturedWebinars(): Promise<Webinar[]> {
  */
 export async function registerToWebinar(data: RegisterWebinarData): Promise<{ success: boolean; message: string; registration?: WebinarRegistration }> {
   try {
-    await prisma.$connect();
     // Verificar si el webinar existe y está activo
     const webinar = await prisma.webinar.findUnique({
       where: { id: data.webinarId },
@@ -263,7 +257,6 @@ export async function registerToWebinar(data: RegisterWebinarData): Promise<{ su
  */
 export async function createWebinar(data: CreateWebinarData): Promise<{ success: boolean; message: string; webinar?: Webinar }> {
   try {
-    await prisma.$connect();
     const webinar = await prisma.webinar.create({
       data: {
         title: data.title,
@@ -309,7 +302,6 @@ export async function createWebinar(data: CreateWebinarData): Promise<{ success:
  */
 export async function getWebinarStats(webinarId: string) {
   try {
-    await prisma.$connect();
     const [totalRegistrations, confirmedRegistrations, attendedRegistrations] = await Promise.all([
       prisma.webinarRegistration.count({ where: { webinarId } }),
       prisma.webinarRegistration.count({ where: { webinarId, isConfirmed: true } }),

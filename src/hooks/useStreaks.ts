@@ -53,7 +53,9 @@ export const useStreaks = () => {
         // Usuario no autenticado, no es un error crítico
         setStats(null);
       } else {
-        throw new Error('Failed to fetch streak stats');
+        // Log error details but don't throw
+        console.warn(`Failed to fetch streak stats: ${response.status} ${response.statusText}`);
+        setStats(null);
       }
     } catch (err) {
       console.error('Error fetching streak stats:', err);

@@ -10,12 +10,9 @@ export async function GET(
     
     console.log('🔄 Obteniendo curso por slug:', slug);
     
-    // Buscar el curso con toda su información
-    const course = await prisma.course.findUnique({
-      where: { 
-        slug: slug,
-        status: 'PUBLISHED' // Solo cursos publicados
-      },
+    // Buscar el curso publicado con toda su información
+    const course = await prisma.course.findFirst({
+      where: { slug, status: 'PUBLISHED' },
       include: {
         lessons: {
           orderBy: { order: 'asc' }
@@ -50,7 +47,7 @@ export async function GET(
       );
     }
 
-    // Si hay snapshot de plantilla, devolverlo directamente
+    // Si hay snapshot de plantilla, devolverlo directamente (vista 1:1 del preview)
     const meta: any = (course as any).meta || {};
     if (meta?.pageDataV1) {
       return NextResponse.json(meta.pageDataV1);

@@ -265,47 +265,66 @@ export async function POST(request: NextRequest) {
       const finalSlug = await generateUniqueSlug((data.slug || '').trim() || (data.title || '').toLowerCase().replace(/[^a-z0-9-\s]/g, '').replace(/\s+/g, '-'));
       data.slug = finalSlug as any;
     }
-    const lessonsCount = data.modules.reduce((total, module) => total + module.lessons.length, 0);
+    const modulesArray = Array.isArray((data as any).modules) ? (data as any).modules : [];
+    const lessonsCount = modulesArray.reduce((total: number, module: any) => total + ((module?.lessons?.length) || 0), 0);
+    const lessonsCreate = modulesArray.flatMap((module: any, moduleIndex: number) =>
+      (module?.lessons || []).map((lesson: any, lessonIndex: number) => ({
+        title: (lesson.title || '').trim(),
+        content: lesson.content || '',
+        videoUrl: lesson.videoUrl || null,
+        duration: lesson.duration || 0,
+        order: moduleIndex * 100 + lessonIndex + 1,
+      }))
+    );
 
-    // Construir snapshot 1:1 para la plantilla CourseTemplateV1
+    // Normalizar arrays del contenido
+    const learningGoalsArr: string[] = Array.isArray((data as any).learningGoals)
+      ? (data as any).learningGoals
+      : Array.isArray((data as any).whatYouWillLearn)
+      ? (data as any).whatYouWillLearn
+      : [];
+    const toolsArr: string[] = Array.isArray((data as any).tools) ? (data as any).tools : [];
+    const prerequisitesArr: string[] = Array.isArray((data as any).prerequisites) ? (data as any).prerequisites : [];
+
+    // Construir snapshot 1:1 para la plantilla CourseTemplateV1 con valores por defecto mínimos
     const snapshot: CourseTemplateV1Data = {
-      title: data.title,
-      shortDescription: data.shortDescription,
-      description: data.description,
-      thumbnail: data.imageUrl || undefined,
-      introVideo: (data as any).mainVideoUrl || undefined,
-      price: data.price,
+      title: (data.title || '').trim(),
+      shortDescription: (data.shortDescription || undefined) as any,
+      description: (data.description || undefined) as any,
+      thumbnail: (data.imageUrl || undefined) as any,
+      introVideo: ((data as any).mainVideoUrl || undefined) as any,
+      price: Number(data.price ?? 0),
       originalPrice: (data as any).originalPrice ?? null,
-      isFree: data.price === 0,
-      rating: (data as any).rating,
-      studentsCount: (data as any).studentsCount,
-      objectivesLead: (data as any).objectivesLead,
-      learningGoals: (data as any).learningGoals || (data as any).whatYouWillLearn || [],
-      tools: (data as any).tools || [],
-      prerequisites: (data as any).prerequisites || [],
-      modules: (data.modules || []).map((m) => ({
-        title: m.title,
-        description: m.description,
-        lessons: (m.lessons || []).map((l) => ({
-          title: l.title,
-          duration: l.duration,
+      isFree: Number(data.price ?? 0) === 0,
+      rating: (data as any).rating ?? 4.8,
+      studentsCount: (data as any).studentsCount ?? 1000,
+      objectivesLead: (data as any).objectivesLead || undefined,
+      learningGoals: Array.isArray(learningGoalsArr) ? learningGoalsArr : [],
+      tools: Array.isArray(toolsArr) ? toolsArr : [],
+      prerequisites: Array.isArray(prerequisitesArr) ? prerequisitesArr : [],
+      modules: (data.modules || []).map((m, moduleIndex) => ({
+        title: (m.title || '').trim(),
+        description: (m.description || undefined) as any,
+        lessons: (m.lessons || []).map((l, lessonIndex) => ({
+          title: (l.title || '').trim(),
+          duration: Number(l.duration || 0),
           isFree: (l as any).isFree,
-          videoUrl: l.videoUrl
+          videoUrl: l.videoUrl || undefined,
         }))
       })),
       instructor: {
-        name: data.instructor?.name,
-        title: data.instructor?.title,
-        image: (data.instructor as any)?.image,
-        bio: data.instructor?.bio
+        name: (data.instructor?.name || 'eGrow Academy').trim(),
+        title: (data.instructor?.title || 'Instructor').trim(),
+        image: ((data.instructor as any)?.image || '/images/Zair.jpeg') as any,
+        bio: data.instructor?.bio || undefined,
       },
       testimonials: ((data as any).testimonials || []).map((t: any) => ({
-        studentName: t.name,
-        content: t.text,
-        rating: t.rating,
-        studentTitle: t.studentTitle
+        studentName: (t.name || '').trim(),
+        content: (t.text || '').trim(),
+        rating: t.rating ?? undefined,
+        studentTitle: t.studentTitle ?? undefined,
       })),
-      sidebar: { durationHours: data.durationHours, includes: [] }
+      sidebar: { durationHours: Number(data.durationHours || 0), includes: [] }
     };
 
     const course = existing
@@ -331,18 +350,14 @@ export async function POST(request: NextRequest) {
             // instructorId: session.user.id, // Descomentar cuando tengamos auth
             studentsCount: (data as any).studentsCount ?? undefined,
             rating: (data as any).rating ?? undefined,
-            lessons: {
-              deleteMany: {},
-              create: data.modules.flatMap((module, moduleIndex) =>
-                module.lessons.map((lesson, lessonIndex) => ({
-                  title: lesson.title.trim(),
-                  content: lesson.content || '',
-                  videoUrl: lesson.videoUrl || null,
-                  duration: lesson.duration,
-                  order: moduleIndex * 100 + lessonIndex + 1,
-                }))
-              )
-            }
+            ...(lessonsCreate.length > 0
+              ? {
+                  lessons: {
+                    deleteMany: {},
+                    create: lessonsCreate,
+                  },
+                }
+              : {})
           },
           include: { lessons: { orderBy: { order: 'asc' } } }
         })
@@ -366,17 +381,13 @@ export async function POST(request: NextRequest) {
             },
             studentsCount: (data as any).studentsCount ?? undefined,
             rating: (data as any).rating ?? undefined,
-            lessons: {
-              create: data.modules.flatMap((module, moduleIndex) =>
-                module.lessons.map((lesson, lessonIndex) => ({
-                  title: lesson.title.trim(),
-                  content: lesson.content || '',
-                  videoUrl: lesson.videoUrl || null,
-                  duration: lesson.duration,
-                  order: moduleIndex * 100 + lessonIndex + 1,
-                }))
-              )
-            }
+            ...(lessonsCreate.length > 0
+              ? {
+                  lessons: {
+                    create: lessonsCreate,
+                  },
+                }
+              : {})
           },
           include: { lessons: { orderBy: { order: 'asc' } } }
         });

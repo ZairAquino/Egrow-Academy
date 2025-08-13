@@ -16,7 +16,8 @@ export default function Newsletter() {
       const response = await fetch('/api/webinars');
       
       if (!response.ok) {
-        throw new Error('Error al cargar webinars');
+        console.warn(`Failed to load webinars: ${response.status} ${response.statusText}`);
+        return;
       }
       
       const data = await response.json();

@@ -6,7 +6,7 @@ export const runtime = 'nodejs';
 
 export async function GET(request: NextRequest) {
   try {
-    await prisma.$connect();
+    // Prisma maneja la conexión automáticamente en entornos Next.js
     // Verificar token desde cookies o headers
     const cookieToken = request.cookies.get('auth-token')?.value
     const headerToken = extractTokenFromHeader(request)

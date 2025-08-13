@@ -47,6 +47,48 @@ export async function POST(request: NextRequest) {
       existing = await prisma.course.findUnique({ where: { slug: uniqueSlug } });
     }
 
+    // Construir snapshot y eliminar undefined del JSON (Prisma JSON no acepta undefined)
+    const rawSnapshot = {
+      title: data.title,
+      shortDescription: data.shortDescription,
+      description: data.description,
+      thumbnail: data.imageUrl ?? null,
+      introVideo: (data as any).mainVideoUrl ?? null,
+      price: typeof data.price === 'number' ? data.price : 0,
+      originalPrice: (data as any).originalPrice ?? null,
+      isFree: data.price === 0,
+      rating: (data as any).rating ?? null,
+      studentsCount: (data as any).studentsCount ?? null,
+      objectivesLead: (data as any).objectivesLead ?? null,
+      learningGoals: (data as any).learningGoals || (data as any).whatYouWillLearn || [],
+      tools: (data as any).tools || [],
+      prerequisites: (data as any).prerequisites || [],
+      modules: (data.modules || []).map((m: any) => ({
+        title: m.title,
+        description: m.description ?? '',
+        lessons: (m.lessons || []).map((l: any) => ({
+          title: l.title,
+          duration: l.duration ?? 0,
+          isFree: l.isFree ?? false,
+          videoUrl: l.videoUrl ?? null
+        }))
+      })),
+      instructor: {
+        name: (data.instructor as any)?.name ?? '',
+        title: (data.instructor as any)?.title ?? '',
+        image: (data.instructor as any)?.image ?? null,
+        bio: (data.instructor as any)?.bio ?? ''
+      },
+      testimonials: ((data as any).testimonials || []).map((t: any) => ({
+        studentName: t.name ?? '',
+        content: t.text ?? '',
+        rating: t.rating ?? 5,
+        studentTitle: t.studentTitle ?? ''
+      })),
+      sidebar: { durationHours: data.durationHours ?? null, includes: [] as string[] }
+    };
+    const safeSnapshot = JSON.parse(JSON.stringify(rawSnapshot));
+
     const payload: any = {
       title: baseTitle || 'Borrador sin título',
       slug: existing?.slug || uniqueSlug,
@@ -58,6 +100,11 @@ export async function POST(request: NextRequest) {
       difficulty: data.difficulty || null,
       durationHours: typeof data.durationHours === 'number' ? data.durationHours : null,
       status: 'DRAFT' as CourseStatus,
+      meta: {
+        templateId: 'course-v1',
+        templateVersion: 1,
+        pageDataV1: safeSnapshot
+      }
     };
 
     const course = existing
@@ -67,7 +114,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true, course: { id: course.id, slug: course.slug, status: course.status } });
   } catch (error) {
     console.error('[drafts] error:', error);
-    return NextResponse.json({ success: false, error: 'Error guardando borrador' }, { status: 500 });
+    return NextResponse.json({ success: false, error: (error as any)?.message || 'Error guardando borrador' }, { status: 500 });
   }
 }
 

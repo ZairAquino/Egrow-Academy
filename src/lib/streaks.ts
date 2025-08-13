@@ -390,53 +390,44 @@ async function checkAndAwardBadges(userId: string, currentStreak: number) {
 export async function getUserStreakStats(userId: string) {
   const currentWeekStart = getWeekStart();
   
-  // Obtener racha actual
-  let currentStreak = await prisma.userStreak.findUnique({
+  // Usar upsert atómico para evitar condiciones de carrera al crear la semana actual
+  // Consultar la racha previa para inicializar, sin afectar si ya existe la semana actual
+  const previousStreak = await prisma.userStreak.findFirst({
+    where: {
+      userId,
+      weekStartDate: {
+        lt: currentWeekStart,
+      }
+    },
+    orderBy: {
+      weekStartDate: 'desc',
+    }
+  });
+
+  const initialCurrentStreak = previousStreak?.isCurrentWeekComplete
+    ? previousStreak.currentStreak
+    : 0;
+  const initialLongestStreak = previousStreak?.longestStreak || 0;
+
+  const currentStreak = await prisma.userStreak.upsert({
     where: {
       user_streaks_unique_user_week: {
         userId,
         weekStartDate: currentWeekStart,
       }
+    },
+    update: {},
+    create: {
+      userId,
+      weekStartDate: currentWeekStart,
+      currentWeekLessons: 0,
+      currentStreak: initialCurrentStreak,
+      longestStreak: initialLongestStreak,
+      totalPoints: previousStreak?.totalPoints || 0,
+      lifetimePointsEarned: previousStreak?.lifetimePointsEarned || 0,
+      isCurrentWeekComplete: false,
     }
   });
-
-  // Si no existe racha para la semana actual, crearla automáticamente
-  if (!currentStreak) {
-    // Obtener la racha más reciente (semana anterior)
-    const previousStreak = await prisma.userStreak.findFirst({
-      where: {
-        userId,
-        weekStartDate: {
-          lt: currentWeekStart,
-        }
-      },
-      orderBy: {
-        weekStartDate: 'desc',
-      }
-    });
-
-    let newCurrentStreak = 0;
-    let newLongestStreak = previousStreak?.longestStreak || 0;
-
-    // Si la semana anterior cumplió la meta, mantener la racha
-    if (previousStreak && previousStreak.isCurrentWeekComplete) {
-      newCurrentStreak = previousStreak.currentStreak;
-    }
-
-    // Crear el registro de racha para la semana actual
-    currentStreak = await prisma.userStreak.create({
-      data: {
-        userId,
-        weekStartDate: currentWeekStart,
-        currentWeekLessons: 0,
-        currentStreak: newCurrentStreak,
-        longestStreak: newLongestStreak,
-        totalPoints: previousStreak?.totalPoints || 0,
-        lifetimePointsEarned: previousStreak?.lifetimePointsEarned || 0,
-        isCurrentWeekComplete: false,
-      }
-    });
-  }
 
   // Obtener todos los badges del usuario
   const badges = await prisma.userStreakBadge.findMany({
