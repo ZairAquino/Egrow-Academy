@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { 
   initializeUTMTracking, 
@@ -9,7 +9,7 @@ import {
   UTMConversionData 
 } from '@/lib/utm-tracking';
 
-export default function UTMTracker() {
+function UTMTrackerContent() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -90,4 +90,12 @@ export default function UTMTracker() {
   }, [pathname]);
 
   return null; // Componente invisible
+}
+
+export default function UTMTracker() {
+  return (
+    <Suspense fallback={null}>
+      <UTMTrackerContent />
+    </Suspense>
+  );
 }

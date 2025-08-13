@@ -101,7 +101,8 @@
       "Bash(timeout 30 npm run dev)",
       "Bash(timeout 60 npm run dev)",
       "Bash(tsx scripts/test-course-creation.ts:*)",
-      "Bash(tsx scripts/test-edge-cases.ts:*)"
+      "Bash(tsx scripts/test-edge-cases.ts:*)",
+      "Bash(timeout 30 npm run build)"
     ],
     "deny": []
   }

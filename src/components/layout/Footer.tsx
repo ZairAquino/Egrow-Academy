@@ -28,9 +28,6 @@ export default function Footer() {
               <SocialMediaLinks 
                 campaign="newsletter" 
                 size="medium"
-                onClick={(platform, campaign) => {
-                  console.log(`Click en ${platform} para campaña ${campaign}`);
-                }}
               />
             </div>
           </div>

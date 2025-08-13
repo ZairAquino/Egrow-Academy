@@ -6,7 +6,7 @@ import SocialTrackingUrls from '@/components/social/SocialTrackingUrls';
 
 export default function UTMDemoPage() {
   const [selectedCampaign, setSelectedCampaign] = useState('newsletter');
-  const [selectedPlatform, setSelectedPlatform] = 'instagram';
+  const [selectedPlatform, setSelectedPlatform] = useState('instagram');
 
   const campaigns = [
     { id: 'newsletter', name: 'Newsletter', description: 'Suscripción al boletín' },
