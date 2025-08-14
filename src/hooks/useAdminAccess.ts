@@ -14,9 +14,11 @@ export function useAdminAccess(redirectPath: string = '/courses') {
       return;
     }
 
-    // Si no está autenticado, redirigir al login
+    // Si no está autenticado, redirigir al login con redirect parameter
     if (status === 'unauthenticated' || !user) {
-      router.push('/login');
+      const currentPath = window.location.pathname;
+      const loginUrl = `/login?redirect=${encodeURIComponent(currentPath)}`;
+      router.push(loginUrl);
       return;
     }
 

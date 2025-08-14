@@ -103,7 +103,8 @@
       "Bash(tsx scripts/test-course-creation.ts:*)",
       "Bash(tsx scripts/test-edge-cases.ts:*)",
       "Bash(timeout 30 npm run build)",
-      "Bash(tsx:*)"
+      "Bash(tsx:*)",
+      "Bash(git cherry-pick:*)"
     ],
     "deny": []
   }
