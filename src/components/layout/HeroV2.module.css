@@ -1,0 +1,298 @@
+/* ==========================================
+   HERO V2 - ESTILOS ESPECÍFICOS
+   ========================================== */
+
+.heroV2 {
+  padding: 0;
+  color: white;
+  margin-top: 0;
+  position: relative;
+  overflow: visible;
+  height: 550px;
+  display: flex;
+  align-items: center;
+}
+
+.heroV2Background {
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 320px !important;
+  min-height: 140px !important;
+  max-width: 1200px !important;
+  max-height: 550px !important;
+  aspect-ratio: 175/87 !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  z-index: -1 !important;
+}
+
+.heroV2Container {
+  position: relative;
+  z-index: 10;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.heroV2Grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  margin-bottom: 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 15;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  clip-path: inset(0 -160px -100px 0);
+}
+
+/* Columna izquierda - Contenido de texto */
+.heroV2Left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  position: relative;
+  z-index: 15;
+}
+
+.heroV2ContentCard {
+  background: white;
+  padding: 2.3rem;
+  border-radius: 20px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+  border: none;
+  backdrop-filter: none;
+  max-width: 490px;
+  position: relative;
+  z-index: 15;
+  margin-top: 105px; 
+}
+
+.heroV2Title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  line-height: 1.1;
+  color: #111827;
+  margin-bottom: 1.25rem;
+  letter-spacing: -0.02em;
+  text-shadow: none;
+}
+
+.heroV2Subtitle {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: #4b5563;
+  margin-bottom: 2rem;
+  font-weight: 500;
+  text-shadow: none;
+}
+
+.heroV2CTA {
+  display: flex;
+  gap: 1rem;
+}
+
+/* Columna derecha - Imagen */
+.heroV2Right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  position: relative;
+  z-index: 15;
+  overflow: visible;
+  height: 100%;
+}
+
+/* Imagen principal v-16.png */
+.heroV2MainImage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 720px;
+  margin: 0 auto 0 0;
+  position: relative;
+  right: -6rem;
+  transform: scale(1.6) translateY(50px);
+  
+}
+
+.heroV2Image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0;
+  box-shadow: none;
+  transition: all 0.3s ease;
+  filter: none;
+  max-height: 520px;
+  object-fit: contain;
+}
+
+/* Desactivar cualquier efecto visual en hover */
+.heroV2Image:hover {
+  transform: none;
+  box-shadow: none;
+  filter: none;
+}
+
+/* Logo centrado igual que en courses */
+.heroV2LogoCenter {
+  position: absolute;
+  top: 50%;
+  left: 48%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+}
+
+.logoAnimationWrapper {
+  animation: float 3s ease-in-out infinite;
+}
+
+.heroV2LogoImage {
+  height: auto;
+  max-height: 71px;
+  width: auto;
+  max-width: 95px;
+  opacity: 0.9;
+  transition: all 0.3s ease;
+  filter: brightness(0) invert(1);
+}
+
+.heroV2LogoImage:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Responsive Design igual que en courses */
+@media (min-width: 768px) {
+  .heroV2 {
+    padding-top: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroV2 {
+    padding: 2rem 0;
+    min-height: auto;
+    max-height: none;
+    margin-top: 0;
+    display: block;
+  }
+  
+  .heroV2Grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    text-align: center;
+    padding: 0 1rem;
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+  }
+  
+  .heroV2Left {
+    align-items: center;
+  }
+  
+  .heroV2ContentCard {
+    padding: 2rem;
+    max-width: 100%;
+    position: relative;
+    transform: none;
+    margin: 0;
+    top: auto;
+    left: auto;
+  }
+  
+  .heroV2Title {
+    font-size: 2rem;
+  }
+  
+  .heroV2Subtitle {
+    font-size: 1rem;
+  }
+  
+  .heroV2MainImage {
+    max-width: 100%;
+    right: 0;
+    transform: scale(1);
+  }
+  
+  .heroV2Image {
+    max-width: 100%;
+    max-height: 300px;
+  }
+  
+  .heroV2LogoImage {
+    max-height: 60px;
+    max-width: 80px;
+  }
+}
+
+@media (max-width: 640px) {
+  .heroV2Container {
+    padding: 0;
+  }
+  
+  .heroV2ContentCard {
+    padding: 1.5rem;
+  }
+  
+  .heroV2Title {
+    font-size: 2rem;
+  }
+  
+  .heroV2Subtitle {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroV2Title {
+    font-size: 1.75rem;
+  }
+  
+  .heroV2Image {
+    max-height: 250px;
+  }
+}
+
+/* Responsive adjustments for hero background igual que en Hero V1 */
+@media (max-width: 768px) {
+  .heroV2Background {
+    max-width: 768px !important;
+    max-height: 400px !important;
+    min-height: 250px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroV2Background {
+    max-width: 480px !important;
+    max-height: 350px !important;
+    min-height: 200px !important;
+  }
+}
+
+@media (max-width: 375px) {
+  .heroV2Background {
+    max-width: 375px !important;
+    max-height: 300px !important;
+    min-height: 150px !important;
+  }
+}

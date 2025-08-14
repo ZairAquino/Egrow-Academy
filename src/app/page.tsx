@@ -4,6 +4,8 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import Hero from '@/components/layout/Hero';
+import HeroV2 from '@/components/layout/HeroV2';
+import { FEATURE_FLAGS } from '@/lib/config';
 import CompaniesMarquee from '@/components/ui/CompaniesMarquee';
 import FeaturedCourses from '@/components/courses/FeaturedCourses';
 import Newsletter from '@/components/ui/Newsletter';
@@ -29,6 +31,12 @@ function HomeContent() {
   const { user, status, refreshUser } = useAuth();
   const { trackEvent, trackFunnel, isUserLoggedIn } = useFacebookPixel();
   const isAuthenticated = status === 'authenticated' && user;
+
+  // Debug temporal para verificar el flag del hero
+  useEffect(() => {
+    console.log('🏠 Página principal - FEATURE_FLAGS.HERO_V2:', FEATURE_FLAGS.HERO_V2);
+    console.log('🔧 Variable de entorno NEXT_PUBLIC_HERO_V2:', process.env.NEXT_PUBLIC_HERO_V2);
+  }, []);
 
   // Efecto para mostrar notificación de pago exitoso y refrescar usuario
   useEffect(() => {
@@ -142,7 +150,7 @@ function HomeContent() {
         {isAuthenticated ? (
           /* Contenido para usuarios autenticados */
           <>
-            <Hero />
+            {FEATURE_FLAGS.HERO_V2 ? <HeroV2 /> : <Hero />}
             
             {/* Banner Promocional y Mensaje de Bienvenida */}
             <WelcomeBannerSection />
@@ -167,7 +175,7 @@ function HomeContent() {
         ) : (
           /* Contenido para usuarios no autenticados (original) */
           <>
-            <Hero />
+            {FEATURE_FLAGS.HERO_V2 ? <HeroV2 /> : <Hero />}
             
             {/* Banner Promocional y Mensaje de Bienvenida */}
             <WelcomeBannerSection />
