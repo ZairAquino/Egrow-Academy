@@ -36,14 +36,34 @@ function LoginPageContent() {
     }
 
     if (user && status === 'authenticated' && !hasRedirected) {
-      console.log('✅ [DEBUG] LoginPage - Usuario ya logueado, redirigiendo...');
-      setHasRedirected(true);
+      console.log('✅ [DEBUG] LoginPage - Usuario ya logueado, verificando destino...');
       
       // Obtener la URL de redirección si existe
       const redirectUrl = searchParams.get('redirect') || '/';
-      console.log('🔀 [DEBUG] LoginPage - Redirigiendo a:', redirectUrl);
+      console.log('🔀 [DEBUG] LoginPage - URL destino:', redirectUrl);
       
-      // Usar setTimeout para asegurar que la redirección se ejecute después del render
+      // Si el destino es una ruta admin, verificar rol antes de redirigir
+      if (redirectUrl.startsWith('/admin')) {
+        console.log('🔒 [DEBUG] LoginPage - Destino es ruta admin, verificando rol...');
+        if (user.role === 'ADMIN') {
+          console.log('✅ [DEBUG] LoginPage - Usuario es ADMIN, redirigiendo...');
+          setHasRedirected(true);
+          setTimeout(() => {
+            router.push(redirectUrl);
+          }, 100);
+        } else {
+          console.log('❌ [DEBUG] LoginPage - Usuario no es ADMIN, redirigiendo a courses');
+          setHasRedirected(true);
+          setTimeout(() => {
+            router.push('/courses');
+          }, 100);
+        }
+        return;
+      }
+      
+      // Para rutas no-admin, redirigir normalmente
+      console.log('🔀 [DEBUG] LoginPage - Ruta normal, redirigiendo...');
+      setHasRedirected(true);
       setTimeout(() => {
         router.push(redirectUrl);
       }, 100);
