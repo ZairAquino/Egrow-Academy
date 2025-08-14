@@ -1,0 +1,144 @@
+-- Backup de base de datos: PRODUCCIÓN
+-- Fecha: 2025-08-13T23:55:17.621Z
+
+-- Usuarios (13 registros)
+-- Usuario: rickflo528@gmail.com
+-- Usuario: aquinozair3@gmail.com
+-- Usuario: liamjimenez644@gmail.com
+-- Usuario: rickpoluniverse@gmail.com
+-- Usuario: ochoaramoshector@gmail.com
+-- Usuario: luisdavid.ls47@gmail.com
+-- Usuario: aquinozair1@gmail.com
+-- Usuario: saq.sofia18@gmail.com
+-- Usuario: empuniv@yahoo.com
+-- Usuario: luissolis.17@outlook.com
+-- Usuario: consuxd11@gmail.com
+-- Usuario: solismartinezluisdavid@gmail.com
+-- Usuario: erick.hernandez.flores01@gmail.com
+
+-- Cursos (8 registros)
+-- Curso: Desarrollo Web Full Stack con React y Node.js
+-- Curso: Monetiza con la IA
+-- Curso: Asistentes virtuales con IA
+-- Curso: Vibe coding con Claude code y Cursor
+-- Curso: Aprende a crear videos profesionales con IA
+-- Curso: Crea Mockups con IA desde cero sin saber nada de diseño
+-- Curso: Guiones para videos promocionales con IA
+-- Curso: Monetiza tu Voz con IA: ElevenLabs para anuncios, cursos y podcasts (sin curva técnica)
+
+-- Lecciones (94 registros)
+-- Lección: Introducción al Desarrollo Full Stack
+-- Lección: Configuración del Entorno de Desarrollo
+-- Lección: Fundamentos de HTML5 y CSS3
+-- Lección: JavaScript Moderno (ES6+)
+-- Lección: Introducción a React
+-- Lección: Estado Global con Context API
+-- Lección: Routing con React Router
+-- Lección: Backend con Node.js y Express
+-- Lección: Base de Datos MongoDB
+-- Lección: Autenticación JWT
+-- Lección: API RESTful
+-- Lección: Integración Frontend-Backend
+-- Lección: Despliegue en la Nube
+-- Lección: Optimización y Performance
+-- Lección: Proyecto Final: E-commerce
+-- Lección: 1.1 Fundamentos de Monetización con IA
+-- Lección: 2.1 Estrategias de ChatGPT para Negocios
+-- Lección: 3.1 Creación de Productos Digitales
+-- Lección: 4.1 Automatización de Ventas
+-- Lección: 5.1 Marketing Digital con IA
+-- Lección: 6.1 Ingresos Pasivos con IA
+-- Lección: 7.1 Analytics y Optimización
+-- Lección: 8.1 Escalabilidad y Tendencias Futuras
+-- Lección: 1.1 Introducción a los Asistentes Virtuales con IA
+-- Lección: 1.2 Beneficios Empresariales Clave
+-- Lección: 1.3 Comparación: Google Gemini vs ChatGPT
+-- Lección: 1.4 Planificación Estratégica
+-- Lección: 2.1 Preparación de Documentación Empresarial
+-- Lección: 2.2 Configuración de Procesos
+-- Lección: 2.3 Establecimiento de Metodologías
+-- Lección: 3.1 Introducción a Google Gemini
+-- Lección: 3.2 Configuración de Gemini
+-- Lección: 3.3 Creación de Asistente con Gemini
+-- Lección: 3.4 Optimización de Prompts
+-- Lección: 4.1 Introducción a ChatGPT
+-- Lección: 4.2 Configuración de ChatGPT
+-- Lección: 4.3 Creación de Asistente con ChatGPT
+-- Lección: 4.4 GPTs Personalizados
+-- Lección: 5.1 Optimización de Rendimiento
+-- Lección: 5.2 Pruebas y Validación
+-- Lección: 5.3 Mantenimiento Continuo
+-- Lección: 5.4 Escalabilidad y Mejoras
+-- Lección: 5.5 Monitoreo y Analytics
+-- Lección: 5.6 Conclusiones y Próximos Pasos
+-- Lección: 1.1 Introducción a la Creación de Videos con IA
+-- Lección: 1.2 Panorama de Herramientas de IA para Video
+-- Lección: 1.3 Casos de Uso y Aplicaciones Comerciales
+-- Lección: 2.1 Dominio de Synthesia
+-- Lección: 2.2 Generación con Runway ML
+-- Lección: 2.3 Edición Inteligente con Herramientas IA
+-- Lección: 3.1 Optimización para Diferentes Plataformas
+-- Lección: 3.2 SEO y Metadatos para Videos
+-- Lección: 4.1 Modelos de Monetización con Videos IA
+-- Lección: 4.2 Automatización del Flujo de Trabajo
+-- Lección: 4.3 Casos de Éxito y Mejores Prácticas
+-- Lección: 1.1 Introducción al Vibe Coding con IA
+-- Lección: 1.2 Configuración del Entorno de Desarrollo
+-- Lección: 1.3 Principios del Desarrollo Asistido por IA
+-- Lección: 1.4 Tu Primera Sesión de Vibe Coding
+-- Lección: 2.1 Dominio Avanzado de Claude Code
+-- Lección: 2.2 Proyecto Final Integrado
+-- Lección: 1.1 ¿Qué es un mockup?
+-- Lección: 1.2 Tipologías
+-- Lección: 1.3 Diferencias entre wireframes, prototipos y mockups
+-- Lección: 1.4 Actividad Práctica 1: Análisis Rápido de Mockups Exitosos
+-- Lección: 2.1 Familiarizarte con las principales herramientas de IA
+-- Lección: 3.1 Crear una landing page completa
+-- Lección: 4.1 Aprender a diseñar mockups
+-- Lección: 5.1 Crear una identidad visual de marca
+-- Lección: 1.1 Introducción al Copywriting Digital
+-- Lección: 1.2 Estructura de un Guión Efectivo
+-- Lección: 1.3 Psicología de la Persuasión
+-- Lección: 2.1 Introducción a ChatGPT para Guiones
+-- Lección: 2.2 Prompts Efectivos para Guiones
+-- Lección: 2.3 Claude AI para Refinamiento
+-- Lección: 3.1 Estructura AIDA para Videos Promocionales
+-- Lección: 3.2 Hook y Apertura Impactante
+-- Lección: 3.3 Desarrollo del Beneficio Principal
+-- Lección: 4.1 Adaptación para Instagram
+-- Lección: 4.2 Guiones para TikTok
+-- Lección: 4.3 Contenido para LinkedIn
+-- Lección: 5.1 A/B Testing de Guiones
+-- Lección: 5.2 Métricas de Rendimiento
+-- Lección: 5.3 Optimización Continua
+-- Lección: 1.1 Origen de ElevenLabs (story breve)
+-- Lección: 1.2 Alcances y límites (ética y uso responsable)
+-- Lección: 1.3 Panorama TTS (comparativa rápida)
+-- Lección: 2.1 Introducción al flujo
+-- Lección: 2.2 Text-to-Speech (TTS) base
+-- Lección: 2.3 Mejora, cambio y traducción de voz
+-- Lección: 2.4 Postproducción (toques pro)
+-- Lección: 3.1 Casos de la vida real
+-- Lección: 3.2 ElevenLabs como negocio
+-- Lección: 3.3 Conclusión y siguientes pasos
+
+-- Esquema de tabla users:
+-- id: text (nullable: NO)
+-- email: text (nullable: NO)
+-- passwordHash: text (nullable: YES)
+-- firstName: text (nullable: NO)
+-- lastName: text (nullable: NO)
+-- username: text (nullable: YES)
+-- profileImage: text (nullable: YES)
+-- bio: text (nullable: YES)
+-- membershipLevel: USER-DEFINED (nullable: NO)
+-- isActive: boolean (nullable: NO)
+-- emailVerified: boolean (nullable: NO)
+-- createdAt: timestamp without time zone (nullable: NO)
+-- updatedAt: timestamp without time zone (nullable: NO)
+-- lastLogin: timestamp without time zone (nullable: YES)
+-- verificationCode: text (nullable: YES)
+-- stripeCustomerId: text (nullable: YES)
+-- verificationCodeExpires: timestamp without time zone (nullable: YES)
+-- country: text (nullable: YES)
+-- hasBeenPremium: boolean (nullable: NO)

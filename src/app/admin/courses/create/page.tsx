@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAdminAccess } from '@/hooks/useAdminAccess';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import FormSteps from './components/FormSteps';
 import BasicInfo from './components/BasicInfo';
 import InstructorInfo from './components/InstructorInfo';
@@ -15,7 +17,10 @@ import { useAutoSave } from './hooks/useAutoSave';
 
 export default function CreateCoursePage() {
   const router = useRouter();
+  const { isAdmin, isLoading } = useAdminAccess();
   const [publishInfo, setPublishInfo] = useState<null | { success: boolean; course?: { id: string; slug: string; url: string; lessonsCount: number; status: string }; error?: string; errors?: string[] }>(null);
+
+  // ✅ TODOS LOS HOOKS DEBEN IR AQUÍ - ANTES DE CUALQUIER RETURN CONDICIONAL
   const {
     formData,
     currentStep,
@@ -39,6 +44,27 @@ export default function CreateCoursePage() {
     lastSaved,
     forceSave
   } = useAutoSave(formData, saveAsDraft);
+
+  // Mostrar loading mientras verifica permisos
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  // Si no es admin, el hook ya manejó la redirección
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-red-600 mb-4">Acceso Denegado</h1>
+          <p className="text-gray-600">No tienes permisos para acceder a esta página.</p>
+        </div>
+      </div>
+    );
+  }
 
   const handleBack = () => {
     if (currentStep === 1) {

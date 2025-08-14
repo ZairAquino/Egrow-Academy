@@ -45,6 +45,7 @@ export async function GET(request: NextRequest) {
         profileImage: true,
         bio: true,
         membershipLevel: true,
+        role: true,
         isActive: true,
         emailVerified: true,
         createdAt: true,

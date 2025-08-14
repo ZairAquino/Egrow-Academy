@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { CourseCategory, CourseStatus } from '@prisma/client';
+import { verifyAdminAuth } from '@/lib/admin-auth';
 
 function slugify(input: string): string {
   return (input || '')
@@ -28,6 +29,12 @@ async function generateUniqueSlug(baseSlug: string): Promise<string> {
 
 export async function POST(request: NextRequest) {
   try {
+    // ✅ Verificar autenticación ADMIN
+    const authResult = await verifyAdminAuth(request);
+    if (!authResult.success) {
+      return authResult.response!;
+    }
+
     const body = await request.json().catch(() => ({}));
     const data = (body?.data || {}) as any;
     const providedId: string | null = body?.id || null;

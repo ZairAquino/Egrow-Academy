@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { getServerSession } from 'next-auth';
+import { verifyAdminAuth } from '@/lib/admin-auth';
 import type { CourseTemplateV1Data } from '@/types/course-template';
 import { CourseCategory, Difficulty, CourseStatus } from '@prisma/client';
 
@@ -226,14 +226,11 @@ export async function POST(request: NextRequest) {
   try {
     console.log('🔄 Iniciando creación de curso...');
     
-    // Verificar autenticación (comentado por ahora para desarrollo)
-    // const session = await getServerSession();
-    // if (!session || !session.user) {
-    //   return NextResponse.json(
-    //     { error: 'No autorizado' },
-    //     { status: 401 }
-    //   );
-    // }
+    // ✅ Verificar autenticación ADMIN
+    const authResult = await verifyAdminAuth(request);
+    if (!authResult.success) {
+      return authResult.response!;
+    }
     
     // Obtener datos del cuerpo de la petición
     const data: CourseFormData = await request.json();

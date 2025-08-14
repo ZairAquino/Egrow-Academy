@@ -1,0 +1,2316 @@
+{
+  "timestamp": "2025-08-13T23-22-22",
+  "environment": "development",
+  "purpose": "Backup antes de agregar campo role a tabla users",
+  "database": "egrow-academy-development",
+  "currentUserSchema": [
+    {
+      "column_name": "id",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "column_name": "email",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "column_name": "passwordHash",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "column_name": "firstName",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "column_name": "lastName",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "column_name": "username",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "column_name": "profileImage",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "column_name": "bio",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "column_name": "membershipLevel",
+      "data_type": "USER-DEFINED",
+      "is_nullable": "NO",
+      "column_default": "'FREE'::\"MembershipLevel\""
+    },
+    {
+      "column_name": "isActive",
+      "data_type": "boolean",
+      "is_nullable": "NO",
+      "column_default": "true"
+    },
+    {
+      "column_name": "emailVerified",
+      "data_type": "boolean",
+      "is_nullable": "NO",
+      "column_default": "false"
+    },
+    {
+      "column_name": "createdAt",
+      "data_type": "timestamp without time zone",
+      "is_nullable": "NO",
+      "column_default": "CURRENT_TIMESTAMP"
+    },
+    {
+      "column_name": "updatedAt",
+      "data_type": "timestamp without time zone",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "column_name": "lastLogin",
+      "data_type": "timestamp without time zone",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "column_name": "verificationCode",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "column_name": "stripeCustomerId",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "column_name": "verificationCodeExpires",
+      "data_type": "timestamp without time zone",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "column_name": "country",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "column_name": "hasBeenPremium",
+      "data_type": "boolean",
+      "is_nullable": "NO",
+      "column_default": "false"
+    }
+  ],
+  "stats": {
+    "users": 6,
+    "courses": 9,
+    "webinars": 1,
+    "enrollments": 11,
+    "userStreaks": 5,
+    "subscriptions": 0,
+    "payments": 0
+  },
+  "data": {
+    "users": [
+      {
+        "id": "cmdhipu140000la04lk6x6aqe",
+        "email": "rickflo528@gmail.com",
+        "passwordHash": null,
+        "firstName": "Rick",
+        "lastName": "Flores",
+        "username": null,
+        "profileImage": null,
+        "bio": null,
+        "membershipLevel": "FREE",
+        "isActive": true,
+        "emailVerified": true,
+        "createdAt": "2025-07-24T14:59:03.881Z",
+        "updatedAt": "2025-08-05T23:26:36.962Z",
+        "lastLogin": null,
+        "verificationCode": null,
+        "stripeCustomerId": null,
+        "verificationCodeExpires": null,
+        "country": null,
+        "hasBeenPremium": false,
+        "enrollments": [
+          {
+            "id": "cme20bbhw0001e5e4owc1fvl0",
+            "enrolledAt": "2025-08-07T23:07:03.282Z",
+            "completedAt": null,
+            "progressPercentage": "0",
+            "status": "ACTIVE",
+            "userId": "cmdhipu140000la04lk6x6aqe",
+            "courseId": "vibe-coding-claude-cursor"
+          },
+          {
+            "id": "cmdz680tb0001ib04efaee3zd",
+            "enrolledAt": "2025-08-05T23:29:08.639Z",
+            "completedAt": null,
+            "progressPercentage": "0",
+            "status": "ACTIVE",
+            "userId": "cmdhipu140000la04lk6x6aqe",
+            "courseId": "mockup-cero"
+          },
+          {
+            "id": "cmdzd7a970001l504xu28oxh8",
+            "enrolledAt": "2025-08-06T02:44:31.530Z",
+            "completedAt": null,
+            "progressPercentage": "0",
+            "status": "ACTIVE",
+            "userId": "cmdhipu140000la04lk6x6aqe",
+            "courseId": "cmddav1bv0001e5ko3o5dt2cv"
+          }
+        ],
+        "userStreaks": [
+          {
+            "id": "cme3fqgk70001e57orupq9hb7",
+            "userId": "cmdhipu140000la04lk6x6aqe",
+            "weekStartDate": "2025-08-04T06:00:00.000Z",
+            "currentWeekLessons": 0,
+            "currentStreak": 0,
+            "longestStreak": 0,
+            "totalPoints": 0,
+            "lifetimePointsEarned": 0,
+            "isCurrentWeekComplete": false,
+            "lastLessonCompletedAt": null,
+            "pointsSpentOnRecovery": 0,
+            "recoveryCount": 0,
+            "lastRecoveryUsed": null,
+            "createdAt": "2025-08-08T23:06:30.103Z",
+            "updatedAt": "2025-08-08T23:06:30.103Z"
+          }
+        ],
+        "subscriptions": [],
+        "payments": [],
+        "achievements": [],
+        "webinarRegistrations": []
+      },
+      {
+        "id": "cme0hkdp50000jv04arpy1qx2",
+        "email": "solismartinezluisdavid@gmail.com",
+        "passwordHash": null,
+        "firstName": "David",
+        "lastName": "Martine",
+        "username": null,
+        "profileImage": null,
+        "bio": null,
+        "membershipLevel": "PREMIUM",
+        "isActive": true,
+        "emailVerified": true,
+        "createdAt": "2025-08-06T21:34:27.162Z",
+        "updatedAt": "2025-08-07T00:26:47.140Z",
+        "lastLogin": null,
+        "verificationCode": null,
+        "stripeCustomerId": null,
+        "verificationCodeExpires": null,
+        "country": null,
+        "hasBeenPremium": false,
+        "enrollments": [
+          {
+            "id": "cme0nmm3d0004jj04kds6m61h",
+            "enrolledAt": "2025-08-07T00:24:09.049Z",
+            "completedAt": null,
+            "progressPercentage": "33",
+            "status": "ACTIVE",
+            "userId": "cme0hkdp50000jv04arpy1qx2",
+            "courseId": "cmds0r34u0000e5048x4gkzi7"
+          }
+        ],
+        "userStreaks": [],
+        "subscriptions": [],
+        "payments": [],
+        "achievements": [],
+        "webinarRegistrations": []
+      },
+      {
+        "id": "cmdhyu3bi0005jx048jinmv6t",
+        "email": "aquinozair3@gmail.com",
+        "passwordHash": null,
+        "firstName": "Zair",
+        "lastName": "Aquino",
+        "username": null,
+        "profileImage": null,
+        "bio": null,
+        "membershipLevel": "PREMIUM",
+        "isActive": true,
+        "emailVerified": true,
+        "createdAt": "2025-07-24T22:30:16.398Z",
+        "updatedAt": "2025-08-07T00:01:43.166Z",
+        "lastLogin": null,
+        "verificationCode": null,
+        "stripeCustomerId": null,
+        "verificationCodeExpires": null,
+        "country": null,
+        "hasBeenPremium": false,
+        "enrollments": [
+          {
+            "id": "cme1u5o8g0001jv049usypqk5",
+            "enrolledAt": "2025-08-07T20:14:42.160Z",
+            "completedAt": null,
+            "progressPercentage": "0",
+            "status": "ACTIVE",
+            "userId": "cmdhyu3bi0005jx048jinmv6t",
+            "courseId": "cme1s4sb90001e5zo9it0330m"
+          },
+          {
+            "id": "cme1pity70001jt04fs41qwzk",
+            "enrolledAt": "2025-08-07T18:04:58.014Z",
+            "completedAt": null,
+            "progressPercentage": "0",
+            "status": "ACTIVE",
+            "userId": "cmdhyu3bi0005jx048jinmv6t",
+            "courseId": "cmdf4hcn50000e5isc57n04xy"
+          }
+        ],
+        "userStreaks": [],
+        "subscriptions": [],
+        "payments": [],
+        "achievements": [],
+        "webinarRegistrations": []
+      },
+      {
+        "id": "cme37m5uh0002vqiw9dd0thj5",
+        "email": "mallotomendoza@gmail.com",
+        "passwordHash": "$2b$12$N40arFmii9bNfWdrvLHFA.ZZi4QGtZQZj3bdAiPVDzMFVCaKVSDny",
+        "firstName": "jesus",
+        "lastName": "gonzales",
+        "username": "arturd2",
+        "profileImage": null,
+        "bio": null,
+        "membershipLevel": "PREMIUM",
+        "isActive": true,
+        "emailVerified": true,
+        "createdAt": "2025-08-08T19:19:12.665Z",
+        "updatedAt": "2025-08-08T19:19:33.382Z",
+        "lastLogin": "2025-08-08T19:19:33.381Z",
+        "verificationCode": null,
+        "stripeCustomerId": null,
+        "verificationCodeExpires": null,
+        "country": "México",
+        "hasBeenPremium": false,
+        "enrollments": [],
+        "userStreaks": [
+          {
+            "id": "cme37mkmt0006vqiwa1ux4tol",
+            "userId": "cme37m5uh0002vqiw9dd0thj5",
+            "weekStartDate": "2025-08-04T06:00:00.000Z",
+            "currentWeekLessons": 0,
+            "currentStreak": 0,
+            "longestStreak": 0,
+            "totalPoints": 0,
+            "lifetimePointsEarned": 0,
+            "isCurrentWeekComplete": false,
+            "lastLessonCompletedAt": null,
+            "pointsSpentOnRecovery": 0,
+            "recoveryCount": 0,
+            "lastRecoveryUsed": null,
+            "createdAt": "2025-08-08T19:19:31.829Z",
+            "updatedAt": "2025-08-08T19:19:31.829Z"
+          }
+        ],
+        "subscriptions": [],
+        "payments": [],
+        "achievements": [],
+        "webinarRegistrations": []
+      },
+      {
+        "id": "cme3d7va10002e5acs9gcat1n",
+        "email": "luissolis.17@outlook.com",
+        "passwordHash": "$2b$12$dMt5wT9qnU61PEvWmOIXOuicD7idzuQz2gZAJW4/wbXiAjAxUTLve",
+        "firstName": "Luis sad",
+        "lastName": "Solis",
+        "username": "atest",
+        "profileImage": null,
+        "bio": null,
+        "membershipLevel": "FREE",
+        "isActive": true,
+        "emailVerified": true,
+        "createdAt": "2025-08-08T21:56:03.481Z",
+        "updatedAt": "2025-08-08T22:18:26.626Z",
+        "lastLogin": "2025-08-08T22:18:26.622Z",
+        "verificationCode": null,
+        "stripeCustomerId": null,
+        "verificationCodeExpires": null,
+        "country": "El Salvador",
+        "hasBeenPremium": false,
+        "enrollments": [],
+        "userStreaks": [
+          {
+            "id": "cme3d8e750006e5achvgy798x",
+            "userId": "cme3d7va10002e5acs9gcat1n",
+            "weekStartDate": "2025-08-04T06:00:00.000Z",
+            "currentWeekLessons": 0,
+            "currentStreak": 0,
+            "longestStreak": 0,
+            "totalPoints": 0,
+            "lifetimePointsEarned": 0,
+            "isCurrentWeekComplete": false,
+            "lastLessonCompletedAt": null,
+            "pointsSpentOnRecovery": 0,
+            "recoveryCount": 0,
+            "lastRecoveryUsed": null,
+            "createdAt": "2025-08-08T21:56:28.001Z",
+            "updatedAt": "2025-08-08T21:56:28.001Z"
+          }
+        ],
+        "subscriptions": [],
+        "payments": [],
+        "achievements": [],
+        "webinarRegistrations": []
+      },
+      {
+        "id": "cme1ybn260003e5q4dpppa9tb",
+        "email": "luisdavid.ls47@gmail.com",
+        "passwordHash": "$2b$12$0zs4jaa8S5NqJvn.MoR7zO0cG487hxkmrQR8vBU1p0ei7TjIsyhBy",
+        "firstName": "Luis",
+        "lastName": "test",
+        "username": "Luistest",
+        "profileImage": null,
+        "bio": null,
+        "membershipLevel": "PREMIUM",
+        "isActive": true,
+        "emailVerified": true,
+        "createdAt": "2025-08-07T22:11:19.038Z",
+        "updatedAt": "2025-08-13T19:58:27.182Z",
+        "lastLogin": "2025-08-13T19:58:27.181Z",
+        "verificationCode": null,
+        "stripeCustomerId": null,
+        "verificationCodeExpires": null,
+        "country": "Honduras",
+        "hasBeenPremium": false,
+        "enrollments": [
+          {
+            "id": "cme1ycado000ce5q4s54xcyv0",
+            "enrolledAt": "2025-08-07T22:11:49.258Z",
+            "completedAt": null,
+            "progressPercentage": "78",
+            "status": "ACTIVE",
+            "userId": "cme1ybn260003e5q4dpppa9tb",
+            "courseId": "mockup-cero"
+          },
+          {
+            "id": "cme20degm0001e5102ow8v7fp",
+            "enrolledAt": "2025-08-07T23:08:40.435Z",
+            "completedAt": null,
+            "progressPercentage": "0",
+            "status": "ACTIVE",
+            "userId": "cme1ybn260003e5q4dpppa9tb",
+            "courseId": "vibe-coding-claude-cursor"
+          },
+          {
+            "id": "cme1zsnta000xe5tkmp2f41m0",
+            "enrolledAt": "2025-08-07T22:52:32.781Z",
+            "completedAt": null,
+            "progressPercentage": "73",
+            "status": "ACTIVE",
+            "userId": "cme1ybn260003e5q4dpppa9tb",
+            "courseId": "cmdupxdio0000e51oeuyvbqns"
+          },
+          {
+            "id": "cme31p1900004e5tw79aai8kz",
+            "enrolledAt": "2025-08-08T16:33:28.973Z",
+            "completedAt": null,
+            "progressPercentage": "0",
+            "status": "ACTIVE",
+            "userId": "cme1ybn260003e5q4dpppa9tb",
+            "courseId": "cme30lnzr0001e5lk928moflk"
+          },
+          {
+            "id": "cme34j2yy0001e5gkjadf8e8r",
+            "enrolledAt": "2025-08-08T17:52:50.120Z",
+            "completedAt": null,
+            "progressPercentage": "0",
+            "status": "ACTIVE",
+            "userId": "cme1ybn260003e5q4dpppa9tb",
+            "courseId": "cme1s4sb90001e5zo9it0330m"
+          }
+        ],
+        "userStreaks": [
+          {
+            "id": "cme1yc23i0007e5q4xy6cm69d",
+            "userId": "cme1ybn260003e5q4dpppa9tb",
+            "weekStartDate": "2025-08-04T06:00:00.000Z",
+            "currentWeekLessons": 14,
+            "currentStreak": 1,
+            "longestStreak": 1,
+            "totalPoints": 17,
+            "lifetimePointsEarned": 17,
+            "isCurrentWeekComplete": true,
+            "lastLessonCompletedAt": "2025-08-07T23:12:25.637Z",
+            "pointsSpentOnRecovery": 0,
+            "recoveryCount": 0,
+            "lastRecoveryUsed": null,
+            "createdAt": "2025-08-07T22:11:38.526Z",
+            "updatedAt": "2025-08-07T23:12:25.637Z"
+          },
+          {
+            "id": "cmeae7ykv000pe5oookizsbt4",
+            "userId": "cme1ybn260003e5q4dpppa9tb",
+            "weekStartDate": "2025-08-11T06:00:00.000Z",
+            "currentWeekLessons": 0,
+            "currentStreak": 1,
+            "longestStreak": 1,
+            "totalPoints": 17,
+            "lifetimePointsEarned": 17,
+            "isCurrentWeekComplete": false,
+            "lastLessonCompletedAt": null,
+            "pointsSpentOnRecovery": 0,
+            "recoveryCount": 0,
+            "lastRecoveryUsed": null,
+            "createdAt": "2025-08-13T19:58:30.607Z",
+            "updatedAt": "2025-08-13T19:58:30.607Z"
+          }
+        ],
+        "subscriptions": [],
+        "payments": [],
+        "achievements": [],
+        "webinarRegistrations": []
+      }
+    ],
+    "courses": [
+      {
+        "id": "cmddav1bv0001e5ko3o5dt2cv",
+        "title": "Desarrollo Web Full Stack con React y Node.js",
+        "slug": "desarrollo-web-fullstack",
+        "description": "Aprende a crear aplicaciones web completas desde cero. Domina React, Node.js, Express, MongoDB y despliegue en la nube.",
+        "shortDescription": "Curso completo de desarrollo web full stack con las tecnologías más demandadas del mercado.",
+        "imageUrl": "/images/16.png",
+        "price": "99.98999999999999",
+        "isFree": false,
+        "requiresAuth": true,
+        "difficulty": "INTERMEDIATE",
+        "durationHours": 25,
+        "lessonsCount": 15,
+        "studentsCount": 0,
+        "rating": "4.8",
+        "status": "PUBLISHED",
+        "createdAt": "2025-07-21T16:08:04.987Z",
+        "updatedAt": "2025-08-02T21:32:57.975Z",
+        "instructorId": null,
+        "category": "DESARROLLO_WEB",
+        "meta": null,
+        "lessons": [
+          {
+            "id": "cmddav1g90003e5kov39obh94",
+            "title": "Introducción al Desarrollo Full Stack",
+            "content": "Conceptos fundamentales del desarrollo web full stack y las tecnologías que aprenderás.",
+            "videoUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "duration": 15,
+            "order": 1,
+            "createdAt": "2025-07-21T16:08:05.146Z",
+            "updatedAt": "2025-07-21T16:08:05.146Z",
+            "courseId": "cmddav1bv0001e5ko3o5dt2cv"
+          },
+          {
+            "id": "cmddav1kh0005e5kow4mgzmct",
+            "title": "Configuración del Entorno de Desarrollo",
+            "content": "Instalación y configuración de Node.js, npm, Git y herramientas de desarrollo.",
+            "videoUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "duration": 20,
+            "order": 2,
+            "createdAt": "2025-07-21T16:08:05.298Z",
+            "updatedAt": "2025-07-21T16:08:05.298Z",
+            "courseId": "cmddav1bv0001e5ko3o5dt2cv"
+          },
+          {
+            "id": "cmddav1mn0007e5kohizki664",
+            "title": "Fundamentos de HTML5 y CSS3",
+            "content": "Estructura semántica, flexbox, grid y diseño responsive moderno.",
+            "videoUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "duration": 25,
+            "order": 3,
+            "createdAt": "2025-07-21T16:08:05.375Z",
+            "updatedAt": "2025-07-21T16:08:05.375Z",
+            "courseId": "cmddav1bv0001e5ko3o5dt2cv"
+          },
+          {
+            "id": "cmddav1os0009e5koev6dgbpe",
+            "title": "JavaScript Moderno (ES6+)",
+            "content": "Arrow functions, destructuring, async/await, módulos y promesas.",
+            "videoUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "duration": 30,
+            "order": 4,
+            "createdAt": "2025-07-21T16:08:05.452Z",
+            "updatedAt": "2025-07-21T16:08:05.452Z",
+            "courseId": "cmddav1bv0001e5ko3o5dt2cv"
+          },
+          {
+            "id": "cmddav1qy000be5kouysaarac",
+            "title": "Introducción a React",
+            "content": "Componentes, props, estado, hooks y ciclo de vida de componentes.",
+            "videoUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "duration": 35,
+            "order": 5,
+            "createdAt": "2025-07-21T16:08:05.530Z",
+            "updatedAt": "2025-07-21T16:08:05.530Z",
+            "courseId": "cmddav1bv0001e5ko3o5dt2cv"
+          },
+          {
+            "id": "cmddav1t3000de5kofiq8ig9o",
+            "title": "Estado Global con Context API",
+            "content": "Gestión de estado global, useContext y patrones de diseño.",
+            "videoUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "duration": 30,
+            "order": 6,
+            "createdAt": "2025-07-21T16:08:05.607Z",
+            "updatedAt": "2025-07-21T16:08:05.607Z",
+            "courseId": "cmddav1bv0001e5ko3o5dt2cv"
+          },
+          {
+            "id": "cmddav1v8000fe5kocwfdvahi",
+            "title": "Routing con React Router",
+            "content": "Navegación, rutas dinámicas, protected routes y lazy loading.",
+            "videoUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "duration": 25,
+            "order": 7,
+            "createdAt": "2025-07-21T16:08:05.685Z",
+            "updatedAt": "2025-07-21T16:08:05.685Z",
+            "courseId": "cmddav1bv0001e5ko3o5dt2cv"
+          },
+          {
+            "id": "cmddav1xd000he5koloq5uiz6",
+            "title": "Backend con Node.js y Express",
+            "content": "Servidor HTTP, middleware, rutas, controladores y validación.",
+            "videoUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "duration": 40,
+            "order": 8,
+            "createdAt": "2025-07-21T16:08:05.761Z",
+            "updatedAt": "2025-07-21T16:08:05.761Z",
+            "courseId": "cmddav1bv0001e5ko3o5dt2cv"
+          },
+          {
+            "id": "cmddav1zj000je5koc6apfrhg",
+            "title": "Base de Datos MongoDB",
+            "content": "CRUD operations, Mongoose ODM, esquemas y relaciones.",
+            "videoUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "duration": 35,
+            "order": 9,
+            "createdAt": "2025-07-21T16:08:05.839Z",
+            "updatedAt": "2025-07-21T16:08:05.839Z",
+            "courseId": "cmddav1bv0001e5ko3o5dt2cv"
+          },
+          {
+            "id": "cmddav21p000le5ko97szwugj",
+            "title": "Autenticación JWT",
+            "content": "Registro, login, tokens JWT, middleware de autenticación.",
+            "videoUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "duration": 30,
+            "order": 10,
+            "createdAt": "2025-07-21T16:08:05.917Z",
+            "updatedAt": "2025-07-21T16:08:05.917Z",
+            "courseId": "cmddav1bv0001e5ko3o5dt2cv"
+          },
+          {
+            "id": "cmddav23u000ne5koz2liprvy",
+            "title": "API RESTful",
+            "content": "Diseño de APIs, endpoints, status codes y documentación.",
+            "videoUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "duration": 25,
+            "order": 11,
+            "createdAt": "2025-07-21T16:08:05.995Z",
+            "updatedAt": "2025-07-21T16:08:05.995Z",
+            "courseId": "cmddav1bv0001e5ko3o5dt2cv"
+          },
+          {
+            "id": "cmddav25z000pe5ko4qvr1yso",
+            "title": "Integración Frontend-Backend",
+            "content": "Consumo de APIs, manejo de errores, loading states.",
+            "videoUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "duration": 30,
+            "order": 12,
+            "createdAt": "2025-07-21T16:08:06.071Z",
+            "updatedAt": "2025-07-21T16:08:06.071Z",
+            "courseId": "cmddav1bv0001e5ko3o5dt2cv"
+          },
+          {
+            "id": "cmddav284000re5koh7bjruv2",
+            "title": "Despliegue en la Nube",
+            "content": "Vercel, Heroku, MongoDB Atlas y variables de entorno.",
+            "videoUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "duration": 20,
+            "order": 13,
+            "createdAt": "2025-07-21T16:08:06.148Z",
+            "updatedAt": "2025-07-21T16:08:06.148Z",
+            "courseId": "cmddav1bv0001e5ko3o5dt2cv"
+          },
+          {
+            "id": "cmddav2a9000te5kojph0ctfh",
+            "title": "Optimización y Performance",
+            "content": "Lazy loading, code splitting, caching y métricas de rendimiento.",
+            "videoUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "duration": 25,
+            "order": 14,
+            "createdAt": "2025-07-21T16:08:06.225Z",
+            "updatedAt": "2025-07-21T16:08:06.225Z",
+            "courseId": "cmddav1bv0001e5ko3o5dt2cv"
+          },
+          {
+            "id": "cmddav2ce000ve5kojb1tytg5",
+            "title": "Proyecto Final: E-commerce",
+            "content": "Desarrollo completo de una aplicación de e-commerce full stack.",
+            "videoUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "duration": 60,
+            "order": 15,
+            "createdAt": "2025-07-21T16:08:06.302Z",
+            "updatedAt": "2025-07-21T16:08:06.302Z",
+            "courseId": "cmddav1bv0001e5ko3o5dt2cv"
+          }
+        ],
+        "enrollments": [
+          {
+            "id": "cmdzd7a970001l504xu28oxh8",
+            "enrolledAt": "2025-08-06T02:44:31.530Z",
+            "completedAt": null,
+            "progressPercentage": "0",
+            "status": "ACTIVE",
+            "userId": "cmdhipu140000la04lk6x6aqe",
+            "courseId": "cmddav1bv0001e5ko3o5dt2cv"
+          }
+        ],
+        "ratings": [],
+        "comments": []
+      },
+      {
+        "id": "cmdf4hcn50000e5isc57n04xy",
+        "title": "Monetiza con la IA",
+        "slug": "monetiza-ia",
+        "description": "Descubre cómo generar ingresos utilizando inteligencia artificial. Aprende estrategias prácticas para monetizar herramientas de IA y crear fuentes de ingresos pasivos.",
+        "shortDescription": "Aprende a generar ingresos con inteligencia artificial",
+        "imageUrl": "/images/monetiza-ia.png",
+        "price": "0",
+        "isFree": true,
+        "requiresAuth": true,
+        "difficulty": "INTERMEDIATE",
+        "durationHours": 3,
+        "lessonsCount": 8,
+        "studentsCount": 1250,
+        "rating": "4.8",
+        "status": "PUBLISHED",
+        "createdAt": "2025-07-22T22:45:01.121Z",
+        "updatedAt": "2025-07-31T22:15:36.585Z",
+        "instructorId": null,
+        "category": "IA_PARA_EMPRENDER",
+        "meta": null,
+        "lessons": [
+          {
+            "id": "cmdf7ygs80001e5ro8cgyad7s",
+            "title": "1.1 Fundamentos de Monetización con IA",
+            "content": "Introducción a los conceptos básicos de monetización utilizando inteligencia artificial. Descubre las oportunidades del mercado digital.",
+            "videoUrl": "https://www.youtube.com/watch?v=example1",
+            "duration": 20,
+            "order": 1,
+            "createdAt": "2025-07-23T00:22:18.488Z",
+            "updatedAt": "2025-07-23T00:22:18.488Z",
+            "courseId": "cmdf4hcn50000e5isc57n04xy"
+          },
+          {
+            "id": "cmdf7ygwn0003e5roxziuhqgp",
+            "title": "2.1 Estrategias de ChatGPT para Negocios",
+            "content": "Aprende a utilizar ChatGPT para crear productos digitales, automatizar procesos y generar ingresos online.",
+            "videoUrl": "https://www.youtube.com/watch?v=example2",
+            "duration": 25,
+            "order": 2,
+            "createdAt": "2025-07-23T00:22:18.647Z",
+            "updatedAt": "2025-07-23T00:22:18.647Z",
+            "courseId": "cmdf4hcn50000e5isc57n04xy"
+          },
+          {
+            "id": "cmdf7ygyv0005e5roa99bawm8",
+            "title": "3.1 Creación de Productos Digitales",
+            "content": "Descubre cómo crear ebooks, cursos online, plantillas y otros productos digitales con herramientas de IA.",
+            "videoUrl": "https://www.youtube.com/watch?v=example3",
+            "duration": 30,
+            "order": 3,
+            "createdAt": "2025-07-23T00:22:18.727Z",
+            "updatedAt": "2025-07-23T00:22:18.727Z",
+            "courseId": "cmdf4hcn50000e5isc57n04xy"
+          },
+          {
+            "id": "cmdf7yh110007e5ro0b6lxxk0",
+            "title": "4.1 Automatización de Ventas",
+            "content": "Implementa sistemas automatizados de venta, marketing y atención al cliente utilizando IA.",
+            "videoUrl": "https://www.youtube.com/watch?v=example4",
+            "duration": 25,
+            "order": 4,
+            "createdAt": "2025-07-23T00:22:18.806Z",
+            "updatedAt": "2025-07-23T00:22:18.806Z",
+            "courseId": "cmdf4hcn50000e5isc57n04xy"
+          },
+          {
+            "id": "cmdf7yh370009e5roitshayuk",
+            "title": "5.1 Marketing Digital con IA",
+            "content": "Optimiza tus campañas de marketing digital, SEO y redes sociales con herramientas de inteligencia artificial.",
+            "videoUrl": "https://www.youtube.com/watch?v=example5",
+            "duration": 30,
+            "order": 5,
+            "createdAt": "2025-07-23T00:22:18.884Z",
+            "updatedAt": "2025-07-23T00:22:18.884Z",
+            "courseId": "cmdf4hcn50000e5isc57n04xy"
+          },
+          {
+            "id": "cmdf7yh5f000be5rorgf8ujq6",
+            "title": "6.1 Ingresos Pasivos con IA",
+            "content": "Crea múltiples fuentes de ingresos pasivos utilizando estrategias de automatización e inteligencia artificial.",
+            "videoUrl": "https://www.youtube.com/watch?v=example6",
+            "duration": 25,
+            "order": 6,
+            "createdAt": "2025-07-23T00:22:18.963Z",
+            "updatedAt": "2025-07-23T00:22:18.963Z",
+            "courseId": "cmdf4hcn50000e5isc57n04xy"
+          },
+          {
+            "id": "cmdf7yh7k000de5roe70p5f0n",
+            "title": "7.1 Analytics y Optimización",
+            "content": "Utiliza herramientas de analytics y IA para analizar, optimizar y escalar tus resultados de monetización.",
+            "videoUrl": "https://www.youtube.com/watch?v=example7",
+            "duration": 20,
+            "order": 7,
+            "createdAt": "2025-07-23T00:22:19.041Z",
+            "updatedAt": "2025-07-23T00:22:19.041Z",
+            "courseId": "cmdf4hcn50000e5isc57n04xy"
+          },
+          {
+            "id": "cmdf7yh9s000fe5rotp7aikd0",
+            "title": "8.1 Escalabilidad y Tendencias Futuras",
+            "content": "Aprende a escalar tu negocio digital y descubre las tendencias futuras en monetización con IA.",
+            "videoUrl": "https://www.youtube.com/watch?v=example8",
+            "duration": 20,
+            "order": 8,
+            "createdAt": "2025-07-23T00:22:19.120Z",
+            "updatedAt": "2025-07-23T00:22:19.120Z",
+            "courseId": "cmdf4hcn50000e5isc57n04xy"
+          }
+        ],
+        "enrollments": [
+          {
+            "id": "cme1pity70001jt04fs41qwzk",
+            "enrolledAt": "2025-08-07T18:04:58.014Z",
+            "completedAt": null,
+            "progressPercentage": "0",
+            "status": "ACTIVE",
+            "userId": "cmdhyu3bi0005jx048jinmv6t",
+            "courseId": "cmdf4hcn50000e5isc57n04xy"
+          }
+        ],
+        "ratings": [],
+        "comments": []
+      },
+      {
+        "id": "cmds0r34u0000e5048x4gkzi7",
+        "title": "Asistentes virtuales con IA",
+        "slug": "asistentes-virtuales-ia",
+        "description": "Descubre cómo crear y configurar asistentes virtuales inteligentes para automatizar tareas y mejorar la productividad en tu organización. Domina Google Gemini, ChatGPT y otras herramientas de IA.",
+        "shortDescription": "Domina la creación de asistentes virtuales personalizados para potenciar tu negocio utilizando Google Gemini y ChatGPT",
+        "imageUrl": "/images/18.png",
+        "price": "0",
+        "isFree": true,
+        "requiresAuth": false,
+        "difficulty": "INTERMEDIATE",
+        "durationHours": 4,
+        "lessonsCount": 21,
+        "studentsCount": 0,
+        "rating": "0",
+        "status": "PUBLISHED",
+        "createdAt": "2025-07-31T23:21:37.183Z",
+        "updatedAt": "2025-08-04T23:13:50.825Z",
+        "instructorId": null,
+        "category": "IA_PARA_EMPRENDER",
+        "meta": null,
+        "lessons": [
+          {
+            "id": "cmdsziu3w0001e5ao9kf1iqnh",
+            "title": "1.1 Introducción a los Asistentes Virtuales con IA",
+            "content": "Contenido de la lección 1.1: 1.1 Introducción a los Asistentes Virtuales con IA",
+            "videoUrl": null,
+            "duration": null,
+            "order": 1,
+            "createdAt": "2025-08-01T15:34:58.796Z",
+            "updatedAt": "2025-08-01T15:34:58.796Z",
+            "courseId": "cmds0r34u0000e5048x4gkzi7"
+          },
+          {
+            "id": "cmdsziu8p0003e5aof9isqghh",
+            "title": "1.2 Beneficios Empresariales Clave",
+            "content": "Contenido de la lección 1.2: 1.2 Beneficios Empresariales Clave",
+            "videoUrl": null,
+            "duration": null,
+            "order": 2,
+            "createdAt": "2025-08-01T15:34:58.969Z",
+            "updatedAt": "2025-08-01T15:34:58.969Z",
+            "courseId": "cmds0r34u0000e5048x4gkzi7"
+          },
+          {
+            "id": "cmdsziub30005e5aose3jmlkc",
+            "title": "1.3 Comparación: Google Gemini vs ChatGPT",
+            "content": "Contenido de la lección 1.3: 1.3 Casos de Uso Empresariales",
+            "videoUrl": null,
+            "duration": null,
+            "order": 3,
+            "createdAt": "2025-08-01T15:34:59.056Z",
+            "updatedAt": "2025-08-01T15:39:11.791Z",
+            "courseId": "cmds0r34u0000e5048x4gkzi7"
+          },
+          {
+            "id": "cmdsziudi0007e5aod3itk745",
+            "title": "1.4 Planificación Estratégica",
+            "content": "Contenido de la lección 1.4: 1.4 Planificación Estratégica",
+            "videoUrl": null,
+            "duration": null,
+            "order": 4,
+            "createdAt": "2025-08-01T15:34:59.143Z",
+            "updatedAt": "2025-08-01T15:34:59.143Z",
+            "courseId": "cmds0r34u0000e5048x4gkzi7"
+          },
+          {
+            "id": "cmdsziufw0009e5aol87339z2",
+            "title": "2.1 Preparación de Documentación Empresarial",
+            "content": "Contenido de la lección 2.1: 2.1 Preparación de Documentación Empresarial",
+            "videoUrl": null,
+            "duration": null,
+            "order": 5,
+            "createdAt": "2025-08-01T15:34:59.228Z",
+            "updatedAt": "2025-08-01T15:34:59.228Z",
+            "courseId": "cmds0r34u0000e5048x4gkzi7"
+          },
+          {
+            "id": "cmdsziuia000be5aoonmaky6k",
+            "title": "2.2 Configuración de Procesos",
+            "content": "Contenido de la lección 2.2: 2.2 Configuración de Procesos",
+            "videoUrl": null,
+            "duration": null,
+            "order": 6,
+            "createdAt": "2025-08-01T15:34:59.314Z",
+            "updatedAt": "2025-08-01T15:34:59.314Z",
+            "courseId": "cmds0r34u0000e5048x4gkzi7"
+          },
+          {
+            "id": "cmdsziuko000de5aog4u9lxz5",
+            "title": "2.3 Establecimiento de Metodologías",
+            "content": "Contenido de la lección 2.3: 2.3 Establecimiento de Metodologías",
+            "videoUrl": null,
+            "duration": null,
+            "order": 7,
+            "createdAt": "2025-08-01T15:34:59.401Z",
+            "updatedAt": "2025-08-01T15:34:59.401Z",
+            "courseId": "cmds0r34u0000e5048x4gkzi7"
+          },
+          {
+            "id": "cmdsziun2000fe5ao1jtbran3",
+            "title": "3.1 Introducción a Google Gemini",
+            "content": "Contenido de la lección 3.1: 3.1 Introducción a Google Gemini",
+            "videoUrl": null,
+            "duration": null,
+            "order": 8,
+            "createdAt": "2025-08-01T15:34:59.487Z",
+            "updatedAt": "2025-08-01T15:34:59.487Z",
+            "courseId": "cmds0r34u0000e5048x4gkzi7"
+          },
+          {
+            "id": "cmdsziuph000he5aourkr5t1i",
+            "title": "3.2 Configuración de Gemini",
+            "content": "Contenido de la lección 3.2: 3.2 Configuración de Gemini",
+            "videoUrl": null,
+            "duration": null,
+            "order": 9,
+            "createdAt": "2025-08-01T15:34:59.573Z",
+            "updatedAt": "2025-08-01T15:34:59.573Z",
+            "courseId": "cmds0r34u0000e5048x4gkzi7"
+          },
+          {
+            "id": "cmdsziurw000je5ao9omf2odc",
+            "title": "3.3 Creación de Asistente con Gemini",
+            "content": "Contenido de la lección 3.3: 3.3 Creación de Asistente con Gemini",
+            "videoUrl": null,
+            "duration": null,
+            "order": 10,
+            "createdAt": "2025-08-01T15:34:59.660Z",
+            "updatedAt": "2025-08-01T15:34:59.660Z",
+            "courseId": "cmds0r34u0000e5048x4gkzi7"
+          },
+          {
+            "id": "cmdsziuu9000le5aobg7je8p6",
+            "title": "3.4 Optimización de Prompts",
+            "content": "Contenido de la lección 3.4: 3.4 Optimización de Prompts",
+            "videoUrl": null,
+            "duration": null,
+            "order": 11,
+            "createdAt": "2025-08-01T15:34:59.746Z",
+            "updatedAt": "2025-08-01T15:34:59.746Z",
+            "courseId": "cmds0r34u0000e5048x4gkzi7"
+          },
+          {
+            "id": "cmdsziuwo000ne5aolwpkgsl1",
+            "title": "4.1 Introducción a ChatGPT",
+            "content": "Contenido de la lección 4.1: 4.1 Introducción a ChatGPT",
+            "videoUrl": null,
+            "duration": null,
+            "order": 12,
+            "createdAt": "2025-08-01T15:34:59.832Z",
+            "updatedAt": "2025-08-01T15:34:59.832Z",
+            "courseId": "cmds0r34u0000e5048x4gkzi7"
+          },
+          {
+            "id": "cmdsziuz2000pe5aoco6iiuje",
+            "title": "4.2 Configuración de ChatGPT",
+            "content": "Contenido de la lección 4.2: 4.2 Configuración de ChatGPT",
+            "videoUrl": null,
+            "duration": null,
+            "order": 13,
+            "createdAt": "2025-08-01T15:34:59.918Z",
+            "updatedAt": "2025-08-01T15:34:59.918Z",
+            "courseId": "cmds0r34u0000e5048x4gkzi7"
+          },
+          {
+            "id": "cmdsziv1h000re5ao0a2w1mkf",
+            "title": "4.3 Creación de Asistente con ChatGPT",
+            "content": "Contenido de la lección 4.3: 4.3 Creación de Asistente con ChatGPT",
+            "videoUrl": null,
+            "duration": null,
+            "order": 14,
+            "createdAt": "2025-08-01T15:35:00.005Z",
+            "updatedAt": "2025-08-01T15:35:00.005Z",
+            "courseId": "cmds0r34u0000e5048x4gkzi7"
+          },
+          {
+            "id": "cmdsziv3v000te5aoo22nck44",
+            "title": "4.4 GPTs Personalizados",
+            "content": "Contenido de la lección 4.4: 4.4 GPTs Personalizados",
+            "videoUrl": null,
+            "duration": null,
+            "order": 15,
+            "createdAt": "2025-08-01T15:35:00.092Z",
+            "updatedAt": "2025-08-01T15:35:00.092Z",
+            "courseId": "cmds0r34u0000e5048x4gkzi7"
+          },
+          {
+            "id": "cmdsziv69000ve5ao5tog460x",
+            "title": "5.1 Optimización de Rendimiento",
+            "content": "Contenido de la lección 5.1: 5.1 Optimización de Rendimiento",
+            "videoUrl": null,
+            "duration": null,
+            "order": 16,
+            "createdAt": "2025-08-01T15:35:00.178Z",
+            "updatedAt": "2025-08-01T15:35:00.178Z",
+            "courseId": "cmds0r34u0000e5048x4gkzi7"
+          },
+          {
+            "id": "cmdsziv8o000xe5aoxqhkk651",
+            "title": "5.2 Pruebas y Validación",
+            "content": "Contenido de la lección 5.2: 5.2 Pruebas y Validación",
+            "videoUrl": null,
+            "duration": null,
+            "order": 17,
+            "createdAt": "2025-08-01T15:35:00.264Z",
+            "updatedAt": "2025-08-01T15:35:00.264Z",
+            "courseId": "cmds0r34u0000e5048x4gkzi7"
+          },
+          {
+            "id": "cmdszivb2000ze5ao3eccaj4f",
+            "title": "5.3 Mantenimiento Continuo",
+            "content": "Contenido de la lección 5.3: 5.3 Mantenimiento Continuo",
+            "videoUrl": null,
+            "duration": null,
+            "order": 18,
+            "createdAt": "2025-08-01T15:35:00.350Z",
+            "updatedAt": "2025-08-01T15:35:00.350Z",
+            "courseId": "cmds0r34u0000e5048x4gkzi7"
+          },
+          {
+            "id": "cmdszivdg0011e5aorowmnx4l",
+            "title": "5.4 Escalabilidad y Mejoras",
+            "content": "Contenido de la lección 5.4: 5.4 Escalabilidad y Mejoras",
+            "videoUrl": null,
+            "duration": null,
+            "order": 19,
+            "createdAt": "2025-08-01T15:35:00.437Z",
+            "updatedAt": "2025-08-01T15:35:00.437Z",
+            "courseId": "cmds0r34u0000e5048x4gkzi7"
+          },
+          {
+            "id": "cmdszivfv0013e5aowzs8cmd9",
+            "title": "5.5 Monitoreo y Analytics",
+            "content": "Contenido de la lección 5.5: 5.5 Monitoreo y Analytics",
+            "videoUrl": null,
+            "duration": null,
+            "order": 20,
+            "createdAt": "2025-08-01T15:35:00.523Z",
+            "updatedAt": "2025-08-01T15:35:00.523Z",
+            "courseId": "cmds0r34u0000e5048x4gkzi7"
+          },
+          {
+            "id": "cmdszivi90015e5aog2xc0rl2",
+            "title": "5.6 Conclusiones y Próximos Pasos",
+            "content": "Contenido de la lección 5.6: 5.6 Conclusiones y Próximos Pasos",
+            "videoUrl": null,
+            "duration": null,
+            "order": 21,
+            "createdAt": "2025-08-01T15:35:00.610Z",
+            "updatedAt": "2025-08-01T15:35:00.610Z",
+            "courseId": "cmds0r34u0000e5048x4gkzi7"
+          }
+        ],
+        "enrollments": [
+          {
+            "id": "cme0nmm3d0004jj04kds6m61h",
+            "enrolledAt": "2025-08-07T00:24:09.049Z",
+            "completedAt": null,
+            "progressPercentage": "33",
+            "status": "ACTIVE",
+            "userId": "cme0hkdp50000jv04arpy1qx2",
+            "courseId": "cmds0r34u0000e5048x4gkzi7"
+          }
+        ],
+        "ratings": [],
+        "comments": []
+      },
+      {
+        "id": "cmdupxdio0000e51oeuyvbqns",
+        "title": "Aprende a crear videos profesionales con IA",
+        "slug": "videos-profesionales-ia",
+        "description": "Domina las herramientas de IA para crear contenido audiovisual profesional. Aprende a generar videos, editar con inteligencia artificial y optimizar para diferentes plataformas.",
+        "shortDescription": "Crea contenido audiovisual profesional usando inteligencia artificial",
+        "imageUrl": "/images/15.png",
+        "price": "0",
+        "isFree": false,
+        "requiresAuth": true,
+        "difficulty": "INTERMEDIATE",
+        "durationHours": 18,
+        "lessonsCount": 11,
+        "studentsCount": 0,
+        "rating": "0",
+        "status": "PUBLISHED",
+        "createdAt": "2025-08-02T20:41:53.328Z",
+        "updatedAt": "2025-08-02T21:32:47.206Z",
+        "instructorId": null,
+        "category": "MARKETING_DIGITAL",
+        "meta": null,
+        "lessons": [
+          {
+            "id": "vpc-mod1-les3",
+            "title": "1.3 Casos de Uso y Aplicaciones Comerciales",
+            "content": "Identifica oportunidades de negocio y aplicaciones prácticas",
+            "videoUrl": null,
+            "duration": 18,
+            "order": 3,
+            "createdAt": "2025-08-02T21:32:46.511Z",
+            "updatedAt": "2025-08-02T21:32:46.511Z",
+            "courseId": "cmdupxdio0000e51oeuyvbqns"
+          },
+          {
+            "id": "vpc-mod2-les1",
+            "title": "2.1 Dominio de Synthesia",
+            "content": "Aprende a crear presentadores virtuales profesionales",
+            "videoUrl": null,
+            "duration": 25,
+            "order": 4,
+            "createdAt": "2025-08-02T21:32:46.589Z",
+            "updatedAt": "2025-08-02T21:32:46.589Z",
+            "courseId": "cmdupxdio0000e51oeuyvbqns"
+          },
+          {
+            "id": "vpc-mod2-les2",
+            "title": "2.2 Generación con Runway ML",
+            "content": "Explora la creación de videos desde texto y conceptos",
+            "videoUrl": null,
+            "duration": 30,
+            "order": 5,
+            "createdAt": "2025-08-02T21:32:46.666Z",
+            "updatedAt": "2025-08-02T21:32:46.666Z",
+            "courseId": "cmdupxdio0000e51oeuyvbqns"
+          },
+          {
+            "id": "vpc-mod2-les3",
+            "title": "2.3 Edición Inteligente con Herramientas IA",
+            "content": "Optimiza tu flujo de trabajo con edición automatizada",
+            "videoUrl": null,
+            "duration": 22,
+            "order": 6,
+            "createdAt": "2025-08-02T21:32:46.744Z",
+            "updatedAt": "2025-08-02T21:32:46.744Z",
+            "courseId": "cmdupxdio0000e51oeuyvbqns"
+          },
+          {
+            "id": "vpc-mod3-les1",
+            "title": "3.1 Optimización para Diferentes Plataformas",
+            "content": "Adapta tu contenido para YouTube, TikTok, Instagram y más",
+            "videoUrl": null,
+            "duration": 18,
+            "order": 7,
+            "createdAt": "2025-08-02T21:32:46.821Z",
+            "updatedAt": "2025-08-02T21:32:46.821Z",
+            "courseId": "cmdupxdio0000e51oeuyvbqns"
+          },
+          {
+            "id": "vpc-mod3-les2",
+            "title": "3.2 SEO y Metadatos para Videos",
+            "content": "Maximiza el alcance orgánico de tu contenido audiovisual",
+            "videoUrl": null,
+            "duration": 15,
+            "order": 8,
+            "createdAt": "2025-08-02T21:32:46.899Z",
+            "updatedAt": "2025-08-02T21:32:46.899Z",
+            "courseId": "cmdupxdio0000e51oeuyvbqns"
+          },
+          {
+            "id": "vpc-mod4-les1",
+            "title": "4.1 Modelos de Monetización con Videos IA",
+            "content": "Convierte tu habilidad en videos IA en fuentes de ingresos sostenibles",
+            "videoUrl": null,
+            "duration": 20,
+            "order": 9,
+            "createdAt": "2025-08-02T21:32:46.976Z",
+            "updatedAt": "2025-08-02T21:32:46.976Z",
+            "courseId": "cmdupxdio0000e51oeuyvbqns"
+          },
+          {
+            "id": "vpc-mod4-les2",
+            "title": "4.2 Automatización del Flujo de Trabajo",
+            "content": "Escala tu producción mediante automatización inteligente",
+            "videoUrl": null,
+            "duration": 25,
+            "order": 10,
+            "createdAt": "2025-08-02T21:32:47.052Z",
+            "updatedAt": "2025-08-02T21:32:47.052Z",
+            "courseId": "cmdupxdio0000e51oeuyvbqns"
+          },
+          {
+            "id": "vpc-mod4-les3",
+            "title": "4.3 Casos de Éxito y Mejores Prácticas",
+            "content": "Aprende de casos reales y estrategias probadas",
+            "videoUrl": null,
+            "duration": 15,
+            "order": 11,
+            "createdAt": "2025-08-02T21:32:47.129Z",
+            "updatedAt": "2025-08-02T21:32:47.129Z",
+            "courseId": "cmdupxdio0000e51oeuyvbqns"
+          },
+          {
+            "id": "vpc-mod1-les1",
+            "title": "1.1 Introducción a la Creación de Videos con IA",
+            "content": "Descubre el potencial de la inteligencia artificial en la producción audiovisual moderna",
+            "videoUrl": null,
+            "duration": 15,
+            "order": 1,
+            "createdAt": "2025-08-02T21:32:46.275Z",
+            "updatedAt": "2025-08-02T21:32:46.275Z",
+            "courseId": "cmdupxdio0000e51oeuyvbqns"
+          },
+          {
+            "id": "vpc-mod1-les2",
+            "title": "1.2 Panorama de Herramientas de IA para Video",
+            "content": "Explora las principales plataformas y herramientas disponibles en el mercado",
+            "videoUrl": null,
+            "duration": 20,
+            "order": 2,
+            "createdAt": "2025-08-02T21:32:46.432Z",
+            "updatedAt": "2025-08-02T21:32:46.432Z",
+            "courseId": "cmdupxdio0000e51oeuyvbqns"
+          }
+        ],
+        "enrollments": [
+          {
+            "id": "cme1zsnta000xe5tkmp2f41m0",
+            "enrolledAt": "2025-08-07T22:52:32.781Z",
+            "completedAt": null,
+            "progressPercentage": "73",
+            "status": "ACTIVE",
+            "userId": "cme1ybn260003e5q4dpppa9tb",
+            "courseId": "cmdupxdio0000e51oeuyvbqns"
+          }
+        ],
+        "ratings": [],
+        "comments": []
+      },
+      {
+        "id": "mockup-cero",
+        "title": "Crea Mockups con IA desde cero sin saber nada de diseño",
+        "slug": "mockup-cero",
+        "description": "Diseñar presentaciones visuales atractivas usando inteligencia artificial. Aprende a crear mockups profesionales sin experiencia previa en diseño, utilizando herramientas de IA para presentar ideas, productos y servicios.",
+        "shortDescription": "Aprende a crear mockups profesionales sin experiencia previa en diseño usando IA",
+        "imageUrl": "/images/19.png",
+        "price": "0",
+        "isFree": true,
+        "requiresAuth": false,
+        "difficulty": "BEGINNER",
+        "durationHours": 5,
+        "lessonsCount": 8,
+        "studentsCount": 0,
+        "rating": "0",
+        "status": "PUBLISHED",
+        "createdAt": "2025-08-05T15:39:32.076Z",
+        "updatedAt": "2025-08-05T16:54:09.675Z",
+        "instructorId": null,
+        "category": "HABILIDADES_IRREMPLAZABLES",
+        "meta": null,
+        "lessons": [
+          {
+            "id": "cmdyqqkg80001e5sklyq6zhc3",
+            "title": "1.1 ¿Qué es un mockup?",
+            "content": "Un mockup es una representación visual estática y detallada de un diseño o producto antes de su implementación real. Sirve como una maqueta o presentación visual que simula cómo se verá algo en el mundo real (una app, un sitio web, un envase, etc.). Incluye conceptos fundamentales, importancia y casos de uso en negocios y marketing.",
+            "videoUrl": "https://www.youtube.com/watch?v=example1-1",
+            "duration": 10,
+            "order": 1,
+            "createdAt": "2025-08-05T16:15:40.040Z",
+            "updatedAt": "2025-08-05T16:15:40.040Z",
+            "courseId": "mockup-cero"
+          },
+          {
+            "id": "cmdyqqkkj0003e5skpj6xocji",
+            "title": "1.2 Tipologías",
+            "content": "Explora los diferentes tipos de mockups: mockups web (landing pages, blogs, tiendas online), mockups móviles (apps, redes sociales, navegación móvil), y mockups de producto y branding (tazas, bolsas, camisetas, empaques).",
+            "videoUrl": "https://www.youtube.com/watch?v=example1-2",
+            "duration": 12,
+            "order": 2,
+            "createdAt": "2025-08-05T16:15:40.196Z",
+            "updatedAt": "2025-08-05T16:15:40.196Z",
+            "courseId": "mockup-cero"
+          },
+          {
+            "id": "cmdyqqkmq0005e5skd7awa7hf",
+            "title": "1.3 Diferencias entre wireframes, prototipos y mockups",
+            "content": "Comprende las diferencias clave entre wireframes (bajo detalle, estructura general), mockups (alto detalle, apariencia visual real), y prototipos (muy alto detalle, simulación con interacciones). Incluye tabla comparativa completa.",
+            "videoUrl": "https://www.youtube.com/watch?v=example1-3",
+            "duration": 15,
+            "order": 3,
+            "createdAt": "2025-08-05T16:15:40.274Z",
+            "updatedAt": "2025-08-05T16:15:40.274Z",
+            "courseId": "mockup-cero"
+          },
+          {
+            "id": "cmdyqqkox0007e5skmk20laur",
+            "title": "1.4 Actividad Práctica 1: Análisis Rápido de Mockups Exitosos",
+            "content": "Aprende a identificar qué hace visualmente atractivo y funcional a un mockup mediante análisis práctico. Analiza mockups existentes respondiendo 3 preguntas clave para desarrollar tu ojo crítico para el diseño.",
+            "videoUrl": "https://www.youtube.com/watch?v=example1-4",
+            "duration": 8,
+            "order": 4,
+            "createdAt": "2025-08-05T16:15:40.354Z",
+            "updatedAt": "2025-08-05T16:15:40.354Z",
+            "courseId": "mockup-cero"
+          },
+          {
+            "id": "cmdyqqkr40009e5skmm3hwpfb",
+            "title": "2.1 Familiarizarte con las principales herramientas de IA",
+            "content": "Explora y configura las principales herramientas: Figma AI (diseños avanzados), Uizard.io (ideas a interfaces), Canva (herramienta principal), y Mockup World (plantillas gratuitas). Incluye guía completa de Canva, prompts para ChatGPT y actividades prácticas.",
+            "videoUrl": "https://www.youtube.com/watch?v=example2-1",
+            "duration": 25,
+            "order": 5,
+            "createdAt": "2025-08-05T16:15:40.433Z",
+            "updatedAt": "2025-08-05T16:15:40.433Z",
+            "courseId": "mockup-cero"
+          },
+          {
+            "id": "cmdyqqktb000be5skivefjiex",
+            "title": "3.1 Crear una landing page completa",
+            "content": "Crea una landing page completa y funcional con estructura profesional: header con logo y menú, hero con imagen y CTA, sección de beneficios, testimonios o cifras, y CTA final. Incluye actividades en Canva y prompts específicos.",
+            "videoUrl": "https://www.youtube.com/watch?v=example3-1",
+            "duration": 30,
+            "order": 6,
+            "createdAt": "2025-08-05T16:15:40.512Z",
+            "updatedAt": "2025-08-05T16:15:40.512Z",
+            "courseId": "mockup-cero"
+          },
+          {
+            "id": "cmdyqqkvi000de5skwui8tlc5",
+            "title": "4.1 Aprender a diseñar mockups",
+            "content": "Diseña mockups para apps móviles modernas siguiendo principios mobile-first: diseño vertical, pantallas simples, navegación táctil clara, y énfasis en contraste y legibilidad. Incluye diseño de 3 pantallas clave y recursos UI de Canva.",
+            "videoUrl": "https://www.youtube.com/watch?v=example4-1",
+            "duration": 35,
+            "order": 7,
+            "createdAt": "2025-08-05T16:15:40.591Z",
+            "updatedAt": "2025-08-05T16:15:40.591Z",
+            "courseId": "mockup-cero"
+          },
+          {
+            "id": "cmdyqqkxq000fe5ska1d3r6ru",
+            "title": "5.1 Crear una identidad visual de marca",
+            "content": "Proyecto final: crea identidad visual completa (nombre, tono, colores, tipografía, slogan), presenta producto en redes sociales y genera mockups con Sora. Incluye branding con IA, diseño en Canva, mockups directos desde Sora y presentación final.",
+            "videoUrl": "https://www.youtube.com/watch?v=example5-1",
+            "duration": 40,
+            "order": 8,
+            "createdAt": "2025-08-05T16:15:40.670Z",
+            "updatedAt": "2025-08-05T16:15:40.670Z",
+            "courseId": "mockup-cero"
+          }
+        ],
+        "enrollments": [
+          {
+            "id": "cme1ycado000ce5q4s54xcyv0",
+            "enrolledAt": "2025-08-07T22:11:49.258Z",
+            "completedAt": null,
+            "progressPercentage": "78",
+            "status": "ACTIVE",
+            "userId": "cme1ybn260003e5q4dpppa9tb",
+            "courseId": "mockup-cero"
+          },
+          {
+            "id": "cmdz680tb0001ib04efaee3zd",
+            "enrolledAt": "2025-08-05T23:29:08.639Z",
+            "completedAt": null,
+            "progressPercentage": "0",
+            "status": "ACTIVE",
+            "userId": "cmdhipu140000la04lk6x6aqe",
+            "courseId": "mockup-cero"
+          }
+        ],
+        "ratings": [],
+        "comments": []
+      },
+      {
+        "id": "cme1s4sb90001e5zo9it0330m",
+        "title": "Guiones para videos promocionales con IA",
+        "slug": "guiones-videos-promocionales-ia",
+        "description": "En este curso aprenderás a crear guiones efectivos para videos promocionales y contenido en redes sociales utilizando herramientas de inteligencia artificial como ChatGPT, Claude y Copy.ai. A través de ejercicios prácticos, entenderás las diferencias entre los formatos, aprenderás técnicas de persuasión, y dominarás la estructura de contenido que convierte. Este curso es ideal para emprendedores, creadores de contenido, freelancers y equipos de marketing que buscan ahorrar tiempo, optimizar su mensaje y conectar con su audiencia usando IA.",
+        "shortDescription": "Aprende a crear guiones efectivos para videos promocionales usando herramientas de IA como ChatGPT y Claude.",
+        "imageUrl": "/images/20.png",
+        "price": "0",
+        "isFree": true,
+        "requiresAuth": false,
+        "difficulty": "BEGINNER",
+        "durationHours": 2,
+        "lessonsCount": 15,
+        "studentsCount": 0,
+        "rating": "0",
+        "status": "PUBLISHED",
+        "createdAt": "2025-08-07T19:18:01.558Z",
+        "updatedAt": "2025-08-07T20:09:42.550Z",
+        "instructorId": null,
+        "category": "MARKETING_DIGITAL",
+        "meta": null,
+        "lessons": [
+          {
+            "id": "cme1s4sft0003e5zoajkhytmn",
+            "title": "1.1 Introducción al Copywriting Digital",
+            "content": "Fundamentos básicos del copywriting aplicado a contenido digital",
+            "videoUrl": null,
+            "duration": 15,
+            "order": 1,
+            "createdAt": "2025-08-07T19:18:01.722Z",
+            "updatedAt": "2025-08-07T20:09:41.289Z",
+            "courseId": "cme1s4sb90001e5zo9it0330m"
+          },
+          {
+            "id": "cme1s4smg0007e5zozsau178f",
+            "title": "1.2 Estructura de un Guión Efectivo",
+            "content": "Cómo estructurar guiones que convierten y mantienen la atención",
+            "videoUrl": null,
+            "duration": 20,
+            "order": 2,
+            "createdAt": "2025-08-07T19:18:01.961Z",
+            "updatedAt": "2025-08-07T20:09:41.444Z",
+            "courseId": "cme1s4sb90001e5zo9it0330m"
+          },
+          {
+            "id": "cme1s4st1000de5zoxcjgqoq7",
+            "title": "1.3 Psicología de la Persuasión",
+            "content": "Principios psicológicos para crear contenido persuasivo",
+            "videoUrl": null,
+            "duration": 18,
+            "order": 3,
+            "createdAt": "2025-08-07T19:18:02.198Z",
+            "updatedAt": "2025-08-07T20:09:41.523Z",
+            "courseId": "cme1s4sb90001e5zo9it0330m"
+          },
+          {
+            "id": "cme1s4t1s000le5zo94wvokdz",
+            "title": "2.1 Introducción a ChatGPT para Guiones",
+            "content": "Configuración y primeros pasos con ChatGPT",
+            "videoUrl": null,
+            "duration": 15,
+            "order": 4,
+            "createdAt": "2025-08-07T19:18:02.513Z",
+            "updatedAt": "2025-08-07T20:09:41.602Z",
+            "courseId": "cme1s4sb90001e5zo9it0330m"
+          },
+          {
+            "id": "cme1s4t3y000ne5zole6zszqv",
+            "title": "2.2 Prompts Efectivos para Guiones",
+            "content": "Cómo escribir prompts que generen guiones de calidad",
+            "videoUrl": null,
+            "duration": 20,
+            "order": 5,
+            "createdAt": "2025-08-07T19:18:02.590Z",
+            "updatedAt": "2025-08-07T20:09:41.681Z",
+            "courseId": "cme1s4sb90001e5zo9it0330m"
+          },
+          {
+            "id": "cme1s4t64000pe5zo7003920w",
+            "title": "2.3 Claude AI para Refinamiento",
+            "content": "Uso de Claude para mejorar y pulir guiones",
+            "videoUrl": null,
+            "duration": 15,
+            "order": 6,
+            "createdAt": "2025-08-07T19:18:02.668Z",
+            "updatedAt": "2025-08-07T20:09:41.760Z",
+            "courseId": "cme1s4sb90001e5zo9it0330m"
+          },
+          {
+            "id": "cme1s4tah000te5zogehx69u9",
+            "title": "3.1 Estructura AIDA para Videos Promocionales",
+            "content": "Aplicación del método AIDA en videos promocionales",
+            "videoUrl": null,
+            "duration": 20,
+            "order": 7,
+            "createdAt": "2025-08-07T19:18:02.825Z",
+            "updatedAt": "2025-08-07T20:09:41.839Z",
+            "courseId": "cme1s4sb90001e5zo9it0330m"
+          },
+          {
+            "id": "cme1s4tco000ve5zob3pbncum",
+            "title": "3.2 Hook y Apertura Impactante",
+            "content": "Cómo crear aperturas que capten la atención inmediatamente",
+            "videoUrl": null,
+            "duration": 18,
+            "order": 8,
+            "createdAt": "2025-08-07T19:18:02.904Z",
+            "updatedAt": "2025-08-07T20:09:41.918Z",
+            "courseId": "cme1s4sb90001e5zo9it0330m"
+          },
+          {
+            "id": "cme1s4tev000xe5zoszjiuj2z",
+            "title": "3.3 Desarrollo del Beneficio Principal",
+            "content": "Presentación efectiva del beneficio principal del producto/servicio",
+            "videoUrl": null,
+            "duration": 20,
+            "order": 9,
+            "createdAt": "2025-08-07T19:18:02.983Z",
+            "updatedAt": "2025-08-07T20:09:41.997Z",
+            "courseId": "cme1s4sb90001e5zo9it0330m"
+          },
+          {
+            "id": "cme1s4tj80011e5zot8zjw35z",
+            "title": "4.1 Adaptación para Instagram",
+            "content": "Creación de guiones optimizados para Instagram",
+            "videoUrl": null,
+            "duration": 20,
+            "order": 10,
+            "createdAt": "2025-08-07T19:18:03.140Z",
+            "updatedAt": "2025-08-07T20:09:42.075Z",
+            "courseId": "cme1s4sb90001e5zo9it0330m"
+          },
+          {
+            "id": "cme1s4tle0013e5zoag46olae",
+            "title": "4.2 Guiones para TikTok",
+            "content": "Estructura y estilo para contenido de TikTok",
+            "videoUrl": null,
+            "duration": 18,
+            "order": 11,
+            "createdAt": "2025-08-07T19:18:03.219Z",
+            "updatedAt": "2025-08-07T20:09:42.154Z",
+            "courseId": "cme1s4sb90001e5zo9it0330m"
+          },
+          {
+            "id": "cme1s4tnm0015e5zov3hnazbu",
+            "title": "4.3 Contenido para LinkedIn",
+            "content": "Guiones profesionales para LinkedIn",
+            "videoUrl": null,
+            "duration": 20,
+            "order": 12,
+            "createdAt": "2025-08-07T19:18:03.298Z",
+            "updatedAt": "2025-08-07T20:09:42.234Z",
+            "courseId": "cme1s4sb90001e5zo9it0330m"
+          },
+          {
+            "id": "cme1s4trx0019e5zomcv9kagv",
+            "title": "5.1 A/B Testing de Guiones",
+            "content": "Cómo probar diferentes versiones de guiones",
+            "videoUrl": null,
+            "duration": 15,
+            "order": 13,
+            "createdAt": "2025-08-07T19:18:03.453Z",
+            "updatedAt": "2025-08-07T20:09:42.313Z",
+            "courseId": "cme1s4sb90001e5zo9it0330m"
+          },
+          {
+            "id": "cme1s4tu3001be5zobudyywsx",
+            "title": "5.2 Métricas de Rendimiento",
+            "content": "Análisis de métricas para medir el éxito de los guiones",
+            "videoUrl": null,
+            "duration": 18,
+            "order": 14,
+            "createdAt": "2025-08-07T19:18:03.531Z",
+            "updatedAt": "2025-08-07T20:09:42.391Z",
+            "courseId": "cme1s4sb90001e5zo9it0330m"
+          },
+          {
+            "id": "cme1s4tw9001de5zoea0oomu3",
+            "title": "5.3 Optimización Continua",
+            "content": "Proceso de mejora continua basado en datos",
+            "videoUrl": null,
+            "duration": 12,
+            "order": 15,
+            "createdAt": "2025-08-07T19:18:03.609Z",
+            "updatedAt": "2025-08-07T20:09:42.469Z",
+            "courseId": "cme1s4sb90001e5zo9it0330m"
+          }
+        ],
+        "enrollments": [
+          {
+            "id": "cme1u5o8g0001jv049usypqk5",
+            "enrolledAt": "2025-08-07T20:14:42.160Z",
+            "completedAt": null,
+            "progressPercentage": "0",
+            "status": "ACTIVE",
+            "userId": "cmdhyu3bi0005jx048jinmv6t",
+            "courseId": "cme1s4sb90001e5zo9it0330m"
+          },
+          {
+            "id": "cme34j2yy0001e5gkjadf8e8r",
+            "enrolledAt": "2025-08-08T17:52:50.120Z",
+            "completedAt": null,
+            "progressPercentage": "0",
+            "status": "ACTIVE",
+            "userId": "cme1ybn260003e5q4dpppa9tb",
+            "courseId": "cme1s4sb90001e5zo9it0330m"
+          }
+        ],
+        "ratings": [],
+        "comments": []
+      },
+      {
+        "id": "vibe-coding-claude-cursor",
+        "title": "Vibe coding con Claude code y Cursor",
+        "slug": "vibe-coding-claude-cursor",
+        "description": "Domina el desarrollo de código con inteligencia artificial. Aprende a usar Claude Code y Cursor para acelerar tu productividad como desarrollador y crear código más eficiente.",
+        "shortDescription": "Desarrollo de código con IA usando Claude Code y Cursor",
+        "imageUrl": "/images/17.png",
+        "price": "99.98999999999999",
+        "isFree": false,
+        "requiresAuth": true,
+        "difficulty": "INTERMEDIATE",
+        "durationHours": 20,
+        "lessonsCount": 6,
+        "studentsCount": 0,
+        "rating": "0",
+        "status": "PUBLISHED",
+        "createdAt": "2025-08-02T20:24:19.807Z",
+        "updatedAt": "2025-08-07T23:08:18.308Z",
+        "instructorId": null,
+        "category": "HABILIDADES_IRREMPLAZABLES",
+        "meta": null,
+        "lessons": [
+          {
+            "id": "vcc-mod1-les1",
+            "title": "1.1 Introducción al Vibe Coding con IA",
+            "content": "Descubre el nuevo paradigma de programación asistida por IA y cómo transformará tu forma de codificar",
+            "videoUrl": "https://www.youtube.com/watch?v=example1-1",
+            "duration": 15,
+            "order": 1,
+            "createdAt": "2025-08-04T16:53:44.776Z",
+            "updatedAt": "2025-08-04T16:53:44.776Z",
+            "courseId": "vibe-coding-claude-cursor"
+          },
+          {
+            "id": "vcc-mod1-les2",
+            "title": "1.2 Configuración del Entorno de Desarrollo",
+            "content": "Prepara tu máquina con todas las herramientas necesarias para comenzar tu viaje en el Vibe Coding",
+            "videoUrl": "https://www.youtube.com/watch?v=example1-2",
+            "duration": 20,
+            "order": 2,
+            "createdAt": "2025-08-04T16:53:44.935Z",
+            "updatedAt": "2025-08-04T16:53:44.935Z",
+            "courseId": "vibe-coding-claude-cursor"
+          },
+          {
+            "id": "vcc-mod1-les3",
+            "title": "1.3 Principios del Desarrollo Asistido por IA",
+            "content": "Comprende los fundamentos y mejores prácticas para trabajar eficientemente con asistentes de IA",
+            "videoUrl": "https://www.youtube.com/watch?v=example1-3",
+            "duration": 18,
+            "order": 3,
+            "createdAt": "2025-08-04T16:53:45.015Z",
+            "updatedAt": "2025-08-04T16:53:45.015Z",
+            "courseId": "vibe-coding-claude-cursor"
+          },
+          {
+            "id": "vcc-mod1-les4",
+            "title": "1.4 Tu Primera Sesión de Vibe Coding",
+            "content": "Experimenta tu primera sesión práctica creando una aplicación simple con asistencia de IA",
+            "videoUrl": "https://www.youtube.com/watch?v=example1-4",
+            "duration": 25,
+            "order": 4,
+            "createdAt": "2025-08-04T16:53:45.095Z",
+            "updatedAt": "2025-08-04T16:53:45.095Z",
+            "courseId": "vibe-coding-claude-cursor"
+          },
+          {
+            "id": "vcc-mod2-les1",
+            "title": "2.1 Dominio Avanzado de Claude Code",
+            "content": "Explora las capacidades avanzadas de Claude Code para proyectos complejos",
+            "videoUrl": "https://www.youtube.com/watch?v=example2-1",
+            "duration": 22,
+            "order": 5,
+            "createdAt": "2025-08-04T16:53:45.175Z",
+            "updatedAt": "2025-08-04T16:53:45.175Z",
+            "courseId": "vibe-coding-claude-cursor"
+          },
+          {
+            "id": "vcc-mod2-les2",
+            "title": "2.2 Proyecto Final Integrado",
+            "content": "Construye una aplicación completa aplicando todo lo aprendido en el curso",
+            "videoUrl": "https://www.youtube.com/watch?v=example2-2",
+            "duration": 45,
+            "order": 6,
+            "createdAt": "2025-08-04T16:53:45.254Z",
+            "updatedAt": "2025-08-04T16:53:45.254Z",
+            "courseId": "vibe-coding-claude-cursor"
+          }
+        ],
+        "enrollments": [
+          {
+            "id": "cme20bbhw0001e5e4owc1fvl0",
+            "enrolledAt": "2025-08-07T23:07:03.282Z",
+            "completedAt": null,
+            "progressPercentage": "0",
+            "status": "ACTIVE",
+            "userId": "cmdhipu140000la04lk6x6aqe",
+            "courseId": "vibe-coding-claude-cursor"
+          },
+          {
+            "id": "cme20degm0001e5102ow8v7fp",
+            "enrolledAt": "2025-08-07T23:08:40.435Z",
+            "completedAt": null,
+            "progressPercentage": "0",
+            "status": "ACTIVE",
+            "userId": "cme1ybn260003e5q4dpppa9tb",
+            "courseId": "vibe-coding-claude-cursor"
+          }
+        ],
+        "ratings": [],
+        "comments": []
+      },
+      {
+        "id": "cme30lnzr0001e5lk928moflk",
+        "title": "Monetiza tu Voz con IA: ElevenLabs para anuncios, cursos y podcasts (sin curva técnica)",
+        "slug": "monetiza-voz-ia-elevenlabs",
+        "description": "Aprende a monetizar tu voz utilizando inteligencia artificial con ElevenLabs. Crea anuncios profesionales, cursos narrados y podcasts de alta calidad sin conocimientos técnicos. Desde la configuración básica hasta estrategias avanzadas de monetización.",
+        "shortDescription": "Monetiza tu voz con IA usando ElevenLabs para anuncios, cursos y podcasts sin complejidad técnica.",
+        "imageUrl": "/images/21.png",
+        "price": "97",
+        "isFree": false,
+        "requiresAuth": true,
+        "difficulty": "BEGINNER",
+        "durationHours": 8,
+        "lessonsCount": 10,
+        "studentsCount": 0,
+        "rating": "0",
+        "status": "PUBLISHED",
+        "createdAt": "2025-08-08T16:02:52.214Z",
+        "updatedAt": "2025-08-08T18:51:51.550Z",
+        "instructorId": null,
+        "category": "IA_PARA_EMPRENDER",
+        "meta": null,
+        "lessons": [
+          {
+            "id": "cme32go3u0001e5jk05eq8352",
+            "title": "1.1 Origen de ElevenLabs (story breve)",
+            "content": "## Origen de ElevenLabs\n\n### Fundadores y motivación\nFundada en 2022 por Mati Staniszewski y Piotr Dobkowski; la inspiración vino de crecer con doblajes monótonos y querer voces sintéticas realistas. \n\n### Significado del nombre\n\"Eleven\" alude al:\n- 11 (divisibilidad matemática)\n- Apollo 11 (exploración espacial)  \n- \"Turn it up to 11\" (referencia cultural)\n\n### Momentum empresarial\n- Modelo propio de IA\n- Locuciones naturales de alta calidad\n- En dos años alcanzó ~$100M ARR\n\n### Por qué importa\n- 30+ idiomas soportados\n- Velocidad de procesamiento\n- Coste bajo por palabra\n- Accesibilidad global\n- Ronda Serie B de ~$80M\n\n### Entregable\nCrear un mini-pitch (3 frases) de cómo usarás ElevenLabs en tu proyecto personal o empresarial.",
+            "videoUrl": "https://www.youtube.com/watch?v=ejemplo-1-1",
+            "duration": 25,
+            "order": 1,
+            "createdAt": "2025-08-08T16:54:58.314Z",
+            "updatedAt": "2025-08-08T16:54:58.314Z",
+            "courseId": "cme30lnzr0001e5lk928moflk"
+          },
+          {
+            "id": "cme32goam0003e5jk3mkyp4ee",
+            "title": "1.2 Alcances y límites (ética y uso responsable)",
+            "content": "## Alcances y límites de ElevenLabs\n\n### Alcances principales\n- **Clonación de voz** para identidad de marca\n- **Doblaje exprés multilingüe** para contenido global\n- **Asistentes con emoción** para mejor UX\n- **Storytelling inmersivo** para audiencias cautivadas\n\n### Límites importantes\n- **Deepfakes/fraude**: Riesgo de uso malintencionado\n- **Derechos de autor/contratos**: Consideraciones legales\n- **Costo de tiempo real**: Limitaciones económicas\n- **Emociones extremas**: Aún imperfectas tecnológicamente\n\n### Principio ético clave\n> \"Amplifica tu mensaje, no reemplaces tu humanidad.\"\n\n### Entregable\nCrear una política breve de uso ético para tu marca usando la plantilla incluida en el curso.",
+            "videoUrl": "https://www.youtube.com/watch?v=ejemplo-1-2",
+            "duration": 30,
+            "order": 2,
+            "createdAt": "2025-08-08T16:54:58.559Z",
+            "updatedAt": "2025-08-08T16:54:58.559Z",
+            "courseId": "cme30lnzr0001e5lk928moflk"
+          },
+          {
+            "id": "cme32goey0005e5jkpt31edta",
+            "title": "1.3 Panorama TTS (comparativa rápida)",
+            "content": "## Panorama de Text-to-Speech (TTS)\n\n### Quién es quién\n- **Amazon Polly**: Enfocado en precio competitivo\n- **Google TTS Neural**: Versatilidad y ecosistema\n- **ElevenLabs**: Realismo y control emocional\n\n### Niveles de calidad\n- **Nivel A**: Correcto pero robótico\n- **Nivel B**: Entonación natural\n- **Nivel C**: Timbre y respiración realistas\n\n### Facilidad de uso\n- **AWS Polly**: Requiere IAM y configuración técnica\n- **Google TTS**: UI sencilla e intuitiva\n- **ElevenLabs**: Dashboard no-code + SDK avanzado\n\n### Costos aproximados (por 1M caracteres)\n- **Amazon**: ~$16 neural (~$4 estándar)\n- **Google**: ~$12–17 según configuración\n- **ElevenLabs**: Premium por realismo, con modo turbo\n\n### Casos de uso recomendados\n- **IVR masivo**: Amazon Polly\n- **Micro-learning**: Google TTS\n- **Audiolibros/podcasts premium**: ElevenLabs\n\n### Entregable\nIdentificar qué herramienta usar según tu caso específico de negocio.",
+            "videoUrl": "https://www.youtube.com/watch?v=ejemplo-1-3",
+            "duration": 25,
+            "order": 3,
+            "createdAt": "2025-08-08T16:54:58.714Z",
+            "updatedAt": "2025-08-08T16:54:58.714Z",
+            "courseId": "cme30lnzr0001e5lk928moflk"
+          },
+          {
+            "id": "cme32lcta0001e5fgd5kgyuq0",
+            "title": "2.1 Introducción al flujo",
+            "content": "## Introducción al flujo de trabajo con ElevenLabs\n\n### Visión general del proceso\nEn esta lección obtendrás una vista panorámica de todo el flujo de trabajo que dominarás en este módulo, desde la configuración inicial hasta la producción final.\n\n### Funciones que cubriremos:\n1. **Text-to-Speech básico**: Conversión de texto a voz\n2. **Configuración de parámetros**: Ajuste de velocidad, tono y emoción\n3. **Postproducción**: Efectos y mejoras de calidad\n4. **Exportación**: Formatos y configuraciones óptimas\n5. **Integración**: Uso en diferentes plataformas y proyectos\n\n### Metodología paso a paso\n- **Paso 1**: Preparación del texto y selección de voz\n- **Paso 2**: Configuración de parámetros básicos\n- **Paso 3**: Generación y revisión inicial\n- **Paso 4**: Ajustes y refinamientos\n- **Paso 5**: Postproducción y exportación final\n\n### Casos de uso principales:\n- Anuncios publicitarios\n- Cursos online y e-learning\n- Podcasts y contenido de audio\n- Videos promocionales\n- Asistentes virtuales\n\n### Entregable\nCrear tu propio flujo de 5 pasos personalizado para tu proyecto específico usando la plantilla proporcionada.",
+            "videoUrl": "https://www.youtube.com/watch?v=ejemplo-2-1",
+            "duration": 25,
+            "order": 4,
+            "createdAt": "2025-08-08T16:58:36.958Z",
+            "updatedAt": "2025-08-08T16:58:36.958Z",
+            "courseId": "cme30lnzr0001e5lk928moflk"
+          },
+          {
+            "id": "cme32ld000003e5fgq9w1ydfu",
+            "title": "2.2 Text-to-Speech (TTS) base",
+            "content": "## Text-to-Speech: Fundamentos prácticos\n\n### Generación de voz desde texto\nAprende a convertir texto en voz natural y profesional, y cómo integrarla efectivamente en videos promocionales.\n\n### Práctica guiada paso a paso:\n\n#### 1. Preparación del guión\n- Redacción para voz (60-90 segundos)\n- Puntuación y pausas estratégicas\n- Marcas de énfasis y emoción\n\n#### 2. Configuración en ElevenLabs\n- Selección de voz apropiada\n- Ajuste de velocidad y tono\n- Preview y refinamiento\n\n#### 3. Generación y exportación\n- **Formatos disponibles**: MP3, WAV, FLAC\n- **Configuraciones de calidad**: 44.1kHz, 48kHz\n- **Optimización por uso**: web, broadcast, móvil\n\n#### 4. Montaje en editor de video\n- Sincronización con imagen\n- Ajuste de niveles de audio\n- Corrección de timing\n\n### Herramientas recomendadas para montaje:\n- **Gratuitas**: DaVinci Resolve, Audacity\n- **Profesionales**: Adobe Premiere, Final Cut Pro\n- **Online**: Kapwing, InVideo\n\n### Consejos pro:\n- Usa formato WAV para máxima calidad\n- Exporta siempre un backup en MP3\n- Ajusta el volumen a -12dB para broadcast\n\n### Entregable\nVideo promocional corto (60-90s) con voice-over generado por TTS, completamente terminado y listo para publicar.",
+            "videoUrl": "https://www.youtube.com/watch?v=ejemplo-2-2",
+            "duration": 35,
+            "order": 5,
+            "createdAt": "2025-08-08T16:58:37.200Z",
+            "updatedAt": "2025-08-08T16:58:37.200Z",
+            "courseId": "cme30lnzr0001e5lk928moflk"
+          },
+          {
+            "id": "cme32ld4f0005e5fgde8rgcq0",
+            "title": "2.3 Mejora, cambio y traducción de voz",
+            "content": "## Personalización avanzada de la voz\n\n### Cambio de timbre y características\nAprende a modificar las características de la voz para diferentes contextos y audiencias.\n\n#### Ajustes de timbre:\n- **Grave/Agudo**: Para diferentes demografías\n- **Calidez**: Más personal vs más corporativo\n- **Claridad**: Optimización para diferentes medios\n\n### Ajuste emocional\nControl fino de las emociones y estados de ánimo en la voz:\n\n#### Emociones disponibles:\n- **Neutral**: Presentaciones formales\n- **Entusiasta**: Marketing y promociones  \n- **Calmada**: Meditación y relajación\n- **Urgente**: Llamadas a la acción\n- **Amigable**: Atención al cliente\n\n### Traducción multilenguaje\n\n#### Práctica guiada: ES → EN/PR\nTomaremos el mismo spot creado en la lección anterior y lo adaptaremos:\n\n1. **Versión en inglés**:\n   - Traducción cultural (no literal)\n   - Ajuste de timing para diferencias de idioma\n   - Selección de voz en inglés apropiada\n\n2. **Versión en portugués**:\n   - Adaptación para mercado brasileño\n   - Consideraciones culturales específicas\n   - Optimización de pronunciación\n\n### Proceso de localización:\n- **Paso 1**: Traducción y adaptación cultural\n- **Paso 2**: Ajuste de duración y timing\n- **Paso 3**: Selección de voz nativa\n- **Paso 4**: Generación y refinamiento\n- **Paso 5**: Sincronización con video original\n\n### Consideraciones técnicas:\n- Diferentes idiomas tienen diferentes velocidades naturales\n- Ajustar pausas entre frases\n- Mantener la energía del mensaje original\n\n### Entregable\n2 variantes del mismo video en diferentes idiomas (inglés y portugués), optimizadas para sus respectivos mercados.",
+            "videoUrl": "https://www.youtube.com/watch?v=ejemplo-2-3",
+            "duration": 40,
+            "order": 6,
+            "createdAt": "2025-08-08T16:58:37.359Z",
+            "updatedAt": "2025-08-08T16:58:37.359Z",
+            "courseId": "cme30lnzr0001e5lk928moflk"
+          },
+          {
+            "id": "cme32ld8u0007e5fgx1xvewoa",
+            "title": "2.4 Postproducción (toques pro)",
+            "content": "## Postproducción profesional para calidad broadcast\n\n### Técnicas de postproducción avanzada\nTransforma tu audio generado por IA en contenido con calidad profesional de emisión comercial.\n\n### Pipeline de postproducción:\n\n#### 1. Normalización de audio\n- **Niveles óptimos**: -23 LUFS para broadcast, -16 LUFS para streaming\n- **Peak limiting**: Evitar distorsión\n- **Consistencia**: Volumen uniforme en todo el proyecto\n\n#### 2. EQ (Ecualización)\n- **Frecuencias graves**: Limpieza de rumble (80Hz)\n- **Medios**: Claridad vocal (1-3kHz)\n- **Agudos**: Presencia y brillo (8-12kHz)\n\n#### 3. Compresión dinámica\n- **Ratio**: 3:1 a 4:1 para voz\n- **Attack/Release**: Naturales pero controlados\n- **Makeup gain**: Compensación de nivel\n\n#### 4. Efectos broadcast:\n- **De-esser**: Control de sibilantes\n- **Gate/Expander**: Eliminar ruido de fondo\n- **Limiter**: Protección contra picos\n\n### Herramientas profesionales:\n- **Plugins recomendados**: FabFilter, Waves, iZotope\n- **DAW profesionales**: Pro Tools, Logic Pro, Cubase\n- **Alternativas gratuitas**: Reaper, Audacity con plugins\n\n### Estándares de calidad:\n\n#### Para diferentes medios:\n- **Radio comercial**: -12 LUFS, procesado pesado\n- **Podcast**: -16 LUFS, procesado moderado\n- **Audiolibros**: -18 LUFS, procesado mínimo\n- **Streaming**: -14 LUFS, procesado dinámico\n\n### Checklist de calidad broadcast:\n- ✅ Sin clipping ni distorsión\n- ✅ Niveles consistentes\n- ✅ EQ balanceado\n- ✅ Compresión apropiada\n- ✅ Sin ruido de fondo\n- ✅ Transiciones suaves\n- ✅ Formato y sample rate correctos\n\n### Entregable final\nAudio postproducido con calidad broadcast professional, listo para usar en cualquier medio comercial.",
+            "videoUrl": "https://www.youtube.com/watch?v=ejemplo-2-4",
+            "duration": 20,
+            "order": 7,
+            "createdAt": "2025-08-08T16:58:37.518Z",
+            "updatedAt": "2025-08-08T16:58:37.518Z",
+            "courseId": "cme30lnzr0001e5lk928moflk"
+          },
+          {
+            "id": "cme32r9vf0001e5oomp7hne2b",
+            "title": "3.1 Casos de la vida real",
+            "content": "## Casos de la vida real con ElevenLabs\n\n### Aplicaciones prácticas concretas\n\nEn esta lección transformaremos los conceptos teóricos en prácticas reales que puedes implementar inmediatamente en tu día a día o negocio.\n\n### 1. Grabación en casa - Mejora de voz personal\n\n#### Problemas comunes:\n- **Audio casero con ruido de fondo**\n- **Calidad de micrófono limitada**\n- **Nerviosismo al grabar**\n- **Inconsistencia en la energía**\n\n#### Solución con ElevenLabs:\n1. **Clona tu voz** con muestras de tu mejor grabación\n2. **Genera el contenido** con calidad consistente\n3. **Elimina imperfecciones** automáticamente\n4. **Mantén tu personalidad** pero mejorada\n\n### 2. Traducción de audios existentes\n\n#### Casos de uso:\n- **Podcasts multiidioma** sin regrabar\n- **Cursos en línea** para mercados internacionales\n- **Testimonios de clientes** localizados\n- **Contenido de marketing** globalizado\n\n#### Proceso paso a paso:\n1. Transcribir audio original\n2. Traducir manteniendo el tono\n3. Generar con voz similar al original\n4. Ajustar timing y pausas\n5. Sincronizar con video si es necesario\n\n### 3. Creación de audiolibros\n\n#### Ventajas de ElevenLabs:\n- **Consistencia** en largas grabaciones\n- **Control emocional** según el contenido\n- **Velocidad de producción** exponencial\n- **Costos reducidos** vs narrador profesional\n\n#### Flujo de trabajo:\n- Preparar manuscrito con marcas emocionales\n- Dividir por capítulos\n- Generar con voz apropiada\n- Postproducir cada sección\n- Compilar en formato final\n\n### 4. Accesibilidad digital\n\n#### Impacto social:\n- **Contenido web** accesible para personas con discapacidad visual\n- **Navegación por voz** en aplicaciones\n- **Documentos** convertidos a audio\n- **Subtítulos hablados** para contenido multimedia\n\n### 5. Contenidos cortos para redes sociales\n\n#### Formatos optimizados:\n- **TikTok/Reels**: 15-60 segundos, alta energía\n- **YouTube Shorts**: Storytelling rápido\n- **Instagram Stories**: Mensajes directos\n- **Twitter Spaces**: Intervenciones precisas\n\n### Práctica guiada: Tu proyecto específico\n\n#### Selecciona tu caso:\n1. **Emprendedor**: Mejorar presentaciones de pitch\n2. **Creador de contenido**: Automatizar narración\n3. **Empresa**: Crear IVR personalizado\n4. **Educador**: Generar material accesible\n5. **Podcaster**: Expandir a otros idiomas\n\n### Técnicas de postproducción para cada caso:\n\n#### EQ/Compresión ligera:\n- **High-pass filter** a 80Hz para limpieza\n- **Compresión suave** 2:1 ratio\n- **EQ boost** ligero en 2-5kHz para claridad\n\n#### Gestión de pausas:\n- **Pausas cortas**: 0.5 segundos entre frases\n- **Pausas largas**: 1.5 segundos entre ideas\n- **Respiraciones**: Añadir naturalidad\n\n#### Ambience sutil:\n- **Room tone** muy bajo (-40dB)\n- **Reverb** mínimo para calidez\n- **Noise floor** consistente\n\n### Entregable del módulo\nCrear un caso aplicado específicamente a tu nicho:\n- **Opción A**: 1 video promocional completo (60-90s)\n- **Opción B**: 1 audio/podcast optimizado (3-5min)\n\n### Plantillas incluidas:\n- ✅ **Preset de audio** para diferentes casos de uso\n- ✅ **Plantilla replicable** de postproducción\n- ✅ **Checklist de calidad** por tipo de proyecto\n- ✅ **Guía de timing** para diferentes formatos",
+            "videoUrl": "https://www.youtube.com/watch?v=ejemplo-3-1",
+            "duration": 40,
+            "order": 8,
+            "createdAt": "2025-08-08T17:03:13.082Z",
+            "updatedAt": "2025-08-08T17:03:13.082Z",
+            "courseId": "cme30lnzr0001e5lk928moflk"
+          },
+          {
+            "id": "cme32ra2o0003e5ooh7f4rnci",
+            "title": "3.2 ElevenLabs como negocio",
+            "content": "## Monetizando ElevenLabs: Tu negocio de voz IA\n\n### Estructura de ofertas comerciales\n\nConvierte tu conocimiento de ElevenLabs en un negocio rentable con ofertas específicas y precios competitivos.\n\n### 1. Servicios principales que puedes ofrecer\n\n#### A) Doblaje exprés\n**Propuesta de valor**: \"Doblaje profesional en 24-48h vs 2-4 semanas tradicional\"\n\n**Casos de uso:**\n- Videos corporativos urgentes\n- Campañas de marketing con deadline apretado\n- Localización rápida para lanzamientos\n- Corrección de errores en producciones\n\n**Precio sugerido**: $25-50 por minuto de audio final\n\n#### B) \"Podcast en 3 idiomas\"\n**Propuesta de valor**: \"Expande tu audiencia 300% manteniendo tu voz y personalidad\"\n\n**Proceso:**\n1. Grabar episodio original en español\n2. Transcribir y traducir culturalmente\n3. Generar en inglés y portugués con tu voz clonada\n4. Postproducir manteniendo el estilo original\n\n**Precio sugerido**: $200-400 por episodio de 20-30min\n\n#### C) IVR con marca\n**Propuesta de valor**: \"Sistema telefónico que suena como tu equipo, 24/7\"\n\n**Incluye:**\n- Clonación de voz del CEO/representante\n- Grabación de menús y mensajes\n- Variantes emocionales según el contexto\n- Updates ilimitados por 6 meses\n\n**Precio sugerido**: $800-1,500 setup + $100/mes mantenimiento\n\n#### D) Packs para cursos online\n**Propuesta de valor**: \"Curso completo narrado en tiempo récord\"\n\n**Paquetes:**\n- **Básico**: Hasta 2h de contenido, 1 voz\n- **Estándar**: Hasta 5h, 2 voces, intro/outro\n- **Premium**: Hasta 10h, múltiples voces, música\n\n**Precio sugerido**: $500 / $1,200 / $2,500\n\n### 2. Costeo y estructura financiera\n\n#### Costos base (mensual):\n- **ElevenLabs Pro**: ~$22/mes (100k caracteres)\n- **ElevenLabs Creator**: ~$99/mes (500k caracteres) \n- **Herramientas de edición**: $20-50/mes\n- **Tiempo de trabajo**: Tu tarifa horaria\n\n#### Cálculo por minuto generado:\n- **1 minuto de audio** ≈ 150-200 palabras ≈ 900-1,200 caracteres\n- **Costo ElevenLabs**: $0.02-0.05 por minuto\n- **Tu margen objetivo**: 300-500% sobre costos\n\n### 3. Tiempos de entrega realistas\n\n#### Proyectos estándar:\n- **Hasta 5 minutos**: 24-48 horas\n- **5-15 minutos**: 2-3 días laborales\n- **15-30 minutos**: 1 semana\n- **Más de 30 minutos**: 2+ semanas\n\n#### Factores que afectan tiempo:\n- Complejidad del guión\n- Número de revisiones incluidas\n- Postproducción requerida\n- Traducción/localización\n\n### 4. Aspectos legales y consentimiento\n\n#### Cláusulas esenciales para contratos:\n\n**Uso de voz clonada:**\n- Consentimiento explícito por escrito\n- Limitaciones de uso específicas\n- Derechos de distribución clarificados\n- Cláusula de no uso malicioso\n\n**Plantilla de consentimiento:**\n```\n\"Autorizo el uso de mi voz para generar contenido sintético exclusivamente para:\n- [Propósito específico]\n- [Duración del permiso]  \n- [Territorios/idiomas autorizados]  \n- [Limitaciones expresas]\"\n```\n\n### 5. Estrategia de precios inicial\n\n#### Estructura de 3 niveles:\n\n**Nivel 1 - Básico ($):**\n- Voz estándar\n- 1 revisión incluida\n- Entrega en 5 días\n\n**Nivel 2 - Profesional ($$):**\n- Voz clonada personalizada\n- 3 revisiones incluidas\n- Entrega en 3 días\n- Postproducción básica\n\n**Nivel 3 - Premium ($$$):**\n- Múltiples voces\n- Revisiones ilimitadas\n- Entrega express (24-48h)\n- Postproducción avanzada\n- Soporte prioritario\n\n### 6. Página de oferta - Elementos clave\n\n#### Headline poderoso:\n\"Transforma tu contenido con IA de voz en 24-48 horas\"\n\n#### Propuesta de valor clara:\n- Antes: 2-4 semanas, $500-2000\n- Después: 24-48 horas, $200-800\n\n#### Casos de éxito:\n- Testimonios con resultados específicos\n- Antes/después audibles\n- Métricas de satisfacción\n\n#### Call to action directo:\n\"Reserva tu consulta gratuita de 15 minutos\"\n\n### Entregables de esta lección:\n1. **Página de oferta completa** con tu propuesta de valor\n2. **Tabla de precios detallada** con 3 niveles de servicio\n3. **Contratos y cláusulas** de uso responsable\n4. **Calculadora de costos** para tus proyectos",
+            "videoUrl": "https://www.youtube.com/watch?v=ejemplo-3-2",
+            "duration": 35,
+            "order": 9,
+            "createdAt": "2025-08-08T17:03:13.345Z",
+            "updatedAt": "2025-08-08T17:03:13.345Z",
+            "courseId": "cme30lnzr0001e5lk928moflk"
+          },
+          {
+            "id": "cme32ra740005e5oo1x58gr72",
+            "title": "3.3 Conclusión y siguientes pasos",
+            "content": "## Conclusión: Tu camino hacia la monetización con IA de voz\n\n### Recapitulación de conceptos clave\n\n¡Felicidades! Has completado un viaje transformador que te lleva desde los fundamentos de ElevenLabs hasta la creación de un negocio rentable con IA de voz.\n\n### Lo que has dominado:\n\n#### MÓDULO 1 - Fundamentos sólidos:\n- ✅ **Origen y contexto** de ElevenLabs en el mercado\n- ✅ **Ética y uso responsable** de la tecnología\n- ✅ **Panorama competitivo** vs Amazon Polly y Google TTS\n\n#### MÓDULO 2 - Habilidades técnicas:\n- ✅ **Flujo de trabajo** completo y optimizado\n- ✅ **Text-to-Speech profesional** con postproducción\n- ✅ **Traducción multiidioma** manteniendo la esencia\n- ✅ **Calidad broadcast-ready** para medios comerciales\n\n#### MÓDULO 3 - Aplicación práctica:\n- ✅ **Casos de uso reales** en diferentes industrias\n- ✅ **Estructura de negocio** con precios competitivos\n- ✅ **Aspectos legales** y consentimiento responsable\n\n### Tu checklist final de implementación\n\n#### Checklist técnico:\n- [ ] Cuenta ElevenLabs configurada (Pro o Creator)\n- [ ] Herramientas de postproducción instaladas\n- [ ] Templates y presets guardados\n- [ ] Flujo de trabajo documentado\n- [ ] Calidad de audio validada\n\n#### Checklist de negocio:\n- [ ] Servicios principales definidos\n- [ ] Estructura de precios establecida\n- [ ] Página de oferta publicada\n- [ ] Contratos y cláusulas preparadas\n- [ ] Primeros clientes identificados\n\n#### Checklist legal/ético:\n- [ ] Políticas de uso responsable escritas\n- [ ] Formularios de consentimiento listos\n- [ ] Limitaciones de uso clarificadas\n- [ ] Casos de uso prohibidos identificados\n\n### Plan de acción: Próximos 30 días\n\n#### Semana 1: Validación\n- **Días 1-3**: Perfecciona tu caso de uso principal\n- **Días 4-7**: Crea 2-3 ejemplos de tu trabajo\n\n#### Semana 2: Construcción\n- **Días 8-10**: Finaliza tu página de oferta\n- **Días 11-14**: Establece precios y paquetes\n\n#### Semana 3: Lanzamiento suave\n- **Días 15-17**: Comparte con tu red cercana\n- **Días 18-21**: Refina basado en feedback inicial\n\n#### Semana 4: Escalamiento\n- **Días 22-24**: Lanza públicamente\n- **Días 25-30**: Optimiza y documenta lecciones aprendidas\n\n### Recursos adicionales incluidos\n\n#### Plantillas descargables:\n1. **📋 Política de uso responsable** - Template completo\n2. **📊 Matriz de plataformas** - Especificaciones técnicas\n3. **🔄 Flujo TTS optimizado** - Paso a paso visual\n4. **💼 Página de oferta** - Template con copy probado\n\n#### Herramientas recomendadas:\n- **Edición de audio**: Audacity (gratis), Reaper ($60)\n- **Gestión de proyectos**: Notion, Trello\n- **Pagos**: Stripe, PayPal Business\n- **Comunicación**: Calendly, Zoom\n\n### Comunidad y soporte continuo\n\n#### Próximos pasos para seguir creciendo:\n1. **Únete a nuestra comunidad** de estudiantes\n2. **Comparte tus resultados** y casos de éxito\n3. **Solicita feedback** en proyectos específicos\n4. **Mantente actualizado** con nuevas funcionalidades\n\n### Mensaje final\n\nLa IA de voz no es solo una herramienta tecnológica; es una oportunidad de **democratizar la comunicación** y **amplificar voces** que antes tenían barreras técnicas o económicas.\n\nRecuerda nuestro principio fundamental:\n> **\"Amplifica tu mensaje, no reemplaces tu humanidad.\"**\n\n### Tu entregable final:\n\nCrea tu **plan de acción personalizado** que incluya:\n- [ ] Tu nicho específico elegido\n- [ ] Servicios principales que ofrecerás\n- [ ] Primeros 3 clientes potenciales identificados\n- [ ] Timeline de lanzamiento (30-60-90 días)\n- [ ] Métricas de éxito definidas\n\n### ¡Es hora de monetizar tu voz con IA!\n\nEl futuro de la comunicación está en tus manos. Tienes las herramientas, el conocimiento y la estructura para construir un negocio exitoso.\n\n**Tu próxima acción**: Implementa tu primer caso de uso en las próximas 48 horas.\n\n¡Esperamos ver tus resultados! 🎙️✨",
+            "videoUrl": "https://www.youtube.com/watch?v=ejemplo-3-3",
+            "duration": 15,
+            "order": 10,
+            "createdAt": "2025-08-08T17:03:13.504Z",
+            "updatedAt": "2025-08-08T17:03:13.504Z",
+            "courseId": "cme30lnzr0001e5lk928moflk"
+          }
+        ],
+        "enrollments": [
+          {
+            "id": "cme31p1900004e5tw79aai8kz",
+            "enrolledAt": "2025-08-08T16:33:28.973Z",
+            "completedAt": null,
+            "progressPercentage": "0",
+            "status": "ACTIVE",
+            "userId": "cme1ybn260003e5q4dpppa9tb",
+            "courseId": "cme30lnzr0001e5lk928moflk"
+          }
+        ],
+        "ratings": [],
+        "comments": []
+      },
+      {
+        "id": "cmeaiyylw0000e5jg9xd2r6ng",
+        "title": "Curso prueba final",
+        "slug": "curso-prueba-final",
+        "description": "Prueba final de la implementacion de crear cursos desde el formulario optimizando tiempos de proceso.",
+        "shortDescription": "Es el curso de prueba final",
+        "imageUrl": "https://utfs.io/f/P2bnXUoat3WfQYZpKZeafq9bogy3hEzJGkOS7vWndVPx5260",
+        "price": "4",
+        "isFree": true,
+        "requiresAuth": true,
+        "difficulty": "INTERMEDIATE",
+        "durationHours": 8,
+        "lessonsCount": 9,
+        "studentsCount": 150,
+        "rating": "3.6",
+        "status": "PUBLISHED",
+        "createdAt": "2025-08-13T22:11:28.820Z",
+        "updatedAt": "2025-08-13T22:16:35.673Z",
+        "instructorId": null,
+        "category": "DESARROLLO_WEB",
+        "meta": {
+          "pageDataV1": {
+            "price": 4,
+            "title": "Curso prueba final",
+            "tools": [
+              "google",
+              "Spotify",
+              "Facebook"
+            ],
+            "isFree": false,
+            "rating": 3.6,
+            "modules": [
+              {
+                "title": "Modulo 1",
+                "lessons": [
+                  {
+                    "title": "Lección 1",
+                    "isFree": false,
+                    "duration": 10
+                  }
+                ],
+                "description": "Modulo de prueba"
+              },
+              {
+                "title": "Módulo 2",
+                "lessons": [
+                  {
+                    "title": "Lección 1",
+                    "isFree": false,
+                    "duration": 10
+                  },
+                  {
+                    "title": "Lección 2",
+                    "isFree": false,
+                    "duration": 10
+                  }
+                ],
+                "description": "prueba 2"
+              },
+              {
+                "title": "Módulo 3",
+                "lessons": [
+                  {
+                    "title": "Lección 1",
+                    "isFree": false,
+                    "duration": 10
+                  },
+                  {
+                    "title": "Lección 2",
+                    "isFree": false,
+                    "duration": 10
+                  },
+                  {
+                    "title": "Lección 3",
+                    "isFree": false,
+                    "duration": 10
+                  },
+                  {
+                    "title": "Lección 4",
+                    "isFree": false,
+                    "duration": 10
+                  },
+                  {
+                    "title": "Lección 5",
+                    "isFree": false,
+                    "duration": 10
+                  }
+                ],
+                "description": "prueba 3"
+              },
+              {
+                "title": "Módulo 4",
+                "lessons": [
+                  {
+                    "title": "Lección 1",
+                    "isFree": false,
+                    "duration": 10
+                  }
+                ],
+                "description": "prueba 4"
+              }
+            ],
+            "sidebar": {
+              "includes": [],
+              "durationHours": 8
+            },
+            "thumbnail": "https://utfs.io/f/P2bnXUoat3WfQYZpKZeafq9bogy3hEzJGkOS7vWndVPx5260",
+            "instructor": {
+              "bio": "graduado del ITP",
+              "name": "Flores Erick",
+              "image": "https://utfs.io/f/P2bnXUoat3WfR9MfhotSAvJp48uVEPjmsYXd7ODoCeGrQxHZ",
+              "title": "Experto en cursos de IA"
+            },
+            "description": "Prueba final de la implementacion de crear cursos desde el formulario optimizando tiempos de proceso.",
+            "testimonials": [
+              {
+                "rating": 5,
+                "content": "Testtesttesttesttest",
+                "studentName": "David",
+                "studentTitle": "estudiante"
+              }
+            ],
+            "learningGoals": [
+              "cursos nuevos rapido"
+            ],
+            "originalPrice": 12,
+            "prerequisites": [
+              "test",
+              "test"
+            ],
+            "studentsCount": 150,
+            "objectivesLead": "Cursos rapidamente creados",
+            "shortDescription": "Es el curso de prueba final"
+          },
+          "templateId": "course-v1",
+          "templateVersion": 1
+        },
+        "lessons": [
+          {
+            "id": "cmeaj5jdl0001e5jgi2jkgt9i",
+            "title": "Lección 1",
+            "content": "",
+            "videoUrl": null,
+            "duration": 10,
+            "order": 1,
+            "createdAt": "2025-08-13T22:16:35.673Z",
+            "updatedAt": "2025-08-13T22:16:35.673Z",
+            "courseId": "cmeaiyylw0000e5jg9xd2r6ng"
+          },
+          {
+            "id": "cmeaj5jdl0002e5jgymplvwus",
+            "title": "Lección 1",
+            "content": "",
+            "videoUrl": null,
+            "duration": 10,
+            "order": 101,
+            "createdAt": "2025-08-13T22:16:35.673Z",
+            "updatedAt": "2025-08-13T22:16:35.673Z",
+            "courseId": "cmeaiyylw0000e5jg9xd2r6ng"
+          },
+          {
+            "id": "cmeaj5jdl0003e5jgcs0ecgd8",
+            "title": "Lección 2",
+            "content": "",
+            "videoUrl": null,
+            "duration": 10,
+            "order": 102,
+            "createdAt": "2025-08-13T22:16:35.673Z",
+            "updatedAt": "2025-08-13T22:16:35.673Z",
+            "courseId": "cmeaiyylw0000e5jg9xd2r6ng"
+          },
+          {
+            "id": "cmeaj5jdl0004e5jg84024v3k",
+            "title": "Lección 1",
+            "content": "",
+            "videoUrl": null,
+            "duration": 10,
+            "order": 201,
+            "createdAt": "2025-08-13T22:16:35.673Z",
+            "updatedAt": "2025-08-13T22:16:35.673Z",
+            "courseId": "cmeaiyylw0000e5jg9xd2r6ng"
+          },
+          {
+            "id": "cmeaj5jdl0005e5jgp8ifur8a",
+            "title": "Lección 2",
+            "content": "",
+            "videoUrl": null,
+            "duration": 10,
+            "order": 202,
+            "createdAt": "2025-08-13T22:16:35.673Z",
+            "updatedAt": "2025-08-13T22:16:35.673Z",
+            "courseId": "cmeaiyylw0000e5jg9xd2r6ng"
+          },
+          {
+            "id": "cmeaj5jdl0006e5jgu0w0779k",
+            "title": "Lección 3",
+            "content": "",
+            "videoUrl": null,
+            "duration": 10,
+            "order": 203,
+            "createdAt": "2025-08-13T22:16:35.673Z",
+            "updatedAt": "2025-08-13T22:16:35.673Z",
+            "courseId": "cmeaiyylw0000e5jg9xd2r6ng"
+          },
+          {
+            "id": "cmeaj5jdl0007e5jgfr9t768y",
+            "title": "Lección 4",
+            "content": "",
+            "videoUrl": null,
+            "duration": 10,
+            "order": 204,
+            "createdAt": "2025-08-13T22:16:35.673Z",
+            "updatedAt": "2025-08-13T22:16:35.673Z",
+            "courseId": "cmeaiyylw0000e5jg9xd2r6ng"
+          },
+          {
+            "id": "cmeaj5jdl0008e5jgklflrfgj",
+            "title": "Lección 5",
+            "content": "",
+            "videoUrl": null,
+            "duration": 10,
+            "order": 205,
+            "createdAt": "2025-08-13T22:16:35.673Z",
+            "updatedAt": "2025-08-13T22:16:35.673Z",
+            "courseId": "cmeaiyylw0000e5jg9xd2r6ng"
+          },
+          {
+            "id": "cmeaj5jdl0009e5jgi1fugack",
+            "title": "Lección 1",
+            "content": "",
+            "videoUrl": null,
+            "duration": 10,
+            "order": 301,
+            "createdAt": "2025-08-13T22:16:35.673Z",
+            "updatedAt": "2025-08-13T22:16:35.673Z",
+            "courseId": "cmeaiyylw0000e5jg9xd2r6ng"
+          }
+        ],
+        "enrollments": [],
+        "ratings": [],
+        "comments": []
+      }
+    ],
+    "webinars": [
+      {
+        "id": "cme07w5ad0000e5mchgpeq4ah",
+        "title": "Aprende a crear videos profesionales con IA",
+        "slug": "videos-profesionales-ia",
+        "description": "Aprende a crear videos profesionales con Inteligencia Artificial usando herramientas como Sora y VEO Gemini. Descubre cómo atraer hasta un 80% más de clientes con contenido de alto impacto, sin ser experto en edición.",
+        "shortDescription": "Crea videos profesionales con IA y atrae 80% más clientes sin experiencia en edición.",
+        "imageUrl": "/images/webinars/videos-ia-webinar.jpg",
+        "videoUrl": null,
+        "dateTime": "2025-08-08T23:00:00.000Z",
+        "duration": 90,
+        "maxAttendees": 500,
+        "currentAttendees": 0,
+        "isActive": true,
+        "isFree": true,
+        "price": "0",
+        "category": "Inteligencia Artificial",
+        "tags": [
+          "IA",
+          "Videos",
+          "Marketing",
+          "Contenido Digital",
+          "Sora",
+          "VEO Gemini"
+        ],
+        "hostName": "Experto en Video Marketing con IA",
+        "hostBio": "Especialista en creación de contenido audiovisual utilizando las últimas herramientas de Inteligencia Artificial. Con más de 5 años de experiencia ayudando a emprendedores y empresas a crear contenido de alto impacto.",
+        "zoomLink": "https://zoom.us/j/videos-profesionales-ia",
+        "meetingId": "videos-ia-2025",
+        "password": "VIDEOIA2025",
+        "recordingUrl": null,
+        "createdAt": "2025-08-06T17:03:39.973Z",
+        "updatedAt": "2025-08-06T17:35:00.638Z",
+        "registrations": []
+      }
+    ],
+    "enrollments": [
+      {
+        "id": "cme1u5o8g0001jv049usypqk5",
+        "enrolledAt": "2025-08-07T20:14:42.160Z",
+        "completedAt": null,
+        "progressPercentage": "0",
+        "status": "ACTIVE",
+        "userId": "cmdhyu3bi0005jx048jinmv6t",
+        "courseId": "cme1s4sb90001e5zo9it0330m"
+      },
+      {
+        "id": "cme20bbhw0001e5e4owc1fvl0",
+        "enrolledAt": "2025-08-07T23:07:03.282Z",
+        "completedAt": null,
+        "progressPercentage": "0",
+        "status": "ACTIVE",
+        "userId": "cmdhipu140000la04lk6x6aqe",
+        "courseId": "vibe-coding-claude-cursor"
+      },
+      {
+        "id": "cme1ycado000ce5q4s54xcyv0",
+        "enrolledAt": "2025-08-07T22:11:49.258Z",
+        "completedAt": null,
+        "progressPercentage": "78",
+        "status": "ACTIVE",
+        "userId": "cme1ybn260003e5q4dpppa9tb",
+        "courseId": "mockup-cero"
+      },
+      {
+        "id": "cme20degm0001e5102ow8v7fp",
+        "enrolledAt": "2025-08-07T23:08:40.435Z",
+        "completedAt": null,
+        "progressPercentage": "0",
+        "status": "ACTIVE",
+        "userId": "cme1ybn260003e5q4dpppa9tb",
+        "courseId": "vibe-coding-claude-cursor"
+      },
+      {
+        "id": "cme1zsnta000xe5tkmp2f41m0",
+        "enrolledAt": "2025-08-07T22:52:32.781Z",
+        "completedAt": null,
+        "progressPercentage": "73",
+        "status": "ACTIVE",
+        "userId": "cme1ybn260003e5q4dpppa9tb",
+        "courseId": "cmdupxdio0000e51oeuyvbqns"
+      },
+      {
+        "id": "cme31p1900004e5tw79aai8kz",
+        "enrolledAt": "2025-08-08T16:33:28.973Z",
+        "completedAt": null,
+        "progressPercentage": "0",
+        "status": "ACTIVE",
+        "userId": "cme1ybn260003e5q4dpppa9tb",
+        "courseId": "cme30lnzr0001e5lk928moflk"
+      },
+      {
+        "id": "cme34j2yy0001e5gkjadf8e8r",
+        "enrolledAt": "2025-08-08T17:52:50.120Z",
+        "completedAt": null,
+        "progressPercentage": "0",
+        "status": "ACTIVE",
+        "userId": "cme1ybn260003e5q4dpppa9tb",
+        "courseId": "cme1s4sb90001e5zo9it0330m"
+      },
+      {
+        "id": "cmdz680tb0001ib04efaee3zd",
+        "enrolledAt": "2025-08-05T23:29:08.639Z",
+        "completedAt": null,
+        "progressPercentage": "0",
+        "status": "ACTIVE",
+        "userId": "cmdhipu140000la04lk6x6aqe",
+        "courseId": "mockup-cero"
+      },
+      {
+        "id": "cmdzd7a970001l504xu28oxh8",
+        "enrolledAt": "2025-08-06T02:44:31.530Z",
+        "completedAt": null,
+        "progressPercentage": "0",
+        "status": "ACTIVE",
+        "userId": "cmdhipu140000la04lk6x6aqe",
+        "courseId": "cmddav1bv0001e5ko3o5dt2cv"
+      },
+      {
+        "id": "cme0nmm3d0004jj04kds6m61h",
+        "enrolledAt": "2025-08-07T00:24:09.049Z",
+        "completedAt": null,
+        "progressPercentage": "33",
+        "status": "ACTIVE",
+        "userId": "cme0hkdp50000jv04arpy1qx2",
+        "courseId": "cmds0r34u0000e5048x4gkzi7"
+      },
+      {
+        "id": "cme1pity70001jt04fs41qwzk",
+        "enrolledAt": "2025-08-07T18:04:58.014Z",
+        "completedAt": null,
+        "progressPercentage": "0",
+        "status": "ACTIVE",
+        "userId": "cmdhyu3bi0005jx048jinmv6t",
+        "courseId": "cmdf4hcn50000e5isc57n04xy"
+      }
+    ],
+    "userStreaks": [
+      {
+        "id": "cme1yc23i0007e5q4xy6cm69d",
+        "userId": "cme1ybn260003e5q4dpppa9tb",
+        "weekStartDate": "2025-08-04T06:00:00.000Z",
+        "currentWeekLessons": 14,
+        "currentStreak": 1,
+        "longestStreak": 1,
+        "totalPoints": 17,
+        "lifetimePointsEarned": 17,
+        "isCurrentWeekComplete": true,
+        "lastLessonCompletedAt": "2025-08-07T23:12:25.637Z",
+        "pointsSpentOnRecovery": 0,
+        "recoveryCount": 0,
+        "lastRecoveryUsed": null,
+        "createdAt": "2025-08-07T22:11:38.526Z",
+        "updatedAt": "2025-08-07T23:12:25.637Z"
+      },
+      {
+        "id": "cme37mkmt0006vqiwa1ux4tol",
+        "userId": "cme37m5uh0002vqiw9dd0thj5",
+        "weekStartDate": "2025-08-04T06:00:00.000Z",
+        "currentWeekLessons": 0,
+        "currentStreak": 0,
+        "longestStreak": 0,
+        "totalPoints": 0,
+        "lifetimePointsEarned": 0,
+        "isCurrentWeekComplete": false,
+        "lastLessonCompletedAt": null,
+        "pointsSpentOnRecovery": 0,
+        "recoveryCount": 0,
+        "lastRecoveryUsed": null,
+        "createdAt": "2025-08-08T19:19:31.829Z",
+        "updatedAt": "2025-08-08T19:19:31.829Z"
+      },
+      {
+        "id": "cme3d8e750006e5achvgy798x",
+        "userId": "cme3d7va10002e5acs9gcat1n",
+        "weekStartDate": "2025-08-04T06:00:00.000Z",
+        "currentWeekLessons": 0,
+        "currentStreak": 0,
+        "longestStreak": 0,
+        "totalPoints": 0,
+        "lifetimePointsEarned": 0,
+        "isCurrentWeekComplete": false,
+        "lastLessonCompletedAt": null,
+        "pointsSpentOnRecovery": 0,
+        "recoveryCount": 0,
+        "lastRecoveryUsed": null,
+        "createdAt": "2025-08-08T21:56:28.001Z",
+        "updatedAt": "2025-08-08T21:56:28.001Z"
+      },
+      {
+        "id": "cme3fqgk70001e57orupq9hb7",
+        "userId": "cmdhipu140000la04lk6x6aqe",
+        "weekStartDate": "2025-08-04T06:00:00.000Z",
+        "currentWeekLessons": 0,
+        "currentStreak": 0,
+        "longestStreak": 0,
+        "totalPoints": 0,
+        "lifetimePointsEarned": 0,
+        "isCurrentWeekComplete": false,
+        "lastLessonCompletedAt": null,
+        "pointsSpentOnRecovery": 0,
+        "recoveryCount": 0,
+        "lastRecoveryUsed": null,
+        "createdAt": "2025-08-08T23:06:30.103Z",
+        "updatedAt": "2025-08-08T23:06:30.103Z"
+      },
+      {
+        "id": "cmeae7ykv000pe5oookizsbt4",
+        "userId": "cme1ybn260003e5q4dpppa9tb",
+        "weekStartDate": "2025-08-11T06:00:00.000Z",
+        "currentWeekLessons": 0,
+        "currentStreak": 1,
+        "longestStreak": 1,
+        "totalPoints": 17,
+        "lifetimePointsEarned": 17,
+        "isCurrentWeekComplete": false,
+        "lastLessonCompletedAt": null,
+        "pointsSpentOnRecovery": 0,
+        "recoveryCount": 0,
+        "lastRecoveryUsed": null,
+        "createdAt": "2025-08-13T19:58:30.607Z",
+        "updatedAt": "2025-08-13T19:58:30.607Z"
+      }
+    ],
+    "subscriptions": [],
+    "payments": []
+  }
+}

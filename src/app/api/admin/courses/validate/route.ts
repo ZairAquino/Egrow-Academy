@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-// import { prisma } from '@/lib/prisma'; // Temporalmente comentado por problema de permisos
+import { prisma } from '@/lib/prisma';
+import { verifyAdminAuth } from '@/lib/admin-auth';
 
 interface ValidationRequest {
   field: 'slug' | 'title' | 'videoUrl' | 'imageUrl';
@@ -114,6 +115,12 @@ function validateImageUrl(url: string): { valid: boolean; suggestions?: string[]
 
 export async function POST(request: NextRequest) {
   try {
+    // ✅ Verificar autenticación ADMIN
+    const authResult = await verifyAdminAuth(request);
+    if (!authResult.success) {
+      return authResult.response!;
+    }
+
     const { field, value, courseId }: ValidationRequest = await request.json();
     
     console.log(`🔍 Validando ${field}:`, value);
@@ -242,6 +249,12 @@ export async function POST(request: NextRequest) {
 // También permitir GET para validaciones simples via query params
 export async function GET(request: NextRequest) {
   try {
+    // ✅ Verificar autenticación ADMIN
+    const authResult = await verifyAdminAuth(request);
+    if (!authResult.success) {
+      return authResult.response!;
+    }
+
     const { searchParams } = new URL(request.url);
     const field = searchParams.get('field') as 'slug' | 'title';
     const value = searchParams.get('value');

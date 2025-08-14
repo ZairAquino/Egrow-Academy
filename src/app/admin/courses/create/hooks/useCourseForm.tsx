@@ -232,6 +232,7 @@ export function useCourseForm() {
       const response = await fetch('/api/admin/courses/drafts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // ✅ Incluir cookies de autenticación
         body: JSON.stringify({ id: draftId, slug: draftSlug || formData.slug, data: formData })
       });
       if (!response.ok) {
@@ -270,6 +271,7 @@ export function useCourseForm() {
         headers: {
           'Content-Type': 'application/json'
         },
+        credentials: 'include', // ✅ Incluir cookies de autenticación
         body: JSON.stringify({
           ...formData,
           status: 'PUBLISHED',
