@@ -19,7 +19,7 @@ export default function WelcomeBannerSection() {
       // Ejecutar animaciones después de que el estado esté listo
       const animationTimer = setTimeout(() => {
         setShowWelcome(true);
-      }, 800); // Aumentado de 300ms a 800ms para ver mejor el efecto
+      }, 800); // Delay para ver mejor el efecto
       
       return () => clearTimeout(animationTimer);
     }
