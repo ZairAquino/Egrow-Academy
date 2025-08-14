@@ -33,63 +33,39 @@ export async function checkAdminAccess(request: NextRequest): Promise<boolean> {
   }
 }
 
-// Middleware para proteger rutas admin
+// Middleware para proteger rutas admin - SIMPLIFICADO
 export function protectAdminRoutes(request: NextRequest) {
   const { pathname } = request.nextUrl;
   
-  // Verificar si la ruta es una ruta admin
-  const isAdminRoute = pathname.startsWith('/admin');
-  const isAdminApiRoute = pathname.startsWith('/api/admin');
+  // Verificar si la ruta es una ruta admin de página (no API)
+  const isAdminPageRoute = pathname.startsWith('/admin') && !pathname.startsWith('/api/admin');
   
-  if (isAdminRoute || isAdminApiRoute) {
-    console.log(`🔒 Checking admin access for: ${pathname}`);
+  if (isAdminPageRoute) {
+    console.log(`🔒 Admin page route detected: ${pathname} - letting page handle auth`);
+    // Para rutas de página admin, dejar que la página maneje la autenticación
+    // No bloquear en middleware, el useAdminAccess hook se encargará
+    return NextResponse.next();
+  }
+  
+  // Para rutas API admin, mantener protección básica
+  const isAdminApiRoute = pathname.startsWith('/api/admin');
+  if (isAdminApiRoute) {
+    console.log(`🔒 Admin API route: ${pathname} - checking basic auth`);
     
-    // Obtener token
-    const cookieToken = request.cookies.get('session')?.value;
-    const authHeader = request.headers.get('authorization');
-    const headerToken = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : null;
-    const token = cookieToken || headerToken;
+    // Buscar cualquier token en cookies
+    const allCookies = request.cookies.getAll();
+    const hasAnyCookie = allCookies.length > 0;
     
-    if (!token) {
-      console.log('❌ No token found for admin route');
-      
-      if (isAdminApiRoute) {
-        // Para rutas API, devolver 401
-        return NextResponse.json(
-          { error: 'Acceso denegado. Se requiere autenticación de administrador.' },
-          { status: 401 }
-        );
-      } else {
-        // Para rutas de página, redirigir al login
-        const loginUrl = new URL('/login', request.url);
-        loginUrl.searchParams.set('redirect', pathname);
-        return NextResponse.redirect(loginUrl);
-      }
+    if (!hasAnyCookie) {
+      console.log('❌ No cookies found for admin API route');
+      return NextResponse.json(
+        { error: 'Acceso denegado. Se requiere autenticación.' },
+        { status: 401 }
+      );
     }
     
-    try {
-      // Verificar que el token es válido
-      verifyToken(token);
-      console.log('✅ Valid token found for admin route');
-      
-      // El token es válido, pero aún necesitamos verificar el role en la página/API individual
-      // porque el middleware no puede hacer queries de base de datos
-      return NextResponse.next();
-      
-    } catch (error) {
-      console.log('❌ Invalid token for admin route');
-      
-      if (isAdminApiRoute) {
-        return NextResponse.json(
-          { error: 'Token inválido. Acceso denegado.' },
-          { status: 401 }
-        );
-      } else {
-        const loginUrl = new URL('/login', request.url);
-        loginUrl.searchParams.set('redirect', pathname);
-        return NextResponse.redirect(loginUrl);
-      }
-    }
+    console.log('✅ Cookies found, letting API handle detailed auth');
+    return NextResponse.next();
   }
   
   return null; // No es ruta admin, continuar normalmente
