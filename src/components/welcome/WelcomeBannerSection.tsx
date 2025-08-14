@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import WelcomeMessage from './WelcomeMessage';
-import PromotionBannerWrapper from '../PromotionBannerWrapper';
+import PremiumSubscriptionBanner from '../PremiumSubscriptionBanner';
 
 export default function WelcomeBannerSection() {
   const { status } = useAuth();
@@ -19,7 +19,7 @@ export default function WelcomeBannerSection() {
       // Ejecutar animaciones después de que el estado esté listo
       const animationTimer = setTimeout(() => {
         setShowWelcome(true);
-      }, 300);
+      }, 800); // Aumentado de 300ms a 800ms para ver mejor el efecto
       
       return () => clearTimeout(animationTimer);
     }
@@ -32,11 +32,16 @@ export default function WelcomeBannerSection() {
 
   return (
     <div className="w-full bg-gradient-to-b from-white to-gray-50 py-8">
+      {/* Banner Promocional - Ancho completo del background */}
+      <div className={`banner-full-width ${showWelcome ? 'show' : ''}`} style={{ transitionDelay: '0.2s' }}>
+        <PremiumSubscriptionBanner skipDelay={true} />
+      </div>
+      
       <div className="container mx-auto px-4">
         {!isAuthenticated ? (
-          /* Banner Promocional - Desliza desde la Derecha (usuarios no registrados) */
-          <div className={`banner-slide ${showWelcome ? 'show' : ''}`}>
-            <PromotionBannerWrapper skipDelay={true} />
+          /* Solo mensaje de bienvenida para usuarios no registrados */
+          <div className={`welcome-message ${showWelcome ? 'show' : ''}`}>
+            <WelcomeMessage />
           </div>
         ) : (
           /* Layout para usuarios registrados */
@@ -46,37 +51,37 @@ export default function WelcomeBannerSection() {
               <WelcomeMessage />
             </div>
             
-            {/* Banner Promocional - Desliza desde la Derecha */}
-            <div className={`w-full lg:w-1/2 banner-slide ${showWelcome ? 'show' : ''}`} style={{ transitionDelay: '0.2s' }}>
-              <PromotionBannerWrapper skipDelay={true} />
-            </div>
+            {/* Espacio para balance visual */}
+            <div className="w-full lg:w-1/2"></div>
           </div>
         )}
       </div>
 
       <style jsx>{`
+        /* Banner Promocional - Desliza desde abajo hacia arriba */
+        .banner-full-width {
+          width: 100%;
+          opacity: 0;
+          transform: translateY(100px);
+          transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .banner-full-width.show {
+          opacity: 1;
+          transform: translateY(0);
+        }
+
         /* Mensaje de Bienvenida - Animación suave y limpia */
         .welcome-message {
           opacity: 0;
           transform: translateY(20px) scale(0.98);
           transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+          transition-delay: 0.5s;
         }
 
         .welcome-message.show {
           opacity: 1;
           transform: translateY(0) scale(1);
-        }
-
-        /* Banner Promocional - Desliza desde la Derecha con efecto suave */
-        .banner-slide {
-          transform: translateX(100%);
-          opacity: 0;
-          transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-
-        .banner-slide.show {
-          transform: translateX(0);
-          opacity: 1;
         }
 
         /* Mobile - animaciones optimizadas */
@@ -89,11 +94,11 @@ export default function WelcomeBannerSection() {
             transform: translateY(0) scale(1);
           }
 
-          .banner-slide {
-            transform: translateY(40px);
+          .banner-full-width {
+            transform: translateY(80px);
           }
 
-          .banner-slide.show {
+          .banner-full-width.show {
             transform: translateY(0);
           }
         }
@@ -101,7 +106,7 @@ export default function WelcomeBannerSection() {
         /* Accesibilidad */
         @media (prefers-reduced-motion: reduce) {
           .welcome-message,
-          .banner-slide {
+          .banner-full-width {
             transition: none;
             transform: none;
             opacity: 1;
