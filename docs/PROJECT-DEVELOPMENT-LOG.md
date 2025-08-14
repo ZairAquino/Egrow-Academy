@@ -1,3 +1,22 @@
+# Registro de Desarrollo
+
+Fecha: 2025-08-14
+
+Cambios aplicados:
+
+- Actualización de precios multi-moneda por IP en la card de cursos (`src/components/course/templates/CourseTemplateV1.tsx`).
+  - Se eliminan valores estáticos y se usa `getDisplayPrice`/`getCurrencySymbol` leyendo la cookie `currency` fijada por el middleware.
+- Página del curso ElevenLabs (`src/app/curso/monetiza-voz-ia-elevenlabs/page.tsx`):
+  - Banner promocional superior ahora muestra el precio según moneda detectada.
+  - Sección "Elige tu Plan de Suscripción" usa la misma lógica de moneda que la página de suscripción.
+- Banner de cuenta regresiva reutilizable (`src/components/CountdownPromotionBanner.tsx`):
+  - Texto del precio ahora es dinámico por moneda, basado en la cookie `currency`.
+
+Impacto:
+
+- Los precios se muestran consistentes en todas las vistas relacionadas a cursos y suscripción, alineados con la moneda detectada por IP desde el middleware (`src/middleware.ts`).
+- No hay cambios de base de datos ni de API; Stripe ya recibe `currency` desde cookie.
+
 # 📋 Log de Desarrollo - eGrow Academy
 
 ## 🚀 Última Actualización: 2025-08-08
