@@ -167,9 +167,9 @@ export default function MonetizaVozIAElevenLabsPage() {
     lessonsCount: 10,
     instructor: {
       name: 'Zair Aquino',
-      title: 'CEO de eGrow y especialista en IA',
+      title: 'Fundador de eGrow',
       image: '/images/Zair.jpeg',
-      bio: 'Experto en herramientas de IA para generación de contenido y monetización digital con más de 5 años de experiencia en ElevenLabs y tecnologías de voz.'
+      bio: 'Especialista en Inteligencia Artificial para entornos B2B y B2C, con enfoque en soluciones de utilidad práctica, aplicaciones generativas y procesos avanzados de postproducción.'
     },
     prerequisites: [
       'No se requieren conocimientos técnicos previos.',
@@ -178,14 +178,10 @@ export default function MonetizaVozIAElevenLabsPage() {
       'Ganas de aprender y monetizar tu voz con IA.'
     ],
     whatYouWillLearn: [
-      'Configuración completa de ElevenLabs desde cero',
-      'Creación de voces personalizadas de alta calidad',
-      'Producción de anuncios comerciales profesionales',
-      'Narración automatizada de cursos online',
-      'Creación de podcasts sin hablar en vivo',
-      'Estrategias de monetización con voz artificial',
-      'Optimización de calidad y naturalidad del audio',
-      'Escalabilidad de negocios con tecnología de voz'
+      '<span style="color: #3b82f6; font-weight: 600;">Dominio Completo de ElevenLabs:</span> desde lo básico hasta trucos avanzados. Te enseñaremos a utilizar la herramienta paso a paso, sin experiencia previa, hasta manejarla como un profesional. Aprenderás a elegir y personalizar voces, ajustar su tono emocional y hasta clonar tu propia voz con IA.',
+      '<span style="color: #3b82f6; font-weight: 600;">Creación de Audios Profesionales en Minutos:</span> conviértete en un narrador virtual. Crea locuciones de alta calidad rápidamente para videos de YouTube, anuncios publicitarios, podcasts, presentaciones y más, sin conocimientos técnicos ni equipo especializado.',
+      '<span style="color: #3b82f6; font-weight: 600;">Técnicas de Neuroventas aplicadas a Audio:</span> descubre cómo ciertas palabras, tonos y estilos de narración disparan emociones positivas en tu oyente. Incorpora gatillos mentales en tus audios para persuadir a tu audiencia y convertir oyentes en clientes. (Ejemplo: aprenderás a usar la urgencia, la curiosidad y la empatía en tus guiones hablados para mantener a la gente enganchada hasta el final).',
+      '<span style="color: #3b82f6; font-weight: 600;">Monetiza tu Nueva Habilidad:</span> te mostraremos estrategias para vender tus audios y servicios de voz. Ya seas freelance o emprendedor, sabrás cómo ofrecer locuciones AI en plataformas de freelance, paquetes para clientes de marketing, o crear productos propios (como audiolibros o cursos narrados). Convierte tu habilidad en una fuente de ingresos desde casa, aprovechando un mercado creciente que busca voces en off de calidad sin los costos tradicionales.'
     ],
     tools: [
       'ElevenLabs Pro',
@@ -1052,6 +1048,10 @@ export default function MonetizaVozIAElevenLabsPage() {
           0% { left: -100%; }
           100% { left: 100%; }
         }
+        
+        .objectives-grid.refined {
+          grid-template-columns: 1fr !important;
+        }
       `}</style>
       {/* Banner promocional exclusivo de esta página */}
       {shouldShowBanner() && (
@@ -1182,14 +1182,10 @@ export default function MonetizaVozIAElevenLabsPage() {
               <div className="hero-grid">
                 <div className="hero-left">
                   <h1 className="hero-title-big">
-                    Convierte tu voz en<br />
-                    ingresos con IA —<br />
-                    Domina ElevenLabs<br />
-                    sin experiencia previa
+                    Domina ElevenLabs sin experiencia previa y crea audios profesionales en minutos.
                   </h1>
                   <p className="hero-subtext">
-                    Crea audios profesionales en minutos, sin equipo costoso ni
-                    conocimientos técnicos, y empieza a venderlos en anuncios,...
+                    ¿Te imaginas generar ingresos con solo hablar o escribir un texto? Ahora es posible gracias a la inteligencia artificial de ElevenLabs. En este curso aprenderás a transformar tu voz (¡o cualquier texto!) en narraciones de calidad de estudio de forma rápida y sencilla – sin invertir en equipo de grabación costoso ni contratar actores de voz profesionales
                   </p>
                   <button className="hero-cta" onClick={goToCourseContent}>
                     Iniciar Sesión para Comenzar
@@ -1249,17 +1245,13 @@ export default function MonetizaVozIAElevenLabsPage() {
               <div className="main-content-area desktop-content">
                 {/* Descripción del Curso (card + diseño minimal interno) */}
                 <div className="course-overview-card">
-                  <h2 className="desc-title">Descripción del Curso</h2>
+                  <h2 className="desc-title">El Poder de una Voz Profesional en Tus Proyectos</h2>
                   <p className="desc-lead">
-                    Convierte tu voz en una fuente de ingresos con la inteligencia artificial más realista del mundo. En este curso práctico, aprenderás a dominar ElevenLabs, la tecnología líder en clonación y creación de voz, para producir audios que venden, conectan y emocionan… sin curva técnica.
+                    Un audio de mala calidad puede arruinar incluso el mejor video. Nuestro cerebro conecta profundamente con las voces claras y confiables: un estudio de University College London demostró que el audio puede provocar una respuesta emocional más intensa que el video. ¿Por qué? Porque una voz envolvente activa la imaginación y las emociones de tu audiencia, generando mayor conexión y convenciendo mejor que cualquier gráfico. Con una narración profesional, tus videos, anuncios y presentaciones atraparán la atención de tu público y los motivarán a actuar.
                   </p>
                   <div className="desc-separator" />
                   <div className="desc-body">
-                    <p className="desc-paragraph">Descubrirás el poder de tu voz y cómo amplificarla con IA para anuncios, cursos, podcasts y doblajes multilenguaje.</p>
-                    <p className="desc-paragraph">Aplicarás técnicas profesionales para generar, traducir y mejorar locuciones que suenan listas para radio o TV.</p>
-                    <p className="desc-paragraph">Diseñarás ofertas rentables para vender tu servicio de voz y llegar a clientes en cualquier parte del mundo.</p>
-                    <p className="desc-paragraph">Aprenderás paso a paso con ejercicios reales, plantillas y un enfoque ético para proteger tu identidad vocal y la de tus clientes.</p>
-                    <p className="desc-closure">Al terminar, no solo dominarás ElevenLabs: tendrás tu portafolio listo y tu plan para empezar a monetizar al día siguiente.</p>
+                    <p className="desc-paragraph">¿No tienes experiencia técnica? No la necesitas. ElevenLabs es la plataforma de voz AI que ha llevado a miles de creadores de contenido a pasar de videos amateur a producciones con sonido profesional. Sus voces artificiales son ultrarrealistas y expresivas, capaces de replicar entonaciones y emociones en 29 idiomas. Imagina: en minutos puedes convertir un guión en un audio cautivador, con la voz, el idioma o el acento que prefieras, listo para usar en proyectos reales. Creadores con millones de seguidores ya usan ElevenLabs para dar vida a sus contenidos– ahora tú también podrás hacerlo.</p>
                   </div>
                 </div>
 
@@ -1270,7 +1262,7 @@ export default function MonetizaVozIAElevenLabsPage() {
                 <div className="learning-objectives">
                   <div className="objectives-header">
                     <span className="section-badge">Objetivos</span>
-                    <h2 className="objectives-title">Lo que vas a conseguir con este curso</h2>
+                    <h2 className="objectives-title">¿Qué Aprenderás en Este Curso?</h2>
                     <p className="section-lead">Enfocado en resultados reales: dominio técnico, flujo de trabajo claro y aplicabilidad inmediata.</p>
                   </div>
 
@@ -1278,7 +1270,7 @@ export default function MonetizaVozIAElevenLabsPage() {
                     {courseData.whatYouWillLearn.map((objective, index) => (
                       <div key={index} className="objective-card">
                         <div className="objective-index">{index + 1}</div>
-                        <p className="objective-text">{objective}</p>
+                        <p className="objective-text" dangerouslySetInnerHTML={{ __html: objective }}></p>
                       </div>
                     ))}
                   </div>
@@ -1621,7 +1613,7 @@ export default function MonetizaVozIAElevenLabsPage() {
             <h2 style={{ textAlign: 'center' }}>¡Empieza a Monetizar Tu Voz Ya!</h2>
             <p style={{ textAlign: 'center' }}>Estás a un paso de transformar tu manera de trabajar y generar dinero. Inscríbete ahora en Convierte Tu Voz en Ingresos con IA y obtén acceso inmediato a todos los módulos. Comienza hoy mismo a crear audios impresionantes que te posicionen por encima de la competencia.</p>
             
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginTop: '2rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginTop: '2rem', alignItems: 'center' }}>
               <div className="columna-izquierda">
                 {/* Card 1 - Bonos especiales */}
                 <div style={{
@@ -1864,7 +1856,7 @@ export default function MonetizaVozIAElevenLabsPage() {
                   </div>
                 </div>
               </div>
-              <div className="columna-derecha">
+              <div className="columna-derecha" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <img src="/images/Aprende-9.png" alt="Aprende a monetizar tu voz" style={{ width: '100%', height: 'auto' }} />
               </div>
             </div>
