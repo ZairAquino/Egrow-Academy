@@ -1,0 +1,5 @@
+[33me015039[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mrichpol[m[33m, [m[1;31morigin/richpol[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m resolve: resolver conflictos en env.example combinando configuraciones de analytics y variables de entorno
+[33m8337b19[m feat: Implementar HeroV2 con diseño de dos columnas y botón condicional según autenticación
+[33m931e3a0[m fix(build): resolver error de styled-jsx anidadas en página monetiza-voz-ia-elevenlabs
+[33m68f32c5[m Merge pull request #5 from ZairAquino/David-clean
+[33m9bebb7f[m[33m ([m[1;31morigin/David-clean[m[33m)[m feat(pricing): precios multi-moneda por IP en CourseTemplateV1, banner de cuenta regresiva y sección de planes en cursos; alineado con lógica de suscripción. Docs actualizados

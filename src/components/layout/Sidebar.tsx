@@ -39,11 +39,11 @@ export default function Sidebar({ isOpen, onToggle, hideToggle = false }: Sideba
   // Configuración de navegación por teclado
   const menuItems = [
     { id: 'home', label: 'Inicio', href: '/', icon: '🏠' },
-    { id: 'courses', label: 'Cursos', href: '#', icon: '📚', hasDropdown: true },
-    { id: 'ai-news', label: 'AI-News', href: 'https://egrow-theta.vercel.app/ai-news', icon: '🤖', external: true },
+    { id: 'courses', label: 'Cursos', href: '/courses', icon: '📚' },
+    // { id: 'ai-news', label: 'AI-News', href: 'https://egrow-theta.vercel.app/ai-news', icon: '🤖', external: true }, // Temporalmente desactivado
     { id: 'community', label: 'Comunidad', href: '/community', icon: '👥' },
     { id: 'resources', label: 'Recursos', href: '/resources', icon: '📖' },
-    { id: 'contact', label: 'Contacto', href: '/contacto', icon: '✉️' },
+    { id: 'contact', label:'Contacto', href: '/contacto', icon: '✉️' },
     { id: 'ai-experts', label: 'AI Experts©', href: 'https://egrow.lat/ai-experts', icon: '🏢', external: true }
   ];
 
@@ -114,28 +114,16 @@ export default function Sidebar({ isOpen, onToggle, hideToggle = false }: Sideba
             <span className="menu-text">Inicio</span>
           </Link>
 
-          <div className={`menu-item dropdown-sidebar ${activeDropdown === 'courses' ? 'active' : ''}`}>
-            <button 
-              onClick={() => toggleDropdown('courses')}
-              className="menu-link"
-              style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer' }}
-              aria-expanded={activeDropdown === 'courses'}
-              aria-controls="courses-submenu"
-            >
-              <span className="menu-icon" aria-hidden="true">📚</span>
-              <span className="menu-text">Cursos</span>
-              <span className="dropdown-arrow" aria-hidden="true">▼</span>
-            </button>
-            <div className="submenu" id="courses-submenu" role="region" aria-label="Submenú de cursos">
-              <Link href="/cursos-gratuitos" className="submenu-link" onClick={handleLinkClick}>Cursos Gratuitos</Link>
-              <Link href="/courses" className="submenu-link" onClick={handleLinkClick}>Todos los Cursos 🔒</Link>
-            </div>
-          </div>
+          <Link href="/courses" className="menu-link" onClick={handleLinkClick}>
+            <span className="menu-icon" aria-hidden="true">📚</span>
+            <span className="menu-text">Cursos</span>
+          </Link>
 
-          <a href="https://egrow-theta.vercel.app/ai-news" target="_blank" rel="noopener noreferrer" className="menu-link ai-news-btn" onClick={handleLinkClick}>
+          {/* Temporalmente desactivado - AI News */}
+          {/* <a href="https://egrow-theta.vercel.app/ai-news" target="_blank" rel="noopener noreferrer" className="menu-link ai-news-btn" onClick={handleLinkClick}>
             <span className="menu-icon" aria-hidden="true">🤖</span>
             <span className="menu-text">AI-News</span>
-          </a>
+          </a> */}
 
           <Link href="/community" className="menu-link" onClick={handleLinkClick}>
             <span className="menu-icon" aria-hidden="true">👥</span>

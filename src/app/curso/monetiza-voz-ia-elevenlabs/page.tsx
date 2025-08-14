@@ -1115,6 +1115,7 @@ export default function MonetizaVozIAElevenLabsPage() {
         .objectives-grid.refined {
           grid-template-columns: 1fr !important;
         }
+        
         .modal-overlay {
           position: fixed;
           top: 0;
@@ -1127,6 +1128,7 @@ export default function MonetizaVozIAElevenLabsPage() {
           justify-content: center;
           z-index: 1000;
         }
+        
         .modal-content {
           background: #fff;
           border-radius: 12px;
@@ -1135,9 +1137,30 @@ export default function MonetizaVozIAElevenLabsPage() {
           max-height: 90vh;
           overflow-y: auto;
         }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid #e5e7eb; }
-        .modal-body { padding: 16px 20px; }
-        .modal-close { background: none; border: none; font-size: 22px; cursor: pointer; color: #6b7280; }
+        
+        .modal-header { 
+          display: flex; 
+          justify-content: space-between; 
+          align-items: center; 
+          padding: 16px 20px; 
+          border-bottom: 1px solid #e5e7eb; 
+        }
+        
+        .modal-body { 
+          padding: 16px 20px; 
+        }
+        
+        .modal-close { 
+          background: none; 
+          border: none; 
+          font-size: 22px; 
+          cursor: pointer; 
+          color: #6b7280; 
+        }
+        
+        .modal-close:hover {
+          color: #374151;
+        }
       `}</style>
       {/* Banner promocional exclusivo de esta página */}
       {shouldShowBanner() && (
