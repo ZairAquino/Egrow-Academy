@@ -93,7 +93,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setUser(apiUser)
       setStatus('authenticated')
       setToken('cookie-based') // Indicador de que usa cookies
-      console.log('✅ [AuthContext] Usuario autenticado:', apiUser.email)
+      console.log('✅ [AuthContext] Usuario autenticado:', apiUser.email, 'Role:', apiUser.role)
     } else {
       setUser(null)
       setStatus('unauthenticated')
