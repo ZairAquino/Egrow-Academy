@@ -1047,6 +1047,12 @@ export default function MonetizaVozIAElevenLabsPage() {
 
   return (
     <>
+      <style jsx>{`
+        @keyframes shine {
+          0% { left: -100%; }
+          100% { left: 100%; }
+        }
+      `}</style>
       {/* Banner promocional exclusivo de esta página */}
       {shouldShowBanner() && (
         <div className="promo-banner" role="button" onClick={handleBannerClick}>
@@ -1617,7 +1623,246 @@ export default function MonetizaVozIAElevenLabsPage() {
             
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginTop: '2rem' }}>
               <div className="columna-izquierda">
-                {/* Contenido columna izquierda */}
+                {/* Card 1 - Bonos especiales */}
+                <div style={{
+                  background: 'linear-gradient(135deg, #e2e5e9 0%, #d1d5db 100%)',
+                  padding: '2rem',
+                  borderRadius: '16px',
+                  boxShadow: '0 20px 40px rgba(0, 0, 0, 0.08)',
+                  color: '#2d3748',
+                  marginBottom: '1.5rem',
+                  transform: 'translateY(0)',
+                  transition: 'all 0.3s ease',
+                  cursor: 'pointer',
+                  position: 'relative',
+                  overflow: 'hidden'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-5px)';
+                  e.currentTarget.style.boxShadow = '0 30px 60px rgba(0, 0, 0, 0.12)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.08)';
+                }}>
+                  {/* Efecto de brillo sutil */}
+                  <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: '-100%',
+                    width: '100%',
+                    height: '100%',
+                    background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)',
+                    animation: 'shine 3s infinite'
+                  }} />
+                  
+                  <div style={{ position: 'relative', zIndex: 1 }}>
+                    <h3 style={{ 
+                      fontSize: '1.4rem', 
+                      fontWeight: '700', 
+                      marginBottom: '1.5rem',
+                      color: '#2d3748',
+                      textAlign: 'center'
+                    }}>
+                      Bonos Exclusivos de Inscripción Temprana
+                    </h3>
+                    
+                    {/* Lista de bonos destacados */}
+                    <div style={{ marginBottom: '1.5rem' }}>
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.75rem',
+                        marginBottom: '1rem',
+                        padding: '0.75rem',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderRadius: '8px',
+                        borderLeft: '4px solid #3b82f6'
+                      }}>
+                        <div style={{
+                          backgroundColor: '#3b82f6',
+                          color: 'white',
+                          borderRadius: '50%',
+                          width: '24px',
+                          height: '24px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '14px',
+                          fontWeight: 'bold'
+                        }}>✓</div>
+                        <div>
+                          <span style={{ 
+                            fontSize: '0.95rem',
+                            fontWeight: '600',
+                            color: '#2d3748',
+                            display: 'block'
+                          }}>
+                            Biblioteca de Plantillas Profesionales
+                          </span>
+                          <span style={{ 
+                            fontSize: '0.8rem',
+                            color: '#64748b',
+                            lineHeight: '1.4'
+                          }}>
+                            Guiones publicitarios probados y optimizados para diferentes industrias y formatos.
+                          </span>
+                        </div>
+                      </div>
+
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.75rem',
+                        marginBottom: '1rem',
+                        padding: '0.75rem',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderRadius: '8px',
+                        borderLeft: '4px solid #3b82f6'
+                      }}>
+                        <div style={{
+                          backgroundColor: '#3b82f6',
+                          color: 'white',
+                          borderRadius: '50%',
+                          width: '24px',
+                          height: '24px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '14px',
+                          fontWeight: 'bold'
+                        }}>✓</div>
+                        <div>
+                          <span style={{ 
+                            fontSize: '0.95rem',
+                            fontWeight: '600',
+                            color: '#2d3748',
+                            display: 'block'
+                          }}>
+                            Masterclass: Estrategias de Pricing
+                          </span>
+                          <span style={{ 
+                            fontSize: '0.8rem',
+                            color: '#64748b',
+                            lineHeight: '1.4'
+                          }}>
+                            Metodología completa para valorar tu trabajo y negociar con confianza.
+                          </span>
+                        </div>
+                      </div>
+
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.75rem',
+                        padding: '0.75rem',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderRadius: '8px',
+                        borderLeft: '4px solid #3b82f6'
+                      }}>
+                        <div style={{
+                          backgroundColor: '#3b82f6',
+                          color: 'white',
+                          borderRadius: '50%',
+                          width: '24px',
+                          height: '24px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '14px',
+                          fontWeight: 'bold'
+                        }}>✓</div>
+                        <div>
+                          <span style={{ 
+                            fontSize: '0.95rem',
+                            fontWeight: '600',
+                            color: '#2d3748',
+                            display: 'block'
+                          }}>
+                            Acceso Prioritario a Actualizaciones
+                          </span>
+                          <span style={{ 
+                            fontSize: '0.8rem',
+                            color: '#64748b',
+                            lineHeight: '1.4'
+                          }}>
+                            Primera notificación sobre nuevo contenido, herramientas y técnicas avanzadas.
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div style={{
+                      textAlign: 'center',
+                      padding: '1rem',
+                      backgroundColor: 'rgba(30, 58, 138, 0.1)',
+                      borderRadius: '8px',
+                      border: '1px dashed #1e3a8a'
+                    }}>
+                      <p style={{ 
+                        fontSize: '0.9rem', 
+                        fontWeight: '600',
+                        color: '#1e3a8a',
+                        margin: 0
+                      }}>
+                        Disponible únicamente durante el período de lanzamiento
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Card 2 - Llamada a la acción */}
+                <div style={{
+                  background: 'linear-gradient(135deg, #e8eaed 0%, #d0d4da 100%)',
+                  padding: '2rem',
+                  borderRadius: '16px',
+                  boxShadow: '0 20px 40px rgba(0, 0, 0, 0.08)',
+                  color: '#2d3748',
+                  transform: 'translateY(0)',
+                  transition: 'all 0.3s ease',
+                  cursor: 'pointer',
+                  position: 'relative',
+                  overflow: 'hidden'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-5px)';
+                  e.currentTarget.style.boxShadow = '0 30px 60px rgba(0, 0, 0, 0.12)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.08)';
+                }}>
+                  {/* Efecto de brillo sutil */}
+                  <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: '-100%',
+                    width: '100%',
+                    height: '100%',
+                    background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)',
+                    animation: 'shine 3s infinite 1.5s'
+                  }} />
+                  
+                  <div style={{ position: 'relative', zIndex: 1 }}>
+                    <h3 style={{ 
+                      fontSize: '1.4rem', 
+                      fontWeight: '700', 
+                      marginBottom: '1rem',
+                      color: '#2d3748'
+                    }}>
+                      Tu Transformación Empieza Aquí
+                    </h3>
+                    <p style={{ 
+                      fontSize: '1rem', 
+                      lineHeight: '1.6',
+                      opacity: '0.85',
+                      margin: 0,
+                      color: '#2d3748'
+                    }}>
+                      Convierte tu voz en tu activo más rentable. Te esperamos dentro del curso para empezar juntos tu transformación. ¡El mejor momento para unirte a la revolución de la voz AI es ahora!
+                    </p>
+                  </div>
+                </div>
               </div>
               <div className="columna-derecha">
                 <img src="/images/Aprende-9.png" alt="Aprende a monetizar tu voz" style={{ width: '100%', height: 'auto' }} />
