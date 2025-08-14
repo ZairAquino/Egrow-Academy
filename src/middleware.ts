@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { checkMaintenanceMode } from './middleware/maintenance';
 import { protectAdminRoutes } from './middleware/auth';
+import { resolveCurrencyFromCountry } from '@/lib/geo-currency';
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -18,8 +19,30 @@ export function middleware(request: NextRequest) {
     return adminProtectionResponse;
   }
 
+  // Resolver moneda por IP/país: usar header geolocalizado si existe
+  const country = request.headers.get('x-vercel-ip-country') || request.headers.get('x-geo-country');
+  let currency = resolveCurrencyFromCountry(country);
+
+  // Permitir override por query param ?currency=usd|eur|mxn|ars (útil para QA)
+  const url = new URL(request.url);
+  const override = url.searchParams.get('currency');
+  if (override && ['usd','eur','mxn','ars'].includes(override.toLowerCase())) {
+    currency = override.toLowerCase() as any;
+  }
+
   // Solo aplicar headers básicos sin restricciones
   const response = NextResponse.next();
+
+  // Setear cookie de moneda si no existe o cambió
+  const existingCurrency = request.cookies.get('currency')?.value;
+  if (!existingCurrency || existingCurrency !== currency) {
+    response.cookies.set('currency', currency, {
+      httpOnly: false,
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 60 * 60 * 24 * 30, // 30 días
+    });
+  }
   
   // Headers de seguridad básicos
   response.headers.set('X-Content-Type-Options', 'nosniff');

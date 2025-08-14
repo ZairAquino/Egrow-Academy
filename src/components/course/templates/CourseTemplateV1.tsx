@@ -4,6 +4,7 @@ import React from 'react';
 import VideoPlayer from '@/components/courses/VideoPlayer';
 import { CheckCircle, Play, Users, Star, Award, ChevronDown, ChevronUp, Lock, Clock } from 'lucide-react';
 import { renderToolIcon, renderUiIcon } from '@/lib/tool-icons';
+import { getCurrencySymbol, getDisplayPrice } from '@/lib/pricing';
 
 export interface CourseTemplateLesson {
   id?: string | number;
@@ -70,6 +71,43 @@ export default function CourseTemplateV1({ course, onPrimaryAction }: Props) {
   const [stickyOpacity, setStickyOpacity] = React.useState(0);
   const stickyTriggerRef = React.useRef<HTMLDivElement | null>(null);
   const reviewsRef = React.useRef<HTMLElement | null>(null);
+  const [currency, setCurrency] = React.useState<'usd' | 'eur' | 'mxn' | 'ars'>('usd');
+
+  React.useEffect(() => {
+    try {
+      const match = document.cookie.match(/(?:^|; )currency=([^;]+)/);
+      const cur = match ? decodeURIComponent(match[1]) : 'usd';
+      if (cur === 'usd' || cur === 'eur' || cur === 'mxn' || cur === 'ars') {
+        setCurrency(cur as any);
+      }
+    } catch {}
+  }, []);
+
+  const getFormattedPrice = (type: 'monthly' | 'yearly' | 'course') => {
+    const price = getDisplayPrice(type, currency);
+    const symbol = getCurrencySymbol(currency);
+    const amount = Math.floor(price);
+    const cents = Math.round((price % 1) * 100);
+    return {
+      currency: symbol,
+      amount: String(amount),
+      cents: cents > 0 ? `.${String(cents).padStart(2, '0')}` : '',
+      code: currency.toUpperCase(),
+    };
+  };
+
+  const PriceDisplay = ({ type }: { type: 'monthly' | 'yearly' | 'course' }) => {
+    const p = getFormattedPrice(type);
+    const period = type === 'monthly' ? '/mes' : type === 'yearly' ? '/año' : '';
+    return (
+      <div className="price-main">
+        <span className="price-currency">{p.currency}</span>
+        <span className="price-amount">{p.amount}</span>
+        {p.cents && <span className="price-cents">{p.cents}</span>}
+        {period ? <span className="price-period">{p.code}{period}</span> : null}
+      </div>
+    );
+  };
   const toggleModule = (moduleId: number) => {
     setExpandedModules(prev => (prev.includes(moduleId) ? prev.filter(id => id !== moduleId) : [...prev, moduleId]));
   };
@@ -138,12 +176,25 @@ export default function CourseTemplateV1({ course, onPrimaryAction }: Props) {
               <div className="price-card-sticky">
                 <div className="price-option highlight">
                   <div className="price-option-header"><h3 className="price-option-title">Acceso al curso</h3><div className="price-badges"><span className="price-badge plus">e Plus</span></div></div>
-                  <div className="price-display"><div className="price-radio"><input type="radio" defaultChecked /><label></label></div><div className="price-main"><span className="price-currency">$</span><span className="price-amount">12</span><span className="price-cents">.49</span><span className="price-period">USD/mes</span></div></div>
+                  <div className="price-display"><div className="price-radio"><input type="radio" defaultChecked /><label></label></div><PriceDisplay type="monthly" /></div>
                   <button className="price-cta primary" type="button" onClick={onPrimaryAction}>Empezar con e Plus</button>
                 </div>
                 <div className="price-option regular">
                   <div className="price-option-header"><h3 className="price-option-title">Acceso individual</h3></div>
-                  <div className="price-display"><div className="price-radio"><input type="radio" /><label></label></div><div className="price-main"><span className="price-currency">$</span><span className="price-amount">{Math.trunc(course.price || 0)}</span><span className="price-cents">.{String(Math.round((((course.price || 0) % 1) * 100))).padStart(2,'0')}</span><span className="price-period">USD</span></div></div>
+                  <div className="price-display">
+                    <div className="price-radio"><input type="radio" /><label></label></div>
+                    {(() => {
+                      const p = getFormattedPrice('course');
+                      return (
+                        <div className="price-main">
+                          <span className="price-currency">{p.currency}</span>
+                          <span className="price-amount">{p.amount}</span>
+                          {p.cents && <span className="price-cents">{p.cents}</span>}
+                          <span className="price-period">{p.code}</span>
+                        </div>
+                      );
+                    })()}
+                  </div>
                   <button className="price-cta" type="button" onClick={onPrimaryAction}>Comprar este curso</button>
                 </div>
               </div>
@@ -349,7 +400,7 @@ export default function CourseTemplateV1({ course, onPrimaryAction }: Props) {
                     </div>
                     <div className="price-display">
                       <div className="price-radio"><input type="radio" defaultChecked /><label></label></div>
-                      <div className="price-main"><span className="price-currency">$</span><span className="price-amount">12</span><span className="price-cents">.49</span><span className="price-period">USD/mes</span></div>
+                      <PriceDisplay type="monthly" />
                     </div>
                     <div className="price-discount"><span className="discount-text">Accede a todos los cursos de eGrow Academy mientras mantengas tu suscripción.</span></div>
                     <button className="price-cta primary" type="button" onClick={onPrimaryAction}>Empezar con e Plus</button>
@@ -363,12 +414,17 @@ export default function CourseTemplateV1({ course, onPrimaryAction }: Props) {
                       <div className="price-option-header"><h3 className="price-option-title">Acceso individual</h3></div>
                       <div className="price-display">
                         <div className="price-radio"><input type="radio" /><label></label></div>
-                        <div className="price-main">
-                          <span className="price-currency">$</span>
-                          <span className="price-amount">{Math.trunc(course.price || 0)}</span>
-                          <span className="price-cents">.{String(Math.round((((course.price || 0) % 1) * 100))).padStart(2,'0')}</span>
-                          <span className="price-period">USD</span>
-                        </div>
+                        {(() => {
+                          const p = getFormattedPrice('course');
+                          return (
+                            <div className="price-main">
+                              <span className="price-currency">{p.currency}</span>
+                              <span className="price-amount">{p.amount}</span>
+                              {p.cents && <span className="price-cents">{p.cents}</span>}
+                              <span className="price-period">{p.code}</span>
+                            </div>
+                          );
+                        })()}
                       </div>
                       <div className="price-description"><span className="description-text">Pago único para este curso. Acceso permanente al contenido del curso.</span></div>
                       <button className="price-cta" type="button" onClick={onPrimaryAction}>Comprar este curso</button>
@@ -476,8 +532,8 @@ export default function CourseTemplateV1({ course, onPrimaryAction }: Props) {
           <div className="pricing-header"><h2 className="pricing-title">Elige tu Plan de Suscripción</h2><p className="pricing-subtitle">Desbloquea todo el potencial de eGrow Academy con acceso ilimitado a nuestros cursos especializados</p></div>
           <div className="pricing-grid">
             <div className="pricing-card"><div className="pricing-card-content"><div className="pricing-header-card"><h3 className="pricing-plan-name">Plan Gratuito</h3><div className="pricing-plan-price">$0<span className="pricing-interval">/mes</span></div></div><ul className="pricing-features"><li className="pricing-feature"><span className="pricing-feature-icon">✓</span><span className="pricing-feature-text">Acceso a cursos públicos gratuitos</span></li><li className="pricing-feature"><span className="pricing-feature-icon">✓</span><span className="pricing-feature-text">Sistema básico de rachas</span></li><li className="pricing-feature"><span className="pricing-feature-icon">✓</span><span className="pricing-feature-text">Comunidad básica</span></li><li className="pricing-feature"><span className="pricing-feature-icon">✓</span><span className="pricing-feature-text">Soporte por email estándar</span></li><li className="pricing-feature not-included"><span className="pricing-feature-icon not-included-icon">✕</span><span className="pricing-feature-text not-included-text">Acceso a cursos especializados premium</span></li><li className="pricing-feature not-included"><span className="pricing-feature-icon not-included-icon">✕</span><span className="pricing-feature-text not-included-text">Certificados de finalización</span></li><li className="pricing-feature not-included"><span className="pricing-feature-icon not-included-icon">✕</span><span className="pricing-feature-text not-included-text">Badge visible en navbar</span></li><li className="pricing-feature not-included"><span className="pricing-feature-icon not-included-icon">✕</span><span className="pricing-feature-text not-included-text">Personalización de badges y rachas</span></li></ul><button className="pricing-button secondary">Registrarse Gratis</button></div></div>
-            <div className="pricing-card popular"><div className="pricing-popular-badge"><span style={{ display:'inline-flex', alignItems:'center', gap:'0.25rem' }}><span style={{ width:18, height:18, display:'inline-block' }} /><span>Más Popular</span></span></div><div className="pricing-card-content"><div className="pricing-header-card"><h3 className="pricing-plan-name">Plan Mensual</h3><div className="pricing-plan-price">$12.49<span className="pricing-interval">/mes</span></div></div><ul className="pricing-features"><li className="pricing-feature"><span className="pricing-feature-icon">✓</span><span className="pricing-feature-text">Acceso a todos los cursos especializados</span></li><li className="pricing-feature"><span className="pricing-feature-icon">✓</span><span className="pricing-feature-text">Contenido actualizado mensualmente</span></li><li className="pricing-feature"><span className="pricing-feature-icon">✓</span><span className="pricing-feature-text">Certificados de finalización</span></li><li className="pricing-feature"><span className="pricing-feature-icon">✓</span><span className="pricing-feature-text">Sistema completo de rachas</span></li><li className="pricing-feature"><span className="pricing-feature-icon">✓</span><span className="pricing-feature-text">Badge visible en navbar</span></li><li className="pricing-feature"><span className="pricing-feature-icon">✓</span><span className="pricing-feature-text">Personalización de badges y rachas</span></li><li className="pricing-feature"><span className="pricing-feature-icon">✓</span><span className="pricing-feature-text">Soporte técnico prioritario</span></li><li className="pricing-feature"><span className="pricing-feature-icon">✓</span><span className="pricing-feature-text">Acceso a la comunidad exclusiva</span></li></ul><button className="pricing-button primary">Suscribirse por $12.49</button></div></div>
-            <div className="pricing-card popular yearly-popular"><div className="pricing-popular-badge yearly-badge"><span style={{ display:'inline-flex', alignItems:'center', gap:'0.25rem' }}><span style={{ width:18, height:18, display:'inline-block' }} /><span>Ahorra Más</span></span></div><div className="pricing-card-content"><div className="pricing-header-card"><h3 className="pricing-plan-name">Plan Anual</h3><div className="pricing-plan-price">$149.99<span className="pricing-interval">/año</span></div><p className="pricing-monthly-price">$12.50/mes facturado anualmente</p></div><ul className="pricing-features"><li className="pricing-feature"><span className="pricing-feature-icon">✓</span><span className="pricing-feature-text">Todo lo del plan mensual</span></li><li className="pricing-feature"><span className="pricing-feature-icon">✓</span><span className="pricing-feature-text">2 meses gratis</span></li><li className="pricing-feature"><span className="pricing-feature-icon">✓</span><span className="pricing-feature-text">Personalización completa de badges y rachas</span></li><li className="pricing-feature"><span className="pricing-feature-icon">✓</span><span className="pricing-feature-text">Badge visible en barra de navegación</span></li><li className="pricing-feature"><span className="pricing-feature-icon">✓</span><span className="pricing-feature-text">Acceso anticipado a nuevos cursos</span></li><li className="pricing-feature"><span className="pricing-feature-icon">✓</span><span className="pricing-feature-text">Mentorías grupales mensuales</span></li><li className="pricing-feature"><span className="pricing-feature-icon">✓</span><span className="pricing-feature-text">Recursos premium adicionales</span></li><li className="pricing-feature"><span className="pricing-feature-icon">✓</span><span className="pricing-feature-text">Garantía de satisfacción de 30 días</span></li></ul><button className="pricing-button primary">Suscribirse por $149.99</button></div></div>
+            <div className="pricing-card popular"><div className="pricing-popular-badge"><span style={{ display:'inline-flex', alignItems:'center', gap:'0.25rem' }}><span style={{ width:18, height:18, display:'inline-block' }} /><span>Más Popular</span></span></div><div className="pricing-card-content"><div className="pricing-header-card"><h3 className="pricing-plan-name">Plan Mensual</h3><div className="pricing-plan-price">{getCurrencySymbol(currency)}{getDisplayPrice('monthly', currency)}<span className="pricing-interval">/mes</span></div></div><ul className="pricing-features"><li className="pricing-feature"><span className="pricing-feature-icon">✓</span><span className="pricing-feature-text">Acceso a todos los cursos especializados</span></li><li className="pricing-feature"><span className="pricing-feature-icon">✓</span><span className="pricing-feature-text">Contenido actualizado mensualmente</span></li><li className="pricing-feature"><span className="pricing-feature-icon">✓</span><span className="pricing-feature-text">Certificados de finalización</span></li><li className="pricing-feature"><span className="pricing-feature-icon">✓</span><span className="pricing-feature-text">Sistema completo de rachas</span></li><li className="pricing-feature"><span className="pricing-feature-icon">✓</span><span className="pricing-feature-text">Badge visible en navbar</span></li><li className="pricing-feature"><span className="pricing-feature-icon">✓</span><span className="pricing-feature-text">Personalización de badges y rachas</span></li><li className="pricing-feature"><span className="pricing-feature-icon">✓</span><span className="pricing-feature-text">Soporte técnico prioritario</span></li><li className="pricing-feature"><span className="pricing-feature-icon">✓</span><span className="pricing-feature-text">Acceso a la comunidad exclusiva</span></li></ul><button className="pricing-button primary">{`Suscribirse por ${getCurrencySymbol(currency)}${getDisplayPrice('monthly', currency)}`}</button></div></div>
+            <div className="pricing-card popular yearly-popular"><div className="pricing-popular-badge yearly-badge"><span style={{ display:'inline-flex', alignItems:'center', gap:'0.25rem' }}><span style={{ width:18, height:18, display:'inline-block' }} /><span>Ahorra Más</span></span></div><div className="pricing-card-content"><div className="pricing-header-card"><h3 className="pricing-plan-name">Plan Anual</h3><div className="pricing-plan-price">{getCurrencySymbol(currency)}{getDisplayPrice('yearly', currency)}<span className="pricing-interval">/año</span></div><p className="pricing-monthly-price">{(() => { const yearly = getDisplayPrice('yearly', currency); const perMonth = (Number(yearly) / 12).toFixed(2); return `${getCurrencySymbol(currency)}${perMonth}/mes facturado anualmente`; })()}</p></div><ul className="pricing-features"><li className="pricing-feature"><span className="pricing-feature-icon">✓</span><span className="pricing-feature-text">Todo lo del plan mensual</span></li><li className="pricing-feature"><span className="pricing-feature-icon">✓</span><span className="pricing-feature-text">2 meses gratis</span></li><li className="pricing-feature"><span className="pricing-feature-icon">✓</span><span className="pricing-feature-text">Personalización completa de badges y rachas</span></li><li className="pricing-feature"><span className="pricing-feature-icon">✓</span><span className="pricing-feature-text">Badge visible en barra de navegación</span></li><li className="pricing-feature"><span className="pricing-feature-icon">✓</span><span className="pricing-feature-text">Acceso anticipado a nuevos cursos</span></li><li className="pricing-feature"><span className="pricing-feature-icon">✓</span><span className="pricing-feature-text">Mentorías grupales mensuales</span></li><li className="pricing-feature"><span className="pricing-feature-icon">✓</span><span className="pricing-feature-text">Recursos premium adicionales</span></li><li className="pricing-feature"><span className="pricing-feature-icon">✓</span><span className="pricing-feature-text">Garantía de satisfacción de 30 días</span></li></ul><button className="pricing-button primary">{`Suscribirse por ${getCurrencySymbol(currency)}${getDisplayPrice('yearly', currency)}`}</button></div></div>
           </div>
         </div>
       </section>
