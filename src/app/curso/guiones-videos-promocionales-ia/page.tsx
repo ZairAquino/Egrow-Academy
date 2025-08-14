@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, Suspense, useEffect } from 'react';
+import { useState, Suspense, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 
@@ -10,7 +10,8 @@ import Navbar from '@/components/layout/Navbar';
 import VideoPlayer from '@/components/courses/VideoPlayer';
 
 import { useAuth } from '@/contexts/AuthContext';
-import { renderToolIcon } from '@/lib/tool-icons';
+import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
+import { renderToolIcon, renderUiIcon } from '@/lib/tool-icons';
 
 
 // Contador eliminado - ya no se necesita
@@ -26,13 +27,22 @@ export default function GuionesVideosPromocionalesIAPage() {
   
   
   const [currentLesson, setCurrentLesson] = useState(0);
-  const [completedLessons, setCompletedLessons] = useState<number[]>([]);
+  const [completedLessons, setCompletedLessons] = useState<string[]>([]);
   const [progressPercentage, setProgressPercentage] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [expandedLessons, setExpandedLessons] = useState<number[]>([]);
-  const [dbLessons, setDbLessons] = useState<any[]>([]);
-  // Estados del contador eliminados
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const [currentReviewSlide, setCurrentReviewSlide] = useState(0);
+  const [showMainVideo, setShowMainVideo] = useState(false);
+  const [videoCurrentTime, setVideoCurrentTime] = useState(0);
+  const [showStickyNavbar, setShowStickyNavbar] = useState(false);
+  const [stickyOpacity, setStickyOpacity] = useState(0);
+  const stickyTriggerRef = useRef<HTMLDivElement | null>(null);
+  const reviewsRef = useRef<HTMLDivElement | null>(null);
+  const reviewsTrackRef = useRef<HTMLDivElement | null>(null);
+  const heroSectionRef = useRef<HTMLDivElement | null>(null);
+  const reviewSlidesCount = 3; // 6 testimonios, 2 por slide
   const { user, status } = useAuth();
+  const { hasPremiumAccess, isLoading: subscriptionLoading } = useSubscriptionStatus();
   const router = useRouter();
   
   console.log('🔍 [DEBUG] Estados iniciales:', { 
@@ -45,54 +55,27 @@ export default function GuionesVideosPromocionalesIAPage() {
     authStatus: status
   });
 
-  
 
-  // Cargar lecciones de la base de datos
-  useEffect(() => {
-    loadDbLessons();
-  }, []);
-
-  // Función para cargar lecciones de la base de datos
-  const loadDbLessons = async () => {
-    try {
-      const response = await fetch('/api/courses/lessons?courseId=guiones-videos-promocionales-ia');
-      if (response.ok) {
-        const lessons = await response.json();
-        setDbLessons(lessons);
-        console.log('📚 Lecciones cargadas de la BD:', lessons.length);
-      }
-    } catch (error) {
-      console.error('❌ Error cargando lecciones:', error);
-    }
-  };
-
-  // Función para alternar la expansión de lecciones
-  const toggleLesson = (index: number) => {
-    setExpandedLessons(prev => 
-      prev.includes(index) 
-        ? prev.filter(i => i !== index)
-        : [...prev, index]
-    );
-  };
-
-  // Función completamente nueva para redirección directa
-  const goToCourseContent = () => {
-    console.log('🎯 Botón clickeado - Estado de autenticación:', { 
+  // Función para inscribir e ir al contenido del curso
+  const goToCourseContent = async () => {
+  console.log('[GUIONES-PAGE] Botón clickeado - Estado de autenticación:', { 
       user: !!user, 
       status, 
-      userEmail: user?.email 
+      userEmail: user?.email,
+      userId: user?.id,
+      hasPremiumAccess
     });
     
     // Verificar si el usuario está autenticado
-    if (status === 'loading') {
-      console.log('⏳ Estado de autenticación cargando, esperando...');
+    if (status === 'loading' || subscriptionLoading) {
+      console.log('⏳ [GUIONES-PAGE] Estado de autenticación cargando, esperando...');
       return;
     }
     
     if (!user || status === 'unauthenticated') {
       // Si el usuario no está logueado, redirigir al login con redirect
       const loginUrl = `/login?redirect=/curso/guiones-videos-promocionales-ia/contenido`;
-      console.log(`🔐 Usuario no logueado - Redirigiendo a login: ${loginUrl}`);
+      console.log(`[GUIONES-PAGE] Usuario no logueado - Redirigiendo a login: ${loginUrl}`);
       
       if (typeof window !== 'undefined') {
         window.location.href = loginUrl;
@@ -100,13 +83,63 @@ export default function GuionesVideosPromocionalesIAPage() {
       return;
     }
     
-    // Si el usuario está logueado, ir directamente al contenido
+    if (!hasPremiumAccess) {
+      // Si el usuario no tiene acceso premium, redirigir a suscripción
+      console.log(`[GUIONES-PAGE] Usuario no tiene acceso premium - Redirigiendo a suscripción`);
+      router.push('/subscription');
+      return;
+    }
+    
+    // Si el usuario está logueado y tiene premium, inscribirlo automáticamente y redirigir
+    console.log(`[GUIONES-PAGE] Usuario logueado con premium (${user.email}) - Inscribiendo y redirigiendo...`);
+    
+    try {
+      console.log('🔄 [GUIONES-PAGE] Iniciando inscripción automática...');
+      
+      // Inscribir automáticamente al usuario
+      const enrollResponse = await fetch('/api/courses/enroll', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ courseId: courseData.id }),
+        credentials: 'include',
+      });
+      
+      console.log('📡 [GUIONES-PAGE] Respuesta de inscripción:', { 
+        status: enrollResponse.status, 
+        ok: enrollResponse.ok 
+      });
+      
+      if (enrollResponse.ok) {
+        const enrollData = await enrollResponse.json();
+        console.log('[GUIONES-PAGE] Usuario inscrito automáticamente:', enrollData);
+      } else {
+        const errorData = await enrollResponse.text();
+        console.error('⚠️ [GUIONES-PAGE] Error al inscribir:', { 
+          status: enrollResponse.status, 
+          error: errorData 
+        });
+      }
+    } catch (error) {
+      console.error('❌ [GUIONES-PAGE] Error en inscripción automática:', error);
+    }
+    
+    // Redirigir al contenido del curso independientemente del resultado de la inscripción
     const contentUrl = '/curso/guiones-videos-promocionales-ia/contenido';
-    console.log(`✅ Usuario logueado (${user.email}) - Redirigiendo a contenido: ${contentUrl}`);
+    console.log(`🔄 [GUIONES-PAGE] Redirigiendo a: ${contentUrl}`);
     
     if (typeof window !== 'undefined') {
       window.location.href = contentUrl;
     }
+  };
+
+  const handleVideoPreviewClick = () => {
+    setShowMainVideo(!showMainVideo);
+  };
+
+  const handleVideoProgress = (currentTime: number, duration: number) => {
+    setVideoCurrentTime(currentTime);
   };
 
   const courseData = {
@@ -152,43 +185,123 @@ export default function GuionesVideosPromocionalesIAPage() {
     lessons: [
       {
         id: 1,
-        title: 'MÓDULO 1: FUNDAMENTOS DEL GUIÓN DIGITAL',
-        description: 'Aprende los principios básicos de la redacción de guiones para contenido digital',
+        title: 'MÓDULO 1: Fundamentos del guión digital',
+        description: 'Aprende los principios básicos de la redacción de guiones para contenido digital y las diferencias clave entre formatos.',
         duration: 70,
         type: 'Video',
-        videoUrl: 'https://www.youtube.com/watch?v=example1'
+        lessonsCount: 3,
+        subLessons: [
+          {
+            id: '1.1',
+            title: 'Introducción al copywriting para videos',
+            description: 'Fundamentos del copywriting aplicado a contenido audiovisual. Diferencias entre copy escrito y guiones para video.',
+            content: 'Aprenderás los principios básicos del copywriting y cómo adaptarlos específicamente para contenido en video. Exploraremos las diferencias clave entre escribir para lectura y escribir para ser escuchado.',
+            deliverable: 'primer borrador de guión de 30 segundos.',
+            duration: 20,
+            type: 'Video'
+          },
+          {
+            id: '1.2',
+            title: 'Estructura y ritmo en guiones digitales',
+            description: 'Cómo estructurar guiones para mantener la atención en plataformas digitales. Hook, desarrollo y CTA.',
+            content: 'Dominarás la estructura de tres actos adaptada a videos cortos, la importancia del hook en los primeros 3 segundos y cómo mantener el ritmo narrativo.',
+            deliverable: 'plantilla de estructura para diferentes duraciones.',
+            duration: 25,
+            type: 'Video'
+          },
+          {
+            id: '1.3',
+            title: 'Psicología del consumidor digital',
+            description: 'Entender a tu audiencia: triggers emocionales, puntos de dolor y motivaciones de compra en el entorno digital.',
+            content: 'Análisis profundo de cómo piensa y actúa tu audiencia en redes sociales, qué les motiva a ver, compartir y comprar.',
+            deliverable: 'mapa de empatía de tu cliente ideal.',
+            duration: 25,
+            type: 'Video'
+          }
+        ]
       },
       {
         id: 2,
-        title: 'MÓDULO 2: HERRAMIENTAS DE IA PARA GUIONES',
-        description: 'Domina ChatGPT, Claude y otras herramientas de IA para crear guiones efectivos',
-        duration: 65,
-        type: 'Video',
-        videoUrl: 'https://www.youtube.com/watch?v=example2'
+        title: 'MÓDULO 2: Herramientas de IA para guiones',
+        description: 'Domina ChatGPT, Claude y otras herramientas de IA para crear guiones efectivos y escalarlos.',
+        duration: 80,
+        type: 'Lab',
+        lessonsCount: 4,
+        subLessons: [
+          {
+            id: '2.1',
+            title: 'ChatGPT para guiones: configuración avanzada',
+            description: 'Configuración óptima de ChatGPT para generar guiones. Custom instructions y mejores prompts.',
+            content: 'Aprenderás a configurar ChatGPT específicamente para copywriting de video, incluyendo custom instructions probadas y estructura de prompts efectivos.',
+            deliverable: 'biblioteca de 10 prompts maestros.',
+            duration: 20,
+            type: 'Práctica'
+          },
+          {
+            id: '2.2',
+            title: 'Claude AI: el editor perfecto',
+            description: 'Usar Claude para refinar, editar y mejorar guiones. Técnicas de iteración y refinamiento.',
+            content: 'Claude como tu editor personal: cómo usarlo para mejorar tono, claridad y persuasión en tus guiones.',
+            deliverable: 'guión refinado con 3 variantes de tono.',
+            duration: 20,
+            type: 'Práctica'
+          },
+          {
+            id: '2.3',
+            title: 'Copy.ai y Jasper: generación masiva',
+            description: 'Crear variaciones y escalar producción de guiones. Workflows para equipos y agencias.',
+            content: 'Estrategias para generar múltiples versiones de un guión, A/B testing de copy y producción en escala.',
+            deliverable: 'sistema de generación de 10 variantes.',
+            duration: 25,
+            type: 'Práctica'
+          },
+          {
+            id: '2.4',
+            title: 'Integración de herramientas: workflow completo',
+            description: 'Combinar todas las herramientas en un flujo de trabajo eficiente y profesional.',
+            content: 'Crear un pipeline de producción que combine lo mejor de cada herramienta para máxima eficiencia.',
+            deliverable: 'workflow documentado paso a paso.',
+            duration: 15,
+            type: 'Video'
+          }
+        ]
       },
       {
         id: 3,
-        title: 'MÓDULO 3: GUIONES PARA VIDEOS PROMOCIONALES',
-        description: 'Crea guiones persuasivos para videos promocionales y publicitarios usando AIDA',
-        duration: 75,
-        type: 'Video',
-        videoUrl: 'https://www.youtube.com/watch?v=example3'
-      },
-      {
-        id: 4,
-        title: 'MÓDULO 4: GUIONES PARA REDES SOCIALES',
-        description: 'Adapta tus guiones para diferentes plataformas de redes sociales',
-        duration: 100,
-        type: 'Video',
-        videoUrl: 'https://www.youtube.com/watch?v=example4'
-      },
-      {
-        id: 5,
-        title: 'MÓDULO 5: OPTIMIZACIÓN Y ANÁLISIS',
-        description: 'Optimiza y analiza el rendimiento de tus guiones para mejorar conversiones',
-        duration: 45,
-        type: 'Video',
-        videoUrl: 'https://www.youtube.com/watch?v=example5'
+        title: 'MÓDULO 3: Aplicación práctica y monetización',
+        description: 'Casos reales, estrategias de venta y cómo construir un negocio con guiones de IA.',
+        duration: 85,
+        type: 'Project',
+        lessonsCount: 3,
+        subLessons: [
+          {
+            id: '3.1',
+            title: 'Videos promocionales que convierten',
+            description: 'Análisis de casos exitosos. Estructura AIDA aplicada. Guiones para productos, servicios y eventos.',
+            content: 'Estudiaremos guiones reales que generaron millones en ventas, desglosando cada elemento y replicando su éxito.',
+            deliverable: 'guión completo para video de venta.',
+            duration: 30,
+            type: 'Práctica'
+          },
+          {
+            id: '3.2',
+            title: 'Guiones para cada red social',
+            description: 'Adaptar el mensaje para TikTok, Instagram Reels, YouTube Shorts y LinkedIn. Formatos y duraciones.',
+            content: 'Cada plataforma tiene su lenguaje. Aprenderás a adaptar un mensaje central a múltiples formatos manteniendo la efectividad.',
+            deliverable: 'mismo producto, 4 guiones diferentes.',
+            duration: 35,
+            type: 'Práctica'
+          },
+          {
+            id: '3.3',
+            title: 'Monetización y servicios profesionales',
+            description: 'Cómo vender tus servicios de guionista con IA. Precios, paquetes y estrategias de venta.',
+            content: 'Estructurar tu oferta de servicios, pricing estratégico, cómo conseguir clientes y escalar tu negocio.',
+            deliverable: 'portfolio + propuesta comercial lista.',
+            duration: 20,
+            type: 'Negocio'
+          }
+        ]
       }
     ]
   };
@@ -200,17 +313,115 @@ export default function GuionesVideosPromocionalesIAPage() {
 
   // Efectos para manejar el progreso del usuario
   useEffect(() => {
-    console.log('🔍 [DEBUG] useEffect [user] ejecutado');
-    console.log('🔍 [DEBUG] Estado del usuario:', { user: !!user, userId: user?.id });
+    console.log('🔍 [DEBUG] useEffect [user, status] ejecutado');
+    console.log('🔍 [DEBUG] Estado del usuario:', { user: !!user, userId: user?.id, status });
     
-    if (user) {
-      console.log('🔍 [DEBUG] Usuario detectado, cargando progreso');
+    if (user && status === 'authenticated') {
+      console.log('🔍 [DEBUG] Usuario autenticado detectado, cargando progreso');
       loadUserProgress();
-    } else {
-      console.log('🔍 [DEBUG] No hay usuario, estableciendo isLoading = false');
+    } else if (status === 'unauthenticated' || (!user && status !== 'loading')) {
+      console.log('🔍 [DEBUG] Usuario no autenticado, estableciendo isLoading = false');
       setIsLoading(false);
+    } else {
+      console.log('🔍 [DEBUG] Estado de autenticación en progreso...');
     }
-  }, [user]);
+  }, [user, status]);
+
+  // Contador de tiempo para la oferta (cuenta regresiva desde 1h 54m)
+  useEffect(() => {
+    const countdownMs = ((1 * 60) + 54) * 60 * 1000; // 1 hora y 54 minutos en milisegundos
+    const endDate = new Date(Date.now() + countdownMs);
+
+    const calculateTimeLeft = () => {
+      const diff = endDate.getTime() - Date.now();
+      if (diff <= 0) {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        return false;
+      }
+
+      const totalSeconds = Math.floor(diff / 1000);
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      setTimeLeft({ days: 0, hours, minutes, seconds });
+      return true;
+    };
+
+    const timer = window.setInterval(() => {
+      const stillRunning = calculateTimeLeft();
+      if (!stillRunning) {
+        window.clearInterval(timer);
+      }
+    }, 1000);
+
+    calculateTimeLeft();
+    return () => window.clearInterval(timer);
+  }, []);
+
+  // Auto-play del carrusel de opiniones
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      setCurrentReviewSlide((prev) => (prev + 1) % reviewSlidesCount);
+    }, 5000);
+    return () => window.clearInterval(id);
+  }, []);
+
+  // Aplicar transform al track cuando cambie el slide
+  useEffect(() => {
+    if (reviewsTrackRef.current) {
+      reviewsTrackRef.current.style.transform = `translateX(-${currentReviewSlide * 100}%)`;
+    }
+  }, [currentReviewSlide]);
+
+  // Mostrar navbar sticky a partir de Objetivos y desvanecer antes de Opiniones
+  useEffect(() => {
+    const handleScroll = () => {
+      const trigger = stickyTriggerRef.current;
+      if (!trigger) {
+        console.log('🚨 [STICKY DEBUG] No trigger found');
+        return;
+      }
+      const triggerTop = trigger.getBoundingClientRect().top;
+      const passedObjectives = triggerTop <= 0;
+
+      const reviewsEl = reviewsRef.current;
+      let opacity = 0;
+      if (passedObjectives) {
+        // Calcular desvanecimiento al acercarse a Opiniones
+        const reviewsTop = reviewsEl ? reviewsEl.getBoundingClientRect().top : Number.POSITIVE_INFINITY;
+        const fadeStart = 240; // px antes de llegar a Opiniones
+        const fadeEnd = 40;    // px del tope donde ya debe estar casi oculto
+        if (reviewsTop === Number.POSITIVE_INFINITY) {
+          opacity = 1;
+        } else if (reviewsTop <= fadeEnd) {
+          opacity = 0;
+        } else if (reviewsTop < fadeStart) {
+          opacity = Math.max(0, Math.min(1, (reviewsTop - fadeEnd) / (fadeStart - fadeEnd)));
+        } else {
+          opacity = 1;
+        }
+      }
+
+      console.log('🔍 [STICKY DEBUG]', {
+        triggerTop,
+        passedObjectives,
+        opacity,
+        showStickyNavbar: passedObjectives && opacity > 0.01
+      });
+
+      setStickyOpacity(opacity);
+      setShowStickyNavbar(passedObjectives && opacity > 0.01);
+    };
+
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true } as any);
+    window.addEventListener('resize', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
     const handleFocus = () => {
@@ -243,62 +454,99 @@ export default function GuionesVideosPromocionalesIAPage() {
   }, [user]);
 
   const loadUserProgress = async () => {
-    console.log('🔍 [DEBUG] loadUserProgress iniciado');
-    console.log('🔍 [DEBUG] Usuario:', { user: !!user, userId: user?.id });
+    if (!user?.id) return;
     
-    if (!user) {
-      console.log('🔍 [DEBUG] No hay usuario, saliendo de loadUserProgress');
-      return;
-    }
-
     try {
-      console.log('🔍 [DEBUG] Enviando request de progreso a /api/courses/progress');
-      const response = await fetch(`/api/courses/progress?courseId=${courseData.id}`, {
-        credentials: 'include',
-      });
-
-      console.log('🔍 [DEBUG] Respuesta de progreso:', { 
-        status: response.status, 
-        ok: response.ok,
-        statusText: response.statusText 
-      });
-
+      const response = await fetch(`/api/user/progress?userId=${user.id}`);
       if (response.ok) {
         const data = await response.json();
-        console.log('🔍 [DEBUG] Datos de progreso recibidos:', data);
-        setCurrentLesson(data.currentLesson || 0);
         setCompletedLessons(data.completedLessons || []);
+        setCurrentLesson(data.currentLesson || 0);
         setProgressPercentage(data.progressPercentage || 0);
-      } else if (response.status === 404) {
-        console.log('🔍 [DEBUG] Usuario no inscrito (404), estableciendo valores por defecto');
-        // Usuario no inscrito, mantener valores por defecto
-        setCurrentLesson(0);
-        setCompletedLessons([]);
-        setProgressPercentage(0);
-      } else {
-        console.log('🔍 [DEBUG] Error en respuesta de progreso:', response.status);
       }
     } catch (error) {
-      console.error('❌ Error al cargar el progreso:', error);
+      console.error('Error loading user progress:', error);
     } finally {
       setIsLoading(false);
-      console.log('🔍 [DEBUG] loadUserProgress completado, isLoading = false');
     }
   };
 
   const getRemainingTime = () => {
     if (completedLessons.length === 0) {
-      return `${totalDuration}min`;
+      return `${Math.floor(totalDuration / 60)}h ${totalDuration % 60}min`;
     }
     
-    const remainingLessons = courseData.lessons.length - completedLessons.length;
-    const averageTimePerLesson = totalDuration / courseData.lessons.length;
+    const remainingLessons = courseData.lessonsCount - completedLessons.length;
+    const averageTimePerLesson = totalDuration / courseData.lessonsCount;
     const totalRemainingTime = remainingLessons * averageTimePerLesson;
     
     const hours = Math.floor(totalRemainingTime / 60);
     const minutes = Math.round(totalRemainingTime % 60);
     return `${hours}h ${minutes}min`;
   };
+
+  // Mapeo de las lecciones por módulo para determinar si un módulo está completado
+  const getModuleLessons = (moduleId: number): string[] => {
+    const lessonsByModule: Record<number, string[]> = {
+      1: ['gui1.1', 'gui1.2', 'gui1.3'],
+      2: ['gui2.1', 'gui2.2', 'gui2.3', 'gui2.4'],
+      3: ['gui3.1', 'gui3.2', 'gui3.3']
+    };
+    return lessonsByModule[moduleId] || [];
+  };
+
+  const isModuleCompleted = (moduleId: number): boolean => {
+    const moduleLessons = getModuleLessons(moduleId);
+    return moduleLessons.every(lessonId => completedLessons.includes(lessonId));
+  };
+
+  // Calcular módulos completados (hay 3 módulos en total)
+  const getCompletedModulesCount = (): number => {
+    let completedCount = 0;
+    for (let moduleId = 1; moduleId <= 3; moduleId++) {
+      if (isModuleCompleted(moduleId)) {
+        completedCount++;
+      }
+    }
+    return completedCount;
+  };
+
+  // Calcular porcentaje de progreso basado en módulos (3 módulos total)
+  const getModuleProgressPercentage = (): number => {
+    const completedModules = getCompletedModulesCount();
+    return Math.round((completedModules / 3) * 100);
+  };
+
+  // Función para determinar si mostrar el banner
+  const shouldShowBanner = () => {
+    // Mostrar banner si el usuario no está logueado
+    if (!user || status === 'unauthenticated') {
+      return true;
+    }
+    
+    // Mostrar banner si el usuario está logueado pero no tiene acceso premium
+    if (user && !hasPremiumAccess) {
+      return true;
+    }
+    
+    // No mostrar banner si tiene acceso premium
+    return false;
+  };
+
+  const handleBannerClick = () => {
+    router.push('/subscription');
+  };
+
+  const handleStickyThumbnailClick = () => {
+    if (heroSectionRef.current) {
+      heroSectionRef.current.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  };
+
+
 
   console.log('🔍 [DEBUG] Renderizando componente, isLoading:', isLoading, 'authStatus:', status);
   
@@ -320,83 +568,188 @@ export default function GuionesVideosPromocionalesIAPage() {
   
   return (
     <>
-
+      {/* Banner promocional exclusivo de esta página */}
+      {shouldShowBanner() && (
+        <div className="promo-banner" role="button" onClick={handleBannerClick}>
+          <div className="promo-banner-content">
+            <span className="promo-banner-message">
+              Accede a todos nuestros cursos con Suscripción Plus por solo $12.49 USD/mes – ¡Oferta por tiempo limitado!
+            </span>
+            <div className="promo-banner-timer" aria-label="Tiempo restante de la oferta">
+              {/* Si hay días, se muestran como horas acumuladas para un look compacto */}
+              <span className="timer-chip">{String(timeLeft.days * 24 + timeLeft.hours).padStart(2, '0')}h</span>
+              <span className="timer-chip">{String(timeLeft.minutes).padStart(2, '0')}m</span>
+              <span className="timer-chip">{String(timeLeft.seconds).padStart(2, '0')}s</span>
+            </div>
+          </div>
+        </div>
+      )}
       
       <Navbar />
       
-      <main className="main-content">
-        {/* Hero Section */}
-        <section className="hero-section">
-          <div className="container">
-            <div className="course-hero">
-              <div className="course-info">
-                <div className="course-badges">
-                  <span className="badge badge-free">Gratis</span>
-                  <span className="badge badge-level">{courseData.level}</span>
-                  <span className="badge badge-duration">Duración: {courseData.duration}</span>
-                </div>
-                
-                <h1 className="course-title-large">{courseData.title}</h1>
-                <p className="course-description course-description-dark">{courseData.description}</p>
-                
-                {/* Video solo para móvil - entre descripción y botón */}
-                <div className="mobile-video-preview">
-                  <VideoPlayer
-                    videoUrl="https://www.youtube.com/watch?v=hBuXs6NYesw"
-                    title="Preview del Curso - Guiones para Videos Promocionales con IA"
-                    className="mobile-preview-video"
-                  />
-                </div>
-                
-                {/* Botón nuevo completamente desde cero */}
-                <div className="new-course-actions">
-                  {isUserAuthenticated && completedLessons.length > 0 ? (
-                    <div className="progress-section-new">
-                      <div className="progress-info-new">
-                        <p className="progress-text-new">
-                          <strong>Progreso actual:</strong> Lección {currentLesson + 1} de {dbLessons.length > 0 ? dbLessons.length : courseData.lessons.length}
-                        </p>
-                        <p className="progress-detail-new">
-                          {completedLessons.length} lecciones completadas • {Math.round(progressPercentage)}% del curso
-                        </p>
-                      </div>
-                      <div 
-                        className="course-action-button course-action-continue"
-                        onClick={goToCourseContent}
-                      >
-                        Continuar con el curso
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="start-section-new">
-                      <div 
-                        className="course-action-button course-action-start"
-                        onClick={goToCourseContent}
-                      >
-                        {isUserAuthenticated ? 'Comenzar Curso Gratis' : 'Iniciar Sesión para Comenzar'}
-                      </div>
-                      
-                      {/* Contador eliminado */}
-                    </div>
-                  )}
-                </div>
-                
-                <div className="course-meta">
-                  <div className="course-badges-secondary">
-                    <span className="badge badge-language">{courseData.language}</span>
-                    <span className="badge badge-includes">Proyecto práctico incluido</span>
-                    <span className="badge badge-access">Acceso de por vida</span>
-                  </div>
+      {/* Sticky Course Navbar - aparece al hacer scroll */}
+      {showStickyNavbar && (
+        <div className="sticky-course-navbar" style={{ opacity: stickyOpacity, transition: 'opacity 180ms ease-out' }}>
+          <div className="sticky-navbar-content">
+            <div className="sticky-course-info">
+              <div className="sticky-video-thumbnail" onClick={handleStickyThumbnailClick}>
+                <img 
+                  src="/images/20.png" 
+                  alt="Curso Guiones"
+                />
+                <div className="sticky-play-icon">
+                  <svg width="12" height="14" viewBox="0 0 20 24" fill="none">
+                    <path d="M0 2.4C0 1.07 1.34 0.16 2.5 0.83L18.5 11.43C19.66 12.1 19.66 13.9 18.5 14.57L2.5 23.17C1.34 23.84 0 22.93 0 21.6V2.4Z" fill="currentColor"/>
+                  </svg>
                 </div>
               </div>
-              
-              <div className="course-preview">
-                <VideoPlayer
-                  videoUrl="https://www.youtube.com/watch?v=hBuXs6NYesw"
-                  title="Preview del Curso - Guiones para Videos Promocionales con IA"
-                  className="desktop-preview-video"
-                />
+              <div className="sticky-course-title">
+                <h3>Guiones con IA</h3>
+                <div className="sticky-course-rating">
+                  <span className="stars">★★★★★</span>
+                  <span>4.8 (450)</span>
+                </div>
+              </div>
+            </div>
+            <div className="sticky-pricing">
+              {/* Replicar exactamente la tarjeta de precios original completa */}
+              <div className="price-card-sticky">
+                {/* Opción Destacada - e Plus */}
+                <div className="price-option highlight">
+                  <div className="price-option-header">
+                    <h3 className="price-option-title">Acceso al curso</h3>
+                    <div className="price-badges">
+                      <span className="price-badge plus">e Plus</span>
+                    </div>
+                  </div>
+                  
+                  <div className="price-display">
+                    <div className="price-radio">
+                      <input type="radio" name="pricing-sticky" id="plus-option-sticky" defaultChecked />
+                      <label htmlFor="plus-option-sticky"></label>
+                    </div>
+                    <div className="price-main">
+                      <span className="price-currency">$</span>
+                      <span className="price-amount">12</span>
+                      <span className="price-cents">.49</span>
+                      <span className="price-period">USD/mes</span>
+                    </div>
+                  </div>
+                  
+                  <div className="price-discount">
+                    <span className="discount-text">Accede a todos los cursos de eGrow Academy mientras mantengas tu suscripción.</span>
+                  </div>
+                  
+                  <button className="price-cta primary" type="button">
+                    Empezar con e Plus
+                  </button>
+                  
+                  <div className="price-benefits">
+                    <div className="benefit-item">
+                      <span className="benefit-icon">✓</span>
+                      <span className="benefit-text">Acceso ilimitado a todos los cursos de la plataforma</span>
+                    </div>
+                    <div className="benefit-item">
+                      <span className="benefit-icon">✓</span>
+                      <span className="benefit-text">Actualizaciones continuas y nuevo contenido</span>
+                    </div>
+                  </div>
+                </div>
                 
+                {/* Opción Regular - Curso Individual */}
+                <div className="price-option regular">
+                  <div className="price-option-header">
+                    <h3 className="price-option-title">Acceso individual</h3>
+                  </div>
+                  
+                  <div className="price-display">
+                    <div className="price-radio">
+                      <input type="radio" name="pricing-sticky" id="regular-option-sticky" />
+                      <label htmlFor="regular-option-sticky"></label>
+                    </div>
+                    <div className="price-main">
+                      <span className="price-currency">$</span>
+                      <span className="price-amount">4</span>
+                      <span className="price-cents">.00</span>
+                      <span className="price-period">USD</span>
+                    </div>
+                  </div>
+                  
+                  <div className="price-description">
+                    <span className="description-text">Pago único para este curso. Acceso permanente al contenido del curso.</span>
+                  </div>
+                  
+                  <button className="price-cta" type="button">
+                    Comprar este curso
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      <main className={`main-content ${showStickyNavbar ? 'with-sticky-navbar' : ''}`}>
+        {/* Hero Section - Diseño replicado */}
+        <section className={`hero-section ${shouldShowBanner() ? 'with-promo' : ''}`} ref={heroSectionRef}>
+          <div className="container">
+            <div className="hero-card">
+              <div className="hero-grid">
+                <div className="hero-left">
+                  <h1 className="hero-title-big">
+                    Crea guiones que convierten<br />
+                    con Inteligencia Artificial<br />
+                    para videos promocionales<br />
+                    y redes sociales
+                  </h1>
+                  <p className="hero-subtext">
+                    Aprende a crear guiones efectivos para videos promocionales y contenido en redes sociales utilizando herramientas de IA como ChatGPT, Claude y Copy.ai.
+                  </p>
+                  <button className="hero-cta" onClick={goToCourseContent}>
+                    Iniciar Sesión para Comenzar
+                  </button>
+                </div>
+                <div className="hero-right">
+                  <div className="preview-box" onClick={handleVideoPreviewClick} style={{ cursor: 'pointer' }}>
+                    {!showMainVideo ? (
+                      <>
+                        <img 
+                          src="/images/20.png" 
+                          alt="Vista previa del curso Guiones con IA"
+                          className="preview-video"
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        />
+                        <div className="video-overlay">
+                          <div className="play-btn">
+                            <svg width="20" height="24" viewBox="0 0 20 24" fill="none">
+                              <path d="M0 2.4C0 1.07 1.34 0.16 2.5 0.83L18.5 11.43C19.66 12.1 19.66 13.9 18.5 14.57L2.5 23.17C1.34 23.84 0 22.93 0 21.6V2.4Z" fill="currentColor"/>
+                            </svg>
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <VideoPlayer 
+                        videoUrl="https://www.youtube.com/watch?v=hBuXs6NYesw" 
+                        title={courseData.title}
+                        className="main-video-player"
+                        startTime={videoCurrentTime}
+                        onProgress={handleVideoProgress}
+                      />
+                    )}
+                  </div>
+                  {/* Stats a la derecha */}
+                  <div className="hero-stats">
+                    <div className="stars" aria-label="Calificación 4.8 de 5">
+                      <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                    </div>
+                    <span className="rating">4.8 <span className="muted">(450 valoraciones)</span></span>
+                    <span className="dot" />
+                    <span className="students" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem' }}>
+                      <span className="student-icon" style={{ display: 'inline-flex' }}>{renderUiIcon('estudiantes')}</span>
+                      <span>2,863 estudiantes</span>
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -408,12 +761,62 @@ export default function GuionesVideosPromocionalesIAPage() {
             <div className="content-layout">
               {/* Main Content - Desktop */}
               <div className="main-content-area desktop-content">
-                {/* Curriculum */}
+                {/* Descripción del Curso (card + diseño minimal interno) */}
+                <div className="course-overview-card">
+                  <h2 className="desc-title">Descripción del Curso</h2>
+                  <p className="desc-lead">
+                    Aprende a crear guiones efectivos para videos promocionales y contenido en redes sociales utilizando herramientas de inteligencia artificial como ChatGPT, Claude y Copy.ai. A través de ejercicios prácticos, entenderás las diferencias entre los formatos, aprenderás técnicas de persuasión, y dominarás la estructura de contenido que convierte.
+                  </p>
+                  <div className="desc-separator" />
+                  <div className="desc-body">
+                    <p className="desc-paragraph">Descubrirás el poder de la IA para generar ideas creativas y estructurar contenido persuasivo que conecte con tu audiencia.</p>
+                    <p className="desc-paragraph">Aplicarás técnicas profesionales de copywriting adaptadas específicamente para contenido audiovisual y digital.</p>
+                    <p className="desc-paragraph">Diseñarás estrategias de contenido que generen engagement y conversiones en diferentes plataformas.</p>
+                    <p className="desc-paragraph">Aprenderás paso a paso con ejercicios reales, plantillas y casos de estudio de creadores exitosos.</p>
+                    <p className="desc-closure">Al terminar, tendrás un portafolio de guiones listo y las habilidades para crear contenido que venda y conecte.</p>
+                  </div>
+                </div>
+
+                {/* Trigger para activar navbar sticky a partir de Objetivos */}
+                <div ref={stickyTriggerRef} aria-hidden style={{ height: 1 }} />
+
+                {/* What You'll Learn */}
+                <div className="learning-objectives">
+                  <div className="objectives-header">
+                    <span className="section-badge">Objetivos</span>
+                    <h2 className="objectives-title">Lo que vas a conseguir con este curso</h2>
+                    <p className="section-lead">Enfocado en resultados reales: dominio técnico, flujo de trabajo claro y aplicabilidad inmediata.</p>
+                  </div>
+
+                  <div className="objectives-grid refined">
+                    {courseData.whatYouWillLearn.map((objective, index) => (
+                      <div key={index} className="objective-card">
+                        <div className="objective-index">{index + 1}</div>
+                        <p className="objective-text">{objective}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Tools and Technologies */}
+                <div className="tools-section">
+                  <h2>Herramientas y Tecnologías</h2>
+                  <div className="tools-grid">
+                      {courseData.tools.map((tool, index) => (
+                      <div key={index} className="tool-item">
+                          <span className="tool-icon" aria-hidden>{renderToolIcon(tool)}</span>
+                          <span className="tool-name">{tool}</span>
+                      </div>
+                    ))}
+                  </div>
+              </div>
+
+                {/* Contenido del Curso */}
                 <div className="curriculum-section">
                   <h2>Contenido del Curso</h2>
                   <div className="curriculum-stats">
                     <div className="stat-item">
-                      <span className="stat-number">{dbLessons.length > 0 ? dbLessons.length : courseData.lessons.length}</span>
+                      <span className="stat-number">{courseData.lessonsCount}</span>
                       <span className="stat-label">Lecciones</span>
                     </div>
                     <div className="stat-item">
@@ -425,15 +828,14 @@ export default function GuionesVideosPromocionalesIAPage() {
                       <span className="stat-label">Nivel</span>
                     </div>
                   </div>
-                  
                   <div className="lessons-list">
-                    <div className="lessons-grid">
+                    <div className="lessons-grid timeline">
                       {courseData.lessons.map((lesson, index) => (
-                        <div key={lesson.id} className={`lesson-card ${completedLessons.includes(index) ? 'completed' : ''}`}>
+                        <div key={lesson.id} className={`lesson-card ${isModuleCompleted(lesson.id) ? 'completed' : ''}`}>
                           <div className="lesson-header">
                             <div className="lesson-number">{index + 1}</div>
                             <div className="lesson-status">
-                              {completedLessons.includes(index) ? '✓' : '○'}
+                              {isModuleCompleted(lesson.id) ? '✓' : '○'}
                             </div>
                           </div>
                           <div className="lesson-content">
@@ -443,6 +845,15 @@ export default function GuionesVideosPromocionalesIAPage() {
                               <span className="lesson-type">{lesson.type}</span>
                               <span className="lesson-duration">{lesson.duration}min</span>
                             </div>
+                            {lesson.videoUrl && (
+                              <div className="lesson-video">
+                                <VideoPlayer 
+                                  videoUrl={lesson.videoUrl} 
+                                  title={lesson.title}
+                                  className="lesson-video-player"
+                                />
+                              </div>
+                            )}
                           </div>
                         </div>
                       ))}
@@ -450,249 +861,502 @@ export default function GuionesVideosPromocionalesIAPage() {
                   </div>
                 </div>
 
-                {/* What You'll Learn */}
-                <div className="learning-objectives">
-                  <h2>Lo que Aprenderás</h2>
-                  
-                  <div className="course-introduction">
-                                      
-                    <p>
-                      Este curso te guiará a través de estrategias prácticas y probadas para crear 
-                      guiones efectivos utilizando herramientas de IA. Desde la estructuración de contenido hasta 
-                      la optimización de llamadas a la acción, aprenderás cómo crear contenido que conecte 
-                      con tu audiencia y genere resultados.
-                    </p>
-                    
-                    <p>
-                      A diferencia de otros cursos que se enfocan únicamente en la teoría, aquí encontrarás 
-                      implementaciones reales y casos de estudio de creadores que ya están creando contenido 
-                      viral y efectivo utilizando estas técnicas de IA.
-                    </p>
-                    
-                    <div className="ideal-for-section">
-                      <p>Este curso es ideal para:</p>
-                      <ul>
-                        <li>Creadores de contenido digital</li>
-                        <li>Freelancers de marketing o publicidad</li>
-                        <li>Emprendedores que deseen crear sus propios videos</li>
-                        <li>Agencias o equipos que generan contenido recurrente</li>
-                      </ul>
-                    </div>
-                  </div>
-                  
-                  <div className="objectives-grid">
-                    {courseData.whatYouWillLearn.map((objective, index) => (
-                      <div key={index} className="objective-item">
-                        <span className="objective-check">✓</span>
-                        <span>{objective}</span>
+                
+                {/* Tu Instructor */}
+                <div className="instructor-section presentation">
+                  <h2 className="section-title">Tu Instructor</h2>
+                  <div className="instructor-header">
+                    <img src={courseData.instructor.image} alt={courseData.instructor.name} className="instructor-photo" />
+                    <div className="header-main">
+                      <div className="name-row">
+                        <h3 className="instructor-name">{courseData.instructor.name}</h3>
                       </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Tools and Technologies */}
-                <div className="tools-section">
-                  <h2>Herramientas y Tecnologías</h2>
-                  <div className="tools-grid">
-                                    {courseData.tools.map((tool, index) => (
-                  <div key={index} className="tool-item">
-                    <span className="tool-icon">{renderToolIcon(tool)}</span>
-                    <span>{tool}</span>
-                  </div>
-                ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Sidebar - Desktop Only */}
-              <div className="content-sidebar">
-                {/* Instructor */}
-                <div className="instructor-card">
-                  <h3>Tu Instructor</h3>
-                  <div className="instructor-info">
-                    <div className="instructor-avatar-container">
-                      <img src={courseData.instructor.image} alt={courseData.instructor.name} className="instructor-avatar" />
-                    </div>
-                    <div className="instructor-details">
-                      <h4>{courseData.instructor.name}</h4>
-                      <p className="instructor-title">{courseData.instructor.title}</p>
-                      <p className="instructor-bio">{courseData.instructor.bio}</p>
+                      <div className="instructor-role">{courseData.instructor.title}</div>
+                      
                     </div>
                   </div>
+                  <div className="instructor-description">
+                    <p>{courseData.instructor.bio}</p>
+                  </div>
                 </div>
 
-                {/* Prerequisites */}
-                <div className="prerequisites-card">
-                  <h3>Prerrequisitos</h3>
+                {/* Prerrequisitos */}
+                <div className="prerequisites-section">
+                  <h2>Prerrequisitos</h2>
                   <ul className="prerequisites-list">
                     {courseData.prerequisites.map((prereq, index) => (
                       <li key={index}>{prereq}</li>
                     ))}
                   </ul>
                 </div>
-              </div>
-            </div>
-          </div>
-        </section>
 
-        {/* Mobile Curriculum Section */}
-        <section className="mobile-curriculum-section">
-          <div className="container">
-            <div className="curriculum-section">
-              <h2>Contenido del Curso</h2>
-              <div className="curriculum-stats">
-                <div className="stat-item">
-                  <span className="stat-number">{dbLessons.length > 0 ? dbLessons.length : courseData.lessons.length}</span>
-                  <span className="stat-label">Lecciones</span>
-                </div>
-                <div className="stat-item">
-                  <span className="stat-number">{totalDuration}</span>
-                  <span className="stat-label">Minutos</span>
-                </div>
-                <div className="stat-item">
-                  <span className="stat-number">{courseData.level}</span>
-                  <span className="stat-label">Nivel</span>
-                </div>
-              </div>
-              
-              <div className="lessons-list">
-                <div className="lessons-horizontal">
-                  {courseData.lessons.map((lesson, index) => (
-                    <div key={lesson.id} className={`lesson-item-horizontal ${completedLessons.includes(index) ? 'completed' : ''}`}>
-                      <div className="lesson-header-horizontal" onClick={() => toggleLesson(index)}>
-                        <div className="lesson-number-horizontal">{index + 1}</div>
-                        <div className="lesson-title-horizontal">{lesson.title}</div>
-                        <div className="lesson-status-horizontal">
-                          {completedLessons.includes(index) ? '✓' : '○'}
-                        </div>
-                        <div className="lesson-toggle">
-                          {expandedLessons.includes(index) ? '−' : '+'}
-                        </div>
-                      </div>
-                      {expandedLessons.includes(index) && (
-                        <div className="lesson-description-expanded">
-                          <p className="lesson-description-text">{lesson.description}</p>
-                          <div className="lesson-meta-horizontal">
-                            <span className="lesson-type-horizontal">{lesson.type}</span>
-                            <span className="lesson-duration-horizontal">{lesson.duration}min</span>
+                {/* Reviews Section - Movido al contenido principal */}
+                <div className="reviews-section-main" ref={reviewsRef}>
+                  <h2 className="reviews-title">Opiniones</h2>
+                  <p className="reviews-subtitle">Lo que dicen nuestros estudiantes</p>
+
+                  <div className="reviews-stats-card">
+                    <div className="stat"><span className="stat-icon">{renderUiIcon('estudiantes')}</span><span className="stat-value">2,863</span><span className="stat-label">Estudiantes</span></div>
+                    <div className="stat"><span className="stat-icon">{renderUiIcon('opiniones')}</span><span className="stat-value">450</span><span className="stat-label">Opiniones</span></div>
+                    <div className="stat"><span className="stat-icon">{renderUiIcon('valoraciones positivas')}</span><span className="stat-value stat-good">99%</span><span className="stat-label">Valoraciones positivas</span></div>
+                  </div>
+
+                  {/* Carrusel auto-avanzable con 2 tarjetas por slide */}
+                  <div className="reviews-carousel">
+                    <div className="reviews-track" ref={reviewsTrackRef}>
+                      {/* Slide 1 */}
+                      <div className="review-slide">
+                        <div className="review-grid2">
+                          <div className="testimonial-card">
+                            <div className="testimonial-body">
+                              <p className="testimonial-text">Implementé mi primer guión con IA en 24 horas. El flujo es claro, sin relleno y con ejemplos que realmente funcionan.</p>
+                              <div className="testimonial-author">- Laura M.</div>
+                            </div>
+                          </div>
+                          <div className="testimonial-card">
+                            <div className="testimonial-body">
+                              <p className="testimonial-text">El módulo de copywriting me ayudó a empaquetar mi oferta. En una semana cerré mi primer cliente para videos promocionales.</p>
+                              <div className="testimonial-author">- Diego P.</div>
+                            </div>
                           </div>
                         </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-              
-              {/* Lecciones de la Base de Datos */}
-              {dbLessons.length > 0 && (
-                <div className="db-lessons-section">
-                  <h3>Lecciones Detalladas</h3>
-                  <div className="db-lessons-list">
-                    {dbLessons.map((lesson, index) => (
-                      <div key={lesson.id} className="db-lesson-item">
-                        <div className="db-lesson-header">
-                          <div className="db-lesson-number">{lesson.order}</div>
-                          <div className="db-lesson-title">{lesson.title}</div>
-                          <div className="db-lesson-duration">{lesson.duration}min</div>
+                      </div>
+                      {/* Slide 2 */}
+                      <div className="review-slide">
+                        <div className="review-grid2">
+                          <div className="testimonial-card">
+                            <div className="testimonial-body">
+                              <p className="testimonial-text">Erick Hernandez explica directo al grano. Con su guía monté un pipeline para guiones con IA en dos tardes.</p>
+                              <div className="testimonial-author">- José L.</div>
+                            </div>
+                          </div>
+                          <div className="testimonial-card">
+                            <div className="testimonial-body">
+                              <p className="testimonial-text">Erick no se guarda nada: tips de copywriting, plantillas y cómo cobrar. Salí con un plan de precios listo.</p>
+                              <div className="testimonial-author">- Sandra T.</div>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    ))}
+                      {/* Slide 3 */}
+                      <div className="review-slide">
+                        <div className="review-grid2">
+                          <div className="testimonial-card">
+                            <div className="testimonial-body">
+                              <p className="testimonial-text">Pasé mis videos a 3 idiomas en una tarde. El capítulo de adaptación de guiones es oro puro.</p>
+                              <div className="testimonial-author">- Valeria G.</div>
+                            </div>
+                          </div>
+                          <div className="testimonial-card">
+                            <div className="testimonial-body">
+                              <p className="testimonial-text">No soy copywriter y mis guiones suenan profesionales. Las plantillas y checklists me ahorraron horas.</p>
+                              <div className="testimonial-author">- Marco R.</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="reviews-dots" aria-label="Paginación de testimonios">
+                      {[0,1,2].map((i) => (
+                        <button
+                          key={i}
+                          className={`dot ${currentReviewSlide === i ? 'active' : ''}`}
+                          onClick={() => setCurrentReviewSlide(i)}
+                          aria-label={`Ir al slide ${i + 1}`}
+                        />
+                      ))}
+                    </div>
                   </div>
                 </div>
-              )}
+              </div>
+
+              {/* Sidebar - Desktop Only */}
+              <div className="content-sidebar">
+                {/* Price Card (scrollable) */}
+                <div className="price-card-scrollable">
+                  <div className="price-card">
+                    {/* Opción Destacada - e Plus */}
+                    <div className="price-option highlight">
+                      <div className="price-option-header">
+                        <h3 className="price-option-title">Acceso al curso</h3>
+                        <div className="price-badges">
+                          <span className="price-badge plus">e Plus</span>
             </div>
           </div>
-        </section>
-
-        {/* Mobile Instructor Section */}
-        <section className="mobile-instructor-section">
-          <div className="container">
-            <div className="instructor-card">
-              <h3>Tu Instructor</h3>
-              <div className="instructor-info">
-                <div className="instructor-avatar-container">
-                  <img src={courseData.instructor.image} alt={courseData.instructor.name} className="instructor-avatar" />
+                      
+                      <div className="price-display">
+                        <div className="price-radio">
+                          <input type="radio" name="pricing" id="plus-option" defaultChecked />
+                          <label htmlFor="plus-option"></label>
                 </div>
-                <div className="instructor-details">
-                  <h4>{courseData.instructor.name}</h4>
-                  <p className="instructor-title">{courseData.instructor.title}</p>
-                  <p className="instructor-bio">{courseData.instructor.bio}</p>
+                        <div className="price-main">
+                          <span className="price-currency">$</span>
+                          <span className="price-amount">12</span>
+                          <span className="price-cents">.49</span>
+                          <span className="price-period">USD/mes</span>
                 </div>
+                </div>
+                      
+                      <div className="price-discount">
+                        <span className="discount-text">Accede a todos los cursos de eGrow Academy mientras mantengas tu suscripción.</span>
+              </div>
+              
+                      <button className="price-cta primary" type="button">
+                        Empezar con e Plus
+                      </button>
+                      
+                      <div className="price-benefits">
+                        <div className="benefit-item">
+                          <span className="benefit-icon">✓</span>
+                          <span className="benefit-text">Acceso ilimitado a todos los cursos de la plataforma</span>
+                        </div>
+                        <div className="benefit-item">
+                          <span className="benefit-icon">✓</span>
+                          <span className="benefit-text">Actualizaciones continuas y nuevo contenido</span>
+                        </div>
+                      </div>
+                          </div>
+                    
+                    {/* Opción Regular */}
+                    <div className="price-option regular">
+                      <div className="price-option-header">
+                        <h3 className="price-option-title">Acceso individual</h3>
+                        </div>
+                      
+                      <div className="price-display">
+                        <div className="price-radio">
+                          <input type="radio" name="pricing" id="regular-option" />
+                          <label htmlFor="regular-option"></label>
+                </div>
+                        <div className="price-main">
+                          <span className="price-currency">$</span>
+                          <span className="price-amount">4</span>
+                          <span className="price-cents">.00</span>
+                          <span className="price-period">USD</span>
+                </div>
+              </div>
+                      
+                      <div className="price-description">
+                        <span className="description-text">Pago único para este curso. Acceso permanente al contenido del curso.</span>
+            </div>
+                      
+                      <button className="price-cta" type="button">
+                        Comprar este curso
+                      </button>
+              </div>
+                  </div>
+              </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Mobile Prerequisites Section */}
-        <section className="mobile-prerequisites-section">
+
+        {/* Featured Courses Section */}
+        <section className="featured-courses-section">
           <div className="container">
-            <div className="prerequisites-card">
-              <h3>Prerrequisitos</h3>
-              <ul className="prerequisites-list">
-                {courseData.prerequisites.map((prereq, index) => (
-                  <li key={index}>{prereq}</li>
-                ))}
-              </ul>
+            <div className="featured-courses-header">
+              <h2>Cursos que también te pueden interesar</h2>
+              <p>Expande tus conocimientos con estos cursos populares</p>
+            </div>
+            
+            <div className="courses-grid">
+              <div className="course-card" onClick={() => router.push('/curso/monetiza-voz-ia-elevenlabs')}>
+                <div className="course-image-wrapper">
+                  <img src="/images/courses/monetiza-voz-ia.png" alt="Monetiza tu Voz con IA" className="course-image" />
+                  <span className="course-badge eplus">e Plus</span>
+                </div>
+                <div className="course-content">
+                  <h3 className="course-title">Monetiza tu Voz con IA</h3>
+                  <p className="course-description">Aprende a monetizar tu voz utilizando inteligencia artificial con ElevenLabs</p>
+                  <div className="course-meta">
+                    <span className="course-duration" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem' }}>
+                      <span className="icon" style={{ display: 'inline-flex' }}>{renderUiIcon('duracion')}</span>
+                      <span>8 horas</span>
+                    </span>
+                    <span className="course-level" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem' }}>
+                      <span className="icon" style={{ display: 'inline-flex' }}>{renderUiIcon('nivel')}</span>
+                      <span>Principiante</span>
+                    </span>
+                  </div>
+                  <button className="course-btn">Ver Curso</button>
+                </div>
+              </div>
+              
+              <div className="course-card" onClick={() => router.push('/curso/videos-profesionales-ia')}>
+                <div className="course-image-wrapper">
+                  <img src="/images/15.png" alt="Videos Profesionales con IA" className="course-image" />
+                  <span className="course-badge eplus">e Plus</span>
+                </div>
+                <div className="course-content">
+                  <h3 className="course-title">Videos Profesionales con IA</h3>
+                  <p className="course-description">Crea videos de alta calidad usando herramientas de inteligencia artificial</p>
+                  <div className="course-meta">
+                    <span className="course-duration" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem' }}>
+                      <span className="icon" style={{ display: 'inline-flex' }}>{renderUiIcon('duracion')}</span>
+                      <span>6 horas</span>
+                    </span>
+                    <span className="course-level" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem' }}>
+                      <span className="icon" style={{ display: 'inline-flex' }}>{renderUiIcon('nivel')}</span>
+                      <span>Intermedio</span>
+                    </span>
+                  </div>
+                  <button className="course-btn">Ver Curso</button>
+                </div>
+              </div>
+              
+              <div className="course-card" onClick={() => router.push('/curso/vibe-coding-claude-cursor')}>
+                <div className="course-image-wrapper">
+                  <img src="/images/16.png" alt="Vibe Coding con Claude & Cursor" className="course-image" />
+                  <span className="course-badge eplus">e Plus</span>
+                </div>
+                <div className="course-content">
+                  <h3 className="course-title">Vibe Coding con Claude & Cursor</h3>
+                  <p className="course-description">Aprende a programar con IA usando Claude y Cursor de manera eficiente</p>
+                  <div className="course-meta">
+                    <span className="course-duration" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem' }}>
+                      <span className="icon" style={{ display: 'inline-flex' }}>{renderUiIcon('duracion')}</span>
+                      <span>5 horas</span>
+                    </span>
+                    <span className="course-level" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem' }}>
+                      <span className="icon" style={{ display: 'inline-flex' }}>{renderUiIcon('nivel')}</span>
+                      <span>Intermedio</span>
+                    </span>
+                  </div>
+                  <button className="course-btn">Ver Curso</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        {/* FAQ Section (debajo de cursos relacionados) */}
+        <section className="faq-section">
+          <div className="container">
+            <h2 className="faq-title">Preguntas frecuentes</h2>
+            <div className="faq-list">
+              <details className="faq-item">
+                <summary className="faq-question">¿Qué incluye la Suscripción Premium de eGrow Academy?</summary>
+                <div className="faq-answer">
+                  Acceso a todos los cursos actuales y futuros mientras mantengas tu suscripción, actualizaciones permanentes, plantillas descargables, soporte prioritario por email y certificado digital al completar los cursos compatibles.
+                </div>
+              </details>
+              <details className="faq-item">
+                <summary className="faq-question">¿Cuándo empiezan y cuándo acaban los cursos?</summary>
+                <div className="faq-answer">
+                  Comienzan cuando tú quieras. Son 100% a tu ritmo, con acceso bajo demanda desde cualquier dispositivo. Puedes pausar y retomar sin perder tu progreso.
+                </div>
+              </details>
+              <details className="faq-item">
+                <summary className="faq-question">¿Obtengo certificado digital?</summary>
+                <div className="faq-answer">
+                  Sí. Al completar el contenido marcado como obligatorio en cada curso podrás descargar un certificado digital con tu nombre desde tu perfil.
+                </div>
+              </details>
+              <details className="faq-item">
+                <summary className="faq-question">¿Necesito experiencia previa o equipo especial?</summary>
+                <div className="faq-answer">
+                  No. Los cursos están pensados para principiantes. Solo requieres una computadora con internet. Recomendamos auriculares y micrófono básico para mejores resultados.
+                </div>
+              </details>
+              <details className="faq-item">
+                <summary className="faq-question">¿Puedo usar comercialmente los guiones generados con IA?</summary>
+                <div className="faq-answer">
+                  Sí, siempre que cuentes con la licencia adecuada y permisos de uso cuando corresponda. En el curso incluimos una guía práctica de buenas prácticas y ética.
+                </div>
+              </details>
+              <details className="faq-item">
+                <summary className="faq-question">¿Cómo obtengo soporte si me trabo?</summary>
+                <div className="faq-answer">
+                  Desde tu cuenta puedes abrir un ticket de soporte o escribirnos a soporte@egrow-academy.com. También encontrarás guías rápidas y preguntas frecuentes dentro de cada módulo.
+                </div>
+              </details>
             </div>
           </div>
         </section>
 
-        {/* Mobile Learning Objectives Section */}
-        <section className="mobile-learning-section">
+        {/* Pricing Section */}
+        <section className="pricing-section">
           <div className="container">
-            <div className="learning-objectives">
-              <h2>Lo que Aprenderás</h2>
-              
-              <div className="course-introduction">
-                                
-                <p>
-                  Este curso te guiará a través de estrategias prácticas y probadas para crear 
-                  guiones efectivos utilizando herramientas de IA. Desde la estructuración de contenido hasta 
-                  la optimización de llamadas a la acción, aprenderás cómo crear contenido que conecte 
-                  con tu audiencia y genere resultados.
-                </p>
-                
-                <p>
-                  A diferencia de otros cursos que se enfocan únicamente en la teoría, aquí encontrarás 
-                  implementaciones reales y casos de estudio de creadores que ya están creando contenido 
-                  viral y efectivo utilizando estas técnicas de IA.
-                </p>
-                
-                <div className="ideal-for-section">
-                  <p>Este curso es ideal para:</p>
-                  <ul>
-                    <li>Creadores de contenido digital</li>
-                    <li>Freelancers de marketing o publicidad</li>
-                    <li>Emprendedores que deseen crear sus propios videos</li>
-                    <li>Agencias o equipos que generan contenido recurrente</li>
+            <div className="pricing-header">
+              <h2 className="pricing-title">Elige tu Plan de Suscripción</h2>
+              <p className="pricing-subtitle">Desbloquea todo el potencial de eGrow Academy con acceso ilimitado a nuestros cursos especializados</p>
+            </div>
+            
+            <div className="pricing-grid">
+              {/* Plan Gratuito */}
+              <div className="pricing-card">
+                <div className="pricing-card-content">
+                  <div className="pricing-header-card">
+                    <h3 className="pricing-plan-name">Plan Gratuito</h3>
+                    <div className="pricing-plan-price">
+                      $0
+                      <span className="pricing-interval">/mes</span>
+                    </div>
+                  </div>
+
+                  <ul className="pricing-features">
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Acceso a cursos públicos gratuitos</span>
+                    </li>
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Sistema básico de rachas</span>
+                    </li>
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Comunidad básica</span>
+                    </li>
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Soporte por email estándar</span>
+                    </li>
+                    <li className="pricing-feature not-included">
+                      <span className="pricing-feature-icon not-included-icon">✕</span>
+                      <span className="pricing-feature-text not-included-text">Acceso a cursos especializados premium</span>
+                    </li>
+                    <li className="pricing-feature not-included">
+                      <span className="pricing-feature-icon not-included-icon">✕</span>
+                      <span className="pricing-feature-text not-included-text">Certificados de finalización</span>
+                    </li>
+                    <li className="pricing-feature not-included">
+                      <span className="pricing-feature-icon not-included-icon">✕</span>
+                      <span className="pricing-feature-text not-included-text">Badge visible en navbar</span>
+                    </li>
+                    <li className="pricing-feature not-included">
+                      <span className="pricing-feature-icon not-included-icon">✕</span>
+                      <span className="pricing-feature-text not-included-text">Personalización de badges y rachas</span>
+                    </li>
                   </ul>
+
+                  <button className="pricing-button secondary">
+                    Registrarse Gratis
+                  </button>
                 </div>
               </div>
-              
-              <div className="objectives-grid">
-                {courseData.whatYouWillLearn.map((objective, index) => (
-                  <div key={index} className="objective-item">
-                    <span className="objective-check">✓</span>
-                    <span>{objective}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
 
-        {/* Mobile Tools Section */}
-        <section className="mobile-tools-section">
-          <div className="container">
-                <div className="tools-section">
-              <h2>Herramientas y Tecnologías</h2>
-              <div className="tools-grid">
-                    {courseData.tools.map((tool, index) => (
-                  <div key={index} className="tool-item">
-                    <span className="tool-icon">{renderToolIcon(tool)}</span>
-                    <span>{tool}</span>
+              {/* Plan Mensual */}
+              <div className="pricing-card popular">
+                <div className="pricing-popular-badge">
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                    {/* icon placeholder */}
+                    <span style={{ width: 18, height: 18, display: 'inline-block' }} />
+                    <span>Más Popular</span>
+                  </span>
+                </div>
+                
+                <div className="pricing-card-content">
+                  <div className="pricing-header-card">
+                    <h3 className="pricing-plan-name">Plan Mensual</h3>
+                    <div className="pricing-plan-price">
+                      $12.49
+                      <span className="pricing-interval">/mes</span>
+                    </div>
                   </div>
-                ))}
+
+                  <ul className="pricing-features">
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Acceso a todos los cursos especializados</span>
+                    </li>
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Contenido actualizado mensualmente</span>
+                    </li>
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Certificados de finalización</span>
+                    </li>
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Sistema completo de rachas</span>
+                    </li>
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Badge visible en navbar</span>
+                    </li>
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Personalización de badges y rachas</span>
+                    </li>
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Soporte técnico prioritario</span>
+                    </li>
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Acceso a la comunidad exclusiva</span>
+                    </li>
+                  </ul>
+
+                  <button className="pricing-button primary">
+                    Suscribirse por $12.49
+                  </button>
+                </div>
+              </div>
+
+              {/* Plan Anual */}
+              <div className="pricing-card popular yearly-popular">
+                <div className="pricing-popular-badge yearly-badge">
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                    {/* icon placeholder */}
+                    <span style={{ width: 18, height: 18, display: 'inline-block' }} />
+                    <span>Ahorra Más</span>
+                  </span>
+                </div>
+                
+                <div className="pricing-card-content">
+                  <div className="pricing-header-card">
+                    <h3 className="pricing-plan-name">Plan Anual</h3>
+                    <div className="pricing-plan-price">
+                      $149.99
+                      <span className="pricing-interval">/año</span>
+                    </div>
+                    <p className="pricing-monthly-price">
+                      $12.50/mes facturado anualmente
+                    </p>
+                  </div>
+
+                  <ul className="pricing-features">
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Todo lo del plan mensual</span>
+                    </li>
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">2 meses gratis</span>
+                    </li>
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Personalización completa de badges y rachas</span>
+                    </li>
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Badge visible en barra de navegación</span>
+                    </li>
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Acceso anticipado a nuevos cursos</span>
+                    </li>
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Mentorías grupales mensuales</span>
+                    </li>
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Recursos premium adicionales</span>
+                    </li>
+                    <li className="pricing-feature">
+                      <span className="pricing-feature-icon">✓</span>
+                      <span className="pricing-feature-text">Garantía de satisfacción de 30 días</span>
+                    </li>
+                  </ul>
+
+                  <button className="pricing-button primary">
+                    Suscribirse por $149.99
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -700,1183 +1364,6 @@ export default function GuionesVideosPromocionalesIAPage() {
       </main>
 
       <Footer />
-
-      <style jsx>{`
-        .loading-container {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          min-height: 60vh;
-          gap: 1rem;
-        }
-
-
-
-        .hero-section {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          padding: 1rem 0;
-          margin-top: 0;
-        }
-
-        .course-hero {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 1.5rem;
-          align-items: start;
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 0 1rem;
-        }
-
-        .course-badges {
-          display: flex;
-          gap: 0.4rem;
-          margin-bottom: 0.5rem;
-          flex-wrap: wrap;
-        }
-
-        .badge {
-          padding: 0.25rem 0.75rem;
-          border-radius: 20px;
-          font-size: 0.75rem;
-          font-weight: 600;
-          text-transform: uppercase;
-        }
-
-        .badge-free {
-          background: #22c55e;
-          color: white;
-        }
-
-        .badge-level {
-          background: rgba(255, 255, 255, 0.2);
-          color: white;
-          border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .badge-duration {
-          background: rgba(255, 255, 255, 0.2);
-          color: white;
-          border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .course-title-large {
-          font-size: 2.5rem;
-          font-weight: 700;
-          margin: 0 0 0.6rem 0;
-          line-height: 1.2;
-        }
-
-        .course-description {
-          font-size: 1rem;
-          line-height: 1.5;
-          margin: 0 0 1rem 0;
-          opacity: 0.9;
-        }
-
-        .course-actions {
-          margin-bottom: 2rem;
-        }
-
-        .new-course-actions {
-          margin-bottom: 1.5rem;
-        }
-
-                  /* Ocultar video móvil en desktop */
-          .mobile-video-preview {
-            display: none;
-          }
-          
-          /* Estilos para videos de preview */
-          .mobile-preview-video {
-            margin: 1.5rem 0;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-          }
-          
-          .desktop-preview-video {
-            margin: 0;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-          }
-
-        .progress-section-new {
-          display: flex;
-          flex-direction: column;
-          gap: 1rem;
-          width: 100%;
-        }
-
-        .progress-info-new {
-          background: rgba(255, 255, 255, 0.1);
-          padding: 1rem;
-          border-radius: 8px;
-          border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .progress-text-new {
-          margin: 0 0 0.5rem 0;
-          font-weight: 600;
-        }
-
-        .progress-detail-new {
-          margin: 0;
-          font-size: 0.9rem;
-          opacity: 0.8;
-        }
-
-        .start-section-new {
-          display: flex;
-          flex-direction: column;
-          gap: 1rem;
-          align-items: flex-start;
-        }
-
-        .course-actions-with-progress {
-          display: flex;
-          flex-direction: column;
-          gap: 1rem;
-          width: 100%;
-        }
-
-        .progress-summary {
-          background: rgba(255, 255, 255, 0.1);
-          padding: 1rem;
-          border-radius: 8px;
-          border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .progress-status {
-          margin: 0 0 0.5rem 0;
-          font-weight: 600;
-        }
-
-        .progress-detail {
-          margin: 0;
-          font-size: 0.9rem;
-          opacity: 0.8;
-        }
-
-        .btn {
-          padding: 1rem 2rem;
-          border-radius: 8px;
-          font-weight: 600;
-          font-size: 1rem;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          border: none;
-          text-decoration: none;
-          display: inline-flex;
-          align-items: center;
-          gap: 0.5rem;
-        }
-
-        .btn-primary {
-          background: linear-gradient(135deg, #22c55e, #16a34a);
-          color: white;
-        }
-
-        .btn-primary:hover {
-          background: linear-gradient(135deg, #16a34a, #15803d);
-          transform: translateY(-2px);
-          box-shadow: 0 8px 25px rgba(34, 197, 94, 0.3);
-        }
-
-        .btn-large {
-          padding: 1.25rem 2.5rem;
-          font-size: 1.1rem;
-        }
-
-        .btn-continue-course {
-          background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-        }
-
-        .btn-continue-course:hover {
-          background: linear-gradient(135deg, #1d4ed8, #1e40af);
-          box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
-        }
-
-        .course-meta {
-          margin-top: 0.75rem;
-        }
-
-        .course-badges-secondary {
-          display: flex;
-          gap: 0.5rem;
-          flex-wrap: wrap;
-        }
-
-        .badge-language, .badge-includes, .badge-access {
-          background: rgba(255, 255, 255, 0.1);
-          color: white;
-          border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .course-preview {
-          display: flex;
-          flex-direction: column;
-          gap: 1rem;
-        }
-
-        .preview-video {
-          position: relative;
-          border-radius: 12px;
-          overflow: hidden;
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        .preview-video img {
-          width: 100%;
-          height: auto;
-          display: block;
-        }
-
-        .play-button {
-          position: absolute;
-          top: 80%;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 50px;
-          height: 50px;
-          background: rgba(255, 255, 255, 0.3);
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 1.2rem;
-          color: #1f2937;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          backdrop-filter: blur(3px);
-        }
-
-        .play-button:hover {
-          background: rgba(255, 255, 255, 0.5);
-          transform: translateX(-50%) scale(1.1);
-        }
-
-        .course-actions {
-          display: flex;
-          flex-direction: column;
-          gap: 1rem;
-          align-items: flex-start;
-        }
-
-        /* Estilos del contador eliminados */
-
-        .progress-card {
-          background: white;
-          padding: 2rem;
-          border-radius: 12px;
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-          margin-top: 2rem;
-          text-align: center;
-        }
-
-        .progress-card h3 {
-          margin: 0 0 1.5rem 0;
-          color: #1f2937;
-        }
-
-        .progress-bar {
-          width: 100%;
-          height: 8px;
-          background: #e5e7eb;
-          border-radius: 4px;
-          overflow: hidden;
-          margin-bottom: 1rem;
-        }
-
-        .progress-fill {
-          height: 100%;
-          background: linear-gradient(135deg, #22c55e, #16a34a);
-          transition: width 0.3s ease;
-        }
-
-        .progress-details {
-          margin-bottom: 1rem;
-        }
-
-        .progress-text, .progress-remaining {
-          margin: 0.25rem 0;
-          color: #6b7280;
-          font-size: 0.9rem;
-        }
-
-        .btn-outline {
-          background: transparent;
-          color: #22c55e;
-          border: 2px solid #22c55e;
-        }
-
-        .btn-outline:hover {
-          background: #22c55e;
-          color: white;
-        }
-
-        .btn-small {
-          padding: 0.75rem 1.5rem;
-          font-size: 0.9rem;
-        }
-
-        .course-action-button {
-          padding: 1rem 2rem;
-          border-radius: 8px;
-          font-weight: 600;
-          font-size: 1rem;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          border: none;
-          text-decoration: none;
-          display: inline-flex;
-          align-items: center;
-          gap: 0.5rem;
-          width: 100%;
-          justify-content: center;
-        }
-
-        .course-action-start {
-          background: linear-gradient(135deg, #22c55e, #16a34a);
-          color: white;
-        }
-
-        .course-action-start:hover {
-          background: linear-gradient(135deg, #16a34a, #15803d);
-          transform: translateY(-2px);
-          box-shadow: 0 8px 25px rgba(34, 197, 94, 0.3);
-        }
-
-        .course-action-continue {
-          background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-          color: white;
-        }
-
-        .course-action-continue:hover {
-          background: linear-gradient(135deg, #1d4ed8, #1e40af);
-          transform: translateY(-2px);
-          box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
-        }
-
-        .course-action-resume {
-          background: linear-gradient(135deg, #f59e0b, #d97706);
-          color: white;
-          margin-top: 1rem;
-        }
-
-        .course-action-resume:hover {
-          background: linear-gradient(135deg, #d97706, #b45309);
-          box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
-        }
-
-        .course-content {
-          padding: 4rem 0;
-          background: #f9fafb;
-        }
-
-        .content-layout {
-          display: grid;
-          grid-template-columns: 2fr 1fr;
-          gap: 3rem;
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 0 1rem;
-        }
-
-        .curriculum-section, .learning-objectives, .tools-section {
-          background: white;
-          padding: 2rem;
-          border-radius: 12px;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-          margin-bottom: 2rem;
-        }
-
-        .curriculum-section h2, .learning-objectives h2, .tools-section h2 {
-          margin: 0 0 1.5rem 0;
-          color: #1f2937;
-          font-size: 1.5rem;
-          font-weight: 700;
-        }
-
-        .curriculum-stats {
-          display: flex;
-          gap: 2rem;
-          margin-bottom: 2rem;
-        }
-
-        .stat-item {
-          text-align: center;
-        }
-
-        .stat-number {
-          display: block;
-          font-size: 2rem;
-          font-weight: 700;
-          color: #22c55e;
-        }
-
-        .stat-label {
-          font-size: 0.9rem;
-          color: #6b7280;
-        }
-
-        .lessons-list {
-          display: flex;
-          flex-direction: column;
-          gap: 1rem;
-        }
-
-        .lessons-grid {
-          display: grid;
-          grid-template-columns: 1fr;
-          gap: 1rem;
-          max-width: 800px;
-          margin: 0 auto;
-        }
-
-        /* Ocultar funcionalidad expandible en desktop */
-        .lessons-horizontal {
-          display: none;
-        }
-
-        .lesson-card {
-          background: white;
-          border: 1px solid #e5e7eb;
-          border-radius: 8px;
-          padding: 1rem;
-          transition: all 0.3s ease;
-          display: flex;
-          flex-direction: row;
-          gap: 1rem;
-          align-items: flex-start;
-          width: 100%;
-          min-height: 140px;
-          box-sizing: border-box;
-        }
-
-        .lesson-card:hover {
-          border-color: #22c55e;
-          box-shadow: 0 2px 8px rgba(34, 197, 94, 0.1);
-          transform: translateY(-2px);
-        }
-
-        .lesson-card.completed {
-          background: #f0fdf4;
-          border-color: #22c55e;
-        }
-
-        .lesson-card.completed:hover {
-          background: #dcfce7;
-        }
-
-        .lesson-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          flex-shrink: 0;
-        }
-
-        .lesson-number {
-          width: 32px;
-          height: 32px;
-          background: #22c55e;
-          color: white;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-weight: 600;
-          font-size: 0.9rem;
-        }
-
-        .lesson-status {
-          font-size: 1.2rem;
-          font-weight: 700;
-          color: #22c55e;
-        }
-
-        .lesson-content {
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
-          flex: 1;
-        }
-
-        .lesson-title {
-          margin: 0;
-          font-size: 0.9rem;
-          font-weight: 600;
-          color: #1f2937;
-          line-height: 1.3;
-        }
-
-        .lesson-description {
-          margin: 0;
-          font-size: 0.75rem;
-          color: #6b7280;
-          line-height: 1.4;
-        }
-
-        .lesson-meta {
-          display: flex;
-          gap: 0.5rem;
-          margin-top: 0.5rem;
-        }
-
-        .lesson-type, .lesson-duration {
-          font-size: 0.65rem;
-          color: #6b7280;
-          background: #f3f4f6;
-        }
-
-        /* Estilos para lecciones de la base de datos */
-        .db-lessons-section {
-          margin-top: 2rem;
-          padding: 1.5rem;
-          background: #f8fafc;
-          border-radius: 8px;
-          border: 1px solid #e2e8f0;
-        }
-
-        .db-lessons-section h3 {
-          margin: 0 0 1rem 0;
-          color: #1f2937;
-          font-size: 1.1rem;
-          font-weight: 600;
-        }
-
-        .db-lessons-list {
-          display: flex;
-          flex-direction: column;
-          gap: 0.75rem;
-        }
-
-        .db-lesson-item {
-          background: white;
-          border: 1px solid #e5e7eb;
-          border-radius: 6px;
-          padding: 0.75rem;
-          transition: all 0.2s ease;
-        }
-
-        .db-lesson-item:hover {
-          border-color: #22c55e;
-          box-shadow: 0 1px 4px rgba(34, 197, 94, 0.1);
-        }
-
-        .db-lesson-header {
-          display: flex;
-          align-items: center;
-          gap: 1rem;
-        }
-
-        .db-lesson-number {
-          width: 24px;
-          height: 24px;
-          background: #22c55e;
-          color: white;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-weight: 600;
-          font-size: 0.8rem;
-          flex-shrink: 0;
-        }
-
-        .db-lesson-title {
-          flex: 1;
-          font-size: 0.85rem;
-          font-weight: 500;
-          color: #1f2937;
-          line-height: 1.3;
-        }
-
-        .db-lesson-duration {
-          font-size: 0.75rem;
-          color: #6b7280;
-          background: #f3f4f6;
-          padding: 0.25rem 0.5rem;
-          border-radius: 4px;
-          flex-shrink: 0;
-        }
-          padding: 0.2rem 0.4rem;
-          border-radius: 4px;
-          font-weight: 500;
-        }
-
-                  .lesson-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-          }
-
-          /* Estilos responsive para grid móvil */
-          @media (max-width: 768px) {
-            .lessons-grid {
-              grid-template-columns: repeat(2, 1fr);
-              gap: 0.75rem;
-              justify-items: stretch;
-              align-items: stretch;
-              width: 100%;
-              max-width: 100%;
-            }
-
-            .lesson-card {
-              padding: 0.75rem;
-              gap: 0.5rem;
-              width: 100%;
-              height: 300px;
-              box-sizing: border-box;
-              flex-direction: column;
-              overflow: hidden;
-              display: flex;
-            }
-
-            .lesson-number {
-              width: 28px;
-              height: 28px;
-              font-size: 0.8rem;
-            }
-
-            .lesson-status {
-              font-size: 1rem;
-            }
-
-            .lesson-title {
-              font-size: 0.8rem;
-              line-height: 1.2;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              white-space: nowrap;
-            }
-
-            .lesson-description {
-              font-size: 0.7rem;
-              line-height: 1.3;
-              overflow: hidden;
-              display: -webkit-box;
-              -webkit-line-clamp: 5;
-              -webkit-box-orient: vertical;
-              text-overflow: ellipsis;
-            }
-
-            .lesson-meta {
-              gap: 0.4rem;
-              margin-top: 0.4rem;
-            }
-
-            .lesson-type, .lesson-duration {
-              font-size: 0.6rem;
-              padding: 0.15rem 0.3rem;
-            }
-          }
-
-        .lesson-item:hover {
-          border-color: #22c55e;
-          box-shadow: 0 2px 8px rgba(34, 197, 94, 0.1);
-        }
-
-        .lesson-item.completed {
-          background: #f0fdf4;
-          border-color: #22c55e;
-        }
-
-        .lesson-number {
-          width: 40px;
-          height: 40px;
-          background: #22c55e;
-          color: white;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-weight: 600;
-          flex-shrink: 0;
-        }
-
-        .lesson-content {
-          flex: 1;
-        }
-
-        .lesson-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 0.5rem;
-        }
-
-        .lesson-header h3 {
-          margin: 0;
-          font-size: 1.1rem;
-          font-weight: 600;
-          color: #1f2937;
-        }
-
-        .lesson-meta {
-          display: flex;
-          gap: 0.5rem;
-        }
-
-        .lesson-type, .lesson-duration {
-          font-size: 0.8rem;
-          color: #6b7280;
-          background: #f3f4f6;
-          padding: 0.25rem 0.5rem;
-          border-radius: 4px;
-        }
-
-        .lesson-description {
-          margin: 0;
-          font-size: 0.9rem;
-          color: #6b7280;
-          line-height: 1.5;
-        }
-
-        .lesson-status {
-          font-size: 1.5rem;
-          color: #22c55e;
-          font-weight: 700;
-        }
-
-        .course-introduction {
-          margin-bottom: 2rem;
-        }
-
-        .course-introduction p {
-          margin: 0 0 1rem 0;
-          line-height: 1.6;
-          color: #4b5563;
-        }
-
-        .objectives-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-          gap: 1rem;
-        }
-
-        .objective-item {
-          display: flex;
-          align-items: flex-start;
-          gap: 0.75rem;
-          padding: 1rem;
-          background: #f9fafb;
-          border-radius: 8px;
-          border-left: 4px solid #22c55e;
-        }
-
-        .objective-check {
-          color: #22c55e;
-          font-weight: 700;
-          font-size: 1.2rem;
-          flex-shrink: 0;
-        }
-
-        .tools-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-          gap: 1rem;
-        }
-
-        .tool-item {
-          display: flex;
-          align-items: center;
-          gap: 0.75rem;
-          padding: 1rem;
-          background: #f9fafb;
-          border-radius: 8px;
-          border: 1px solid #e5e7eb;
-        }
-
-        .tool-icon {
-          font-size: 1.5rem;
-        }
-
-        .content-sidebar {
-          display: flex;
-          flex-direction: column;
-          gap: 2rem;
-        }
-
-        .instructor-card, .prerequisites-card {
-          background: white;
-          padding: 2rem;
-          border-radius: 12px;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .instructor-card h3, .prerequisites-card h3 {
-          margin: 0 0 1.5rem 0;
-          color: #1f2937;
-          font-size: 1.25rem;
-          font-weight: 700;
-        }
-
-        .instructor-info {
-          display: flex;
-          flex-direction: column;
-          gap: 1.5rem;
-          align-items: center;
-          text-align: center;
-        }
-
-        .instructor-avatar-container {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        .instructor-avatar {
-          width: 180px;
-          height: 180px;
-          border-radius: 50%;
-          object-fit: cover;
-          flex-shrink: 0;
-          border: 4px solid #f3f4f6;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .instructor-details h4 {
-          margin: 0 0 0.5rem 0;
-          color: #1f2937;
-          font-size: 1.25rem;
-          font-weight: 700;
-        }
-
-        .instructor-title {
-          margin: 0 0 0.75rem 0;
-          color: #22c55e;
-          font-weight: 600;
-          font-size: 1rem;
-        }
-
-        .instructor-bio {
-          margin: 0;
-          font-size: 0.95rem;
-          line-height: 1.6;
-          color: #6b7280;
-          max-width: 280px;
-        }
-
-        .prerequisites-list {
-          list-style: none;
-          padding: 0;
-          margin: 0;
-        }
-
-        .prerequisites-list li {
-          padding: 0.5rem 0;
-          border-bottom: 1px solid #e5e7eb;
-          color: #4b5563;
-        }
-
-        .prerequisites-list li:last-child {
-          border-bottom: none;
-        }
-
-        .prerequisites-list li::before {
-          content: "✓";
-          color: #22c55e;
-          font-weight: 700;
-          margin-right: 0.5rem;
-        }
-
-        @media (max-width: 768px) {
-          .course-hero {
-            grid-template-columns: 1fr;
-            gap: 1rem;
-          }
-
-          /* Ocultar video en su posición original en móvil */
-          .course-preview {
-            display: none;
-          }
-
-          /* Mostrar video móvil entre descripción y botón */
-          .mobile-video-preview {
-            display: block;
-            margin: 1.5rem 0;
-          }
-
-          .mobile-preview-video {
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-          }
-
-          .content-layout {
-            grid-template-columns: 1fr;
-            gap: 2rem;
-            justify-items: center;
-          }
-
-          /* Ocultar contenido desktop en móvil */
-          .desktop-content {
-            display: none;
-          }
-
-          .content-sidebar {
-            display: none;
-          }
-
-          /* Mostrar secciones móviles */
-          .mobile-curriculum-section {
-            display: block;
-          }
-
-          .mobile-learning-section {
-            display: block;
-          }
-
-          .mobile-tools-section {
-            display: block;
-          }
-
-          .mobile-instructor-section {
-            display: block;
-          }
-
-          .mobile-prerequisites-section {
-            display: block;
-          }
-
-          .mobile-pricing-section {
-            display: block;
-          }
-
-          .curriculum-stats {
-            flex-direction: column;
-            gap: 1rem;
-          }
-
-          .objectives-grid, .tools-grid {
-            grid-template-columns: 1fr;
-          }
-
-          .course-title-large {
-            font-size: 1.4rem;
-            line-height: 1.2;
-            margin-bottom: 0.5rem;
-          }
-
-          .course-description {
-            font-size: 0.85rem;
-            line-height: 1.3;
-            margin-bottom: 0.75rem;
-          }
-
-          .btn-large {
-            padding: 0.9rem 1.8rem;
-            font-size: 0.95rem;
-          }
-
-          /* Ajustar badges en móvil */
-          .course-badges {
-            gap: 0.25rem;
-            margin-bottom: 0.5rem;
-            flex-wrap: wrap;
-          }
-
-          .badge {
-            padding: 0.15rem 0.5rem;
-            font-size: 0.7rem;
-            border-radius: 6px;
-          }
-
-          .course-badges-secondary {
-            gap: 0.3rem;
-            flex-wrap: wrap;
-          }
-
-          .badge-language, .badge-includes, .badge-access {
-            font-size: 0.65rem;
-            padding: 0.1rem 0.4rem;
-          }
-
-          /* Ajustar botones de acción en móvil */
-          .course-action-button {
-            font-size: 0.85rem;
-            padding: 0.7rem 1.2rem;
-            border-radius: 8px;
-          }
-
-          /* Ajustar secciones de progreso en móvil */
-          .progress-info-new {
-            padding: 0.8rem;
-            border-radius: 6px;
-          }
-
-          .progress-text-new {
-            font-size: 0.85rem;
-            margin-bottom: 0.4rem;
-          }
-
-          .progress-detail-new {
-            font-size: 0.75rem;
-          }
-
-          /* Mostrar funcionalidad expandible solo en móvil */
-          .lessons-horizontal {
-            display: flex !important;
-            flex-direction: column;
-            gap: 0.5rem;
-            max-width: 100%;
-            margin: 0 auto;
-          }
-
-          /* Ocultar grid en móvil */
-          .lessons-grid {
-            display: none;
-          }
-
-          .lesson-item-horizontal {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-          }
-
-          .lesson-item-horizontal:hover {
-            border-color: #22c55e;
-            box-shadow: 0 2px 8px rgba(34, 197, 94, 0.1);
-          }
-
-          .lesson-item-horizontal.completed {
-            background: #f0fdf4;
-            border-color: #22c55e;
-          }
-
-          .lesson-header-horizontal {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-          }
-
-          .lesson-header-horizontal:hover {
-            background-color: #f9fafb;
-          }
-
-          .lesson-number-horizontal {
-            width: 28px;
-            height: 28px;
-            background: #22c55e;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            font-size: 0.8rem;
-            flex-shrink: 0;
-          }
-
-          .lesson-title-horizontal {
-            flex: 1;
-            font-weight: 600;
-            color: #1f2937;
-            font-size: 0.85rem;
-          }
-
-          .lesson-status-horizontal {
-            font-size: 1rem;
-            font-weight: 700;
-            color: #22c55e;
-            flex-shrink: 0;
-          }
-
-          .lesson-toggle {
-            width: 20px;
-            height: 20px;
-            background: #f3f4f6;
-            color: #6b7280;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            flex-shrink: 0;
-          }
-
-          .lesson-toggle:hover {
-            background: #e5e7eb;
-            color: #374151;
-          }
-
-          .lesson-description-expanded {
-            padding: 0.75rem;
-            background: #f9fafb;
-            border-top: 1px solid #e5e7eb;
-            animation: slideDown 0.3s ease;
-          }
-
-          @keyframes slideDown {
-            from {
-              opacity: 0;
-              max-height: 0;
-            }
-            to {
-              opacity: 1;
-              max-height: 200px;
-            }
-          }
-
-          .lesson-description-text {
-            margin: 0 0 0.5rem 0;
-            color: #6b7280;
-            line-height: 1.4;
-            font-size: 0.8rem;
-          }
-
-          .lesson-meta-horizontal {
-            display: flex;
-            gap: 0.4rem;
-          }
-
-          .lesson-type-horizontal, .lesson-duration-horizontal {
-            font-size: 0.7rem;
-            color: #6b7280;
-            background: #f3f4f6;
-            padding: 0.2rem 0.4rem;
-            border-radius: 4px;
-            font-weight: 500;
-          }
-
-          /* Ajustar hero section padding en móvil */
-          .hero-section {
-            padding: 0.75rem 0;
-          }
-
-
-
-          .course-hero {
-            gap: 0.75rem;
-            padding: 0.5rem 0;
-          }
-
-          .container {
-            padding: 0 1rem;
-          }
-
-          /* Ajustar espaciado de elementos */
-          .course-meta {
-            margin-top: 0.75rem;
-          }
-        }
-      `}</style>
     </>
   );
 } 
