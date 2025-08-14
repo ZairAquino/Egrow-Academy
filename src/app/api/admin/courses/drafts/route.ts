@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { CourseCategory, CourseStatus } from '@prisma/client';
-import { getServerSession } from 'next-auth';
+import { verifyAdminAuth } from '@/lib/admin-auth';
 
 function slugify(input: string): string {
   return (input || '')
@@ -29,27 +29,10 @@ async function generateUniqueSlug(baseSlug: string): Promise<string> {
 
 export async function POST(request: NextRequest) {
   try {
-    // Verificar autenticación y rol ADMIN
-    const session = await getServerSession();
-    if (!session || !session.user) {
-      return NextResponse.json(
-        { error: 'No autorizado' },
-        { status: 401 }
-      );
-    }
-
-    // Verificar que el usuario tenga rol ADMIN
-    const user = await prisma.user.findUnique({
-      where: { id: session.user.id },
-      select: { role: true }
-    });
-
-    if (!user || user.role !== 'ADMIN') {
-      console.log(`❌ Acceso denegado: Usuario ${session.user.id} no es ADMIN (role: ${user?.role})`);
-      return NextResponse.json(
-        { error: 'Acceso denegado. Se requieren permisos de administrador.' },
-        { status: 403 }
-      );
+    // ✅ Verificar autenticación ADMIN
+    const authResult = await verifyAdminAuth(request);
+    if (!authResult.success) {
+      return authResult.response!;
     }
 
     const body = await request.json().catch(() => ({}));

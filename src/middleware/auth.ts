@@ -47,24 +47,11 @@ export function protectAdminRoutes(request: NextRequest) {
     return NextResponse.next();
   }
   
-  // Para rutas API admin, mantener protección básica
+  // Para rutas API admin, NO hacer verificación en middleware
+  // Dejar que cada API individual maneje su propia autenticación
   const isAdminApiRoute = pathname.startsWith('/api/admin');
   if (isAdminApiRoute) {
-    console.log(`🔒 Admin API route: ${pathname} - checking basic auth`);
-    
-    // Buscar cualquier token en cookies
-    const allCookies = request.cookies.getAll();
-    const hasAnyCookie = allCookies.length > 0;
-    
-    if (!hasAnyCookie) {
-      console.log('❌ No cookies found for admin API route');
-      return NextResponse.json(
-        { error: 'Acceso denegado. Se requiere autenticación.' },
-        { status: 401 }
-      );
-    }
-    
-    console.log('✅ Cookies found, letting API handle detailed auth');
+    console.log(`🔒 Admin API route: ${pathname} - letting API handle all auth`);
     return NextResponse.next();
   }
   
