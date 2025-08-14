@@ -8,6 +8,13 @@ import {
   trackUTMConversion,
   UTMConversionData 
 } from '@/lib/utm-tracking';
+import { 
+  trackTikTokViewContent,
+  trackTikTokCompleteRegistration,
+  trackTikTokCompletePayment,
+  trackLinkedInConversion,
+  trackMetaPurchase
+} from '@/lib/pixels';
 
 function UTMTrackerContent() {
   const pathname = usePathname();
@@ -83,8 +90,27 @@ function UTMTrackerContent() {
       // Trackear vista de página específica según la ruta
       if (pathname.includes('/curso/monetiza-voz-ia-elevenlabs')) {
         (window as any).trackUTMCourseView?.('monetiza-voz-ia-elevenlabs', 'Monetiza tu Voz con IA');
+
+        // TikTok ViewContent
+        trackTikTokViewContent({
+          contentId: 'monetiza-voz-ia-elevenlabs',
+          contentName: 'Monetiza tu Voz con IA',
+          utm: utmData
+        })
       } else if (pathname === '/payment') {
         (window as any).trackUTMPayment?.('monetiza-voz-ia-elevenlabs', 'Monetiza tu Voz con IA', 97);
+
+        // TikTok CompletePayment
+        trackTikTokCompletePayment({
+          contentId: 'monetiza-voz-ia-elevenlabs',
+          contentName: 'Monetiza tu Voz con IA',
+          value: 97,
+          currency: 'USD',
+          utm: utmData
+        })
+
+        // Meta Purchase (opcional)
+        trackMetaPurchase({ value: 97, currency: 'USD' })
       }
     }
   }, [pathname]);

@@ -8,6 +8,8 @@ import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Footer from '@/components/layout/Footer';
 import Navbar from '@/components/layout/Navbar';
 import VideoPlayer from '@/components/courses/VideoPlayer';
+import PaymentForm from '@/components/payments/PaymentForm';
+import { COURSE_PRICE_USD_MINOR, getCurrencySymbol, getDisplayPrice, getCourseMinorAmount } from '@/lib/pricing';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
@@ -25,7 +27,7 @@ export default function MonetizaVozIAElevenLabsPage() {
   console.log('🔍 [DEBUG] Componente MonetizaVozIAElevenLabsPage cargado');
   
   
-  const [currentLesson, setCurrentLesson] = useState(0);
+	const [currentLesson, setCurrentLesson] = useState(0);
   const [completedLessons, setCompletedLessons] = useState<string[]>([]);
   const [progressPercentage, setProgressPercentage] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -36,6 +38,7 @@ export default function MonetizaVozIAElevenLabsPage() {
   const [videoCurrentTime, setVideoCurrentTime] = useState(0);
   const [showStickyNavbar, setShowStickyNavbar] = useState(false);
   const [stickyOpacity, setStickyOpacity] = useState(0);
+	const [showCoursePurchaseModal, setShowCoursePurchaseModal] = useState(false);
   const stickyTriggerRef = useRef<HTMLDivElement | null>(null);
   const reviewsRef = useRef<HTMLElement | null>(null);
   const reviewsTrackRef = useRef<HTMLDivElement | null>(null);
@@ -143,9 +146,69 @@ export default function MonetizaVozIAElevenLabsPage() {
     }
   };
 
+  const [currency, setCurrency] = useState<'usd' | 'eur' | 'mxn' | 'ars'>('usd');
+
+  useEffect(() => {
+    try {
+      const match = document.cookie.match(/(?:^|; )currency=([^;]+)/);
+      const cur = match ? decodeURIComponent(match[1]) : 'usd';
+      if (cur === 'usd' || cur === 'eur' || cur === 'mxn' || cur === 'ars') {
+        setCurrency(cur);
+      }
+    } catch {}
+  }, []);
+
   const handleVideoPreviewClick = () => {
     setShowMainVideo(!showMainVideo);
   };
+
+	const openCoursePurchase = () => {
+		if (!user || status !== 'authenticated') {
+			const loginUrl = `/login?redirect=/curso/monetiza-voz-ia-elevenlabs`;
+			if (typeof window !== 'undefined') {
+				window.location.href = loginUrl;
+			}
+			return;
+		}
+		// Redirigir a Stripe Checkout directo con moneda detectada
+		fetch('/api/stripe/create-course-checkout-session', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			credentials: 'include',
+			body: JSON.stringify({ courseId: courseData.id, currency }),
+		})
+			.then(async (res) => {
+				if (res.ok) {
+					const data = await res.json();
+					if (data.url) {
+						window.location.href = data.url;
+					} else {
+						console.error('No se pudo crear la sesión de checkout: URL no encontrada en respuesta', data);
+						setShowCoursePurchaseModal(true);
+					}
+				} else {
+					// Parse error response properly
+					let errorData;
+					try {
+						errorData = await res.json();
+					} catch {
+						errorData = { error: `HTTP ${res.status}: ${res.statusText}` };
+					}
+					console.error('Error en la API de checkout:', {
+						status: res.status,
+						statusText: res.statusText,
+						error: errorData
+					});
+					setShowCoursePurchaseModal(true);
+				}
+			})
+			.catch((e) => {
+				console.error('Error creando checkout session:', e);
+				setShowCoursePurchaseModal(true);
+			});
+	};
+
+	const closeCoursePurchase = () => setShowCoursePurchaseModal(false);
 
   const handleVideoProgress = (currentTime: number, duration: number) => {
     setVideoCurrentTime(currentTime);
@@ -1058,7 +1121,10 @@ export default function MonetizaVozIAElevenLabsPage() {
         <div className="promo-banner" role="button" onClick={handleBannerClick}>
           <div className="promo-banner-content">
             <span className="promo-banner-message">
-              Accede a todos nuestros cursos con Suscripción Plus por solo $12.49 USD/mes – ¡Oferta por tiempo limitado!
+              {(() => {
+                const price = getDisplayPrice('monthly', currency);
+                return `Accede a todos nuestros cursos con Suscripción Plus por solo ${getCurrencySymbol(currency)}${price} ${currency.toUpperCase()}/mes – ¡Oferta por tiempo limitado!`;
+              })()}
             </span>
             <div className="promo-banner-timer" aria-label="Tiempo restante de la oferta">
               {/* Si hay días, se muestran como horas acumuladas para un look compacto */}
@@ -1114,10 +1180,13 @@ export default function MonetizaVozIAElevenLabsPage() {
                       <label htmlFor="plus-option-sticky"></label>
                     </div>
                     <div className="price-main">
-                      <span className="price-currency">$</span>
-                      <span className="price-amount">12</span>
-                      <span className="price-cents">.49</span>
-                      <span className="price-period">USD/mes</span>
+                      <span className="price-currency">{getCurrencySymbol(currency)}</span>
+                      <span className="price-amount">{String(Math.floor(getDisplayPrice('monthly', currency)))}</span>
+                      <span className="price-cents">{(() => {
+                        const cents = Math.round((getDisplayPrice('monthly', currency) % 1) * 100);
+                        return cents > 0 ? `.${String(cents).padStart(2, '0')}` : '';
+                      })()}</span>
+                      <span className="price-period">{currency.toUpperCase()}/mes</span>
                     </div>
                   </div>
                   
@@ -1125,7 +1194,7 @@ export default function MonetizaVozIAElevenLabsPage() {
                     <span className="discount-text">Accede a todos los cursos de eGrow Academy mientras mantengas tu suscripción.</span>
                   </div>
                   
-                  <button className="price-cta primary" type="button">
+					<button className="price-cta primary" type="button" onClick={() => router.push('/subscription')}>
                     Empezar con e Plus
                   </button>
                   
@@ -1153,10 +1222,13 @@ export default function MonetizaVozIAElevenLabsPage() {
                       <label htmlFor="regular-option-sticky"></label>
                     </div>
                     <div className="price-main">
-                      <span className="price-currency">$</span>
-                      <span className="price-amount">4</span>
-                      <span className="price-cents">.00</span>
-                      <span className="price-period">USD</span>
+                      <span className="price-currency">{getCurrencySymbol(currency)}</span>
+                      <span className="price-amount">{String(Math.floor(getDisplayPrice('course', currency)))}</span>
+                      <span className="price-cents">{(() => {
+                        const cents = Math.round((getDisplayPrice('course', currency) % 1) * 100);
+                        return cents > 0 ? `.${String(cents).padStart(2, '0')}` : '';
+                      })()}</span>
+                      <span className="price-period">{currency.toUpperCase()}</span>
                     </div>
                   </div>
                   
@@ -1164,7 +1236,7 @@ export default function MonetizaVozIAElevenLabsPage() {
                     <span className="description-text">Pago único para este curso. Acceso permanente al contenido del curso.</span>
                   </div>
                   
-                  <button className="price-cta" type="button">
+					<button className="price-cta" type="button" onClick={openCoursePurchase}>
                     Comprar este curso
                   </button>
                 </div>
@@ -1467,10 +1539,13 @@ export default function MonetizaVozIAElevenLabsPage() {
                           <label htmlFor="plus-option"></label>
                 </div>
                         <div className="price-main">
-                          <span className="price-currency">$</span>
-                          <span className="price-amount">12</span>
-                          <span className="price-cents">.49</span>
-                          <span className="price-period">USD/mes</span>
+                          <span className="price-currency">{getCurrencySymbol(currency)}</span>
+                          <span className="price-amount">{String(Math.floor(getDisplayPrice('monthly', currency)))}</span>
+                          <span className="price-cents">{(() => {
+                            const cents = Math.round((getDisplayPrice('monthly', currency) % 1) * 100);
+                            return cents > 0 ? `.${String(cents).padStart(2, '0')}` : '';
+                          })()}</span>
+                          <span className="price-period">{currency.toUpperCase()}/mes</span>
                 </div>
                 </div>
                       
@@ -1478,7 +1553,7 @@ export default function MonetizaVozIAElevenLabsPage() {
                         <span className="discount-text">Accede a todos los cursos de eGrow Academy mientras mantengas tu suscripción.</span>
               </div>
               
-                      <button className="price-cta primary" type="button">
+                      <button className="price-cta primary" type="button" onClick={() => router.push('/subscription')}>
                         Empezar con e Plus
                       </button>
                       
@@ -1506,10 +1581,13 @@ export default function MonetizaVozIAElevenLabsPage() {
                           <label htmlFor="regular-option"></label>
                 </div>
                         <div className="price-main">
-                          <span className="price-currency">$</span>
-                          <span className="price-amount">4</span>
-                          <span className="price-cents">.00</span>
-                          <span className="price-period">USD</span>
+                          <span className="price-currency">{getCurrencySymbol(currency)}</span>
+                          <span className="price-amount">{String(Math.floor(getDisplayPrice('course', currency)))}</span>
+                          <span className="price-cents">{(() => {
+                            const cents = Math.round((getDisplayPrice('course', currency) % 1) * 100);
+                            return cents > 0 ? `.${String(cents).padStart(2, '0')}` : '';
+                          })()}</span>
+                          <span className="price-period">{currency.toUpperCase()}</span>
                 </div>
               </div>
                       
@@ -1517,7 +1595,7 @@ export default function MonetizaVozIAElevenLabsPage() {
                         <span className="description-text">Pago único para este curso. Acceso permanente al contenido del curso.</span>
             </div>
                       
-                      <button className="price-cta" type="button">
+					<button className="price-cta" type="button" onClick={openCoursePurchase}>
                         Comprar este curso
                       </button>
               </div>
@@ -1980,13 +2058,13 @@ export default function MonetizaVozIAElevenLabsPage() {
                 </div>
                 
                 <div className="pricing-card-content">
-                  <div className="pricing-header-card">
-                    <h3 className="pricing-plan-name">Plan Mensual</h3>
-                    <div className="pricing-plan-price">
-                      $12.49
-                      <span className="pricing-interval">/mes</span>
+                    <div className="pricing-header-card">
+                      <h3 className="pricing-plan-name">Plan Mensual</h3>
+                      <div className="pricing-plan-price">
+                        {getCurrencySymbol(currency)}{getDisplayPrice('monthly', currency)}
+                        <span className="pricing-interval">/mes</span>
+                      </div>
                     </div>
-                  </div>
 
                   <ul className="pricing-features">
                     <li className="pricing-feature">
@@ -2024,7 +2102,7 @@ export default function MonetizaVozIAElevenLabsPage() {
                   </ul>
 
                   <button className="pricing-button primary">
-                    Suscribirse por $12.49
+                    {`Suscribirse por ${getCurrencySymbol(currency)}${getDisplayPrice('monthly', currency)}`}
                   </button>
                 </div>
               </div>
@@ -2040,16 +2118,20 @@ export default function MonetizaVozIAElevenLabsPage() {
                 </div>
                 
                 <div className="pricing-card-content">
-                  <div className="pricing-header-card">
-                    <h3 className="pricing-plan-name">Plan Anual</h3>
-                    <div className="pricing-plan-price">
-                      $149.99
-                      <span className="pricing-interval">/año</span>
+                    <div className="pricing-header-card">
+                      <h3 className="pricing-plan-name">Plan Anual</h3>
+                      <div className="pricing-plan-price">
+                        {getCurrencySymbol(currency)}{getDisplayPrice('yearly', currency)}
+                        <span className="pricing-interval">/año</span>
+                      </div>
+                      <p className="pricing-monthly-price">
+                        {(() => {
+                          const yearly = getDisplayPrice('yearly', currency);
+                          const perMonth = (Number(yearly) / 12).toFixed(2);
+                          return `${getCurrencySymbol(currency)}${perMonth}/mes facturado anualmente`;
+                        })()}
+                      </p>
                     </div>
-                    <p className="pricing-monthly-price">
-                      $12.50/mes facturado anualmente
-                    </p>
-                  </div>
 
                   <ul className="pricing-features">
                     <li className="pricing-feature">
@@ -2087,7 +2169,7 @@ export default function MonetizaVozIAElevenLabsPage() {
                   </ul>
 
                   <button className="pricing-button primary">
-                    Suscribirse por $149.99
+                    {`Suscribirse por ${getCurrencySymbol(currency)}${getDisplayPrice('yearly', currency)}`}
                   </button>
                 </div>
               </div>
@@ -2096,6 +2178,52 @@ export default function MonetizaVozIAElevenLabsPage() {
         </section>
         
       </main>
+
+		{/* Modal de compra individual del curso */}
+		{showCoursePurchaseModal && (
+			<div className="modal-overlay" onClick={closeCoursePurchase}>
+				<div className="modal-content" onClick={(e) => e.stopPropagation()}>
+					<div className="modal-header">
+						<h3>Comprar acceso a este curso</h3>
+						<button className="modal-close" onClick={closeCoursePurchase}>×</button>
+					</div>
+					<div className="modal-body">
+                        <PaymentForm
+                            amount={getCourseMinorAmount(currency)}
+                            currency={currency}
+							courseId={courseData.id}
+							description={`Acceso individual: ${courseData.title}`}
+							onError={() => { /* mantener modal abierto para reintentos */ }}
+						/>
+					</div>
+				</div>
+				<style jsx>{`
+					.modal-overlay {
+						position: fixed;
+						top: 0;
+						left: 0;
+						right: 0;
+						bottom: 0;
+						background: rgba(0, 0, 0, 0.5);
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						z-index: 1000;
+					}
+					.modal-content {
+						background: #fff;
+						border-radius: 12px;
+						max-width: 600px;
+						width: 92%;
+						max-height: 90vh;
+						overflow-y: auto;
+					}
+					.modal-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid #e5e7eb; }
+					.modal-body { padding: 16px 20px; }
+					.modal-close { background: none; border: none; font-size: 22px; cursor: pointer; color: #6b7280; }
+				`}</style>
+			</div>
+		)}
 
       <Footer />
     </>

@@ -1,5 +1,7 @@
+
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
+import { getSubscriptionPriceId } from '@/lib/pricing-server';
 import { verifyToken, extractTokenFromHeader } from '@/lib/auth';
 import { SUBSCRIPTION_PLANS } from '@/lib/stripe';
 import { prisma } from '@/lib/prisma';
@@ -24,7 +26,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Token inválido' }, { status: 401 });
     }
 
-    const { planId, trackingData, discountData } = await request.json();
+    const { planId, trackingData, discountData, currency } = await request.json();
     console.log('🔧 [CHECKOUT] Plan solicitado:', planId);
     console.log('🔧 [CHECKOUT] Tracking data:', trackingData);
     console.log('🔧 [CHECKOUT] Discount data:', discountData);
@@ -119,20 +121,14 @@ export async function POST(request: NextRequest) {
     const finalPrice = Number((plan.price * (1 - discountApplied)).toFixed(2));
 
     // Crear sesión de checkout
+    const cookieCurrency = request.cookies.get('currency')?.value;
+    const resolvedCurrency = ((currency || cookieCurrency || 'usd') as string).toLowerCase();
+    const priceId = await getSubscriptionPriceId(planId, resolvedCurrency);
+
     const sessionConfig: any = {
       line_items: [
         {
-          price_data: {
-            currency: 'usd',
-            product_data: {
-              name: `${plan.name}${discountDescription}`,
-              description: `Suscripción ${plan.interval === 'month' ? 'mensual' : 'anual'} a eGrow Academy${discountDescription}`,
-            },
-            unit_amount: Math.round(plan.price * 100), // Precio original; descuento se aplica vía coupon solo al 1er mes
-            recurring: {
-              interval: plan.interval as 'month' | 'year',
-            },
-          },
+          price: priceId,
           quantity: 1,
         },
       ],
@@ -143,6 +139,7 @@ export async function POST(request: NextRequest) {
       metadata: {
         userId: decoded.userId,
         planId: plan.id,
+        currency: resolvedCurrency,
         // Agregar datos de tracking si existen
         ...(trackingData?.promotionId && { promotionId: trackingData.promotionId }),
         ...(trackingData?.sessionId && { sessionId: trackingData.sessionId }),
@@ -160,6 +157,7 @@ export async function POST(request: NextRequest) {
         metadata: {
           userId: decoded.userId,
           planId: plan.id,
+          currency: resolvedCurrency,
           planName: plan.name,
           ...(discountData?.code && { discountCode: discountData.code }),
           ...(discountData?.discount && { discountAmount: discountData.discount.toString() }),

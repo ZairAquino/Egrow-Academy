@@ -166,6 +166,27 @@ async function handlePaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent)
       },
     });
 
+    // Si es un pago por curso, matricular al usuario con acceso de por vida
+    if (courseId) {
+      await prisma.enrollment.upsert({
+        where: {
+          userId_courseId: {
+            userId,
+            courseId,
+          },
+        },
+        update: {
+          status: 'ACTIVE',
+        },
+        create: {
+          userId,
+          courseId,
+          status: 'ACTIVE',
+          progressPercentage: 0,
+        },
+      });
+    }
+
     console.log(`✅ Pago individual exitoso registrado para usuario ${userId}: ${paymentIntent.id}`);
   } catch (error) {
     console.error('Error manejando payment_intent.succeeded:', error);

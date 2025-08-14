@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { getDisplayPrice, getCurrencySymbol } from '@/lib/pricing';
 
 interface Promotion {
   id: string;
@@ -29,6 +30,7 @@ export default function CountdownPromotionBanner({
 }: CountdownPromotionBannerProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const [currency, setCurrency] = useState<'usd' | 'eur' | 'mxn' | 'ars'>('usd');
 
   useEffect(() => {
     if (skipDelay) {
@@ -68,6 +70,16 @@ export default function CountdownPromotionBanner({
     return () => clearInterval(timer);
   }, [endDate]);
 
+  useEffect(() => {
+    try {
+      const match = document.cookie.match(/(?:^|; )currency=([^;]+)/);
+      const cur = match ? decodeURIComponent(match[1]) : 'usd';
+      if (cur === 'usd' || cur === 'eur' || cur === 'mxn' || cur === 'ars') {
+        setCurrency(cur as any);
+      }
+    } catch {}
+  }, []);
+
   const handleClick = () => {
     onTrack?.('click');
   };
@@ -82,7 +94,10 @@ export default function CountdownPromotionBanner({
         <div className="promo-banner-text">
           <span className="promo-banner-emoji">🚀</span>
           <span className="promo-banner-message">
-            Accede a todos nuestros cursos con Suscripción Plus por solo $12.49 USD/mes – ¡Oferta por tiempo limitado!
+            {(() => {
+              const price = getDisplayPrice('monthly', currency);
+              return `Accede a todos nuestros cursos con Suscripción Plus por solo ${getCurrencySymbol(currency)}${price} ${currency.toUpperCase()}/mes – ¡Oferta por tiempo limitado!`;
+            })()}
             <span className="promo-banner-countdown">
               {' '}({formatNumber(timeLeft.days)}d {formatNumber(timeLeft.hours)}h {formatNumber(timeLeft.minutes)}m {formatNumber(timeLeft.seconds)}s)
             </span>
