@@ -1115,6 +1115,29 @@ export default function MonetizaVozIAElevenLabsPage() {
         .objectives-grid.refined {
           grid-template-columns: 1fr !important;
         }
+        .modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.5);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1000;
+        }
+        .modal-content {
+          background: #fff;
+          border-radius: 12px;
+          max-width: 600px;
+          width: 92%;
+          max-height: 90vh;
+          overflow-y: auto;
+        }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid #e5e7eb; }
+        .modal-body { padding: 16px 20px; }
+        .modal-close { background: none; border: none; font-size: 22px; cursor: pointer; color: #6b7280; }
       `}</style>
       {/* Banner promocional exclusivo de esta página */}
       {shouldShowBanner() && (
@@ -2197,31 +2220,6 @@ export default function MonetizaVozIAElevenLabsPage() {
 						/>
 					</div>
 				</div>
-				<style jsx>{`
-					.modal-overlay {
-						position: fixed;
-						top: 0;
-						left: 0;
-						right: 0;
-						bottom: 0;
-						background: rgba(0, 0, 0, 0.5);
-						display: flex;
-						align-items: center;
-						justify-content: center;
-						z-index: 1000;
-					}
-					.modal-content {
-						background: #fff;
-						border-radius: 12px;
-						max-width: 600px;
-						width: 92%;
-						max-height: 90vh;
-						overflow-y: auto;
-					}
-					.modal-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid #e5e7eb; }
-					.modal-body { padding: 16px 20px; }
-					.modal-close { background: none; border: none; font-size: 22px; cursor: pointer; color: #6b7280; }
-				`}</style>
 			</div>
 		)}
 
