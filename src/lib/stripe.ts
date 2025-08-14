@@ -26,6 +26,11 @@ export const STRIPE_PRICES = {
   YEARLY: 'price_1RoWlMFJoQPSn3lAgdygLOCh', // Actualizar con nuevo ID de precio anual $149.99
 };
 
+// Precio único para cursos (pago por curso, acceso de por vida)
+export const STRIPE_COURSE_PRODUCT = 'prod_SrnGzYhSBWUWp8';
+export const STRIPE_COURSE_PRICE_USD = 'price_1Rw3fqFJoQPSn3lAxkZyxD3N';
+export const COURSE_PRICE_USD_MINOR = 400; // 4 USD en centavos
+
 // Configuración de planes
 export const SUBSCRIPTION_PLANS = {
   monthly: {

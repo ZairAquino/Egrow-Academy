@@ -2,6 +2,27 @@
 
 ## 🚀 Última Actualización: 2025-08-08
 
+### ✅ Pago individual por curso (4 USD) y flujo de checkout directo: 2025-08-14
+**Mensaje:** Se habilitó la compra individual de cursos con Stripe Checkout (pago único) y se conectaron los botones de la card lateral del curso.
+
+**Cambios Principales:**
+- Nuevo endpoint `POST /api/stripe/create-checkout-session` para crear sesiones de Checkout de pago único con metadata `userId` y `courseId`.
+- Webhook actualiza matrícula tras `payment_intent.succeeded` (acceso de por vida si incluye `courseId`).
+- Card lateral del curso “Monetiza tu Voz con IA”: 
+  - Botón “Empezar con e Plus” redirige a `/subscription`.
+  - Botón “Comprar este curso” crea Checkout de 4 USD y redirige a Stripe.
+
+**Archivos Modificados/Creados:**
+- `src/app/api/stripe/create-checkout-session/route.ts` (nuevo)
+- `src/app/curso/monetiza-voz-ia-elevenlabs/page.tsx`
+- `src/app/api/stripe/webhook/route.ts` (matrícula por pago único)
+- `src/lib/stripe.ts` (constantes `STRIPE_COURSE_PRODUCT`, `STRIPE_COURSE_PRICE_USD`, `COURSE_PRICE_USD_MINOR`)
+
+**Impacto:**
+- Venta de cursos individuales operativa con precio global de **$4.00 USD**.
+- Flujo de suscripción intacto y accesos premium sin cambios.
+
+
 ### ✅ Correcciones de enlaces en emails: 2025-08-08
 **Mensaje:** Unificados los enlaces en los correos para que apunten al dominio correcto `https://egrowacademy.com` y evitar 404 o redirecciones a `localhost`.
 

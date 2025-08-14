@@ -8,6 +8,8 @@ import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Footer from '@/components/layout/Footer';
 import Navbar from '@/components/layout/Navbar';
 import VideoPlayer from '@/components/courses/VideoPlayer';
+import PaymentForm from '@/components/payments/PaymentForm';
+import { COURSE_PRICE_USD_MINOR } from '@/lib/stripe';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
@@ -25,7 +27,7 @@ export default function MonetizaVozIAElevenLabsPage() {
   console.log('🔍 [DEBUG] Componente MonetizaVozIAElevenLabsPage cargado');
   
   
-  const [currentLesson, setCurrentLesson] = useState(0);
+	const [currentLesson, setCurrentLesson] = useState(0);
   const [completedLessons, setCompletedLessons] = useState<string[]>([]);
   const [progressPercentage, setProgressPercentage] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -36,6 +38,7 @@ export default function MonetizaVozIAElevenLabsPage() {
   const [videoCurrentTime, setVideoCurrentTime] = useState(0);
   const [showStickyNavbar, setShowStickyNavbar] = useState(false);
   const [stickyOpacity, setStickyOpacity] = useState(0);
+	const [showCoursePurchaseModal, setShowCoursePurchaseModal] = useState(false);
   const stickyTriggerRef = useRef<HTMLDivElement | null>(null);
   const reviewsRef = useRef<HTMLElement | null>(null);
   const reviewsTrackRef = useRef<HTMLDivElement | null>(null);
@@ -146,6 +149,38 @@ export default function MonetizaVozIAElevenLabsPage() {
   const handleVideoPreviewClick = () => {
     setShowMainVideo(!showMainVideo);
   };
+
+	const openCoursePurchase = () => {
+		if (!user || status !== 'authenticated') {
+			const loginUrl = `/login?redirect=/curso/monetiza-voz-ia-elevenlabs`;
+			if (typeof window !== 'undefined') {
+				window.location.href = loginUrl;
+			}
+			return;
+		}
+		// Redirigir a Stripe Checkout directo (4 USD)
+		fetch('/api/stripe/create-checkout-session', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer cookie' },
+			credentials: 'include',
+			body: JSON.stringify({ courseId: courseData.id }),
+		})
+			.then(async (res) => {
+				const data = await res.json();
+				if (res.ok && data.url) {
+					window.location.href = data.url;
+				} else {
+					console.error('No se pudo crear la sesión de checkout:', data);
+					setShowCoursePurchaseModal(true);
+				}
+			})
+			.catch((e) => {
+				console.error('Error creando checkout session:', e);
+				setShowCoursePurchaseModal(true);
+			});
+	};
+
+	const closeCoursePurchase = () => setShowCoursePurchaseModal(false);
 
   const handleVideoProgress = (currentTime: number, duration: number) => {
     setVideoCurrentTime(currentTime);
@@ -1119,7 +1154,7 @@ export default function MonetizaVozIAElevenLabsPage() {
                     <span className="discount-text">Accede a todos los cursos de eGrow Academy mientras mantengas tu suscripción.</span>
                   </div>
                   
-                  <button className="price-cta primary" type="button">
+					<button className="price-cta primary" type="button" onClick={() => router.push('/subscription')}>
                     Empezar con e Plus
                   </button>
                   
@@ -1158,7 +1193,7 @@ export default function MonetizaVozIAElevenLabsPage() {
                     <span className="description-text">Pago único para este curso. Acceso permanente al contenido del curso.</span>
                   </div>
                   
-                  <button className="price-cta" type="button">
+					<button className="price-cta" type="button" onClick={openCoursePurchase}>
                     Comprar este curso
                   </button>
                 </div>
@@ -1519,7 +1554,7 @@ export default function MonetizaVozIAElevenLabsPage() {
                         <span className="description-text">Pago único para este curso. Acceso permanente al contenido del curso.</span>
             </div>
                       
-                      <button className="price-cta" type="button">
+					<button className="price-cta" type="button" onClick={openCoursePurchase}>
                         Comprar este curso
                       </button>
               </div>
@@ -1842,6 +1877,52 @@ export default function MonetizaVozIAElevenLabsPage() {
         </section>
         
       </main>
+
+		{/* Modal de compra individual del curso */}
+		{showCoursePurchaseModal && (
+			<div className="modal-overlay" onClick={closeCoursePurchase}>
+				<div className="modal-content" onClick={(e) => e.stopPropagation()}>
+					<div className="modal-header">
+						<h3>Comprar acceso a este curso</h3>
+						<button className="modal-close" onClick={closeCoursePurchase}>×</button>
+					</div>
+					<div className="modal-body">
+						<PaymentForm
+							amount={COURSE_PRICE_USD_MINOR}
+							currency="usd"
+							courseId={courseData.id}
+							description={`Acceso individual: ${courseData.title}`}
+							onError={() => { /* mantener modal abierto para reintentos */ }}
+						/>
+					</div>
+				</div>
+				<style jsx>{`
+					.modal-overlay {
+						position: fixed;
+						top: 0;
+						left: 0;
+						right: 0;
+						bottom: 0;
+						background: rgba(0, 0, 0, 0.5);
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						z-index: 1000;
+					}
+					.modal-content {
+						background: #fff;
+						border-radius: 12px;
+						max-width: 600px;
+						width: 92%;
+						max-height: 90vh;
+						overflow-y: auto;
+					}
+					.modal-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid #e5e7eb; }
+					.modal-body { padding: 16px 20px; }
+					.modal-close { background: none; border: none; font-size: 22px; cursor: pointer; color: #6b7280; }
+				`}</style>
+			</div>
+		)}
 
       <Footer />
     </>
