@@ -1608,6 +1608,23 @@ export default function MonetizaVozIAElevenLabsPage() {
             </div>
           </div>
         </section>
+
+        {/* Nueva sección vacía */}
+        <section className="nueva-seccion">
+          <div className="container">
+            <h2 style={{ textAlign: 'center' }}>¡Empieza a Monetizar Tu Voz Ya!</h2>
+            <p style={{ textAlign: 'center' }}>Estás a un paso de transformar tu manera de trabajar y generar dinero. Inscríbete ahora en Convierte Tu Voz en Ingresos con IA y obtén acceso inmediato a todos los módulos. Comienza hoy mismo a crear audios impresionantes que te posicionen por encima de la competencia.</p>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginTop: '2rem' }}>
+              <div className="columna-izquierda">
+                {/* Contenido columna izquierda */}
+              </div>
+              <div className="columna-derecha">
+                <img src="/images/Aprende-9.png" alt="Aprende a monetizar tu voz" style={{ width: '100%', height: 'auto' }} />
+              </div>
+            </div>
+          </div>
+        </section>
         
         {/* FAQ Section (debajo de cursos relacionados) */}
         <section className="faq-section">
