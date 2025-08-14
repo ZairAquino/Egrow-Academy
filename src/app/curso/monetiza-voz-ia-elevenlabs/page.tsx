@@ -1115,7 +1115,10 @@ export default function MonetizaVozIAElevenLabsPage() {
         <div className="promo-banner" role="button" onClick={handleBannerClick}>
           <div className="promo-banner-content">
             <span className="promo-banner-message">
-              Accede a todos nuestros cursos con Suscripción Plus por solo $12.49 USD/mes – ¡Oferta por tiempo limitado!
+              {(() => {
+                const price = getDisplayPrice('monthly', currency);
+                return `Accede a todos nuestros cursos con Suscripción Plus por solo ${getCurrencySymbol(currency)}${price} ${currency.toUpperCase()}/mes – ¡Oferta por tiempo limitado!`;
+              })()}
             </span>
             <div className="promo-banner-timer" aria-label="Tiempo restante de la oferta">
               {/* Si hay días, se muestran como horas acumuladas para un look compacto */}
@@ -1801,13 +1804,13 @@ export default function MonetizaVozIAElevenLabsPage() {
                 </div>
                 
                 <div className="pricing-card-content">
-                  <div className="pricing-header-card">
-                    <h3 className="pricing-plan-name">Plan Mensual</h3>
-                    <div className="pricing-plan-price">
-                      $12.49
-                      <span className="pricing-interval">/mes</span>
+                    <div className="pricing-header-card">
+                      <h3 className="pricing-plan-name">Plan Mensual</h3>
+                      <div className="pricing-plan-price">
+                        {getCurrencySymbol(currency)}{getDisplayPrice('monthly', currency)}
+                        <span className="pricing-interval">/mes</span>
+                      </div>
                     </div>
-                  </div>
 
                   <ul className="pricing-features">
                     <li className="pricing-feature">
@@ -1845,7 +1848,7 @@ export default function MonetizaVozIAElevenLabsPage() {
                   </ul>
 
                   <button className="pricing-button primary">
-                    Suscribirse por $12.49
+                    {`Suscribirse por ${getCurrencySymbol(currency)}${getDisplayPrice('monthly', currency)}`}
                   </button>
                 </div>
               </div>
@@ -1861,16 +1864,20 @@ export default function MonetizaVozIAElevenLabsPage() {
                 </div>
                 
                 <div className="pricing-card-content">
-                  <div className="pricing-header-card">
-                    <h3 className="pricing-plan-name">Plan Anual</h3>
-                    <div className="pricing-plan-price">
-                      $149.99
-                      <span className="pricing-interval">/año</span>
+                    <div className="pricing-header-card">
+                      <h3 className="pricing-plan-name">Plan Anual</h3>
+                      <div className="pricing-plan-price">
+                        {getCurrencySymbol(currency)}{getDisplayPrice('yearly', currency)}
+                        <span className="pricing-interval">/año</span>
+                      </div>
+                      <p className="pricing-monthly-price">
+                        {(() => {
+                          const yearly = getDisplayPrice('yearly', currency);
+                          const perMonth = (Number(yearly) / 12).toFixed(2);
+                          return `${getCurrencySymbol(currency)}${perMonth}/mes facturado anualmente`;
+                        })()}
+                      </p>
                     </div>
-                    <p className="pricing-monthly-price">
-                      $12.50/mes facturado anualmente
-                    </p>
-                  </div>
 
                   <ul className="pricing-features">
                     <li className="pricing-feature">
@@ -1908,7 +1915,7 @@ export default function MonetizaVozIAElevenLabsPage() {
                   </ul>
 
                   <button className="pricing-button primary">
-                    Suscribirse por $149.99
+                    {`Suscribirse por ${getCurrencySymbol(currency)}${getDisplayPrice('yearly', currency)}`}
                   </button>
                 </div>
               </div>
