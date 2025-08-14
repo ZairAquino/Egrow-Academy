@@ -1,0 +1,113 @@
+{
+  "env": "live",
+  "created": [
+    {
+      "lookupKey": "sub_monthly_usd",
+      "priceId": "price_1Rw5KLFJoQPSn3lAoPdcRvnl",
+      "currency": "usd",
+      "unitAmount": 1249,
+      "recurring": {
+        "interval": "month"
+      },
+      "productId": "prod_SroyWADeZyW1mB"
+    },
+    {
+      "lookupKey": "sub_monthly_eur",
+      "priceId": "price_1Rw5KLFJoQPSn3lAJdQRIxBU",
+      "currency": "eur",
+      "unitAmount": 1099,
+      "recurring": {
+        "interval": "month"
+      },
+      "productId": "prod_SroyWADeZyW1mB"
+    },
+    {
+      "lookupKey": "sub_monthly_mxn",
+      "priceId": "price_1Rw5KMFJoQPSn3lAlTan4PEh",
+      "currency": "mxn",
+      "unitAmount": 24950,
+      "recurring": {
+        "interval": "month"
+      },
+      "productId": "prod_SroyWADeZyW1mB"
+    },
+    {
+      "lookupKey": "sub_monthly_ars",
+      "priceId": "price_1Rw5KMFJoQPSn3lAcKfGWUuI",
+      "currency": "ars",
+      "unitAmount": 1599900,
+      "recurring": {
+        "interval": "month"
+      },
+      "productId": "prod_SroyWADeZyW1mB"
+    },
+    {
+      "lookupKey": "sub_yearly_usd",
+      "priceId": "price_1Rw5KNFJoQPSn3lANNqXUsTg",
+      "currency": "usd",
+      "unitAmount": 12990,
+      "recurring": {
+        "interval": "year"
+      },
+      "productId": "prod_Sroyr5ggzxex86"
+    },
+    {
+      "lookupKey": "sub_yearly_eur",
+      "priceId": "price_1Rw5KNFJoQPSn3lAMKnlr3v1",
+      "currency": "eur",
+      "unitAmount": 10999,
+      "recurring": {
+        "interval": "year"
+      },
+      "productId": "prod_Sroyr5ggzxex86"
+    },
+    {
+      "lookupKey": "sub_yearly_mxn",
+      "priceId": "price_1Rw5KNFJoQPSn3lAwNoqjyrB",
+      "currency": "mxn",
+      "unitAmount": 239900,
+      "recurring": {
+        "interval": "year"
+      },
+      "productId": "prod_Sroyr5ggzxex86"
+    },
+    {
+      "lookupKey": "sub_yearly_ars",
+      "priceId": "price_1Rw5KOFJoQPSn3lAM9N418ly",
+      "currency": "ars",
+      "unitAmount": 16499900,
+      "recurring": {
+        "interval": "year"
+      },
+      "productId": "prod_Sroyr5ggzxex86"
+    },
+    {
+      "lookupKey": "course_lifetime_usd",
+      "priceId": "price_1Rw5KOFJoQPSn3lA2vLAfOev",
+      "currency": "usd",
+      "unitAmount": 400,
+      "productId": "prod_SroyZ06KIit8LL"
+    },
+    {
+      "lookupKey": "course_lifetime_eur",
+      "priceId": "price_1Rw5KOFJoQPSn3lAIxuZf9gd",
+      "currency": "eur",
+      "unitAmount": 349,
+      "productId": "prod_SroyZ06KIit8LL"
+    },
+    {
+      "lookupKey": "course_lifetime_mxn",
+      "priceId": "price_1Rw5KPFJoQPSn3lAoOOjFJEF",
+      "currency": "mxn",
+      "unitAmount": 7900,
+      "productId": "prod_SroyZ06KIit8LL"
+    },
+    {
+      "lookupKey": "course_lifetime_ars",
+      "priceId": "price_1Rw5KPFJoQPSn3lAbP3ZWiih",
+      "currency": "ars",
+      "unitAmount": 499900,
+      "productId": "prod_SroyZ06KIit8LL"
+    }
+  ]
+}

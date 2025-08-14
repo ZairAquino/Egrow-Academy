@@ -104,7 +104,9 @@
       "Bash(tsx scripts/test-edge-cases.ts:*)",
       "Bash(timeout 30 npm run build)",
       "Bash(tsx:*)",
-      "Bash(git cherry-pick:*)"
+      "Bash(git cherry-pick:*)",
+      "Bash(set -a)",
+      "Bash(source:*)"
     ],
     "deny": []
   }

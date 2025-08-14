@@ -1,0 +1,41 @@
+{
+  "timestamp": "2025-08-14T17:58:09.822Z",
+  "totalFiles": 1,
+  "files": [
+    {
+      "file": "src\\app\\curso\\monetiza-voz-ia-elevenlabs\\page.tsx",
+      "matches": [
+        {
+          "line": 12,
+          "content": "import { COURSE_PRICE_USD_MINOR, getCurrencySymbol, getDisplayPrice, getCourseMinorAmount } from '@/lib/pricing';",
+          "pattern": "/COURSE_PRICE_USD_MINOR/g"
+        },
+        {
+          "line": 288,
+          "content": "content: 'Calidad: A = correcto/robótico; B = entonación natural; C = timbre/respiración realistas. Facilidad: AWS (IAM); Google (UI sencilla); ElevenLabs (dashboard no-code + SDK). Coste (neural aprox. / 1M chars): A ~$16 (std $4), B ~$12–17, C más premium por realismo/turbo.',",
+          "pattern": "/\\$4/g"
+        },
+        {
+          "line": 1118,
+          "content": "Accede a todos nuestros cursos con Suscripción Plus por solo $12.49 USD/mes – ¡Oferta por tiempo limitado!",
+          "pattern": "/\\$12\\.49/g"
+        },
+        {
+          "line": 1118,
+          "content": "Accede a todos nuestros cursos con Suscripción Plus por solo $12.49 USD/mes – ¡Oferta por tiempo limitado!",
+          "pattern": "/USD\\/mes/g"
+        },
+        {
+          "line": 1807,
+          "content": "$12.49",
+          "pattern": "/\\$12\\.49/g"
+        },
+        {
+          "line": 1848,
+          "content": "Suscribirse por $12.49",
+          "pattern": "/\\$12\\.49/g"
+        }
+      ]
+    }
+  ]
+}

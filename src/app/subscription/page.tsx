@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { getDisplayPrice, getCurrencySymbol } from '@/lib/pricing';
+import { useMemo } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import Footer from '@/components/layout/Footer';
@@ -56,7 +58,7 @@ const subscriptionPlans: SubscriptionPlan[] = [
   {
     id: 'yearly',
     name: 'Plan Anual',
-    price: 149.99,
+    price: 129.9,
     interval: 'year',
     popular: true,
     savings: 'Ahorra Más',
@@ -77,6 +79,7 @@ export default function SubscriptionPage() {
   const { user, status } = useAuth();
   const router = useRouter();
   const [selectedPlan, setSelectedPlan] = useState<string>('yearly');
+  const [currency, setCurrency] = useState<'usd' | 'eur' | 'mxn' | 'ars'>('usd');
   const [isProcessing, setIsProcessing] = useState(false);
   const [discountCodes, setDiscountCodes] = useState<{[key: string]: string}>({});
   const [appliedDiscounts, setAppliedDiscounts] = useState<{[key: string]: {code: string, discount: number, planId: string}}>({});
@@ -200,6 +203,17 @@ export default function SubscriptionPage() {
     loadPremiumCourses();
   }, []);
 
+  useEffect(() => {
+    // Leer cookie de moneda establecida por middleware
+    try {
+      const match = document.cookie.match(/(?:^|; )currency=([^;]+)/);
+      const cur = match ? decodeURIComponent(match[1]) : 'usd';
+      if (cur === 'usd' || cur === 'eur' || cur === 'mxn' || cur === 'ars') {
+        setCurrency(cur);
+      }
+    } catch {}
+  }, []);
+
   const handleSubscribe = async (planId: string) => {
     // Si es plan gratuito y no hay usuario, redirigir al registro
     if (planId === 'free' && !user) {
@@ -247,6 +261,7 @@ export default function SubscriptionPage() {
         credentials: 'include',
         body: JSON.stringify({ 
           planId,
+          currency,
           discountData,
           trackingData: Object.fromEntries(
             Object.entries(trackingData).filter(([_, value]) => value !== null)
@@ -437,6 +452,18 @@ export default function SubscriptionPage() {
     setCurrentSlide(index);
   };
 
+  const displayPlans = useMemo(() => {
+    return subscriptionPlans.map((p) => ({
+      ...p,
+      price:
+        p.id === 'monthly'
+          ? getDisplayPrice('monthly', currency)
+          : p.id === 'yearly'
+          ? getDisplayPrice('yearly', currency)
+          : p.price,
+    }));
+  }, [currency]);
+
   if (status === 'loading') {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -505,7 +532,7 @@ export default function SubscriptionPage() {
 
         {/* Plans Grid */}
         <div className="plans-grid">
-          {subscriptionPlans.map((plan) => (
+          {displayPlans.map((plan) => (
             <div
               key={plan.id}
               className={`plan-card ${plan.popular ? 'popular' : ''} ${plan.id === 'yearly' && plan.popular ? 'yearly-popular' : ''}`}
@@ -535,7 +562,7 @@ export default function SubscriptionPage() {
                           </span>
                         </div>
                         <div className="plan-price-discounted-line">
-                          <span className="plan-price-discounted">${getDiscountedPrice(plan)}</span>
+                           <span className="plan-price-discounted">{getCurrencySymbol(currency)}{getDiscountedPrice(plan)}</span>
                           <span className="plan-interval">
                             /{plan.interval === 'month' ? 'mes' : 'año'}
                           </span>
@@ -543,7 +570,7 @@ export default function SubscriptionPage() {
                       </div>
                     ) : (
                       <>
-                        ${plan.price}
+                         {getCurrencySymbol(currency)}{plan.price}
                         <span className="plan-interval">
                           /{plan.interval === 'month' ? 'mes' : 'año'}
                         </span>
@@ -555,9 +582,9 @@ export default function SubscriptionPage() {
                       🎉 {Math.round(appliedDiscounts[plan.id].discount * 100)}% de descuento aplicado
                     </div>
                   )}
-                  {plan.interval === 'year' && (
+                   {plan.interval === 'year' && (
                     <p className="plan-monthly-price">
-                      ${getMonthlyPrice(plan)}/mes facturado anualmente
+                      {getCurrencySymbol(currency)}{getMonthlyPrice(plan)}/mes facturado anualmente
                     </p>
                   )}
                 </div>

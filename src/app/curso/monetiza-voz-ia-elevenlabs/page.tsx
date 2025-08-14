@@ -9,7 +9,7 @@ import Footer from '@/components/layout/Footer';
 import Navbar from '@/components/layout/Navbar';
 import VideoPlayer from '@/components/courses/VideoPlayer';
 import PaymentForm from '@/components/payments/PaymentForm';
-import { COURSE_PRICE_USD_MINOR } from '@/lib/stripe';
+import { COURSE_PRICE_USD_MINOR, getCurrencySymbol, getDisplayPrice, getCourseMinorAmount } from '@/lib/pricing';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
@@ -146,6 +146,18 @@ export default function MonetizaVozIAElevenLabsPage() {
     }
   };
 
+  const [currency, setCurrency] = useState<'usd' | 'eur' | 'mxn' | 'ars'>('usd');
+
+  useEffect(() => {
+    try {
+      const match = document.cookie.match(/(?:^|; )currency=([^;]+)/);
+      const cur = match ? decodeURIComponent(match[1]) : 'usd';
+      if (cur === 'usd' || cur === 'eur' || cur === 'mxn' || cur === 'ars') {
+        setCurrency(cur);
+      }
+    } catch {}
+  }, []);
+
   const handleVideoPreviewClick = () => {
     setShowMainVideo(!showMainVideo);
   };
@@ -158,19 +170,35 @@ export default function MonetizaVozIAElevenLabsPage() {
 			}
 			return;
 		}
-		// Redirigir a Stripe Checkout directo (4 USD)
-		fetch('/api/stripe/create-checkout-session', {
+		// Redirigir a Stripe Checkout directo con moneda detectada
+		fetch('/api/stripe/create-course-checkout-session', {
 			method: 'POST',
-			headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer cookie' },
+			headers: { 'Content-Type': 'application/json' },
 			credentials: 'include',
-			body: JSON.stringify({ courseId: courseData.id }),
+			body: JSON.stringify({ courseId: courseData.id, currency }),
 		})
 			.then(async (res) => {
-				const data = await res.json();
-				if (res.ok && data.url) {
-					window.location.href = data.url;
+				if (res.ok) {
+					const data = await res.json();
+					if (data.url) {
+						window.location.href = data.url;
+					} else {
+						console.error('No se pudo crear la sesión de checkout: URL no encontrada en respuesta', data);
+						setShowCoursePurchaseModal(true);
+					}
 				} else {
-					console.error('No se pudo crear la sesión de checkout:', data);
+					// Parse error response properly
+					let errorData;
+					try {
+						errorData = await res.json();
+					} catch {
+						errorData = { error: `HTTP ${res.status}: ${res.statusText}` };
+					}
+					console.error('Error en la API de checkout:', {
+						status: res.status,
+						statusText: res.statusText,
+						error: errorData
+					});
 					setShowCoursePurchaseModal(true);
 				}
 			})
@@ -1143,10 +1171,13 @@ export default function MonetizaVozIAElevenLabsPage() {
                       <label htmlFor="plus-option-sticky"></label>
                     </div>
                     <div className="price-main">
-                      <span className="price-currency">$</span>
-                      <span className="price-amount">12</span>
-                      <span className="price-cents">.49</span>
-                      <span className="price-period">USD/mes</span>
+                      <span className="price-currency">{getCurrencySymbol(currency)}</span>
+                      <span className="price-amount">{String(Math.floor(getDisplayPrice('monthly', currency)))}</span>
+                      <span className="price-cents">{(() => {
+                        const cents = Math.round((getDisplayPrice('monthly', currency) % 1) * 100);
+                        return cents > 0 ? `.${String(cents).padStart(2, '0')}` : '';
+                      })()}</span>
+                      <span className="price-period">{currency.toUpperCase()}/mes</span>
                     </div>
                   </div>
                   
@@ -1182,10 +1213,13 @@ export default function MonetizaVozIAElevenLabsPage() {
                       <label htmlFor="regular-option-sticky"></label>
                     </div>
                     <div className="price-main">
-                      <span className="price-currency">$</span>
-                      <span className="price-amount">4</span>
-                      <span className="price-cents">.00</span>
-                      <span className="price-period">USD</span>
+                      <span className="price-currency">{getCurrencySymbol(currency)}</span>
+                      <span className="price-amount">{String(Math.floor(getDisplayPrice('course', currency)))}</span>
+                      <span className="price-cents">{(() => {
+                        const cents = Math.round((getDisplayPrice('course', currency) % 1) * 100);
+                        return cents > 0 ? `.${String(cents).padStart(2, '0')}` : '';
+                      })()}</span>
+                      <span className="price-period">{currency.toUpperCase()}</span>
                     </div>
                   </div>
                   
@@ -1504,10 +1538,13 @@ export default function MonetizaVozIAElevenLabsPage() {
                           <label htmlFor="plus-option"></label>
                 </div>
                         <div className="price-main">
-                          <span className="price-currency">$</span>
-                          <span className="price-amount">12</span>
-                          <span className="price-cents">.49</span>
-                          <span className="price-period">USD/mes</span>
+                          <span className="price-currency">{getCurrencySymbol(currency)}</span>
+                          <span className="price-amount">{String(Math.floor(getDisplayPrice('monthly', currency)))}</span>
+                          <span className="price-cents">{(() => {
+                            const cents = Math.round((getDisplayPrice('monthly', currency) % 1) * 100);
+                            return cents > 0 ? `.${String(cents).padStart(2, '0')}` : '';
+                          })()}</span>
+                          <span className="price-period">{currency.toUpperCase()}/mes</span>
                 </div>
                 </div>
                       
@@ -1515,7 +1552,7 @@ export default function MonetizaVozIAElevenLabsPage() {
                         <span className="discount-text">Accede a todos los cursos de eGrow Academy mientras mantengas tu suscripción.</span>
               </div>
               
-                      <button className="price-cta primary" type="button">
+                      <button className="price-cta primary" type="button" onClick={() => router.push('/subscription')}>
                         Empezar con e Plus
                       </button>
                       
@@ -1543,10 +1580,13 @@ export default function MonetizaVozIAElevenLabsPage() {
                           <label htmlFor="regular-option"></label>
                 </div>
                         <div className="price-main">
-                          <span className="price-currency">$</span>
-                          <span className="price-amount">4</span>
-                          <span className="price-cents">.00</span>
-                          <span className="price-period">USD</span>
+                          <span className="price-currency">{getCurrencySymbol(currency)}</span>
+                          <span className="price-amount">{String(Math.floor(getDisplayPrice('course', currency)))}</span>
+                          <span className="price-cents">{(() => {
+                            const cents = Math.round((getDisplayPrice('course', currency) % 1) * 100);
+                            return cents > 0 ? `.${String(cents).padStart(2, '0')}` : '';
+                          })()}</span>
+                          <span className="price-period">{currency.toUpperCase()}</span>
                 </div>
               </div>
                       
@@ -1887,9 +1927,9 @@ export default function MonetizaVozIAElevenLabsPage() {
 						<button className="modal-close" onClick={closeCoursePurchase}>×</button>
 					</div>
 					<div className="modal-body">
-						<PaymentForm
-							amount={COURSE_PRICE_USD_MINOR}
-							currency="usd"
+                        <PaymentForm
+                            amount={getCourseMinorAmount(currency)}
+                            currency={currency}
 							courseId={courseData.id}
 							description={`Acceso individual: ${courseData.title}`}
 							onError={() => { /* mantener modal abierto para reintentos */ }}
