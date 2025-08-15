@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useRef, useEffect } from 'react';
 import CourseCard from './CourseCard';
 import Link from 'next/link';
 
@@ -52,11 +53,46 @@ const featuredCourses = [
 ];
 
 export default function FeaturedCourses() {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const carouselRef = useRef<HTMLDivElement>(null);
+
   const formatNumber = (num: number): string => {
     if (num >= 1000) {
       return (num / 1000).toFixed(1).replace('.0', '') + 'K';
     }
     return num.toString();
+  };
+
+  // Auto-scroll del carrusel cada 5 segundos
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (carouselRef.current && window.innerWidth < 768) {
+        const maxSlides = featuredCourses.length - 1;
+        const nextSlide = currentSlide >= maxSlides ? 0 : currentSlide + 1;
+        setCurrentSlide(nextSlide);
+        
+        // Calcular ancho según el tamaño de pantalla
+        const cardWidth = window.innerWidth <= 480 ? 220 + 12 : 250 + 16;
+        carouselRef.current.scrollTo({
+          left: nextSlide * cardWidth,
+          behavior: 'smooth'
+        });
+      }
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [currentSlide]);
+
+  const scrollToSlide = (index: number) => {
+    if (carouselRef.current) {
+      setCurrentSlide(index);
+      // Calcular ancho según el tamaño de pantalla
+      const cardWidth = window.innerWidth <= 480 ? 220 + 12 : 250 + 16;
+      carouselRef.current.scrollTo({
+        left: index * cardWidth,
+        behavior: 'smooth'
+      });
+    }
   };
 
   return (
@@ -70,6 +106,7 @@ export default function FeaturedCourses() {
           </p>
         </div>
 
+        {/* Grid para tablet y desktop */}
         <div className="courses-grid">
           {featuredCourses.map((course, index) => (
             <CourseCard
@@ -92,6 +129,45 @@ export default function FeaturedCourses() {
               formatNumber={formatNumber}
             />
           ))}
+        </div>
+
+        {/* Carrusel para móviles */}
+        <div className="carousel-container">
+          <div className="courses-carousel" ref={carouselRef}>
+            {featuredCourses.map((course, index) => (
+              <CourseCard
+                key={`carousel-${index}`}
+                id={`featured-carousel-${index}`}
+                image={course.image}
+                title={course.title}
+                description={course.description}
+                tag={course.tag}
+                duration={course.duration}
+                level={course.level}
+                category={course.tag}
+                isFree={course.isFree || course.tag === "Curso Gratuito"}
+                requiresAuth={false}
+                link={course.link}
+                showTopSalesBadge={course.title.includes("Monetiza tu Voz con IA")}
+                studentsCount={course.studentsCount}
+                likePercentage={course.likePercentage}
+                totalLikes={course.totalLikes}
+                formatNumber={formatNumber}
+              />
+            ))}
+          </div>
+          
+          {/* Dots indicator */}
+          <div className="carousel-dots">
+            {featuredCourses.map((_, index) => (
+              <button
+                key={index}
+                className={`carousel-dot ${index === currentSlide ? 'active' : ''}`}
+                onClick={() => scrollToSlide(index)}
+                aria-label={`Ir al curso ${index + 1}`}
+              />
+            ))}
+          </div>
         </div>
         
         <div className="section-cta">

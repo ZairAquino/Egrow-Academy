@@ -3327,17 +3327,114 @@ nav .flex.items-center.space-x-1 {
 /* Courses Grid */
 .courses-grid {
   display: grid;
-  gap: 1.5rem;
-  grid-template-columns: 1fr;
+  gap: 0.75rem;
+  grid-template-columns: repeat(2, 1fr);
   margin-top: 2rem;
   justify-items: center;
+  padding: 0 0.5rem;
 }
 
+/* Estilos para carrusel en móviles */
+.courses-carousel {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  gap: 1rem;
+  padding: 0 1rem;
+  margin-top: 2rem;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE */
+}
+
+.courses-carousel::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
+
+.courses-carousel .course-card-new {
+  flex: 0 0 280px;
+  scroll-snap-align: start;
+  max-width: 280px;
+  width: 280px;
+}
+
+.carousel-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #d1d5db;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.carousel-dot.active {
+  background-color: #3b82f6;
+}
+
+/* Smooth scrolling para el carrusel */
+.courses-carousel {
+  scroll-behavior: smooth;
+}
+
+/* Indicador visual para swipe en móviles */
+@media (max-width: 767px) {
+  .courses-carousel::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 20px;
+    background: linear-gradient(to left, rgba(248, 250, 252, 0.8), transparent);
+    pointer-events: none;
+    z-index: 1;
+  }
+}
+
+/* Ocultar carrusel en desktop y mostrar grid */
 @media (min-width: 768px) {
+  .courses-carousel {
+    display: none;
+  }
+  
   .courses-grid {
+    display: grid;
     grid-template-columns: repeat(2, minmax(280px, 320px));
     gap: 1.5rem;
     justify-content: center;
+    padding: 0;
+  }
+  
+  .carousel-dots {
+    display: none;
+  }
+}
+
+/* Ocultar grid en móviles y mostrar carrusel */
+@media (max-width: 767px) {
+  .courses-grid {
+    display: none;
+  }
+  
+  .courses-carousel {
+    display: flex;
+  }
+  
+  .courses-carousel .course-card-new {
+    flex: 0 0 250px;
+    width: 250px;
+    max-width: 250px;
   }
 }
 
@@ -3346,6 +3443,7 @@ nav .flex.items-center.space-x-1 {
     grid-template-columns: repeat(3, minmax(280px, 320px));
     gap: 2rem;
     justify-content: center;
+    padding: 0;
   }
 }
 
@@ -3373,6 +3471,9 @@ nav .flex.items-center.space-x-1 {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
   max-width: 320px;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .course-card-new:hover {
@@ -4288,9 +4389,40 @@ nav .flex.items-center.space-x-1 {
     padding: 2rem 0;
   }
   
-  .courses-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+  /* courses-grid ya definido arriba - no sobrescribir aquí */
+  
+  /* Optimización para móviles y tablets en modo 2 columnas */
+  .course-card-new {
+    max-width: none;
+    width: 100%;
+  }
+  
+  .course-title {
+    font-size: 14px !important;
+    line-height: 1.3 !important;
+  }
+  
+  .course-instructor {
+    font-size: 11px !important;
+  }
+  
+  .course-description {
+    font-size: 12px !important;
+    line-height: 1.4 !important;
+  }
+  
+  .course-badge {
+    font-size: 9px !important;
+    padding: 2px 7px !important;
+  }
+  
+  .metric-value {
+    font-size: 10px !important;
+  }
+  
+  .buy-button {
+    font-size: 11px !important;
+    padding: 7px 11px !important;
   }
   
   .btn {
@@ -4314,12 +4446,101 @@ nav .flex.items-center.space-x-1 {
     justify-content: center;
   }
   
-  /* SOLO Móviles pequeños - botones más compactos en grid 2x2 */
+  /* SOLO Móviles pequeños - carrusel optimizado */
   @media (max-width: 480px) {
+    .courses-carousel .course-card-new {
+      flex: 0 0 220px;
+      width: 220px;
+      max-width: 220px;
+      min-height: 280px;
+    }
+    
+    .courses-carousel {
+      gap: 0.75rem;
+      padding: 0 0.75rem;
+    }
+    
+    .course-title {
+      font-size: 12px !important;
+      line-height: 1.2 !important;
+      -webkit-line-clamp: 2 !important;
+      margin-bottom: 4px !important;
+    }
+    
+    .course-instructor {
+      font-size: 10px !important;
+      margin-bottom: 4px !important;
+    }
+    
+    .course-description {
+      font-size: 10px !important;
+      line-height: 1.3 !important;
+      -webkit-line-clamp: 2 !important;
+      margin-bottom: 6px !important;
+    }
+    
+    .course-content {
+      padding: 12px !important;
+    }
+    
+    .course-image-container {
+      height: 120px !important;
+    }
+    
+    .course-badge {
+      padding: 2px 6px !important;
+      font-size: 8px !important;
+      border-radius: 12px !important;
+      letter-spacing: 0.3px !important;
+    }
+    
+    .course-badge.top-sales {
+      top: 6px !important;
+      left: 6px !important;
+    }
+    
+    .course-badge.eplus {
+      top: 6px !important;
+      right: 6px !important;
+      padding: 2px 6px !important;
+      font-size: 8px !important;
+    }
+    
+    .course-metrics {
+      margin: 6px 0 !important;
+      gap: 8px !important;
+    }
+    
+    .metric {
+      font-size: 9px !important;
+    }
+    
+    .metric-icon {
+      font-size: 10px !important;
+    }
+    
+    .metric-value {
+      font-size: 9px !important;
+    }
+    
+    .course-pricing {
+      margin-top: auto;
+    }
+    
+    .buy-button {
+      font-size: 10px !important;
+      padding: 6px 10px !important;
+      height: auto !important;
+      min-height: 28px !important;
+      border-radius: 6px !important;
+    }
+    
     /* Navbar más compacta en móviles pequeños */
     .navbar-logo img {
       height: 20px !important;
     }
+    
+
     
     .navbar-menu-btn svg {
       width: 18px;
@@ -11770,13 +11991,7 @@ input:checked + .toggle-slider:before {
   font-size: 1.125rem;
 }
 
-.courses-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-}
+/* courses-grid ya definido anteriormente en el archivo */
 
 .course-card {
   background: white;
@@ -11956,11 +12171,7 @@ input:checked + .toggle-slider:before {
     padding: 1.5rem;
   }
   
-  .courses-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    padding: 0 1rem;
-  }
+  /* courses-grid responsive ya definido anteriormente */
 }
 
 /* ==========================================
