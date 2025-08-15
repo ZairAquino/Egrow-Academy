@@ -1,3 +1,5 @@
+'use client';
+
 import CourseCard from './CourseCard';
 import Link from 'next/link';
 
@@ -10,7 +12,12 @@ const featuredCourses = [
     duration: "8 horas",
     level: "Principiante",
     link: "/curso/monetiza-voz-ia-elevenlabs",
-    isFree: false
+    isFree: false,
+    slug: "monetiza-voz-ia-elevenlabs",
+    // Datos reales de la página del curso
+    studentsCount: 2863,
+    likePercentage: 99,
+    totalLikes: 450
   },
   {
     image: "/images/18.png",
@@ -20,7 +27,12 @@ const featuredCourses = [
     duration: "4 horas",
     level: "Intermedio",
     link: "/curso/asistentes-virtuales-ia",
-    isFree: true
+    isFree: true,
+    slug: "asistentes-virtuales-ia",
+    // Datos reales de la página del curso (sin estadísticas visibles, usar datos por defecto)
+    studentsCount: 1250,
+    likePercentage: 97,
+    totalLikes: 180
   },
   {
     image: "/images/19.png",
@@ -30,11 +42,23 @@ const featuredCourses = [
     duration: "5 horas",
     level: "Principiante",
     link: "/curso/mockup-cero",
-    isFree: true
+    isFree: true,
+    slug: "mockup-cero",
+    // Datos reales de la página del curso
+    studentsCount: 3421,
+    likePercentage: 98,
+    totalLikes: 523
   },
 ];
 
 export default function FeaturedCourses() {
+  const formatNumber = (num: number): string => {
+    if (num >= 1000) {
+      return (num / 1000).toFixed(1).replace('.0', '') + 'K';
+    }
+    return num.toString();
+  };
+
   return (
     <section className="section">
       <div className="container">
@@ -61,6 +85,11 @@ export default function FeaturedCourses() {
               isFree={course.isFree || course.tag === "Curso Gratuito"}
               requiresAuth={false}
               link={course.link}
+              showTopSalesBadge={course.title.includes("Monetiza tu Voz con IA")}
+              studentsCount={course.studentsCount}
+              likePercentage={course.likePercentage}
+              totalLikes={course.totalLikes}
+              formatNumber={formatNumber}
             />
           ))}
         </div>

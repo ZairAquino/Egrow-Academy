@@ -1,58 +1,17 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 export default function CompaniesMarquee() {
   const [isVisible, setIsVisible] = useState(false);
-  const marqueeRef = useRef<HTMLDivElement>(null);
+  const marqueeRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Detectar Safari y dispositivos móviles
-    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-    const isSafariMobile = (isSafari || isIOS) && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
-          
-          // Fix específico para Safari/iOS móvil
-          if (isSafariMobile && contentRef.current) {
-            const element = contentRef.current;
-            
-            // Método más agresivo para Safari móvil
-            setTimeout(() => {
-              // Limpiar clases
-              element.classList.remove('animate');
-              element.style.animation = 'none';
-              element.style.webkitAnimation = 'none';
-              
-              // Forzar reflow
-              element.offsetHeight;
-              
-              // Aplicar estilos de hardware acceleration
-              element.style.webkitTransform = 'translate3d(0, 0, 0)';
-              element.style.transform = 'translate3d(0, 0, 0)';
-              element.style.webkitBackfaceVisibility = 'hidden';
-              element.style.backfaceVisibility = 'hidden';
-              element.style.willChange = 'transform';
-              
-              // Re-aplicar la animación con JavaScript
-              element.style.webkitAnimation = 'marquee 25s linear infinite';
-              element.style.animation = 'marquee 25s linear infinite';
-              element.classList.add('animate');
-              
-              // Double-check después de un segundo
-              setTimeout(() => {
-                if (element.style.animationPlayState !== 'running') {
-                  element.style.animationPlayState = 'running';
-                  element.style.webkitAnimationPlayState = 'running';
-                }
-              }, 1000);
-            }, 100);
-          }
         }
       },
       { threshold: 0.1 }

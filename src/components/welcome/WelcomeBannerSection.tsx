@@ -33,7 +33,7 @@ export default function WelcomeBannerSection() {
   return (
     <div className="w-full bg-gradient-to-b from-white to-gray-50 py-0">
       {/* Banner Promocional - Ancho completo del background */}
-      <div className={`banner-full-width ${showWelcome ? 'show' : ''}`} style={{ transitionDelay: '0.2s' }}>
+      <div className="banner-full-width">
         <PremiumSubscriptionBanner skipDelay={true} />
       </div>
       
@@ -58,17 +58,9 @@ export default function WelcomeBannerSection() {
       </div>
 
       <style jsx>{`
-        /* Banner Promocional - Desliza desde abajo hacia arriba */
+        /* Banner Promocional - Sin animación duplicada, usa la de PremiumSubscriptionBanner */
         .banner-full-width {
           width: 100%;
-          opacity: 0;
-          transform: translateY(100px);
-          transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-
-        .banner-full-width.show {
-          opacity: 1;
-          transform: translateY(0);
         }
 
         /* Mensaje de Bienvenida - Animación suave y limpia */
@@ -77,6 +69,8 @@ export default function WelcomeBannerSection() {
           transform: translateY(20px) scale(0.98);
           transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
           transition-delay: 0.5s;
+          position: relative;
+          z-index: 20;
         }
 
         .welcome-message.show {
@@ -93,20 +87,11 @@ export default function WelcomeBannerSection() {
           .welcome-message.show {
             transform: translateY(0) scale(1);
           }
-
-          .banner-full-width {
-            transform: translateY(80px);
-          }
-
-          .banner-full-width.show {
-            transform: translateY(0);
-          }
         }
 
         /* Accesibilidad */
         @media (prefers-reduced-motion: reduce) {
-          .welcome-message,
-          .banner-full-width {
+          .welcome-message {
             transition: none;
             transform: none;
             opacity: 1;

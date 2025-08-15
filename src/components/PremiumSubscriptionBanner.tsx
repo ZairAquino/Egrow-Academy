@@ -100,21 +100,28 @@ export default function PremiumSubscriptionBanner({
       </div>
       
              <style jsx>{`
-         /* Posicionamiento para que esté detrás del background del hero */
+         /* Banner posicionado detrás del background del hero */
          .banner-container {
            position: relative;
-           z-index: -2;
+           z-index: 0;
+         }
+         
+         /* Cuando termina la animación, se hace visible */
+         .banner-container.animate-slide-down {
+           z-index: 10;
          }
          
          /* Animaciones de deslizamiento */
          @keyframes slideDown {
            from {
-             transform: translateY(-100%);
+             transform: translateY(-50%);
              opacity: 0;
+             visibility: hidden;
            }
            to {
              transform: translateY(0);
              opacity: 1;
+             visibility: visible;
            }
          }
          
@@ -122,19 +129,21 @@ export default function PremiumSubscriptionBanner({
            from {
              transform: translateY(0);
              opacity: 1;
+             visibility: visible;
            }
            to {
-             transform: translateY(-100%);
+             transform: translateY(-50%);
              opacity: 0;
+             visibility: hidden;
            }
          }
          
          .animate-slide-down {
-           animation: slideDown 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+           animation: slideDown 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
          }
          
          .animate-slide-up {
-           animation: slideUp 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+           animation: slideUp 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
          }
         
                  /* Estilos responsivos para móviles */
