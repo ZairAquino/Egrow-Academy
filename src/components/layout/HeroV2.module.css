@@ -97,10 +97,59 @@
   text-shadow: none;
 }
 
-.heroV2CTA {
-  display: flex;
-  gap: 1rem;
-}
+  .heroV2CTA {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+  
+    @media (max-width: 768px) {
+    .heroV2CTA {
+      gap: 0.5rem;
+    }
+    
+         .heroV2CTA a {
+       padding: 0.25rem 0.5rem !important;
+       font-size: 0.54rem !important;
+       border-radius: 5px !important;
+       font-weight: 500 !important;
+     }
+    
+    .heroV2CTA a:first-child {
+      position: relative;
+    }
+    
+    .heroV2CTA a:first-child::after {
+      content: "Inicia sesión";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: inherit;
+      color: inherit;
+      font-size: inherit;
+      font-weight: inherit;
+      border-radius: inherit;
+    }
+   }
+  
+           @media (max-width: 480px) {
+      .heroV2CTA a {
+        padding: 0.2rem 0.4rem !important;
+        font-size: 0.51rem !important;
+      }
+    }
+  
+           @media (max-width: 375px) {
+      .heroV2CTA a {
+        padding: 0.15rem 0.3rem !important;
+        font-size: 0.48rem !important;
+      }
+    }
 
 /* Columna derecha - Imagen */
 .heroV2Right {
@@ -149,8 +198,8 @@
 .heroV2LogoCenter {
   position: absolute;
   top: 50%;
-  left: 48%;
-  transform: translate(-50%, -50%);
+  left: 20px;
+  transform: translateY(-50%);
   z-index: 5;
 }
 
@@ -187,112 +236,230 @@
 
 @media (max-width: 768px) {
   .heroV2 {
-    padding: 2rem 0;
+    padding: 0;
     min-height: auto;
     max-height: none;
     margin-top: 0;
     display: block;
+    overflow: hidden;
+    height: 200px;
   }
   
-  .heroV2Grid {
-    grid-template-columns: 1fr;
-    gap: 3rem;
-    text-align: center;
-    padding: 0 1rem;
-    position: relative;
-    top: auto;
-    left: auto;
-    transform: none;
-  }
+     .heroV2Grid {
+     grid-template-columns: 1fr;
+     gap: 1rem;
+     text-align: center;
+     padding: 0 1rem;
+     position: relative;
+     top: auto;
+     left: auto;
+     transform: none;
+     align-items: flex-start;
+     padding-top: 1rem;
+   }
   
-  .heroV2Left {
-    align-items: center;
-  }
+     .heroV2Left {
+     align-items: center;
+     justify-content: flex-start;
+     padding-top: 0.5rem;
+     margin-left: 0.5rem;
+   }
   
-  .heroV2ContentCard {
-    padding: 2rem;
-    max-width: 100%;
-    position: relative;
-    transform: none;
-    margin: 0;
-    top: auto;
-    left: auto;
-  }
+                                                                                                                                                                                                                                                                                                                                                                                               .heroV2ContentCard {
+           display: block;
+           background: rgba(255, 255, 255, 0.95);
+           padding: 1.2rem;
+           border-radius: 15px;
+           box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+           max-width: 220px;
+           margin: 0 auto 0 0;
+           text-align: center;
+           backdrop-filter: blur(10px);
+           transform: translateX(0%) translateY(15%);
+         }
   
-  .heroV2Title {
-    font-size: 2rem;
-  }
+                       .heroV2Title {
+       font-size: 1.1rem;
+       margin-bottom: 0.8rem;
+       color: #111827;
+     }
   
-  .heroV2Subtitle {
-    font-size: 1rem;
-  }
+           .heroV2Subtitle {
+      font-size: 1rem;
+      margin-bottom: 0;
+    }
   
-  .heroV2MainImage {
-    max-width: 100%;
-    right: 0;
-    transform: scale(1);
-  }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               .heroV2MainImage {
+              max-width: 100%;
+              left: 75%;
+              transform: scale(0.644) translate(-50%, -280px);
+              display: flex;
+              justify-content: center;
+              margin: 0 auto;
+              overflow: visible;
+              height: 100%;
+              clip-path: none;
+            }
   
-  .heroV2Image {
-    max-width: 100%;
-    max-height: 300px;
+     .heroV2Image {
+     max-width: 100%;
+     max-height: none;
+     height: auto;
+     object-fit: contain;
+     object-position: center;
+     margin-right: 0;
+   }
+  
+  .heroV2LogoCenter {
+    position: absolute !important;
+    top: 50% !important;
+    left: 60px !important;
+    transform: translateY(-50%) !important;
+    z-index: 5 !important;
+    display: none !important;
   }
   
   .heroV2LogoImage {
-    max-height: 60px;
-    max-width: 80px;
+    max-height: 80px;
+    max-width: 100px;
   }
 }
 
 @media (max-width: 640px) {
   .heroV2Container {
     padding: 0;
+    overflow: hidden;
   }
   
-  .heroV2ContentCard {
-    padding: 1.5rem;
-  }
+                                                                                                                                                                                                                                                                                                                                                                                               .heroV2ContentCard {
+           padding: 1rem;
+           max-width: 200px;
+           margin: 0 auto 0 0;
+           transform: translateX(0%) translateY(15%);
+         }
   
-  .heroV2Title {
-    font-size: 2rem;
-  }
+     .heroV2Title {
+     font-size: 1rem;
+     margin-bottom: 0.7rem;
+     color: #111827;
+   }
   
   .heroV2Subtitle {
-    font-size: 1rem;
+    display: none;
   }
+  
+  .heroV2LogoCenter {
+    left: 50px !important;
+    transform: translateY(-50%) !important;
+    display: none !important;
+  }
+  
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               .heroV2MainImage {
+             left: 75%;
+             transform: scale(0.7245) translate(-50%, -264px);
+             overflow: visible;
+             height: 100%;
+             clip-path: none;
+           }
+  
+     .heroV2Image {
+     margin-right: 0;
+     height: auto;
+     object-fit: contain;
+     object-position: center;
+   }
 }
 
 @media (max-width: 480px) {
-  .heroV2Title {
-    font-size: 1.75rem;
+                                                                                                                                                                                                                                                                                                                                                                                               .heroV2ContentCard {
+           padding: 0.8rem;
+           max-width: 180px;
+           margin: 0 auto 0 0;
+           transform: translateX(0%) translateY(15%);
+         }
+  
+     .heroV2Title {
+     font-size: 0.9rem;
+     margin-bottom: 0.6rem;
+   }
+  
+     .heroV2Image {
+     max-height: none;
+     height: auto;
+     object-fit: contain;
+     object-position: center;
+     margin-right: 0;
+   }
+  
+  .heroV2LogoCenter {
+    left: 40px !important;
+    transform: translateY(-50%) !important;
+    display: none !important;
   }
   
-  .heroV2Image {
-    max-height: 250px;
-  }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               .heroV2MainImage {
+            left: 75%;
+            transform: scale(0.805) translate(-50%, -248px);
+            overflow: visible;
+            height: 100%;
+            clip-path: none;
+          }
 }
 
 /* Responsive adjustments for hero background igual que en Hero V1 */
 @media (max-width: 768px) {
   .heroV2Background {
-    max-width: 768px !important;
-    max-height: 400px !important;
-    min-height: 250px !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    min-height: 100% !important;
   }
 }
 
 @media (max-width: 480px) {
   .heroV2Background {
-    max-width: 480px !important;
-    max-height: 350px !important;
-    min-height: 200px !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    min-height: 100% !important;
   }
 }
 
 @media (max-width: 375px) {
+                                                                                                                                                                                               .heroV2ContentCard {
+          padding: 0.6rem;
+          max-width: 160px;
+          margin: 0 auto 0 0;
+          transform: translateX(0%) translateY(15%);
+        }
+  
+     .heroV2Title {
+     font-size: 0.85rem;
+     margin-bottom: 0.5rem;
+   }
+  
   .heroV2Background {
-    max-width: 375px !important;
-    max-height: 300px !important;
-    min-height: 150px !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    min-height: 100% !important;
   }
+  
+  .heroV2LogoCenter {
+    left: 30px !important;
+    transform: translateY(-50%) !important;
+    display: none !important;
+  }
+  
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               .heroV2MainImage {
+            left: 75%;
+            transform: scale(0.8855) translate(-50%, -232px);
+            overflow: visible;
+            height: 100%;
+            clip-path: none;
+          }
+  
+     .heroV2Image {
+     margin-right: 0;
+     height: auto;
+     object-fit: contain;
+     object-position: center;
+   }
 }

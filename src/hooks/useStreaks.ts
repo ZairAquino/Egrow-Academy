@@ -105,15 +105,15 @@ export const useStreaks = () => {
 // Utilidades para mostrar badges
 export const getBadgeEmoji = (level: StreakBadgeLevel): string => {
   const emojiMap: { [key in StreakBadgeLevel]: string } = {
-    PRINCIPIANTE: '🌱',
-    ESTUDIANTE: '📚',
-    DEDICADO: '🎯',
-    EN_LLAMAS: '🔥',
-    IMPARABLE: '⚡',
-    MAESTRO: '👑',
-    LEYENDA: '🚀'
+    PRINCIPIANTE: 'seedling',
+    ESTUDIANTE: 'book',
+    DEDICADO: 'target',
+    EN_LLAMAS: 'flame',
+    IMPARABLE: 'bolt',
+    MAESTRO: 'crown',
+    LEYENDA: 'rocket'
   };
-  return emojiMap[level] || '🏆';
+  return emojiMap[level] || 'trophy';
 };
 
 export const getBadgeName = (level: StreakBadgeLevel): string => {
@@ -130,12 +130,12 @@ export const getBadgeName = (level: StreakBadgeLevel): string => {
 };
 
 export const getStreakEmoji = (streak: number): string => {
-  if (streak >= 52) return '🚀'; // 1 año
-  if (streak >= 24) return '👑'; // 6 meses
-  if (streak >= 12) return '⚡'; // 3 meses
-  if (streak >= 8) return '🔥';  // 2 meses
-  if (streak >= 4) return '🎯';  // 1 mes
-  if (streak >= 2) return '📚';  // 2 semanas
-  if (streak >= 1) return '🌱';  // 1 semana
-  return '💤'; // Sin racha
+  if (streak >= 52) return 'rocket'; // 1 año
+  if (streak >= 24) return 'crown'; // 6 meses
+  if (streak >= 12) return 'bolt'; // 3 meses
+  if (streak >= 8) return 'flame';  // 2 meses
+  if (streak >= 4) return 'target';  // 1 mes
+  if (streak >= 2) return 'book';  // 2 semanas
+  if (streak >= 1) return 'seedling';  // 1 semana
+  return 'moon'; // Sin racha
 };

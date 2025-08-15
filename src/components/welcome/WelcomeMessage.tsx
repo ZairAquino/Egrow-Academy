@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { IconHandStop } from '@tabler/icons-react';
 
 export default function WelcomeMessage() {
   const { user } = useAuth();
@@ -28,7 +29,9 @@ export default function WelcomeMessage() {
     <div className="welcome-card">
       <div className="welcome-content">
         <div className="greeting-section">
-          <div className="emoji-float">👋</div>
+          <div className="emoji-float">
+            <IconHandStop size={40} color="#6b7280" />
+          </div>
           <div className="greeting-text">
             <h3>{getGreeting()}, {getFirstName()}!</h3>
             <p>Bienvenido de vuelta a eGrow Academy</p>

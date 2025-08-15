@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { IconHandStop, IconBook, IconRocket, IconBulb, IconStar, IconTarget, IconFlame } from '@tabler/icons-react';
 
 export default function WelcomeHero() {
   const { user } = useAuth();
@@ -41,11 +42,21 @@ export default function WelcomeHero() {
     <section className="welcome-hero">
       <div className="welcome-background">
         <div className="floating-elements">
-          <div className="element element-1">🚀</div>
-          <div className="element element-2">💡</div>
-          <div className="element element-3">⭐</div>
-          <div className="element element-4">🎯</div>
-          <div className="element element-5">🔥</div>
+          <div className="element element-1">
+            <IconRocket size={32} color="#667eea" />
+          </div>
+          <div className="element element-2">
+            <IconBulb size={32} color="#667eea" />
+          </div>
+          <div className="element element-3">
+            <IconStar size={32} color="#667eea" />
+          </div>
+          <div className="element element-4">
+            <IconTarget size={32} color="#667eea" />
+          </div>
+          <div className="element element-5">
+            <IconFlame size={32} color="#667eea" />
+          </div>
         </div>
       </div>
 
@@ -56,7 +67,9 @@ export default function WelcomeHero() {
               <h1 className="welcome-greeting">
                 {getGreeting()}, {user?.firstName}!
               </h1>
-              <div className="wave-emoji">👋</div>
+              <div className="wave-emoji">
+                <IconHandStop size={40} color="#ffffff" />
+              </div>
             </div>
             
             <div className={`welcome-message ${showContent ? 'animate-in' : ''}`}>
@@ -66,7 +79,9 @@ export default function WelcomeHero() {
               
               <div className="welcome-stats">
                 <div className="stat-item">
-                  <span className="stat-icon">📚</span>
+                  <span className="stat-icon">
+                    <IconBook size={24} color="#ffffff" />
+                  </span>
                   <span className="stat-text">Continúa tu viaje de aprendizaje</span>
                 </div>
               </div>

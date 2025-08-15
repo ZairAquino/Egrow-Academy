@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { getDisplayPrice, getCurrencySymbol } from '@/lib/pricing';
+import { IconRocket } from '@tabler/icons-react';
 
 interface Promotion {
   id: string;
@@ -92,7 +93,9 @@ export default function CountdownPromotionBanner({
     <div className="promo-banner">
       <div className="promo-banner-content" onClick={handleClick}>
         <div className="promo-banner-text">
-          <span className="promo-banner-emoji">🚀</span>
+          <span className="promo-banner-emoji">
+            <IconRocket size={24} color="#ffffff" />
+          </span>
           <span className="promo-banner-message">
             {(() => {
               const price = getDisplayPrice('monthly', currency);

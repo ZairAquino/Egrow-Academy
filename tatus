@@ -3,3 +3,8 @@
 [33m931e3a0[m fix(build): resolver error de styled-jsx anidadas en página monetiza-voz-ia-elevenlabs
 [33m68f32c5[m Merge pull request #5 from ZairAquino/David-clean
 [33m9bebb7f[m[33m ([m[1;31morigin/David-clean[m[33m)[m feat(pricing): precios multi-moneda por IP en CourseTemplateV1, banner de cuenta regresiva y sección de planes en cursos; alineado con lógica de suscripción. Docs actualizados
+[33m2c0dd75[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mrichpol[m[33m)[m feat: implementar animación de banner con deslizamiento desde detrás del hero - Agregar animación slideDown/slideUp al PremiumSubscriptionBanner - Posicionar banner detrás del background del hero (z-index: -2) - Restaurar altura del hero a 550px - Agregar logs de debug para verificar funcionamiento - Integrar banner en WelcomeBannerSection con skipDelay=true
+[33m68d921f[m[33m ([m[1;31morigin/richpol[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m resolve: mantener estilos CSS completos de richpol durante merge
+[33ma512a45[m fix: restaurar todos los cambios perdidos durante merge
+[33m03d7a5f[m merge: resolver conflictos y fusionar richpol con main
+[33mfe85c34[m fix: restaurar estilos CSS de cursos y optimizar sidebar

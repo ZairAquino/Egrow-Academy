@@ -8,6 +8,7 @@ import HeroV2 from '@/components/layout/HeroV2';
 import { FEATURE_FLAGS } from '@/lib/config';
 import CompaniesMarquee from '@/components/ui/CompaniesMarquee';
 import FeaturedCourses from '@/components/courses/FeaturedCourses';
+import CourseBenefits from '@/components/courses/CourseBenefits';
 import Newsletter from '@/components/ui/Newsletter';
 import Footer from '@/components/layout/Footer';
 import ClientOnly from '@/components/ClientOnly';
@@ -166,6 +167,9 @@ function HomeContent() {
             {/* Cursos Destacados */}
             <FeaturedCourses />
             
+            {/* Beneficios de los Cursos */}
+            <CourseBenefits />
+            
             {/* Recomendaciones Personalizadas */}
             <PersonalizedRecommendations />
             
@@ -191,6 +195,10 @@ function HomeContent() {
             /> */}
             
             <FeaturedCourses />
+            
+            {/* Beneficios de los Cursos */}
+            <CourseBenefits />
+            
             <Newsletter />
           </>
         )}

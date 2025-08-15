@@ -2,6 +2,18 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { 
+  IconTrophy, 
+  IconSeedling, 
+  IconTarget, 
+  IconFlame, 
+  IconBolt, 
+  IconCrown, 
+  IconRocket, 
+  IconBook, 
+  IconMoon,
+  IconRefresh
+} from '@tabler/icons-react';
 
 interface StreakStats {
   currentWeekLessons: number;
@@ -250,14 +262,14 @@ export default function StreakDisplay({ compact = false }: StreakDisplayProps) {
   console.log('✅ [STREAKS] Mostrando componente completo con stats:', stats);
 
   const getStreakEmoji = (streak: number): string => {
-    if (streak >= 52) return '🚀'; // 1 año
-    if (streak >= 24) return '👑'; // 6 meses
-    if (streak >= 12) return '⚡'; // 3 meses
-    if (streak >= 8) return '🔥';  // 2 meses
-    if (streak >= 4) return '🎯';  // 1 mes
-    if (streak >= 2) return '📚';  // 2 semanas
-    if (streak >= 1) return '🌱';  // 1 semana
-    return '💤'; // Sin racha
+    if (streak >= 52) return 'rocket'; // 1 año
+    if (streak >= 24) return 'crown'; // 6 meses
+    if (streak >= 12) return 'bolt'; // 3 meses
+    if (streak >= 8) return 'flame';  // 2 meses
+    if (streak >= 4) return 'target';  // 1 mes
+    if (streak >= 2) return 'book';  // 2 semanas
+    if (streak >= 1) return 'seedling';  // 1 semana
+    return 'moon'; // Sin racha
   };
 
   const getBadgeEmoji = (level: string): string => {
@@ -266,24 +278,51 @@ export default function StreakDisplay({ compact = false }: StreakDisplayProps) {
       return badgeCustomization.preferredEmojis[level];
     }
     
-    // Fall back to default emojis
+    // Fall back to default icons
     const emojiMap: { [key: string]: string } = {
-      PRINCIPIANTE: '🌱',
-      ESTUDIANTE: '📚',
-      DEDICADO: '🎯',
-      EN_LLAMAS: '🔥',
-      IMPARABLE: '⚡',
-      MAESTRO: '👑',
-      LEYENDA: '🚀'
+      PRINCIPIANTE: 'seedling',
+      ESTUDIANTE: 'book',
+      DEDICADO: 'target',
+      EN_LLAMAS: 'flame',
+      IMPARABLE: 'bolt',
+      MAESTRO: 'crown',
+      LEYENDA: 'rocket'
     };
-    return emojiMap[level] || '🏆';
+    return emojiMap[level] || 'trophy';
+  };
+
+  const renderIcon = (iconString: string) => {
+    switch (iconString) {
+      case 'trophy':
+        return <IconTrophy size={24} color="#fbbf24" />;
+      case 'seedling':
+        return <IconSeedling size={24} color="#10b981" />;
+      case 'target':
+        return <IconTarget size={24} color="#3b82f6" />;
+      case 'flame':
+        return <IconFlame size={24} color="#ef4444" />;
+      case 'bolt':
+        return <IconBolt size={24} color="#f59e0b" />;
+      case 'crown':
+        return <IconCrown size={24} color="#8b5cf6" />;
+      case 'rocket':
+        return <IconRocket size={24} color="#06b6d4" />;
+      case 'book':
+        return <IconBook size={24} color="#3b82f6" />;
+      case 'moon':
+        return <IconMoon size={24} color="#6b7280" />;
+      default:
+        return <IconTrophy size={24} color="#fbbf24" />;
+    }
   };
 
   return (
     <div className={`streak-display bg-white rounded-lg shadow-md border border-gray-200 ${compact ? 'p-2' : 'p-4'}`}>
       <div className={`flex items-center justify-between ${compact ? 'mb-2' : 'mb-3'}`}>
         <h3 className={`${compact ? 'text-sm' : 'text-lg'} font-semibold text-gray-800 flex items-center`}>
-          <span className="mr-2">🏆</span>
+          <span className="mr-2">
+            <IconTrophy size={20} color="#fbbf24" />
+          </span>
           {compact ? 'Rachas' : 'Sistema de Rachas'}
         </h3>
         <button 
@@ -294,7 +333,7 @@ export default function StreakDisplay({ compact = false }: StreakDisplayProps) {
           className="text-blue-500 hover:text-blue-700 text-sm"
           title="Actualizar"
         >
-          🔄
+          <IconRefresh size={16} color="#3b82f6" />
         </button>
       </div>
 
@@ -323,7 +362,7 @@ export default function StreakDisplay({ compact = false }: StreakDisplayProps) {
         <div className="flex items-center justify-between">
           <span className="text-sm font-medium text-gray-700">Racha Actual</span>
           <span className="text-lg font-bold text-blue-600 flex items-center">
-            {getStreakEmoji(stats.currentStreak)} {stats.currentStreak} {stats.currentStreak === 1 ? 'semana' : 'semanas'}
+            {renderIcon(getStreakEmoji(stats.currentStreak))} {stats.currentStreak} {stats.currentStreak === 1 ? 'semana' : 'semanas'}
           </span>
         </div>
         {stats.currentStreak > 0 && (
@@ -337,7 +376,7 @@ export default function StreakDisplay({ compact = false }: StreakDisplayProps) {
       {stats.currentBadge && (
         <div className="mb-4 p-3 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg border border-yellow-200">
           <div className="flex items-center">
-            <span className="text-2xl mr-2">{getBadgeEmoji(stats.currentBadge.badgeLevel)}</span>
+            <span className="text-2xl mr-2">{renderIcon(getBadgeEmoji(stats.currentBadge.badgeLevel))}</span>
             <div>
               <div className="font-medium text-gray-800">{stats.currentBadge.badgeLevel}</div>
               <div className="text-xs text-gray-500">

@@ -22,10 +22,15 @@ interface CourseCardProps {
   priceId?: string;
   isAuthenticated?: boolean;
   onCourseClick?: (courseId: string) => void;
+  showTopSalesBadge?: boolean;
+  studentsCount?: number;
+  likePercentage?: number;
+  totalLikes?: number;
+  formatNumber?: (num: number) => string;
 }
 
 export default function CourseCard({
-  id, image, title, description, tag, duration, level, category, isFree, requiresAuth, link, priceId, isAuthenticated, onCourseClick
+  id, image, title, description, tag, duration, level, category, isFree, requiresAuth, link, priceId, isAuthenticated, onCourseClick, showTopSalesBadge = false, studentsCount = 0, likePercentage = 95, totalLikes = 0, formatNumber = (num: number) => num.toString()
 }: CourseCardProps) {
   const {
     handleCourseAccess,
@@ -73,7 +78,7 @@ export default function CourseCard({
 
   const CardContent = (
     <>
-      <div className="course-image-new">
+      <div className="course-image-container">
         <OptimizedImage 
           src={image} 
           alt={title} 
@@ -82,20 +87,40 @@ export default function CourseCard({
           className="course-image"
           priority={false}
         />
-        <span className="course-type-badge">{getAccessMessage(course)}</span>
+        {showTopSalesBadge && (
+          <div className="course-badge top-sales">TOP VENTAS</div>
+        )}
+        <div className="course-badge eplus">e Plus</div>
       </div>
-      <div className="course-content-new">
-        <div className="course-meta">
-          <span className="course-instructor">eGrow Academy</span>
-        </div>
-        <h3 className="course-title-new">
+      
+      <div className="course-content">
+        <h3 className="course-title">
           {title}
         </h3>
-        <p className="course-description-new">
+        <p className="course-instructor">
+          Un curso de eGrow Academy
+        </p>
+        <p className="course-description">
           {description}
         </p>
-        <div className="course-link">
-          Iniciar curso →
+        
+        <div className="course-metrics">
+          <div className="metric">
+            <span className="metric-icon">👥</span>
+            <span className="metric-value">{formatNumber(studentsCount)}</span>
+          </div>
+          <div className="metric">
+            <span className="metric-icon">👍</span>
+            <span className="metric-value">{likePercentage}% ({formatNumber(totalLikes)})</span>
+          </div>
+        </div>
+        
+        <div className="course-pricing">
+                                <div className="price-info">
+                      </div>
+          <button className="buy-button">
+            Mas Informacion
+          </button>
         </div>
       </div>
     </>

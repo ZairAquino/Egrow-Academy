@@ -3,6 +3,20 @@
 import { useState, useEffect } from 'react';
 import { StreakBadgeLevel } from '@prisma/client';
 import { getBadgeEmoji, getBadgeName } from '@/hooks/useStreaks';
+import { 
+  IconTrophy, 
+  IconSeedling, 
+  IconTarget, 
+  IconFlame, 
+  IconBolt, 
+  IconCrown, 
+  IconRocket, 
+  IconStar, 
+  IconMuscle, 
+  IconClock,
+  IconBook,
+  IconMoon
+} from '@tabler/icons-react';
 
 interface StreakNotification {
   id: string;
@@ -50,9 +64,9 @@ export const removeStreakNotification = (id: string) => {
 export const showGoalCompletedNotification = (weekNumber: number, points: number) => {
   addStreakNotification({
     type: 'goal_completed',
-    title: '🎉 ¡Meta Semanal Completada!',
+    title: '¡Meta Semanal Completada!',
     message: `¡Excelente! Has completado tu meta de 5 lecciones esta semana y ganaste ${points} puntos.`,
-    emoji: '🏆',
+    emoji: 'trophy',
     duration: 8000,
     actionText: 'Ver Progreso'
   });
@@ -60,12 +74,12 @@ export const showGoalCompletedNotification = (weekNumber: number, points: number
 
 export const showStreakMilestoneNotification = (streak: number) => {
   const milestones = {
-    1: { emoji: '🌱', message: '¡Primera racha semanal!' },
-    4: { emoji: '🎯', message: '¡Un mes de constancia!' },
-    8: { emoji: '🔥', message: '¡Dos meses en racha!' },
-    12: { emoji: '⚡', message: '¡Tres meses increíbles!' },
-    24: { emoji: '👑', message: '¡Medio año de dedicación!' },
-    52: { emoji: '🚀', message: '¡Un año completo! ¡Eres una leyenda!' }
+    1: { emoji: 'seedling', message: '¡Primera racha semanal!' },
+    4: { emoji: 'target', message: '¡Un mes de constancia!' },
+    8: { emoji: 'flame', message: '¡Dos meses en racha!' },
+    12: { emoji: 'bolt', message: '¡Tres meses increíbles!' },
+    24: { emoji: 'crown', message: '¡Medio año de dedicación!' },
+    52: { emoji: 'rocket', message: '¡Un año completo! ¡Eres una leyenda!' }
   };
   
   const milestone = milestones[streak as keyof typeof milestones];
@@ -94,10 +108,10 @@ export const showNewBadgeNotification = (badge: StreakBadgeLevel, streak: number
 
 export const showMotivationNotification = (lessonsCompleted: number) => {
   const motivationalMessages = [
-    { lessons: 1, message: '¡Excelente inicio! 🌟 Cada lección cuenta hacia tu meta.', emoji: '🌟' },
-    { lessons: 2, message: '¡Vas por buen camino! 🚀 Solo 3 lecciones más para completar la meta.', emoji: '🚀' },
-    { lessons: 3, message: '¡Más de la mitad! 💪 Te faltan solo 2 lecciones para la meta semanal.', emoji: '💪' },
-    { lessons: 4, message: '¡Casi lo logras! 🔥 Solo una lección más para completar tu racha.', emoji: '🔥' }
+    { lessons: 1, message: '¡Excelente inicio! Cada lección cuenta hacia tu meta.', emoji: 'star' },
+    { lessons: 2, message: '¡Vas por buen camino! Solo 3 lecciones más para completar la meta.', emoji: 'rocket' },
+    { lessons: 3, message: '¡Más de la mitad! Te faltan solo 2 lecciones para la meta semanal.', emoji: 'muscle' },
+    { lessons: 4, message: '¡Casi lo logras! Solo una lección más para completar tu racha.', emoji: 'flame' }
   ];
   
   const motivation = motivationalMessages.find(m => m.lessons === lessonsCompleted);
@@ -116,9 +130,9 @@ export const showWeeklyReminderNotification = (lessonsLeft: number, daysLeft: nu
   if (lessonsLeft > 0 && daysLeft <= 2) {
     addStreakNotification({
       type: 'reminder',
-      title: '⏰ Recordatorio de Meta',
+      title: 'Recordatorio de Meta',
       message: `Te faltan ${lessonsLeft} lecciones para completar tu meta semanal. ¡Solo quedan ${daysLeft} días!`,
-      emoji: '⏰',
+      emoji: 'clock',
       duration: 6000,
       actionText: 'Continuar Aprendiendo'
     });
@@ -127,6 +141,37 @@ export const showWeeklyReminderNotification = (lessonsLeft: number, daysLeft: nu
 
 export default function StreakNotifications({ className = '' }: StreakNotificationsProps) {
   const [notifications, setNotifications] = useState<StreakNotification[]>([]);
+
+  const renderIcon = (emojiString: string) => {
+    switch (emojiString) {
+      case 'trophy':
+        return <IconTrophy size={24} color="#fbbf24" />;
+      case 'seedling':
+        return <IconSeedling size={24} color="#10b981" />;
+      case 'target':
+        return <IconTarget size={24} color="#3b82f6" />;
+      case 'flame':
+        return <IconFlame size={24} color="#ef4444" />;
+      case 'bolt':
+        return <IconBolt size={24} color="#f59e0b" />;
+      case 'crown':
+        return <IconCrown size={24} color="#8b5cf6" />;
+      case 'rocket':
+        return <IconRocket size={24} color="#06b6d4" />;
+      case 'star':
+        return <IconStar size={24} color="#fbbf24" />;
+      case 'muscle':
+        return <IconMuscle size={24} color="#ec4899" />;
+      case 'clock':
+        return <IconClock size={24} color="#6b7280" />;
+      case 'book':
+        return <IconBook size={24} color="#3b82f6" />;
+      case 'moon':
+        return <IconMoon size={24} color="#6b7280" />;
+      default:
+        return <span className="notification-emoji">{emojiString}</span>;
+    }
+  };
 
   useEffect(() => {
     // Suscribirse a las notificaciones
@@ -163,7 +208,7 @@ export default function StreakNotifications({ className = '' }: StreakNotificati
           className={`streak-notification streak-notification-${notification.type}`}
         >
           <div className="notification-header">
-            <span className="notification-emoji">{notification.emoji}</span>
+            <span className="notification-emoji">{renderIcon(notification.emoji)}</span>
             <h3 className="notification-title">{notification.title}</h3>
             <button
               className="notification-close"

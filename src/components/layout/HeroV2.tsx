@@ -12,6 +12,13 @@ export default function HeroV2() {
   const { user } = useAuth();
   const [isClient, setIsClient] = useState(false);
   const [containerPadding, setContainerPadding] = useState('0 1rem');
+  const [logoPosition, setLogoPosition] = useState('48%');
+  
+  // Función helper para obtener el transform de manera segura
+  const getLogoTransform = () => {
+    if (!isClient) return 'translateY(-50%)';
+    return window.innerWidth > 768 ? 'translate(-50%, -50%)' : 'translateY(-50%)';
+  };
 
   useEffect(() => {
     setIsClient(true);
@@ -24,18 +31,42 @@ export default function HeroV2() {
         setContainerPadding('0 2rem');
       } else if (window.innerWidth >= 640) {
         setContainerPadding('0 1.5rem');
-      } else {
+      } else if (window.innerWidth >= 768) {
         setContainerPadding('0 1rem');
+      } else {
+        // En móviles (≤ 768px) sin padding para eliminar espacio entre banner y hero
+        setContainerPadding('0');
+      }
+    };
+
+    // Función para actualizar la posición del logo según el tamaño de pantalla
+    const updateLogoPosition = () => {
+      if (window.innerWidth <= 375) {
+        setLogoPosition('30px');
+      } else if (window.innerWidth <= 480) {
+        setLogoPosition('40px');
+      } else if (window.innerWidth <= 640) {
+        setLogoPosition('50px');
+      } else if (window.innerWidth <= 768) {
+        setLogoPosition('60px');
+      } else {
+        // En desktop (>= 769px) mantener el logo centrado
+        setLogoPosition('48%');
       }
     };
 
     // Actualizar al montar
     updateContainerPadding();
+    updateLogoPosition();
     
     // Actualizar al cambiar el tamaño de la ventana
     window.addEventListener('resize', updateContainerPadding);
+    window.addEventListener('resize', updateLogoPosition);
     
-    return () => window.removeEventListener('resize', updateContainerPadding);
+    return () => {
+      window.removeEventListener('resize', updateContainerPadding);
+      window.removeEventListener('resize', updateLogoPosition);
+    };
   }, []);
 
   return (
@@ -93,23 +124,29 @@ export default function HeroV2() {
                   Desarrolla habilidades irremplazables y consigue mejores oportunidades profesionales
                 </p>
                 <div className={styles.heroV2CTA}>
-                  {!user ? (
-                    <div className="flex justify-center w-full">
-                      <Link 
-                        href="/login" 
-                        className="inline-flex items-center justify-center px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-lg rounded-lg transition-colors duration-200 shadow-lg hover:shadow-xl"
-                      >
-                        Inicia Sesión para comenzar
-                      </Link>
-                    </div>
+                                     {isClient && !user ? (
+                     <div className="flex justify-center w-full">
+                       <Link 
+                         href="/login" 
+                         className="inline-flex items-center justify-center px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-lg rounded-lg transition-colors duration-200 shadow-lg hover:shadow-xl"
+                       >
+                         Inicia Sesión para comenzar
+                       </Link>
+                     </div>
+                   ) : isClient && user ? (
+                     <div className="flex justify-center w-full">
+                       <Link 
+                         href="/my-courses" 
+                         className="inline-flex items-center justify-center px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-lg rounded-lg transition-colors duration-200 shadow-lg hover:shadow-xl"
+                       >
+                         Mis cursos
+                       </Link>
+                     </div>
                   ) : (
                     <div className="flex justify-center w-full">
-                      <Link 
-                        href="/my-courses" 
-                        className="inline-flex items-center justify-center px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-lg rounded-lg transition-colors duration-200 shadow-lg hover:shadow-xl"
-                      >
-                        Haz click para ir a los cursos
-                      </Link>
+                      <div className="inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white font-medium text-sm rounded-md">
+                        Cargando...
+                      </div>
                     </div>
                   )}
                 </div>
@@ -140,6 +177,13 @@ export default function HeroV2() {
           {/* Logo eGrow centrado igual que en courses */}
           <motion.div 
             className={styles.heroV2LogoCenter}
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: logoPosition,
+              transform: getLogoTransform(),
+              zIndex: 5
+            }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.4 }}
