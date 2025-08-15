@@ -11,6 +11,17 @@ import { useSearchEngine } from '@/hooks/useSearchEngine';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import StreakDisplay from '@/components/streaks/StreakDisplay';
+import { 
+  IconTrophy, 
+  IconSeedling, 
+  IconTarget, 
+  IconFlame, 
+  IconBolt, 
+  IconCrown, 
+  IconRocket, 
+  IconBook, 
+  IconMoon 
+} from '@tabler/icons-react';
 
 // Componente mini para mostrar el badge de racha en el navbar
 const StreakBadgeMini: React.FC = () => {
@@ -76,7 +87,7 @@ const StreakBadgeMini: React.FC = () => {
   }, [user]);
 
   const getBadgeDisplay = () => {
-    if (!stats) return { emoji: '🏆', text: '-' };
+    if (!stats) return { emoji: 'trophy', text: '-' };
 
     const currentBadge = stats.currentBadge;
     const streak = stats.currentStreak;
@@ -95,14 +106,14 @@ const StreakBadgeMini: React.FC = () => {
 
     // Fall back to streak-based emoji
     const getStreakEmoji = (streak: number): string => {
-      if (streak >= 52) return '🚀';
-      if (streak >= 24) return '👑';
-      if (streak >= 12) return '⚡';
-      if (streak >= 8) return '🔥';
-      if (streak >= 4) return '🎯';
-      if (streak >= 2) return '📚';
-      if (streak >= 1) return '🌱';
-      return '💤';
+      if (streak >= 52) return 'rocket';
+      if (streak >= 24) return 'crown';
+      if (streak >= 12) return 'bolt';
+      if (streak >= 8) return 'flame';
+      if (streak >= 4) return 'target';
+      if (streak >= 2) return 'book';
+      if (streak >= 1) return 'seedling';
+      return 'moon';
     };
 
     return {
@@ -114,10 +125,35 @@ const StreakBadgeMini: React.FC = () => {
 
   const display = getBadgeDisplay();
   
+  const renderIcon = (iconString: string) => {
+    switch (iconString) {
+      case 'trophy':
+        return <IconTrophy size={20} color="#fbbf24" />;
+      case 'seedling':
+        return <IconSeedling size={20} color="#10b981" />;
+      case 'target':
+        return <IconTarget size={20} color="#3b82f6" />;
+      case 'flame':
+        return <IconFlame size={20} color="#ef4444" />;
+      case 'bolt':
+        return <IconBolt size={20} color="#f59e0b" />;
+      case 'crown':
+        return <IconCrown size={20} color="#8b5cf6" />;
+      case 'rocket':
+        return <IconRocket size={20} color="#06b6d4" />;
+      case 'book':
+        return <IconBook size={20} color="#3b82f6" />;
+      case 'moon':
+        return <IconMoon size={20} color="#6b7280" />;
+      default:
+        return <IconTrophy size={20} color="#fbbf24" />;
+    }
+  };
+  
   if (!stats) {
     return (
       <div className="flex items-center bg-gray-100 px-2 py-1 rounded-full text-sm">
-        <span>🏆</span>
+        <span>{renderIcon('trophy')}</span>
         <span className="ml-1 text-xs">-</span>
       </div>
     );
@@ -166,7 +202,7 @@ const StreakBadgeMini: React.FC = () => {
         </>
       ) : (
         <>
-          <span className="text-lg">{display.emoji}</span>
+          <span className="text-lg">{renderIcon(display.emoji)}</span>
           <span className="ml-1 font-semibold text-gray-700">{display.text}</span>
         </>
       )}

@@ -11962,3 +11962,173 @@ input:checked + .toggle-slider:before {
     padding: 0 1rem;
   }
 }
+
+/* ==========================================
+   SECCIÓN DE BENEFICIOS DE CURSOS
+   ========================================== */
+
+.course-benefits-section {
+  padding: 6rem 0;
+  background: white;
+}
+
+.course-benefits-section .section-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.course-benefits-section .section-title {
+  font-size: 3rem;
+  font-weight: 900;
+  color: #1a1a1a;
+  margin-bottom: 0;
+  line-height: 1.1;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.logo-inline {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+
+.egrow-logo {
+  height: auto;
+  max-width: 200px;
+  vertical-align: middle;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem 3rem;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .benefits-grid {
+    padding: 0 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .benefits-grid {
+    padding: 0 2rem;
+  }
+}
+
+.benefit-card {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 1.5rem;
+  padding: 0;
+  border-radius: 0;
+  transition: none;
+}
+
+.benefit-card:hover {
+  background: transparent;
+}
+
+  .benefit-icon-wrapper {
+    width: 4rem;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .benefit-icon {
+    font-size: 2.5rem;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+.benefit-content {
+  flex: 1;
+  width: 100%;
+}
+
+.benefit-title-container {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.benefit-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.benefit-badge {
+  padding: 3px 8px;
+  border-radius: 16px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0.5px;
+  color: #ffffff;
+  border: 1px solid rgba(255,255,255,0.45);
+  background: linear-gradient(180deg, #8fc9f6 0%, #88bbf4 52%, #5e94ed 100%);
+  box-shadow: 4px 6px 12px rgba(46, 91, 173, 0.18);
+}
+
+.benefit-description {
+  font-size: 0.95rem;
+  color: #6c757d;
+  line-height: 1.5;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .benefits-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 0 1rem;
+  }
+  
+  .course-benefits-section .section-title {
+    font-size: 2.5rem;
+  }
+  
+  .course-benefits-section {
+    padding: 4rem 0;
+  }
+  
+  .course-benefits-section .section-header {
+    margin-bottom: 3rem;
+  }
+  
+  .benefit-icon-wrapper {
+    width: 3rem;
+    height: 3rem;
+  }
+  
+  .benefit-icon {
+    font-size: 2rem;
+  }
+  
+  .benefit-title {
+    font-size: 1.125rem;
+  }
+  
+  .benefit-description {
+    font-size: 0.875rem;
+  }
+}
