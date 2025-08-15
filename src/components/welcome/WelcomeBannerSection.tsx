@@ -31,7 +31,7 @@ export default function WelcomeBannerSection() {
   }
 
   return (
-    <div className="w-full bg-gradient-to-b from-white to-gray-50 py-8">
+    <div className="w-full bg-gradient-to-b from-white to-gray-50 py-0">
       {/* Banner Promocional - Ancho completo del background */}
       <div className={`banner-full-width ${showWelcome ? 'show' : ''}`} style={{ transitionDelay: '0.2s' }}>
         <PremiumSubscriptionBanner skipDelay={true} />
